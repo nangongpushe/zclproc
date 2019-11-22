@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.ConstructionScheduleDao">
+	<resultMap id="constructionScheduleResultMap" type="com.dhc.fastersoft.entity.ConstructionSchedule">
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="YEAR_MONTH" property="yearMonth" jdbcType="VARCHAR" />
+		<result column="PROJECT_UNIT" property="projectUnit" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="HANDLE_TIME" property="handleTime" jdbcType="DATE"/>
+		<result column="REPORT_TIME" property="reportTime" jdbcType="VARCHAR" />
+		<result column="APPROVED_INVESTMENT_SUBTOTAL" property="approvedInvestmentSubtotal" jdbcType="DOUBLE" />
+		<result column="CURRENT_INVESTMENT_SUBTOTAL" property="currentInvestmentSubtotal" jdbcType="DOUBLE" />
+		<result column="ACCUMULATE_INVESTMENT_SUBTOTAL" property="accumulateInvestmentSubtotal" jdbcType="DOUBLE"/>
+		<result column="INVESTMENT_QUOTA" property="investmentQuota" jdbcType="INTEGER"/>
+		<result column="STATUS" property="status" jdbcType="VARCHAR"/>
+		<result column="COLLECT" property="collect" jdbcType="INTEGER"/>
+		<result column="REPORTED" property="reported" jdbcType="INTEGER"/>
+		<result column="WAREHOUSE_ID" property="warehouseId" jdbcType="INTEGER"/>
+		<collection property="scheduleDetail" ofType="com.dhc.fastersoft.entity.ConstructionScheduleDetail">
+			<id column="D_ID" property="id" jdbcType="VARCHAR" />
+			<result column="SCHEDULE_ID" property="scheduleId" jdbcType="VARCHAR"/>
+			<result column="SERIAL" property="serial" jdbcType="INTEGER" />
+			<result column="PROJECT_SERIAL" property="projectSerial" jdbcType="VARCHAR" />		
+			<result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+			<result column="APPROVED_INVESTMENT" property="approvedInvestment" jdbcType="DOUBLE" />
+			<result column="CURRENT_INVESTMENT" property="currentInvestment" jdbcType="DOUBLE" />
+			<result column="ACCUMULATE_INVESTMENT" property="accumulateInvestment" jdbcType="DOUBLE"/>
+			<result column="PROGRESS" property="progress" jdbcType="INTEGER"/>
+			<result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+			<result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+		</collection>
+	</resultMap>
+	
+	<sql id="columns">
+		ID,YEAR_MONTH,PROJECT_UNIT,OPERATOR,HANDLE_TIME,REPORT_TIME,
+		APPROVED_INVESTMENT_SUBTOTAL,CURRENT_INVESTMENT_SUBTOTAL,
+		ACCUMULATE_INVESTMENT_SUBTOTAL,INVESTMENT_QUOTA,STATUS,COLLECT,REPORTED,WAREHOUSE_ID
+	</sql>
+
+	<sql id="columnss">
+		tp.ID,tp.YEAR_MONTH,house.WAREHOUSE_SHORT AS PROJECT_UNIT,tp.OPERATOR,tp.HANDLE_TIME,tp.REPORT_TIME,
+		tp.APPROVED_INVESTMENT_SUBTOTAL,tp.CURRENT_INVESTMENT_SUBTOTAL,
+		tp.ACCUMULATE_INVESTMENT_SUBTOTAL,tp.INVESTMENT_QUOTA,tp.STATUS,COLLECT,tp.REPORTED,tp.WAREHOUSE_ID
+	</sql>
+	
+	<sql id="columns-detail">
+		ID,SCHEDULE_ID,SERIAL,PROJECT_SERIAL,PROJECT_NAME,
+		APPROVED_INVESTMENT,CURRENT_INVESTMENT,ACCUMULATE_INVESTMENT,
+		PROGRESS,REMARK,PROJECT_ID
+	</sql>
+	
+	<sql id="columns-select">
+		m.ID,m.YEAR_MONTH,house.WAREHOUSE_SHORT AS PROJECT_UNIT,m.OPERATOR,m.HANDLE_TIME,m.REPORT_TIME,
+		m.APPROVED_INVESTMENT_SUBTOTAL,m.CURRENT_INVESTMENT_SUBTOTAL,
+		m.ACCUMULATE_INVESTMENT_SUBTOTAL,m.INVESTMENT_QUOTA,m.STATUS,m.COLLECT,m.REPORTED,m.WAREHOUSE_ID
+	</sql>
+	
+	<sql id="columns-detail-select">
+		c.ID D_ID,c.SCHEDULE_ID,c.SERIAL,c.PROJECT_SERIAL,c.PROJECT_NAME,
+		c.APPROVED_INVESTMENT,c.CURRENT_INVESTMENT,c.ACCUMULATE_INVESTMENT,
+		c.PROGRESS,c.REMARK,c.PROJECT_ID
+	</sql>
+	
+	<insert id="AddConstructionSchedule" parameterType="com.dhc.fastersoft.entity.ConstructionSchedule">
+		begin
+		INSERT INTO T_CONSTRUCTION_SCHEDULE(<include refid="columns"/>)
+		VALUES(
+			#{id},#{yearMonth},#{projectUnit},#{operator},#{handleTime},#{reportTime},
+			#{approvedInvestmentSubtotal},#{currentInvestmentSubtotal},
+			#{accumulateInvestmentSubtotal},#{investmentQuota},#{status},
+			#{collect,jdbcType=CHAR},#{reported,jdbcType=CHAR},#{warehouseId,jdbcType=CHAR}
+		);
+		
+		<foreach collection="scheduleDetail" item="schedule" >
+			INSERT INTO T_CONSTRUCTION_SCHEDULE_DETAIL(<include refid="columns-detail"/>)
+			VALUES(
+				#{schedule.id},#{id},#{schedule.serial},#{schedule.projectSerial},#{schedule.projectName},
+				#{schedule.approvedInvestment},#{schedule.currentInvestment},#{schedule.accumulateInvestment},
+				#{schedule.progress},#{schedule.remark},#{schedule.projectId,jdbcType=CHAR}
+			);
+		</foreach>
+		end;
+	</insert>
+	
+	<select id="ListLimitSchedule" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="constructionScheduleResultMap">
+		SELECT * FROM (
+			SELECT A.*, ROWNUM RN
+			FROM (SELECT
+				<include refid="columnss" />
+				FROM
+				T_CONSTRUCTION_SCHEDULE  tp  left join T_STORAGE_WAREHOUSE house ON tp.WAREHOUSE_ID = house.WAREHOUSE_CODE
+				ORDER BY tp.REPORT_TIME DESC,tp.id
+			) A
+			<where>
+				<if test="entity.yearMonth != null  and entity.yearMonth != ''">
+					AND A.YEAR_MONTH LIKE concat(concat('%',#{entity.yearMonth}),'%')
+				</if>
+				<if test="entity.projectUnit != null  and entity.projectUnit != ''">
+					AND A.PROJECT_UNIT LIKE concat(concat('%',#{entity.projectUnit}),'%')
+				</if>
+				<if test="entity.warehouseId != null  and entity.warehouseId != ''">
+					AND A.WAREHOUSE_ID LIKE concat(concat('%',#{entity.warehouseId}),'%')
+				</if>
+				<if test="entity.reportTime != null  and entity.reportTime != ''">
+					AND A.REPORT_TIME LIKE concat(concat('%',#{entity.reportTime}),'%')
+				</if>
+				<if test="entity.approvedInvestmentSubtotal > 0">
+					AND A.APPROVED_INVESTMENT_SUBTOTAL = #{entity.approvedInvestmentSubtotal}
+				</if>
+				<if test="entity.currentInvestmentSubtotal > 0">
+					AND A.CURRENT_INVESTMENT_SUBTOTAL = #{entity.currentInvestmentSubtotal}
+				</if>
+				<if test="entity.accumulateInvestmentSubtotal > 0">
+					AND A.ACCUMULATE_INVESTMENT_SUBTOTAL = #{entity.accumulateInvestmentSubtotal}
+				</if>
+				<if test="entity.collect != null  and entity.collect != ''">
+					AND A.COLLECT = #{entity.collect}
+				</if>
+				<if test="entity.reported != null  and entity.reported != ''">
+					AND A.REPORTED = #{entity.reported}
+				</if>
+				<if test="entity.investmentQuota != null  and entity.investmentQuota != ''">
+					AND A.INVESTMENT_QUOTA = #{entity.investmentQuota}
+				</if>
+				<if test="entity.status != null  and entity.status != ''">
+					AND A.STATUS LIKE concat(concat('%',#{entity.status}),'%')
+				</if>
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			</where>
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(tp.ID) FROM T_CONSTRUCTION_SCHEDULE tp  left join T_STORAGE_WAREHOUSE house ON tp.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		<where>
+			<if test="entity.yearMonth != null  and entity.yearMonth != ''">
+				AND tp.YEAR_MONTH LIKE concat(concat('%',#{entity.yearMonth}),'%')
+			</if>
+			<if test="entity.projectUnit != null  and entity.projectUnit != ''">
+				AND tp.PROJECT_UNIT LIKE concat(concat('%',#{entity.projectUnit}),'%')
+			</if>
+			<if test="entity.warehouseId != null  and entity.warehouseId != ''">
+				AND tp.WAREHOUSE_ID LIKE concat(concat('%',#{entity.warehouseId}),'%')
+			</if>
+			<if test="entity.reportTime != null  and entity.reportTime != ''">
+				AND tp.REPORT_TIME LIKE concat(concat('%',#{entity.reportTime}),'%')
+			</if>
+			<if test="entity.approvedInvestmentSubtotal >0">
+				AND tp.APPROVED_INVESTMENT_SUBTOTAL = #{entity.approvedInvestmentSubtotal}
+			</if>
+			<if test="entity.currentInvestmentSubtotal > 0">
+				AND tp.CURRENT_INVESTMENT_SUBTOTAL = #{entity.currentInvestmentSubtotal}
+			</if>
+			<if test="entity.accumulateInvestmentSubtotal > 0">
+				AND tp.ACCUMULATE_INVESTMENT_SUBTOTAL = #{entity.accumulateInvestmentSubtotal}
+			</if>
+			<if test="entity.collect != null  and entity.collect != ''">
+				AND tp.COLLECT = #{entity.collect}
+			</if>
+			<if test="entity.reported != null  and entity.reported != ''">
+				AND tp.REPORTED = #{entity.reported}
+			</if>
+			<if test="entity.investmentQuota != null  and entity.investmentQuota != ''">
+				AND tp.INVESTMENT_QUOTA = #{entity.investmentQuota}
+			</if>
+			<if test="entity.status != null  and entity.status != ''">
+				AND tp.STATUS LIKE concat(concat('%',#{entity.status}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="GetConstructionSchedule" parameterType="java.lang.String" resultMap="constructionScheduleResultMap">
+		SELECT <include refid="columns-select"/>,<include refid="columns-detail-select"/> FROM T_CONSTRUCTION_SCHEDULE m
+		LEFT JOIN T_CONSTRUCTION_SCHEDULE_DETAIL c ON m.ID = c.SCHEDULE_ID
+		left join T_STORAGE_WAREHOUSE house ON m.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		WHERE m.ID = #{_parameter}
+	</select>
+
+	<update id="UpdateConstructionSchedule" parameterType="com.dhc.fastersoft.entity.ConstructionSchedule">
+		begin
+		UPDATE T_CONSTRUCTION_SCHEDULE SET
+		YEAR_MONTH = #{yearMonth},PROJECT_UNIT = #{projectUnit},APPROVED_INVESTMENT_SUBTOTAL = #{approvedInvestmentSubtotal},REPORT_TIME = #{reportTime},
+		CURRENT_INVESTMENT_SUBTOTAL = #{currentInvestmentSubtotal},ACCUMULATE_INVESTMENT_SUBTOTAL = #{accumulateInvestmentSubtotal},
+		INVESTMENT_QUOTA = #{investmentQuota},STATUS = #{status},COLLECT = #{collect,jdbcType=INTEGER},REPORTED = #{reported,jdbcType=INTEGER},WAREHOUSE_ID=#{warehouseId}
+		WHERE ID = #{id};
+		
+		DELETE FROM T_CONSTRUCTION_SCHEDULE_DETAIL WHERE SCHEDULE_ID = #{id};
+		
+		<foreach collection="scheduleDetail" item="schedule">
+			INSERT INTO T_CONSTRUCTION_SCHEDULE_DETAIL(<include refid="columns-detail"/>)
+			VALUES(
+				#{schedule.id},#{id},#{schedule.serial},#{schedule.projectSerial},#{schedule.projectName},
+				#{schedule.approvedInvestment},#{schedule.currentInvestment},#{schedule.accumulateInvestment},
+				#{schedule.progress,jdbcType=INTEGER},#{schedule.remark,jdbcType=VARCHAR},#{schedule.projectId,jdbcType=VARCHAR}
+			);
+		</foreach>
+		end;
+	</update>
+	
+	<select id="ListGrouyByYearMonth" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="constructionScheduleResultMap">
+		SELECT * FROM (
+		SELECT A.*, ROWNUM RN
+		FROM (
+			SELECT
+			YEAR_MONTH,SUM(APPROVED_INVESTMENT_SUBTOTAL) APPROVED_INVESTMENT_SUBTOTAL,
+			SUM(CURRENT_INVESTMENT_SUBTOTAL) CURRENT_INVESTMENT_SUBTOTAL,
+			SUM(ACCUMULATE_INVESTMENT_SUBTOTAL) ACCUMULATE_INVESTMENT_SUBTOTAL,
+			MIN(REPORTED) REPORTED
+			FROM
+			T_CONSTRUCTION_SCHEDULE
+			<where>
+				<if test="entity.yearMonth != null">
+					AND YEAR_MONTH LIKE concat(concat('%',#{entity.yearMonth}),'%')
+				</if>
+				<if test="entity.collect != null">
+					AND COLLECT = #{entity.collect}
+				</if>
+				<if test="entity.investmentQuota != null">
+					AND INVESTMENT_QUOTA = #{entity.investmentQuota}
+				</if>
+				<if test="entity.reported != null">
+					AND REPORTED = #{entity.reported}
+				</if>
+			</where>
+			GROUP BY YEAR_MONTH
+			ORDER BY YEAR_MONTH
+			) A
+			WHERE ROWNUM &lt;= ${pageIndex}*${pageSize}
+		)
+		WHERE RN > (${pageIndex} - 1) * ${pageSize} 
+	</select>
+	
+	<select id="GetCountGroupByYearMonth" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (SELECT YEAR_MONTH FROM T_CONSTRUCTION_SCHEDULE
+		<where>
+			<if test="entity.yearMonth != null">
+				AND YEAR_MONTH LIKE concat(concat('%',#{entity.yearMonth}),'%')
+			</if>
+			<if test="entity.collect != null">
+				AND COLLECT = #{entity.collect}
+			</if>
+			<if test="entity.investmentQuota != null">
+				AND INVESTMENT_QUOTA = #{entity.investmentQuota}
+			</if>
+			<if test="entity.reported != null">
+				AND REPORTED = #{entity.reported}
+			</if>
+		</where>
+		GROUP BY YEAR_MONTH
+		)
+	</select>
+	
+	<select id="ListScheduleByIdArray" parameterType="java.util.List" resultMap="constructionScheduleResultMap">
+		SELECT <include refid="columns-select"/>,<include refid="columns-detail-select"/> FROM T_CONSTRUCTION_SCHEDULE m
+		LEFT JOIN T_CONSTRUCTION_SCHEDULE_DETAIL c ON m.ID = c.SCHEDULE_ID
+		left join T_STORAGE_WAREHOUSE house ON m.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		WHERE m.ID IN (
+		<foreach collection="list" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</select>
+	
+	<update id="UpdateScheduleByArray" parameterType="java.util.List">
+		begin
+		<foreach collection="list" item="entity">
+		UPDATE T_CONSTRUCTION_SCHEDULE SET
+		YEAR_MONTH = #{entity.yearMonth},PROJECT_UNIT = #{entity.projectUnit},APPROVED_INVESTMENT_SUBTOTAL = #{entity.approvedInvestmentSubtotal},
+		CURRENT_INVESTMENT_SUBTOTAL = #{entity.currentInvestmentSubtotal},ACCUMULATE_INVESTMENT_SUBTOTAL = #{entity.accumulateInvestmentSubtotal},
+		INVESTMENT_QUOTA = #{entity.investmentQuota},STATUS = #{entity.status},COLLECT = #{entity.collect,jdbcType=INTEGER},REPORTED = #{entity.reported,jdbcType=INTEGER},
+		WAREHOUSE_ID=#{entity.warehouseId}
+		WHERE ID = #{entity.id};
+		</foreach>
+		end;
+	</update>
+</mapper>

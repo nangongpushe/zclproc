@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoreWinUnitDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.store.StoreWinUnit" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SERIAL" property="serial" jdbcType="VARCHAR" />
+    <result column="YEAR" property="year" jdbcType="VARCHAR" />
+    <result column="DECLARE_UNIT" property="declareUnit" jdbcType="VARCHAR" />
+    <result column="DECLARE_DATE" property="declareDate" jdbcType="TIMESTAMP" />
+    <result column="REGULATORY_UNIT" property="regulatoryUnit" jdbcType="VARCHAR" />
+    <result column="RECOMMEND" property="recommend" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
+    <result column="CREATORID" property="creatorId" jdbcType="NVARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ss.ID id, ss.SERIAL serial, ss.YEAR year, ss.DECLARE_UNIT declareUnit, to_char(ss.DECLARE_DATE, 'yyyy-mm-dd') declareDate, ss.REGULATORY_UNIT regulatoryUnit,
+    decode(ss.RECOMMEND,'1','已推荐','0','未推荐') recommend, ss.GROUP_ID groupId,ss.CREATORID creatorId
+  </sql>
+  
+   <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+				<include refid="Base_Column_List" />, sys.name  creator
+	   from  T_STORE_WIN_UNIT ss  left join
+	   T_SYS_USER sys ON ss.CREATORID=sys.ID
+		 WHERE 1=1
+		 <if test="creatorId!=null and creatorId!=''">
+			 and  ss.CREATORID  = '${creatorId}'
+		</if>
+		
+		<if test="regulatoryUnit!=null and regulatoryUnit!=''">
+			 and  ss.REGULATORY_UNIT  LIKE '%${regulatoryUnit}%'
+		</if>
+		
+		 <if test="year!=null and year!=''">
+			 and  ss.YEAR  ='${year}'
+		</if>
+		<if test="declareUnit!=null and declareUnit!=''">
+			 and  ss.DECLARE_UNIT  LIKE '%${declareUnit}%'
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(ss.DECLARE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(ss.DECLARE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(ss.DECLARE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD')
+		</if>	
+		order by SERIAL DESC
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_STORE_WIN_UNIT  
+		WHERE 1=1	
+		<if test="creatorId!=null and creatorId!=''">
+			 and  CREATORID  = '${creatorId}'
+		</if>
+		<if test="regulatoryUnit!=null and regulatoryUnit!=''">
+			 and  REGULATORY_UNIT  = '${regulatoryUnit}'
+		</if>
+		 <if test="year!=null and year!=''">
+			 and  YEAR  ='${year}'
+		</if>
+		<if test="declareUnit!=null and declareUnit!=''">
+			 and  DECLARE_UNIT  LIKE  '%${declareUnit}%'
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(DECLARE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(DECLARE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(DECLARE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>		 
+	</select>
+	
+	<select id="getStoreWinUnitById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.store.StoreWinUnit">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM T_STORE_WIN_UNIT ss
+		 WHERE ID=#{id,jdbcType=NVARCHAR}	
+		
+	</select>
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.store.StoreWinUnit" >
+ 	insert into T_STORE_WIN_UNIT (ID, SERIAL, YEAR, 
+      DECLARE_UNIT, DECLARE_DATE, REGULATORY_UNIT, 
+      RECOMMEND, GROUP_ID,CREATORID)
+    values (#{id,jdbcType=VARCHAR}, #{serial,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, 
+      #{declareUnit,jdbcType=VARCHAR},to_date(#{declareDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'), #{regulatoryUnit,jdbcType=VARCHAR}, 
+      #{recommend,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR},#{creatorId,jdbcType=VARCHAR})
+      
+      
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.store.StoreWinUnit">
+	 update T_STORE_WIN_UNIT
+    set 
+      SERIAL = #{serial,jdbcType=VARCHAR},
+      YEAR = #{year,jdbcType=VARCHAR},
+      DECLARE_UNIT = #{declareUnit,jdbcType=VARCHAR},
+      DECLARE_DATE = to_date(#{declareDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'),
+      REGULATORY_UNIT = #{regulatoryUnit,jdbcType=VARCHAR},
+      RECOMMEND = #{recommend,jdbcType=VARCHAR},
+      GROUP_ID = #{groupId,jdbcType=VARCHAR},
+      CREATORID=#{creatorId,jdbcType=VARCHAR}
+      WHERE ID='${id}'			
+	</update>
+	
+	 
+	<update id="updateRecommend" parameterType="java.lang.String">
+	 update T_STORE_WIN_UNIT
+    set 
+       RECOMMEND = '1'
+      WHERE ID=#{id,jdbcType=NVARCHAR}	
+	</update>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORE_WIN_UNIT
+		WHERE ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+  
+  
+</mapper>

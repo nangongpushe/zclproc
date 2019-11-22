@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateProcessDao">
+	<resultMap id="rotateProcessResultMap" type="com.dhc.fastersoft.entity.RotateProcess">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="RECORD_NAME" property="recordName" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="OPERATOR_ID" property="operatorId" jdbcType="VARCHAR" />
+		<result column="HANDLE_TIME" property="handleTime" jdbcType="DATE" />
+		<result column="DEAL_SERIAL" property="dealSerial" jdbcType="VARCHAR" />
+		<result column="BUYER" property="buyer" jdbcType="VARCHAR" />
+		<result column="SELLER" property="seller" jdbcType="VARCHAR" />
+		<result column="BUYER_ID" property="buyerId" jdbcType="VARCHAR" />
+		<result column="SELLER_ID" property="sellerId" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="MODIFIER" property="modifier" jdbcType="VARCHAR" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="DATE" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="DEAL_ID" property="tagId" jdbcType="VARCHAR"/>
+		<collection property="processDetail" ofType="com.dhc.fastersoft.entity.RotateProcessDetail">
+			<id column="CID" property="id" jdbcType="VARCHAR"/>
+			<result column="PROCESS_ID" property="processId" jdbcType="VARCHAR"/>
+			<result column="TYPE" property="type" jdbcType="VARCHAR"/>
+			<result column="ADVISE" property="advise" jdbcType="VARCHAR"/>
+			<result column="AMOUNT" property="amount" jdbcType="DOUBLE"/>
+		</collection>
+	</resultMap>
+	
+	<sql id="columns">
+		ID,RECORD_NAME,OPERATOR,HANDLE_TIME,DEAL_SERIAL,
+		BUYER,SELLER,STATUS,MODIFIER,MODIFY_TIME,REMARK,BUYER_ID,SELLER_ID,DEAL_ID
+	</sql>
+	
+	<sql id="s_columns">
+		ID,RECORD_NAME,(select name from t_sys_user where id = OPERATOR) OPERATOR,HANDLE_TIME,DEAL_SERIAL,
+		BUYER,SELLER,STATUS,MODIFIER,MODIFY_TIME,REMARK,DEAL_ID,BUYER_ID,SELLER_ID
+	</sql>
+	
+	<sql id="columns-detail">
+		ID,PROCESS_ID,TYPE,ADVISE,AMOUNT
+	</sql>
+	
+	<sql id="columns-select">
+		m.ID,RECORD_NAME,(select name from t_sys_user where id = OPERATOR) OPERATOR,OPERATOR AS OPERATOR_ID,HANDLE_TIME,DEAL_SERIAL,
+		BUYER,SELLER,STATUS,MODIFIER,MODIFY_TIME,REMARK,DEAL_ID,BUYER_ID,SELLER_ID
+	</sql>
+	
+	<sql id="columns-detail-select">
+		c.ID CID,PROCESS_ID,TYPE,ADVISE,AMOUNT
+	</sql>
+	
+	<insert id="AddRotateProcess" parameterType="com.dhc.fastersoft.entity.RotateProcess">
+		begin
+		INSERT INTO T_ROTATE_PROCESS(<include refid="columns"/>)
+		VALUES(
+			#{id},#{recordName},#{operator},#{handleTime},#{dealSerial},
+			#{buyer},#{seller},#{status},#{modifier,jdbcType=VARCHAR},#{modifyTime,jdbcType=DATE},
+		#{remark,jdbcType=VARCHAR},#{buyerId,jdbcType=VARCHAR}, #{sellerId,jdbcType=VARCHAR},#{tagId,jdbcType=VARCHAR}
+		);
+		<foreach collection="processDetail" item="process">
+			INSERT INTO T_ROTATE_PROCESS_DETAIL(<include refid="columns-detail"/>)
+			VALUES(
+				#{process.id},#{id},#{process.type,jdbcType=VARCHAR},#{process.advise,jdbcType=VARCHAR},#{process.amount,jdbcType=NUMERIC}
+			);
+		</foreach>
+		end;
+	</insert>
+
+	<select id="ListLimitProcess" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="rotateProcessResultMap">
+		SELECT * FROM (
+			SELECT A.*, ROWNUM RN
+			FROM (SELECT
+				<include refid="s_columns" />
+				FROM
+				T_ROTATE_PROCESS
+				ORDER BY HANDLE_TIME DESC
+			) A
+			<where>
+				<if test="entity.recordName != null">
+					AND RECORD_NAME LIKE concat(concat('%',#{entity.recordName}),'%')
+				</if>
+				<if test="entity.dealSerial != null">
+					AND DEAL_SERIAL LIKE concat(concat('%',#{entity.dealSerial}),'%')
+				</if>
+				<if test="entity.buyer != null">
+					AND BUYER LIKE concat(concat('%',#{entity.buyer}),'%')
+				</if>
+				<if test="entity.seller != null">
+					AND SELLER LIKE concat(concat('%',#{entity.seller}),'%')
+				</if>
+				<if test="entity.status != null">
+					AND STATUS LIKE concat(concat('%',#{entity.status}),'%')
+				</if>
+				<if test="entity.operator != null">
+					AND OPERATOR LIKE concat(concat('%',#{entity.operator}),'%')
+				</if>
+				<if test="entity.handleTime != null and entity.handleTime != ''">
+					AND HANDLE_TIME = #{entity.handleTime}
+				</if>
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			</where>
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(ID) FROM T_ROTATE_PROCESS
+		<where>
+			<if test="entity.recordName != null">
+				AND RECORD_NAME LIKE concat(concat('%',#{entity.recordName}),'%')
+			</if>
+			<if test="entity.dealSerial != null">
+				AND DEAL_SERIAL LIKE concat(concat('%',#{entity.dealSerial}),'%')
+			</if>
+			<if test="entity.buyer != null">
+				AND BUYER LIKE concat(concat('%',#{entity.buyer}),'%')
+			</if>
+			<if test="entity.seller != null">
+				AND SELLER LIKE concat(concat('%',#{entity.seller}),'%')
+			</if>
+			<if test="entity.status != null">
+				AND STATUS LIKE concat(concat('%',#{entity.status}),'%')
+			</if>
+			<if test="entity.operator != null">
+				AND OPERATOR LIKE concat(concat('%',#{entity.operator}),'%')
+			</if>
+			<if test="entity.handleTime != null and entity.handleTime != ''">
+				AND HANDLE_TIME = #{entity.handleTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="GetRotateProcess" parameterType="java.lang.String" resultMap="rotateProcessResultMap">
+		SELECT <include refid="columns-select"/>,<include refid="columns-detail-select"/> FROM T_ROTATE_PROCESS m
+		LEFT JOIN T_ROTATE_PROCESS_DETAIL c ON m.ID = c.PROCESS_ID
+		WHERE m.ID = #{_parameter}
+	</select>
+	
+	<select id="GetRotateProcessDetailByDealSerial" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.RotateProcessDetailDao.rotateProcessDetailResultMap">
+		SELECT <include refid="columns-detail"/> FROM T_ROTATE_PROCESS_DETAIL c WHERE c.PROCESS_ID IN
+		(
+			SELECT ID FROM T_ROTATE_PROCESS m WHERE m.DEAL_SERIAL = #{_parameter} and m.status = '审核通过'
+		)
+	</select>
+
+	<update id="UpdateRotateProcess" parameterType="com.dhc.fastersoft.entity.RotateProcess">
+		begin
+		UPDATE T_ROTATE_PROCESS SET
+		RECORD_NAME = #{recordName},OPERATOR  = #{operator},HANDLE_TIME  = #{handleTime},
+		DEAL_SERIAL = #{dealSerial},DEAL_ID = #{tagId},
+		BUYER = #{buyer},SELLER = #{seller},STATUS  = #{status},MODIFIER  = #{modifier},
+		MODIFY_TIME  = #{modifyTime},REMARK  = #{remark,jdbcType=VARCHAR},
+		BUYER_ID = #{buyerId,jdbcType=VARCHAR},SELLER_ID = #{sellerId,jdbcType=VARCHAR}
+		WHERE ID = #{id};
+		
+		DELETE FROM T_ROTATE_PROCESS_DETAIL WHERE process_ID = #{id};
+		
+		<foreach collection="processDetail" item="process">
+			INSERT INTO T_ROTATE_PROCESS_DETAIL(<include refid="columns-detail"/>)
+			VALUES(
+				#{process.id},#{id},#{process.type},#{process.advise},#{process.amount}
+			);
+		</foreach>
+		end;
+	</update>
+
+	<update id="UpdateRotateProcessState" parameterType="com.dhc.fastersoft.entity.RotateProcess">
+
+		UPDATE T_ROTATE_PROCESS SET
+		STATUS  = #{status}
+		WHERE ID = #{id}
+
+
+	</update>
+
+	<delete id="deleteRotateProcess" parameterType="java.lang.String" >
+		DELETE FROM T_ROTATE_PROCESS m
+
+		WHERE m.ID = #{_parameter}
+	</delete>
+</mapper>

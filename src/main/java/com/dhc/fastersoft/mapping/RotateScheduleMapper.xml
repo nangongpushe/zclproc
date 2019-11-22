@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateScheduleDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateSchedule" id="rotateScheduleResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="operator" column="OPERATOR" jdbcType="VARCHAR" />
+		<result property="department" column="DEPARTMENT" jdbcType="VARCHAR" />
+		<result property="reportTime" column="REPORT_TIME" jdbcType="DATE" />
+		<result property="reportUnit" column="REPORT_UNIT" jdbcType="VARCHAR" />
+		<result property="unit" column="UNIT" jdbcType="VARCHAR" />
+		<result property="noticeType" column="NOTICE_TYPE" jdbcType="NVARCHAR" />
+		<result property="noticeSerial" column="NOTICE_SERIAL" jdbcType="NVARCHAR" />
+		<result property="noticeId" column="NOTICE_ID" jdbcType="NVARCHAR" />
+		<result property="status" column="STATUS" jdbcType="NVARCHAR" />
+		<result property="reporterId" column="REPORTER_ID" jdbcType="NVARCHAR" />
+		<result property="reportUnitId" column="REPORT_UNIT_ID" jdbcType="VARCHAR"/>
+		<collection property="detailList" resultMap="com.dhc.fastersoft.dao.RotateScheduleDetailDao.rotateScheduleDetailResultMap"></collection>
+	</resultMap>
+
+	<sql id="columns_main">
+		ID,OPERATOR,DEPARTMENT,REPORT_TIME,REPORT_UNIT,UNIT,NOTICE_TYPE,NOTICE_SERIAL,NOTICE_ID,STATUS,REPORTER_ID,REPORT_UNIT_ID
+	</sql>
+	
+	<sql id="s_columns_main">
+		ID,(select name from t_sys_user where id = OPERATOR) OPERATOR,DEPARTMENT,REPORT_TIME,REPORT_UNIT,UNIT,NOTICE_TYPE,NOTICE_SERIAL,NOTICE_ID,STATUS,REPORTER_ID
+	</sql>
+	
+	<sql id="columns_detail">
+		ID,SCHEDULE_ID,STOREHOUSE,GRAIN_TYPE,DELIVERY_UNIT,QUANTITY,
+		PRIOR_PERIOD,CURRENT_PERIOD,TOTAL,COMPLE_RATE,MODIFIER,MODIFY_TIME,
+		REMARK,DEAL_SERIAL,REPORT_TIME
+	</sql>
+
+
+	<sql id="table_main"> T_ROTATE_SCHEDULE </sql>
+	
+	<sql id="table_detail"> T_ROTATE_SCHEDULE_DETAIL </sql>
+	
+	
+	<!-- 添加 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.RotateSchedule">
+		begin
+		INSERT INTO
+		<include refid="table_main" />
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(#{id},#{operator},#{department},
+		#{reportTime},#{reportUnit},
+		#{unit},#{noticeType},#{noticeSerial},
+		#{noticeId},#{status},#{reporterId},#{reportUnitId,jdbcType=VARCHAR});
+		<if test="detailList!=null">
+			<foreach collection="detailList" item="item" separator=";">
+				INSERT INTO
+				<include refid="table_detail" />
+				(
+					<include refid="columns_detail" />
+				)
+				VALUES
+				(
+					#{item.id},#{id},#{item.storehouse},#{item.grainType},
+					#{item.deliveryUnit,jdbcType=NVARCHAR},#{item.quantity},#{item.priorPeriod},
+					#{item.currentPeriod},#{item.total},#{item.compleRate},
+					#{item.modifier},#{item.modifyTime},#{item.remark,jdbcType=NVARCHAR},
+					#{item.dealSerial},#{item.reportTime}
+				)
+			</foreach>
+			;
+		</if>
+		end;
+	</insert>
+	
+	
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotateSchedule">
+		begin
+		UPDATE
+		<include refid="table_main" />
+		SET
+		NOTICE_TYPE = #{noticeType},
+		NOTICE_SERIAL = #{noticeSerial},
+		NOTICE_ID = #{noticeId},
+		STATUS = #{status}
+		WHERE ID = #{id};
+		
+		DELETE FROM  <include refid="table_detail" /> WHERE SCHEDULE_ID =#{id};
+
+			<foreach collection="detailList" item="item" separator=";">
+				INSERT INTO
+				<include refid="table_detail" />
+				(
+					<include refid="columns_detail" />
+				)
+				VALUES
+				(
+					#{item.id},#{id},#{item.storehouse},#{item.grainType},
+					#{item.deliveryUnit,jdbcType=NVARCHAR},#{item.quantity},#{item.priorPeriod},
+					#{item.currentPeriod},#{item.total},#{item.compleRate},
+					#{item.modifier},#{item.modifyTime},#{item.remark,jdbcType=NVARCHAR},
+					#{item.dealSerial},#{item.reportTime}
+				)
+			</foreach>
+		;end;
+	</update>
+	
+	
+	<select id="getByCondition" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateScheduleDao.rotateScheduleResultMap">
+		SELECT <include refid="s_columns_main" /> FROM <include refid="table_main" />
+		<where>
+			<if test="id!=null and id!=''">
+				AND ID = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="get" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.RotateScheduleDao.rotateScheduleResultMap">
+		SELECT <include refid="s_columns_main" /> FROM <include refid="table_main" />
+		<where>
+
+				AND ID = #{_parameter}
+			
+		</where>
+	</select>
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateScheduleDao.rotateScheduleResultMap">
+		<if test="pageIndex!=null">
+		select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT <include refid="s_columns_main" /> FROM <include refid="table_main" />
+		<where>
+			<if test="operator!=null and operator!=''">
+				AND OPERATOR IN (${operator})
+			</if>
+			<if test="department!=null and department!=''">
+				AND DEPARTMENT like '%${department}%'
+			</if>
+			<if test="reportTime!=null and reportTime!=''">
+				AND TO_CHAR(REPORT_TIME,'YYYY-MM-DD') = '${reportTime}'
+			</if>
+			<if test="reportUnit!=null and reportUnit!=''">
+				AND REPORT_UNIT like '%${reportUnit}%'
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS like '%${status}%'
+			</if>
+			<if test="noticeType!=null and noticeType!=''">
+				AND NOTICE_TYPE like '%${noticeType}%'
+			</if>
+			<if test="noticeSerial!=null and noticeSerial!=''">
+				AND NOTICE_SERIAL like '%${noticeSerial}%'
+			</if>
+
+
+			<if test="wareHouseIds!=null">
+				AND REPORT_UNIT_ID IN (<foreach collection="wareHouseIds" separator="," item="item">#{item}</foreach>)
+			</if>
+		</where>
+		
+				ORDER BY REPORT_TIME DESC
+
+		<if test="pageIndex!=null">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<select id="count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*) FROM <include refid="table_main" />
+		<where>
+			<if test="operator!=null and operator!=''">
+				AND OPERATOR IN (${operator})
+			</if>
+			<if test="department!=null and department!=''">
+				AND DEPARTMENT like '%${department}%'
+			</if>
+			<if test="reportTime!=null and reportTime!=''">
+				AND TO_CHAR(REPORT_TIME,'YYYY-MM-DD') = '${reportTime}'
+			</if>
+			<if test="reportUnit!=null and reportUnit!=''">
+				AND REPORT_UNIT like '%${reportUnit}%'
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS like '%${status}%'
+			</if>
+			<if test="noticeType!=null and noticeType!=''">
+				AND NOTICE_TYPE like '%${noticeType}%'
+			</if>
+			<if test="noticeSerial!=null and noticeSerial!=''">
+				AND NOTICE_SERIAL like '%${noticeSerial}%'
+			</if>
+			<if test="noticeId!=null and noticeId!=''and findAll == null">
+				AND NOTICE_ID = '${noticeId}'
+				AND STATUS != '已通过'
+			</if>
+			<if test="noticeId != null and noticeId != ''and findAll != null and findAll">
+				AND NOTICE_ID = #{noticeId}
+			</if>
+			<if test="wareHouseIds!=null">
+				AND REPORT_UNIT_ID IN (<foreach collection="wareHouseIds" separator="," item="item">#{item}</foreach>)
+			</if>
+		</where>
+	</select>
+	
+	<select id="listDetail" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateScheduleDetailDao.rotateScheduleDetailResultMap">
+		SELECT <include refid="columns_detail" /> FROM <include refid="table_detail" />
+		<where>
+			<if test="scheduleId!=null and scheduleId!=''">
+				AND SCHEDULE_ID = '${scheduleId}'
+			</if>
+		</where>
+	</select>
+	
+	<select id="listScheduleHistory" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateScheduleDao.rotateScheduleResultMap">
+		<if test="pageIndex!=null">
+		select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT <include refid="s_columns_main" /> FROM  
+				(SELECT
+					ROW_NUMBER () OVER (
+						PARTITION BY NOTICE_SERIAL
+						ORDER BY REPORT_TIME DESC
+					) rn,
+					T_ROTATE_SCHEDULE.*
+				FROM
+					<include refid="table_main" />
+				WHERE T_ROTATE_SCHEDULE.STATUS = '已通过'
+				) T 
+		<where>
+			AND t.rn=1
+			<if test="operator!=null and operator!=''">
+				AND OPERATOR in (${operator})
+			</if>
+			<if test="department!=null and department!=''">
+				AND DEPARTMENT like '%${department}%'
+			</if>
+			<if test="reportTime!=null and reportTime!=''">
+				AND TO_CHAR(REPORT_TIME,'YYYY-MM-DD') = '${reportTime}'
+			</if>
+			<if test="reportUnit!=null and reportUnit!=''">
+				AND REPORT_UNIT like '%${reportUnit}%'
+			</if>
+			<if test="noticeType!=null and noticeType!=''">
+				AND NOTICE_TYPE like '%${noticeType}%'
+			</if>
+			<if test="noticeSerial!=null and noticeSerial!=''">
+				AND NOTICE_SERIAL like '%${noticeSerial}%'
+			</if>
+			<if test="baseNames!=null">
+				AND REPORT_UNIT IN (<foreach collection="baseNames" separator="," item="item">#{item}</foreach>)
+			</if>
+		</where>
+
+		
+				ORDER BY REPORT_TIME DESC
+
+		<if test="pageIndex!=null">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<select id="countScheduleHistory" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(0) FROM  
+				(SELECT
+					ROW_NUMBER () OVER (
+						PARTITION BY NOTICE_SERIAL
+						ORDER BY REPORT_TIME DESC
+					) rn,
+					T_ROTATE_SCHEDULE.*
+				FROM
+					<include refid="table_main" />
+				) T
+		<where>
+			AND t.rn=1
+			<if test="operator!=null and operator!=''">
+				AND OPERATOR in (%${operator}%)
+			</if>
+			<if test="department!=null and department!=''">
+				AND DEPARTMENT like '%${department}%'
+			</if>
+			<if test="reportTime!=null and reportTime!=''">
+				AND TO_CHAR(REPORT_TIME,'YYYY-MM-DD') = '${reportTime}'
+			</if>
+			<if test="reportUnit!=null and reportUnit!=''">
+				AND REPORT_UNIT like '%${reportUnit}%'
+			</if>
+			<if test="noticeType!=null and noticeType!=''">
+				AND NOTICE_TYPE like '%${noticeType}%'
+			</if>
+			<if test="noticeSerial!=null and noticeSerial!=''">
+				AND NOTICE_SERIAL like '%${noticeSerial}%'
+			</if>
+			<if test="baseNames!=null">
+				AND REPORT_UNIT IN (<foreach collection="baseNames" separator="," item="item">#{item}</foreach>)
+			</if>
+		</where>
+	</select>
+	
+	<select id="listDetailHistory" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateScheduleDetailDao.rotateScheduleDetailResultMap">
+		SELECT <include refid="columns_detail" /> FROM <include refid="table_detail" />
+		<where>
+			AND SCHEDULE_ID IN (
+				SELECT ID FROM <include refid="table_main" />
+				<where>
+					AND STATUS = '已通过'
+					<if test="noticeSerial!=null and noticeSerial!=''">
+						AND NOTICE_SERIAL = #{noticeSerial}
+					</if>
+				</where>
+				)
+		</where>
+		ORDER BY REPORT_TIME DESC
+	</select>
+	
+	<select id="getPriorPeriod" parameterType="java.lang.String" resultType="java.lang.Double">
+		SELECT TOTAL FROM <include refid="table_detail" />
+		<where>
+			AND DEAL_SERIAL = '${_parameter}'
+			AND REPORT_TIME >= (
+				select max(REPORT_TIME) from <include refid="table_detail" />
+				WHERE DEAL_SERIAL ='${_parameter}'
+				)
+		</where>
+	</select>
+	
+	<select id="checkPrimaryOfDetail" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(0) FROM <include refid="table_detail" />
+		<where>
+			<if test="${dealSerial!=null and dealSerial!=''}">
+				AND DEAL_SERIAL = '${dealSerial}'
+			</if>
+		</where>
+	</select>
+	
+	<select id="gatherScheduleDetail" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateScheduleDetailDao.rotateScheduleDetailResultMap">
+		<if test="pageIndex!=null">
+		select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT sum(A.QUANTITY) AS QUANTITY,sum(A.PRIOR_PERIOD) AS PRIOR_PERIOD,sum(A.CURRENT_PERIOD) AS CURRENT_PERIOD,
+			sum(A.TOTAL) AS TOTAL,avg(A.COMPLE_RATE) AS COMPLE_RATE,D.SCHEME_BATCH,A.GRAIN_TYPE,A.MODIFY_TIME FROM
+		(
+			SELECT
+			*
+			FROM
+			(
+				SELECT
+					ROW_NUMBER () OVER (
+						PARTITION BY DEAL_SERIAL
+						ORDER BY REPORT_TIME DESC
+					) rn,
+					R.*
+				FROM
+					(
+					SELECT E.*,S.STATUS FROM T_ROTATE_SCHEDULE_DETAIL E
+					LEFT JOIN T_ROTATE_SCHEDULE S 
+					ON E.SCHEDULE_ID = S.ID 
+					<where>
+					<if test="status!=null and status!=''">
+						AND S.STATUS = #{status}
+					</if>
+					<if test="grainType!=null and grainType!=''">
+						AND E.GRAIN_TYPE = #{grainType}
+					</if>
+					</where>
+					) R
+			) T
+			WHERE t.rn=1
+		) A LEFT JOIN (
+			SELECT B.DEAL_SERIAL,C.SCHEME_BATCH FROM T_ROTATE_CONCLUTE_DETAIL B LEFT JOIN  T_ROTATE_SCHEME_DETAIL C 
+			ON B.SCHEME_ID = C.D_ID 
+			WHERE C.SCHEME_BATCH IS NOT NULL 
+			<if test="schemeType!=null and schemeType!=''">
+				AND C.SCHEME_TYPE = #{schemeType}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				AND TO_CHAR(C.END_TIME,'YYYY-MM-DD') = #{endTime}
+			</if>
+			<if test="schemeBatch!=null and schemeBatch!=''">
+				AND C.SCHEME_BATCH = #{schemeBatch}
+			</if>
+		) D ON A.DEAL_SERIAL = D.DEAL_SERIAL WHERE D.DEAL_SERIAL IS NOT NULL GROUP BY D.SCHEME_BATCH,A.GRAIN_TYPE,A.MODIFY_TIME
+		<if test="(pageIndex!=null and pageIndex!='') and (pageSize!=null and pageSize!='')">
+					) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<select id="countGather" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(0) FROM
+		(SELECT sum(A.QUANTITY) AS QUANTITY,sum(A.PRIOR_PERIOD) AS PRIOR_PERIOD,sum(A.CURRENT_PERIOD) AS CURRENT_PERIOD,
+			sum(A.TOTAL) AS TOTAL,avg(A.COMPLE_RATE) AS COMPLE_RATE,D.SCHEME_BATCH SCHEME_BATCH,A.GRAIN_TYPE,A.MODIFY_TIME FROM
+		(
+			SELECT
+			*
+			FROM
+			(
+				SELECT
+					ROW_NUMBER () OVER (
+						PARTITION BY DEAL_SERIAL
+						ORDER BY REPORT_TIME DESC
+					) rn,
+					R.*
+				FROM
+					(
+					SELECT E.*,S.STATUS FROM T_ROTATE_SCHEDULE_DETAIL E
+					LEFT JOIN T_ROTATE_SCHEDULE S 
+					ON E.SCHEDULE_ID = S.ID 
+					<where>
+					<if test="status!=null and status!=''">
+						AND S.STATUS = #{status}
+					</if>
+					<if test="grainType!=null and grainType!=''">
+						AND E.GRAIN_TYPE = #{grainType}
+					</if>
+					</where>
+					) R
+			) T
+			WHERE t.rn=1
+			
+		) A LEFT JOIN (
+			SELECT B.DEAL_SERIAL,C.SCHEME_BATCH FROM T_ROTATE_CONCLUTE_DETAIL B LEFT JOIN  T_ROTATE_SCHEME_DETAIL C 
+			ON B.SCHEME_ID = C.D_ID 
+			WHERE C.SCHEME_BATCH IS NOT NULL 
+			<if test="schemeType!=null and schemeType!=''">
+				AND C.SCHEME_TYPE = #{schemeType}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				AND TO_CHAR(C.END_TIME,'YYYY-MM-DD') = #{endTime}
+			</if>
+			<if test="schemeBatch!=null and schemeBatch!=''">
+				AND C.SCHEME_BATCH = #{schemeBatch}
+			</if>
+		) D ON A.DEAL_SERIAL = D.DEAL_SERIAL WHERE D.DEAL_SERIAL IS NOT NULL GROUP BY D.SCHEME_BATCH,A.GRAIN_TYPE,A.MODIFY_TIME)
+	</select>
+	
+	<select id="viewGatherDetail" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateScheduleDetailDao.rotateScheduleDetailResultMap">
+		SELECT A.*,D.* FROM
+		(
+			SELECT
+			*
+			FROM
+			(
+				SELECT
+					ROW_NUMBER () OVER (
+						PARTITION BY DEAL_SERIAL
+						ORDER BY REPORT_TIME DESC
+					) rn,
+					R.*
+				FROM
+					(
+					SELECT E.*,S.REPORT_UNIT,S.STATUS FROM T_ROTATE_SCHEDULE_DETAIL E
+					LEFT JOIN T_ROTATE_SCHEDULE S 
+					ON E.SCHEDULE_ID = S.ID 
+					<if test="status!=null and status!=''">
+						WHERE S.STATUS = #{status}
+					</if>
+					) R
+			) T
+			WHERE t.rn=1
+			
+		) A LEFT JOIN (
+			SELECT B.DEAL_SERIAL,B.BID_SERIAL,
+			B.DEAL_UNIT,B.DELIVERY_START,B.DELIVERY_END,B.DEAL_DATE,C.SCHEME_BATCH
+			FROM T_ROTATE_CONCLUTE_DETAIL B LEFT JOIN  T_ROTATE_SCHEME_DETAIL C 
+			ON B.SCHEME_ID = C.D_ID WHERE C.SCHEME_BATCH IS NOT NULL
+			<if test="schemeType!=null and schemeType!=''">
+				AND C.SCHEME_TYPE = #{schemeType}
+			</if>
+		) D ON A.DEAL_SERIAL = D.DEAL_SERIAL WHERE D.DEAL_SERIAL IS NOT NULL 
+			AND D.SCHEME_BATCH = #{schemeBatch}
+			AND A.GRAIN_TYPE = #{grainType}
+	</select>
+	
+	<update id="updateStatus" parameterType="java.util.HashMap">
+		UPDATE <include refid="table_main" />
+		SET
+		STATUS = #{status}
+		<where>
+			<if test="id!=null and id!=''">
+				AND ID = #{id}
+			</if>
+		</where>
+	</update>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		begin
+		DELETE FROM <include refid="table_main" /> WHERE ID = #{_parameter};
+		DELETE FROM <include refid="table_detail" /> WHERE SCHEDULE_ID = #{_parameter};
+		end;
+	</delete>
+</mapper>

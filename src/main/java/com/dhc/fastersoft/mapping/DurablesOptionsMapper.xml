@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.DurablesOptionsDao">
+  <resultMap id="DurablesOptionsResultMap" type="com.dhc.fastersoft.entity.DurablesOptions">
+    <result column="ID" jdbcType="NVARCHAR" property="id" />
+    <result column="DURABLES_ID" jdbcType="NVARCHAR" property="durablesId" />
+    <result column="OPTION_NAME" jdbcType="NVARCHAR" property="optionName" />
+    <result column="OPTION_MODEL" jdbcType="NVARCHAR" property="optionModel" />
+    <result column="OPTION_NUM" jdbcType="INTEGER" property="optionNum" />
+    <result column="OPTION_PLACE" jdbcType="NVARCHAR" property="optionPlace" />
+    <result column="CREATOR" jdbcType="NVARCHAR" property="creator" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  
+  
+  <select id="pageQuery" parameterType="java.util.HashMap" resultMap="DurablesOptionsResultMap">
+		${start} 
+		SELECT 
+			ID id, DURABLES_ID durablesId, OPTION_NAME optionName, 
+      		OPTION_MODEL optionModel, OPTION_NUM optionNum, OPTION_PLACE optionPlace, CREATOR creator, 
+      		TO_CHAR(CREATE_DATE,'YYYY-MM-DD') createDate
+		 FROM T_MATERIAL_DURABLES_OPTIONS 	
+		 WHERE 1=1
+		 	
+		order by CREATE_DATE DESC
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_MATERIAL_DURABLES_OPTIONS  
+		WHERE 1=1		 
+		
+	</select>
+	
+	<select id="getDurablesOptionsById" parameterType="java.lang.String" resultMap="DurablesOptionsResultMap">
+		SELECT 
+			ID id, DURABLES_ID durablesId, OPTION_NAME optionName, 
+      		OPTION_MODEL optionModel, OPTION_NUM optionNum, OPTION_PLACE optionPlace, CREATOR creator, 
+      		TO_CHAR(CREATE_DATE,'YYYY-MM-DD') createDate
+		 from T_MATERIAL_DURABLES_OPTIONS		
+		where DURABLES_ID=#{id,jdbcType=NVARCHAR}
+		
+	</select>
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.DurablesOptions" >
+  
+  insert into T_MATERIAL_DURABLES_OPTIONS (ID, DURABLES_ID, OPTION_NAME, 
+      OPTION_MODEL, OPTION_NUM, OPTION_PLACE, 
+      CREATOR, CREATE_DATE)
+    values (#{id,jdbcType=NVARCHAR}, #{durablesId,jdbcType=NVARCHAR}, #{optionName,jdbcType=NVARCHAR}, 
+      #{optionModel,jdbcType=NVARCHAR}, #{optionNum,jdbcType=INTEGER}, #{optionPlace,jdbcType=NVARCHAR}, 
+      #{creator,jdbcType=NVARCHAR}, sysdate)
+      
+   
+  </insert>
+  <update id="update" parameterType="com.dhc.fastersoft.entity.DurablesOptions">
+		UPDATE T_MATERIAL_DURABLES_OPTIONS SET 		
+      DURABLES_ID = #{durablesId,jdbcType=NVARCHAR},
+      OPTION_NAME = #{optionName,jdbcType=NVARCHAR},
+      OPTION_MODEL = #{optionModel,jdbcType=NVARCHAR},
+      OPTION_NUM = #{optionNum,jdbcType=INTEGER},
+      OPTION_PLACE = #{optionPlace,jdbcType=NVARCHAR},
+      CREATOR = #{creator,jdbcType=NVARCHAR},
+      CREATE_DATE = sysdate
+	
+		WHERE ID='${id}'
+		and DURABLES_ID='${durablesId}'
+	</update>
+	
+	
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_MATERIAL_DURABLES_OPTIONS
+		WHERE  DURABLES_ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+  
+</mapper>

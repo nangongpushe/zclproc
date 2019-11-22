@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.report.ReportBzwcrmxDao" >
+    <resultMap id="ReportBzwcrmxResultMap" type="com.dhc.fastersoft.entity.report.ReportBzwcrmx" >
+        <result column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+        <result column="REPORT_MONTH" property="reportMonth" jdbcType="VARCHAR" />
+        <result column="REPORT_WAREHOUSE" property="reportWarehouse" jdbcType="VARCHAR" />
+        <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+        <result column="DETAIL_DATE" property="detailDate" jdbcType="VARCHAR" />
+        <result column="SUMMARY" property="summary" jdbcType="VARCHAR" />
+        <result column="PRIOR_NEW" property="priorNew" jdbcType="DECIMAL" />
+        <result column="PRIOR_OLD" property="priorOld" jdbcType="DECIMAL" />
+        <result column="PRIOR_MIXED" property="priorMixed" jdbcType="DECIMAL" />
+        <result column="PRIOR_WASTE" property="priorWaste" jdbcType="DECIMAL" />
+        <result column="INCOME_NEW" property="incomeNew" jdbcType="DECIMAL" />
+        <result column="INCOME_OLD" property="incomeOld" jdbcType="DECIMAL" />
+        <result column="INCOME_MIXED" property="incomeMixed" jdbcType="DECIMAL" />
+        <result column="INCOME_WASTE" property="incomeWaste" jdbcType="DECIMAL" />
+        <result column="EXPEND_NEW" property="expendNew" jdbcType="DECIMAL" />
+        <result column="EXPEND_OLD" property="expendOld" jdbcType="DECIMAL" />
+        <result column="EXPEND_MIXED" property="expendMixed" jdbcType="DECIMAL" />
+        <result column="EXPEND_WASTE" property="expendWaste" jdbcType="DECIMAL" />
+        <result column="BALANCE_NEW" property="balanceNew" jdbcType="DECIMAL" />
+        <result column="BALANCE_OLD" property="balanceOld" jdbcType="DECIMAL" />
+        <result column="BALANCE_MIXED" property="balanceMixed" jdbcType="DECIMAL" />
+        <result column="BALANCE_WASTE" property="balanceWaste" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="ORDERNUM" property="ordernum" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <sql id="columns">
+        REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+        REPORT_NAME,
+        DETAIL_DATE,
+          SUMMARY,
+        PRIOR_NEW, PRIOR_OLD, PRIOR_MIXED,
+        PRIOR_WASTE, INCOME_NEW, INCOME_OLD,
+        INCOME_MIXED, INCOME_WASTE, EXPEND_NEW,
+        EXPEND_OLD, EXPEND_MIXED, EXPEND_WASTE,
+        BALANCE_NEW, BALANCE_OLD, BALANCE_MIXED,
+        BALANCE_WASTE,REMARK,ORDERNUM
+    </sql>
+
+
+
+
+
+    <sql id="tablename"> T_REPORT_MONTH_BZWCRMX </sql>
+
+    <insert id="add" parameterType="com.dhc.fastersoft.entity.report.ReportBzwcrmx" >
+        insert into <include refid="tablename"/> ( <include refid="columns"/> )
+        values (#{reportId,jdbcType=VARCHAR}, #{reportMonth,jdbcType=VARCHAR}, #{reportWarehouse,jdbcType=VARCHAR},
+        #{reportName,jdbcType=VARCHAR}, to_date(#{detailDate,jdbcType=DATE}, 'yyyy-mm-dd'), #{summary,jdbcType=VARCHAR},
+        #{priorNew,jdbcType=DECIMAL}, #{priorOld,jdbcType=DECIMAL}, #{priorMixed,jdbcType=DECIMAL},
+        #{priorWaste,jdbcType=DECIMAL}, #{incomeNew,jdbcType=DECIMAL}, #{incomeOld,jdbcType=DECIMAL},
+        #{incomeMixed,jdbcType=DECIMAL}, #{incomeWaste,jdbcType=DECIMAL}, #{expendNew,jdbcType=DECIMAL},
+        #{expendOld,jdbcType=DECIMAL}, #{expendMixed,jdbcType=DECIMAL}, #{expendWaste,jdbcType=DECIMAL},
+        #{balanceNew,jdbcType=DECIMAL}, #{balanceOld,jdbcType=DECIMAL}, #{balanceMixed,jdbcType=DECIMAL},
+        #{balanceWaste,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{ordernum,jdbcType=DECIMAL})
+    </insert>
+
+
+
+    <delete id="deleteByReportId" parameterType="String">
+        DELETE FROM <include refid="tablename"/> WHERE
+        REPORT_ID=#{reportId}
+    </delete>
+
+    <select id="listBzwcrmxByReportId" parameterType="String" resultMap="ReportBzwcrmxResultMap">
+        SELECT REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+        REPORT_NAME,
+        to_char(DETAIL_DATE,'yyyy-mm-dd') DETAIL_DATE,
+        SUMMARY,
+        PRIOR_NEW, PRIOR_OLD, PRIOR_MIXED,
+        PRIOR_WASTE, INCOME_NEW, INCOME_OLD,
+        INCOME_MIXED, INCOME_WASTE, EXPEND_NEW,
+        EXPEND_OLD, EXPEND_MIXED, EXPEND_WASTE,
+        BALANCE_NEW, BALANCE_OLD, BALANCE_MIXED,
+        BALANCE_WASTE,REMARK,ORDERNUM FROM <include refid="tablename"/>
+        WHERE REPORT_ID = #{reportId} ORDER BY ORDERNUM
+    </select>
+
+
+    <select id="listSumBzwcrmx" parameterType="String" resultMap="ReportBzwcrmxResultMap">
+        SELECT  REPORT_ID,REPORT_MONTH, REPORT_WAREHOUSE, REPORT_NAME,DETAIL_DATE,nvl(SUMMARY,0) SUMMARY,nvl(PRIOR_NEW,0) PRIOR_NEW
+        ,nvl(PRIOR_OLD,0) PRIOR_OLD,nvl(PRIOR_MIXED,0) PRIOR_MIXED,nvl(PRIOR_WASTE,0) PRIOR_WASTE,nvl(INCOME_NEW,0) INCOME_NEW,
+        nvl(INCOME_OLD,0) INCOME_OLD,nvl(INCOME_MIXED,0) INCOME_MIXED,nvl(INCOME_WASTE,0) INCOME_WASTE,nvl(EXPEND_NEW,0) EXPEND_NEW,
+        nvl(EXPEND_OLD,0) EXPEND_OLD,nvl(EXPEND_MIXED,0) EXPEND_MIXED,nvl(EXPEND_WASTE,0) EXPEND_WASTE,nvl(BALANCE_NEW,0) BALANCE_NEW,
+        nvl(BALANCE_OLD,0) BALANCE_OLD,nvl(BALANCE_MIXED,0) BALANCE_MIXED,nvl(BALANCE_WASTE,0) BALANCE_WASTE,REMARK,ORDERNUM
+        FROM
+        <include refid="tablename"/>
+        WHERE report_id IN (SELECT ID FROM t_report_month WHERE gather_id=#{gatherId})
+        ORDER BY REPORT_WAREHOUSE
+    </select>
+
+
+</mapper>

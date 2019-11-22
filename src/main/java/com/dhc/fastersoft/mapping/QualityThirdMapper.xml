@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualityThirdMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualityThird" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ACCEPTED_UNIT" property="acceptedUnit" jdbcType="VARCHAR" />
+    <result column="SAMPLE_NO" property="sampleNo" jdbcType="VARCHAR" />
+    <result column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR" />
+    <result column="INSPECTED_UNIT" property="inspectedUnit" jdbcType="VARCHAR" />
+    <result column="TEST_DATE" property="testDate" jdbcType="TIMESTAMP" />
+    <result column="VALIDITY" property="validity" jdbcType="VARCHAR" />
+    <result column="BASIC_NUMBER" property="basicNumber" jdbcType="DECIMAL" />
+    <result column="GRADE" property="grade" jdbcType="VARCHAR" />
+    <result column="STORE_TYPE" property="storeType" jdbcType="VARCHAR" />
+    <result column="SAMPLE_PLACE" property="samplePlace" jdbcType="VARCHAR" />
+    <result column="ORIGIN" property="origin" jdbcType="VARCHAR" />
+    <result column="STORE_DATE" property="storeDate" jdbcType="TIMESTAMP" />
+      <result column="GenYear" property="genYear" jdbcType="TIMESTAMP" />
+
+    <result column="TEMPLET_NO" property="templetNo" jdbcType="VARCHAR" />
+    <result column="QUALITY_DETERMIN" property="qualityDetermin" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="VARCHAR" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+    <collection property="qualityThirdItems" resultMap="com.dhc.fastersoft.dao.QualityThirdItemMapper.BaseResultMap" />
+  </resultMap>
+  <sql id="select">
+  	   ID,
+       ACCEPTED_UNIT,
+       SAMPLE_NO,
+       SAMPLE_NAME,
+       INSPECTED_UNIT,
+       TO_CHAR(TEST_DATE,'YYYY-MM-DD') TEST_DATE,
+       VALIDITY,
+       BASIC_NUMBER,
+       GRADE,
+       STORE_TYPE,
+       SAMPLE_PLACE,
+       ORIGIN,
+       TO_CHAR(STORE_DATE,'YYYY-MM') STORE_DATE,
+       TEMPLET_NO,
+       QUALITY_DETERMIN,
+       CREATOR,
+       CREATE_DATE,
+       COMPANY,
+        TO_CHAR(GenYear,'YYYY') GenYear
+
+	</sql>
+	<sql id="criteria">
+  		<where>1=1
+			  <if test="sampleNo != null and sampleNo !=''" >
+	              AND SAMPLE_NO LIKE '%${sampleNo}%'
+		      </if>
+		      <if test="sampleName != null and sampleName != ''" >
+		          AND SAMPLE_NAME LIKE '%${sampleName}%'
+		      </if>
+		      <if test="inspectedUnit != null and inspectedUnit != ''">
+		          AND INSPECTED_UNIT like '%${inspectedUnit}%'
+		      </if>
+		      <if test="samplePlace != null and samplePlace != ''">
+		          AND SAMPLE_PLACE like '%${samplePlace}%'
+		      </if>
+                <if test="genYear != null and genYear != ''">
+
+                    AND GenYear =  to_date('${genYear}','YYYY')
+                </if>
+
+		</where>
+  </sql>
+   <!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_THIRD
+		<include refid="criteria"/>
+	</select>
+	<select id="countSampleNo" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_THIRD
+		<where>
+			  <if test="sampleNo != null and sampleNo !=''" >
+	              SAMPLE_NO = '${sampleNo}'
+		      </if>
+		</where>
+	</select>
+	<!-- 根据搜索条件查询计划列表 -->
+	<select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		${start} SELECT <include refid="select"/> FROM T_QUALITY_THIRD
+		<include refid="criteria"/>
+		ORDER BY CREATE_DATE,SAMPLE_NO DESC
+		${end}
+	</select>
+	<select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select <include refid="select"/> from T_QUALITY_THIRD WHERE ID='${id}'
+	</select>
+	<delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_QUALITY_THIRD WHERE ID='${id}'
+	</delete>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.QualityThird" >
+    insert into T_QUALITY_THIRD
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="acceptedUnit != null" >
+        ACCEPTED_UNIT,
+      </if>
+      <if test="sampleNo != null" >
+        SAMPLE_NO,
+      </if>
+      <if test="sampleName != null" >
+        SAMPLE_NAME,
+      </if>
+      <if test="inspectedUnit != null" >
+        INSPECTED_UNIT,
+      </if>
+      <if test="testDate != null" >
+        TEST_DATE,
+      </if>
+      <if test="validity != null" >
+        VALIDITY,
+      </if>
+      <if test="basicNumber != null" >
+        BASIC_NUMBER,
+      </if>
+      <if test="storeType != null" >
+        STORE_TYPE,
+      </if>
+      <if test="samplePlace != null" >
+        SAMPLE_PLACE,
+      </if>
+      <if test="origin != null" >
+        ORIGIN,
+      </if>
+      <if test="storeDate != null" >
+        STORE_DATE,
+      </if>
+      <if test="templetNo != null" >
+        TEMPLET_NO,
+      </if>
+      <if test="qualityDetermin != null" >
+        QUALITY_DETERMIN,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="company != null" >
+        COMPANY,
+      </if>
+      <if test="grade != null" >
+        GRADE,
+      </if>
+        <if test="genYear != null" >
+            GenYear,
+        </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptedUnit != null" >
+        #{acceptedUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleNo != null" >
+        #{sampleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleName != null" >
+        #{sampleName,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectedUnit != null" >
+        #{inspectedUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="testDate != null" >
+        to_date(#{testDate,jdbcType=VARCHAR}, 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="validity != null" >
+        to_date(#{validity,jdbcType=VARCHAR}, 'yyyy-mm-dd,hh24:mi:ss'), 
+      </if>
+      <if test="basicNumber != null" >
+        #{basicNumber,jdbcType=DECIMAL},
+      </if>
+      <if test="storeType != null" >
+        #{storeType,jdbcType=VARCHAR},
+      </if>
+      <if test="samplePlace != null" >
+        #{samplePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="origin != null" >
+        #{origin,jdbcType=VARCHAR},
+      </if>
+      <if test="storeDate != null" >
+        to_date(#{storeDate,jdbcType=VARCHAR}, 'yyyy-mm'),
+      </if>
+      <if test="templetNo != null" >
+        #{templetNo,jdbcType=VARCHAR},
+      </if>
+      <if test="qualityDetermin != null" >
+        #{qualityDetermin,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        to_date(#{createDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+        <if test="genYear != null" >
+            to_date(#{genYear,jdbcType=VARCHAR}, 'yyyy'),
+        </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.dhc.fastersoft.entity.QualityThird">
+			UPDATE T_QUALITY_THIRD SET
+	<trim suffixOverrides="," >
+	  <if test="acceptedUnit != null" >
+        ACCEPTED_UNIT='${acceptedUnit}',
+      </if>
+      <if test="sampleNo != null" >
+        SAMPLE_NO='${sampleNo}',
+      </if>
+      <if test="sampleName != null" >
+        SAMPLE_NAME='${sampleName}',
+      </if>
+      <if test="inspectedUnit != null" >
+        INSPECTED_UNIT='${inspectedUnit}',
+      </if>
+      <if test="testDate != null" >
+        TEST_DATE=to_date('${testDate}', 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="validity != null" >
+        VALIDITY=to_date('${validity}', 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="basicNumber != null" >
+        BASIC_NUMBER='${basicNumber}',
+      </if>
+      <if test="storeType != null" >
+        STORE_TYPE='${storeType}',
+      </if>
+      <if test="samplePlace != null" >
+        SAMPLE_PLACE='${samplePlace}',
+      </if>
+      <if test="origin != null" >
+        ORIGIN='${origin}',
+      </if>
+      <if test="storeDate != null" >
+        STORE_DATE=to_date('${storeDate}', 'yyyy-mm'),
+      </if>
+      <if test="templetNo != null" >
+        TEMPLET_NO='${templetNo}',
+      </if>
+      <if test="qualityDetermin != null" >
+        QUALITY_DETERMIN='${qualityDetermin}',
+      </if>
+      <if test="grade != null" >
+        GRADE='${grade}',
+      </if>
+       <if test="creator != null" >
+       CREATOR='${creator}' ,
+      </if>
+      <if test="createDate != null" >
+       CREATE_DATE= to_date('${createDate}','yyyy-MM-dd HH24:mi:ss'),
+      </if>
+      <if test="company != null" >
+       COMPANY= '${company}',
+      </if>
+        <if test="genYear != null" >
+            GenYear=to_date('${genYear}', 'yyyy'),
+        </if>
+
+      </trim>
+      		  WHERE ID='${id}'
+	</update>
+	
+	<select id="queryBySampleNo" parameterType="java.util.List" resultMap="BaseResultMap">
+		SELECT r.*,ri.* ,ri.REMARK AS D_REMARK FROM T_QUALITY_RESULT r
+		LEFT JOIN T_QUALITY_RESULT_ITEM ri on r. id = ri.RESULT_ID
+		where r.SAMPLE_NO IN 
+		<foreach item="sampleNo" collection="list" separator="," open="(" close=")">
+			#{sampleNo}
+		</foreach>
+        AND R.CHECK_TYPE = '2'
+        ORDER BY ORDER_NO
+	</select>
+</mapper>
+

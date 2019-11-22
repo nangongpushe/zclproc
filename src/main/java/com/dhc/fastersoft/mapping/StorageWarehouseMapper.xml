@@ -1,0 +1,919 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dhc.fastersoft.dao.StorageWarehouseDao">
+    <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.StorageWarehouse">
+        <result column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="WAREHOUSE_CODE" jdbcType="VARCHAR" property="warehouseCode"/>
+        <result column="WAREHOUSE_NAME" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="WAREHOUSE_SHORT" jdbcType="VARCHAR" property="warehouseShort"/>
+        <result column="WAREHOUSE_NATURE" jdbcType="VARCHAR" property="warehouseNature"/>
+        <result column="WAREHOUSE_TYPE" jdbcType="VARCHAR" property="warehouseType"/>
+        <result column="COMPLETION_DATE" jdbcType="VARCHAR" property="completionDate"/>
+        <result column="STORAGE_CAPACITY" jdbcType="DECIMAL" property="storageCapacity"/>
+        <result column="ACREAGE" jdbcType="DECIMAL" property="acreage"/>
+        <result column="TELPHONE" jdbcType="VARCHAR" property="telphone"/>
+        <result column="FAX" jdbcType="VARCHAR" property="fax"/>
+        <result column="PROVINCE" jdbcType="VARCHAR" property="province"/>
+        <result column="PROVINCE_CODE" jdbcType="VARCHAR" property="provinceCode"/>
+        <result column="CITY" jdbcType="VARCHAR" property="city"/>
+        <result column="CITY_CODE" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="AREA" jdbcType="VARCHAR" property="area"/>
+        <result column="AREA_CODE" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="POSTALCODE" jdbcType="VARCHAR" property="postalcode"/>
+        <result column="CREATOR" jdbcType="VARCHAR" property="creator"/>
+        <result column="CREATORID" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="isHost" jdbcType="VARCHAR" property="isHost"/>
+        <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="ENTERPRISE_NAME" jdbcType="VARCHAR" property="enterpriseName"/>
+        <result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="organizationCode"/>
+        <result column="SOCIAL_CREDIT_CODE" jdbcType="VARCHAR" property="socialCreditCode"/>
+        <result column="ENTERPRISE_ID" jdbcType="VARCHAR" property="enterpriseId"/>
+        <result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo"/>
+
+        <result column="CONTACTS" jdbcType="VARCHAR" property="contacts"/>
+        <result column="CONTACTNUMBER" jdbcType="VARCHAR" property="contactNumber"/>
+        <result column="IS_INPUT" jdbcType="INTEGER" property="isInput"/>
+    </resultMap>
+    <resultMap id="BaseResultMap1" type="com.dhc.fastersoft.entity.StorageWarehouse">
+        <result column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="WAREHOUSE_CODE" jdbcType="VARCHAR" property="warehouseCode"/>
+        <result column="WAREHOUSE_NAME" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="WAREHOUSE_SHORT" jdbcType="VARCHAR" property="warehouseShort"/>
+        <result column="WAREHOUSE_NATURE" jdbcType="VARCHAR" property="warehouseNature"/>
+        <result column="WAREHOUSE_TYPE" jdbcType="VARCHAR" property="warehouseType"/>
+        <result column="COMPLETION_DATE" jdbcType="VARCHAR" property="completionDate"/>
+        <result column="STORAGE_CAPACITY" jdbcType="DECIMAL" property="storageCapacity"/>
+        <result column="ACREAGE" jdbcType="DECIMAL" property="acreage"/>
+        <result column="TELPHONE" jdbcType="VARCHAR" property="telphone"/>
+        <result column="FAX" jdbcType="VARCHAR" property="fax"/>
+        <result column="PROVINCE" jdbcType="VARCHAR" property="province"/>
+        <result column="PROVINCE_CODE" jdbcType="VARCHAR" property="provinceCode"/>
+        <result column="CITY" jdbcType="VARCHAR" property="city"/>
+        <result column="CITY_CODE" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="AREA" jdbcType="VARCHAR" property="area"/>
+        <result column="AREA_CODE" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="POSTALCODE" jdbcType="VARCHAR" property="postalcode"/>
+        <result column="CREATOR" jdbcType="VARCHAR" property="creator"/>
+        <result column="CREATORID" jdbcType="VARCHAR" property="creatorId"/>
+        <result column="isHost" jdbcType="VARCHAR" property="isHost"/>
+        <result column="isStop" jdbcType="VARCHAR" property="isStop"/>
+        <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="ENTERPRISE_NAME" jdbcType="VARCHAR" property="enterpriseName"/>
+        <result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="organizationCode"/>
+        <result column="SOCIAL_CREDIT_CODE" jdbcType="VARCHAR" property="socialCreditCode"/>
+        <result column="ENTERPRISE_ID" jdbcType="VARCHAR" property="enterpriseId"/>
+        <result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="CONTACTS" jdbcType="VARCHAR" property="contacts"/>
+        <result column="CONTACTNUMBER" jdbcType="VARCHAR" property="contactNumber"/>
+    </resultMap>
+
+    <sql id="columns">
+		ID,WAREHOUSE_CODE,WAREHOUSE_NAME,WAREHOUSE_SHORT,WAREHOUSE_NATURE,WAREHOUSE_TYPE,COMPLETION_DATE,
+		STORAGE_CAPACITY,ACREAGE,TELPHONE,FAX,PROVINCE,PROVINCE_CODE,CITY,CITY_CODE,AREA,AREA_CODE,ADDRESS,
+		LONGITUDE,LATITUDE,POSTALCODE,CREATOR,CREATE_DATE,REMARK,ENTERPRISE_NAME,ORGANIZATION_CODE,SOCIAL_CREDIT_CODE,creatorId,isHost,ENTERPRISE_ID,ORDER_NO
+  </sql>
+
+    <sql id="columns1">
+		ss.ID,ss.WAREHOUSE_CODE,ss.WAREHOUSE_NAME,ss.WAREHOUSE_SHORT,ss.WAREHOUSE_NATURE,
+		ss.WAREHOUSE_TYPE,ss.COMPLETION_DATE,
+		ss.STORAGE_CAPACITY,ss.ACREAGE,ss.TELPHONE,ss.FAX,ss.PROVINCE,ss.PROVINCE_CODE,ss.CITY,
+		ss.CITY_CODE,ss.AREA,ss.AREA_CODE,ss.ADDRESS,
+		ss.LONGITUDE,ss.LATITUDE,ss.POSTALCODE,ss.CREATE_DATE,ss.REMARK,ss.creator,
+		tsn.ENTERPRISE_NAME AS ENTERPRISE_NAME,ss.ORGANIZATION_CODE,tsn.SOCIAL_CREDIT_CODE AS SOCIAL_CREDIT_CODE,ss.creatorId,ss.isHost,ss.ENTERPRISE_ID,ss.ORDER_NO,ss.isStop
+	</sql>
+
+    <sql id="tablename"> T_STORAGE_WAREHOUSE </sql>
+
+    <insert id="insert" parameterType="com.dhc.fastersoft.entity.StorageWarehouse">
+        insert into <include refid="tablename"></include> (<include refid="columns"></include>)
+        values (#{id,jdbcType=VARCHAR}, #{warehouseCode,jdbcType=VARCHAR}, #{warehouseName,jdbcType=VARCHAR},
+        #{warehouseShort,jdbcType=VARCHAR}, #{warehouseNature,jdbcType=VARCHAR}, #{warehouseType,jdbcType=VARCHAR},
+        #{completionDate,jdbcType=VARCHAR}, #{storageCapacity,jdbcType=DECIMAL}, #{acreage,jdbcType=DECIMAL},
+        #{telphone,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
+        #{provinceCode,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR},
+        #{area,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+        #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{postalcode,jdbcType=VARCHAR},
+        #{creator,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
+        #{enterpriseName,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR}, #{socialCreditCode,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR},#{isHost,jdbcType=VARCHAR},#{enterpriseId,jdbcType=VARCHAR},#{orderNo,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="getPrimKey" resultType="java.lang.String">
+		SELECT SEQ_STORAGEWAREHOUSE.NEXTVAL FROM DUAL
+	</select>
+    <select id="getWarehouseName" resultType="java.lang.String">
+		select e.WAREHOUSE_NAME from T_STORAGE_WAREHOUSE e where e.warehouse_short = #{warehouseShort, jdbcType=VARCHAR}
+	</select>
+
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.StorageWarehouse">
+        INSERT INTO
+        <include refid="tablename"/>
+        (<include refid="columns"/>,isStop)
+        VALUES (
+        #{id,jdbcType=VARCHAR},#{warehouseCode,jdbcType=VARCHAR},#{warehouseName,jdbcType=VARCHAR},
+        #{warehouseShort,jdbcType=VARCHAR},#{warehouseNature,jdbcType=VARCHAR},#{warehouseType,jdbcType=VARCHAR},
+        #{completionDate,jdbcType=VARCHAR},#{storageCapacity,jdbcType=NUMERIC},#{acreage,jdbcType=NUMERIC},#{telphone,jdbcType=VARCHAR},
+        #{fax,jdbcType=VARCHAR},#{province,jdbcType=VARCHAR},#{provinceCode,jdbcType=VARCHAR},#{city,jdbcType=VARCHAR},
+        #{cityCode,jdbcType=VARCHAR},#{area,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR},
+        #{address,jdbcType=VARCHAR},#{longitude,jdbcType=NUMERIC},#{latitude,jdbcType=NUMERIC},#{postalcode,jdbcType=VARCHAR},
+        #{creator,jdbcType=VARCHAR},SYSDATE,#{remark,jdbcType=VARCHAR},#{enterpriseName,jdbcType=VARCHAR},#{organizationCode,jdbcType=VARCHAR},
+        #{socialCreditCode,jdbcType=VARCHAR},#{creatorId,jdbcType=VARCHAR},#{isHost,jdbcType=VARCHAR},#{enterpriseId,jdbcType=VARCHAR},#{orderNo,jdbcType=VARCHAR},#{isStop,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap1">
+        ${start} SELECT
+        <include refid="columns1"/>
+        from T_STORAGE_WAREHOUSE ss
+        LEFT JOIN T_STORE_ENTERPRISE tsn on ss.ENTERPRISE_ID = tsn.ID
+        <where>
+            <if test="province != null and province != ''">
+                AND ss.PROVINCE LIKE '%${province}%'
+            </if>
+            <if test="city != null and city != ''">
+                AND ss.CITY LIKE '%${city}%'
+            </if>
+            <if test="area != null and area != ''">
+                AND ss.AREA LIKE '%${area}%'
+            </if>
+            <if test="name != null and name != ''">
+                AND ss.WAREHOUSE_NAME LIKE '%${name}%'
+            </if>
+            <if test="shortName != null and shortName != ''">
+                AND ss.WAREHOUSE_SHORT LIKE '%${shortName}%'
+            </if>
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND ss.ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND ss.ENTERPRISE_ID = #{enterpriseId, jdbcType=VARCHAR}
+            </if>
+            <if test="ishost != null and ishost != ''">
+                AND ss.ISHOST = #{ishost, jdbcType=VARCHAR}
+            </if>
+            <if test="warehouseCode != null and warehouseCode != ''">
+                AND ss.warehouse_code = #{warehouseCode, jdbcType=VARCHAR}
+            </if>
+            <if test="warehouseType != null and warehouseType != ''">
+                AND ss.warehouse_type = #{warehouseType, jdbcType=VARCHAR}
+            </if>
+            <if test="isstop != null and isstop != ''">
+                AND ss.ISSTOP = #{isstop, jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY ss.ORDER_NO ASC
+        ${end}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(ID) FROM
+        <include refid="tablename"/>
+        <where>
+            <if test="province != null and province != ''">
+                AND PROVINCE LIKE '%${province}%'
+            </if>
+            <if test="city != null and city != ''">
+                AND CITY LIKE '%${city}%'
+            </if>
+            <if test="area != null and area != ''">
+                AND AREA LIKE '%${area}%'
+            </if>
+            <if test="name != null and name != ''">
+                AND WAREHOUSE_NAME LIKE '%${name}%'
+            </if>
+            <if test="shortName != null and shortName != ''">
+                AND WAREHOUSE_SHORT LIKE '%${shortName}%'
+            </if>
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND ENTERPRISE_ID = #{enterpriseId, jdbcType=VARCHAR}
+            </if>
+            <if test="ishost != null and ishost != ''">
+                AND ISHOST = #{ishost, jdbcType=VARCHAR}
+            </if>
+            <if test="warehouseCode != null and warehouseCode != ''">
+                AND warehouse_code = #{warehouseCode, jdbcType=VARCHAR}
+            </if>
+            <if test="warehouseType != null and warehouseType != ''">
+                AND WAREHOUSE_TYPE = #{warehouseType, jdbcType=VARCHAR}
+            </if>
+            <if test="isstop != null and isstop != ''">
+                AND ISSTOP = #{isstop, jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <delete id="remove" parameterType="java.lang.String">
+        DELETE FROM
+        <include refid="tablename"></include>
+        <where>
+            ID = #{id}
+        </where>
+    </delete>
+
+    <update id="update" parameterType="com.dhc.fastersoft.entity.StorageWarehouse">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        WAREHOUSE_CODE = #{warehouseCode,jdbcType=VARCHAR}, WAREHOUSE_NAME = #{warehouseName,jdbcType=VARCHAR}, WAREHOUSE_SHORT = #{warehouseShort,jdbcType=VARCHAR},
+        WAREHOUSE_NATURE = #{warehouseNature,jdbcType=VARCHAR}, WAREHOUSE_TYPE = #{warehouseType,jdbcType=VARCHAR}, COMPLETION_DATE = #{completionDate,jdbcType=VARCHAR},
+        STORAGE_CAPACITY = #{storageCapacity,jdbcType=NUMERIC}, ACREAGE = #{acreage,jdbcType=NUMERIC}, TELPHONE =
+        #{telphone,jdbcType=VARCHAR}, FAX = #{fax,jdbcType=VARCHAR}, PROVINCE = #{province,jdbcType=VARCHAR},
+        PROVINCE_CODE = #{provinceCode,jdbcType=VARCHAR}, CITY = #{city,jdbcType=VARCHAR}, CITY_CODE =
+        #{cityCode,jdbcType=VARCHAR}, AREA = #{area,jdbcType=VARCHAR}, AREA_CODE = #{areaCode,jdbcType=VARCHAR},
+        ADDRESS = #{address,jdbcType=VARCHAR}, LONGITUDE = #{longitude,jdbcType=NUMERIC}, LATITUDE =
+        #{latitude,jdbcType=NUMERIC}, POSTALCODE = #{postalcode,jdbcType=VARCHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},ENTERPRISE_NAME = #{enterpriseName,jdbcType=VARCHAR},ORGANIZATION_CODE =
+        #{organizationCode,jdbcType=VARCHAR},SOCIAL_CREDIT_CODE = #{socialCreditCode,jdbcType=VARCHAR},CREATOR = #{creator,jdbcType=VARCHAR},
+        creatorId =#{creatorId,jdbcType=VARCHAR},isHost=#{isHost,jdbcType=VARCHAR},ENTERPRISE_ID=#{enterpriseId,jdbcType=VARCHAR},
+        ORDER_NO=#{orderNo,jdbcType=VARCHAR},ISSTOP=#{isStop,jdbcType=VARCHAR}
+        <where>
+            ID = '${id}'
+        </where>
+    </update>
+
+    <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="columns1"></include>
+        FROM
+        <include refid="tablename"></include>ss
+        LEFT JOIN T_STORE_ENTERPRISE tsn ON ss.ENTERPRISE_ID = tsn.ID
+        <where>
+            ss.ID = #{id,jdbcType=VARCHAR}
+        </where>
+    </select>
+
+    <select id="listWarehouseName" resultType="java.lang.String">
+        SELECT DISTINCT WAREHOUSE_NAME
+        FROM
+        <include refid="tablename"></include>
+    </select>
+
+
+    <select id="getAllWarehouse" resultType="java.lang.String" resultMap="BaseResultMap">
+        SELECT *
+        FROM
+        <include refid="tablename"></include>
+    </select>
+
+    <select id="getAllWarehouseOrderBy" resultType="java.lang.String" resultMap="BaseResultMap">
+        SELECT *
+        FROM
+        <include refid="tablename"></include> ORDER BY ORDER_NO ASC
+    </select>
+    <select id="listWareHouseByType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM T_STORAGE_WAREHOUSE
+        <where>
+            <if test="_parameter != null and _parameter != ''">
+                  and ENTERPRISE_NAME = #{_parameter,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="listWareHouseByCondition" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tablename"/>
+        <where>
+        <if test="warehouseName != null and warehouseName != ''">
+          AND WAREHOUSE_NAME = #{warehouseName}
+        </if>
+        <if test="warehouseShort != null and warehouseShort != ''">
+           AND WAREHOUSE_SHORT = #{warehouseShort}
+        </if>
+        <if test="enterpriseName != null and enterpriseName != ''">
+          AND ENTERPRISE_NAME = #{enterpriseName}
+        </if>
+        </where>
+    </select>
+
+    <select id="getWarehouseCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM T_STORAGE_WAREHOUSE
+        WHERE WAREHOUSE_NAME = #{warehouseName} OR WAREHOUSE_SHORT = #{warehouseName}
+    </select>
+
+    <select id="check" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM T_STORAGE_WAREHOUSE
+        <where>
+            <if test="warehouseId != null and warehouseId !=''">
+                AND ID = #{warehouseId}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                AND WAREHOUSE_NAME = '${warehouseName}'
+            </if>
+            <if test="warehouseCode != null and warehouseCode != ''">
+                AND WAREHOUSE_CODE = '${warehouseCode}'
+            </if>
+            <if test="warehouseShort != null and warehouseShort != ''">
+                AND WAREHOUSE_SHORT = '${warehouseShort}'
+            </if>
+            <if test="warehouseType!=null and warehouseType!=''">
+                AND WAREHOUSE_TYPE = '${warehouseType}'
+            </if>
+        </where>
+    </select>
+
+    <select id="getStorageWarehouse" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM T_STORAGE_WAREHOUSE
+        WHERE WAREHOUSE_CODE = #{_parameter} AND rownum = 1
+    </select>
+
+    <!-- 查询库点以及分片监管处于有效期内的代储点 -->
+    <select id="listValidWarehouse" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        <if test="pageIndex!=null and pageIndex!=''">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+            SELECT
+                id,
+                warehouse_name,
+                warehouse_short,
+                enterprise_name,
+                warehouse_code,
+                warehouse_type,
+                is_input
+            from
+            (
+            SELECT w.id,w.warehouse_name,w.warehouse_short,w.enterprise_name,w.warehouse_code,w.WAREHOUSE_TYPE,e.IS_INPUT
+            FROM t_storage_warehouse w
+            LEFT JOIN T_STORE_ENTERPRISE e on w.ENTERPRISE_ID = e.ID
+            WHERE WAREHOUSE_TYPE='储备库'
+
+            UNION ALL
+
+            SELECT DISTINCT w.id,w.warehouse_name,w.warehouse_short,w.enterprise_name,w.warehouse_code,w.WAREHOUSE_TYPE,e.IS_INPUT
+            FROM t_store_supervise_item i,t_storage_warehouse w,T_STORE_ENTERPRISE e
+            WHERE trunc(SYSDATE) BETWEEN i.supervise_start AND i.supervise_end
+            AND i.ENTERPRISE_ID=w.ENTERPRISE_ID AND w.ENTERPRISE_ID = e.id
+            )
+        <where>
+
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND WAREHOUSE_CODE LIKE '%${warehouseCode}%'
+            </if>
+            <if test="warehouseType!=null and warehouseType!=''">
+                AND WAREHOUSE_TYPE LIKE '%${warehouseType}%'
+            </if>
+            <if test="warehouseShort!=null and warehouseShort!=''">
+                AND WAREHOUSE_SHORT LIKE '%${warehouseShort}%'
+            </if>
+            <if test="warehouseName!=null and warehouseName!=''">
+                AND WAREHOUSE_NAME LIKE '%${warehouseName}%'
+            </if>
+        </where>
+        <if test="pageIndex!=null and pageIndex!='' and pageSize!=null and pageSize!=''">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <!-- 总条数 -->
+    <select id="countValidWarehouse" parameterType="java.util.HashMap"
+            resultType="Integer">
+        SELECT count(0)
+        FROM
+        (
+        SELECT w.warehouse_name,w.warehouse_short,w.enterprise_name,w.warehouse_code,w.WAREHOUSE_TYPE
+        FROM t_storage_warehouse w WHERE WAREHOUSE_TYPE='储备库'
+
+        UNION ALL
+
+        SELECT DISTINCT w.warehouse_name,w.warehouse_short,w.enterprise_name,w.warehouse_code,w.WAREHOUSE_TYPE
+        FROM t_store_supervise_item i,t_storage_warehouse w
+        WHERE trunc(SYSDATE) BETWEEN i.supervise_start AND i.supervise_end
+        AND i.ENTERPRISE_ID=w.ENTERPRISE_ID
+        )
+        <where>
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND WAREHOUSE_CODE LIKE '%${warehouseCode}%'
+            </if>
+            <if test="warehouseType!=null and warehouseType!=''">
+                AND WAREHOUSE_TYPE = '${warehouseType}'
+            </if>
+            <if test="warehouseShort!=null and warehouseShort!=''">
+                AND WAREHOUSE_SHORT LIKE '%${warehouseShort}%'
+            </if>
+            <if test="warehouseName!=null and warehouseName!=''">
+                AND WAREHOUSE_NAME LIKE '%${warehouseName}%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getLimitRecordCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(0)
+        FROM (
+        SELECT w.WAREHOUSE_CODE,w.warehouse_name,w.warehouse_short,w.warehouse_type,w.enterprise_name,w.ENTERPRISE_ID
+        FROM t_storage_warehouse w WHERE WAREHOUSE_TYPE='储备库'
+
+        UNION
+
+        SELECT DISTINCT w.WAREHOUSE_CODE,w.warehouse_name,w.warehouse_short,w.warehouse_type,w.enterprise_name,w.ENTERPRISE_ID
+        FROM t_store_supervise_item i,t_storage_warehouse w
+        WHERE trunc(SYSDATE) BETWEEN i.supervise_start AND i.supervise_end
+        AND i.ENTERPRISE_ID=w.ENTERPRISE_ID
+        )
+        <where>
+            <if test="warehouse_type!=null and warehouse_type!=''">
+                AND warehouse_type LIKE '%${warehouse_type}%'
+            </if>
+            <if test="warehouseName!=null and warehouseName!=''">
+                AND warehouse_name LIKE '%${warehouseName}%'
+            </if>
+            <if test="warehouseShort!=null and warehouseShort!=''">
+                AND warehouse_short LIKE '%${warehouseShort}%'
+            </if>
+            <if test="enterpriseName!=null and enterpriseName!=''">
+                AND enterprise_name LIKE '%${enterpriseName}%'
+            </if>
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND WAREHOUSE_CODE LIKE '%${warehouseCode}%'
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND ENTERPRISE_ID = #{enterpriseId}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="limitPageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        ${start}
+        SELECT ID,WAREHOUSE_CODE,warehouse_name,warehouse_short,warehouse_type,enterprise_name FROM (
+        SELECT w.ID,w.WAREHOUSE_CODE,w.warehouse_name,w.warehouse_short,w.warehouse_type,w.enterprise_name,w.ORDER_NO,w.ENTERPRISE_ID
+        FROM t_storage_warehouse w WHERE WAREHOUSE_TYPE='储备库'
+
+        UNION
+
+        SELECT DISTINCT w.ID,w.WAREHOUSE_CODE,w.warehouse_name,w.warehouse_short,w.warehouse_type,w.enterprise_name,w.ORDER_NO,w.ENTERPRISE_ID
+        FROM t_store_supervise_item i,t_storage_warehouse w
+        WHERE trunc(SYSDATE)  BETWEEN i.supervise_start AND i.supervise_end
+        AND i.ENTERPRISE_ID=w.ENTERPRISE_ID
+        )
+        <where>
+            <if test="warehouse_type!=null and warehouse_type!=''">
+                AND warehouse_type LIKE '%${warehouse_type}%'
+            </if>
+            <if test="warehouseName!=null and warehouseName!=''">
+                AND warehouse_name LIKE '%${warehouseName}%'
+            </if>
+            <if test="warehouseShort!=null and warehouseShort!=''">
+                AND warehouse_short LIKE '%${warehouseShort}%'
+            </if>
+            <if test="enterpriseName!=null and enterpriseName!=''">
+                AND enterprise_name LIKE '%${enterpriseName}%'
+            </if>
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND WAREHOUSE_CODE LIKE '%${warehouseCode}%'
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND ENTERPRISE_ID = #{enterpriseId}
+            </if>
+        </where>
+        order by ORDER_NO
+        ${end}
+    </select>
+
+    <select id="limitList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		SELECT warehouse_name,id,warehouse_short,order_no,creator,telphone FROM (
+            SELECT w.warehouse_name,id,w.warehouse_short,w.order_no,w.creator,w.telphone
+            FROM t_storage_warehouse w
+            WHERE WAREHOUSE_TYPE='储备库'
+
+            UNION ALL
+
+            SELECT DISTINCT w2.warehouse_name,w2.id,w2.warehouse_short,w2.order_no,w2.creator,w2.telphone
+            FROM t_store_supervise_item i,t_storage_warehouse w2
+            WHERE TRUNC(SYSDATE) BETWEEN i.supervise_start AND i.supervise_end
+            AND i.ENTERPRISE_ID=w2.ENTERPRISE_ID
+		)
+		order by order_no
+	</select>
+    <select id="limitListCBL" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+       SELECT id, warehouse_name, warehouse_short, order_no
+       FROM (SELECT w.id, w.warehouse_name, w.warehouse_short, w.order_no
+          FROM t_storage_warehouse w
+         WHERE WAREHOUSE_TYPE='储备库'
+       )
+       order by order_no
+
+    </select>
+    <select id="limitListNOTCBL" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT DISTINCT w.warehouse_name,w.warehouse_short,w.WAREHOUSE_CODE,w.order_no FROM t_store_supervise_item i,t_storage_warehouse w
+        WHERE to_char(SYSDATE,'yyyymmdd') BETWEEN to_char(i.supervise_start,'yyyymmdd') AND to_char(i.supervise_end,'yyyymmdd')
+        AND i.ENTERPRISE_ID=w.ENTERPRISE_ID
+
+    </select>
+    <select id="listSuperviseOfWarehouse" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+		     ID,
+		     warehouse_name,
+		     warehouse_short,
+		     enterprise_name,
+		     enterprise_id
+        FROM (
+                SELECT
+                   DISTINCT
+                   W.ID,
+                   w.warehouse_name,
+                   w.warehouse_short,
+                   w.enterprise_name,
+                   w.enterprise_id
+                FROM
+                   t_store_supervise_item i,
+                   t_storage_warehouse w
+                WHERE
+                    i.ENTERPRISE_ID=w.ENTERPRISE_ID
+                AND
+                    i.WAREHOUSE_ID = #{_parameter}
+                AND
+                    trunc(SYSDATE)
+                BETWEEN i.supervise_start AND i.supervise_end
+		)
+	</select>
+
+    <select id="listKudianCode" resultType="String">
+        SELECT distinct WAREHOUSE_CODE FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE='储备库'
+    </select>
+    <select id="listKudianId" resultType="String">
+        SELECT distinct ID FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE='储备库'
+    </select>
+
+    <select id="listEntrepriseId" resultType="String">
+    SELECT distinct enterprise_id FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE='储备库'
+    </select>
+    <select id="listWareHouseByEnterPriseName" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT WAREHOUSE_CODE,WAREHOUSE_SHORT WAREHOUSE_NAME FROM
+        <include refid="tablename"/>
+        <where>
+            1=1
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND (ENTERPRISE_NAME = #{enterpriseName, jdbcType=VARCHAR} OR WAREHOUSE_CODE =
+                #{enterpriseName, jdbcType=VARCHAR} )
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWareHouseByEnterPriseName" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT WAREHOUSE_CODE,WAREHOUSE_SHORT WAREHOUSE_NAME FROM
+        <include refid="tablename"/>
+        <where>
+            1=1
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND (ENTERPRISE_NAME = #{enterpriseName, jdbcType=VARCHAR} )
+            </if>
+        </where>
+    </select>
+
+    <select id="listHostWareHouse" parameterType="Map" resultMap="BaseResultMap">
+        SELECT * FROM (
+          SELECT sw.WAREHOUSE_CODE,sw.order_no,sw.id,SW.WAREHOUSE_SHORT,SW.ENTERPRISE_NAME,sw.ENTERPRISE_ID
+          FROM T_STORAGE_WAREHOUSE sw WHERE  sw.WAREHOUSE_TYPE='储备库'
+
+          UNION ALL
+
+          SELECT sw.WAREHOUSE_CODE,sw.order_no,sw.id,SW.WAREHOUSE_SHORT,SW.ENTERPRISE_NAME,sw.ENTERPRISE_ID
+          FROM T_STORAGE_WAREHOUSE sw  INNER JOIN  T_STORE_ENTERPRISE e
+          ON sw.ENTERPRISE_NAME=e.ENTERPRISE_NAME
+          WHERE sw.ISHOST = 'Y'
+        )
+        ORDER BY  order_no,id
+    </select>
+
+    <select id="HostWareHouses" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM (
+          SELECT sw.WAREHOUSE_CODE,sw.order_no,sw.id,SW.WAREHOUSE_SHORT,SW.ENTERPRISE_NAME,sw.ENTERPRISE_ID
+          FROM T_STORAGE_WAREHOUSE sw WHERE  sw.WAREHOUSE_TYPE='储备库'
+          <if test="wareHouseCode != null and wareHouseCode != ''">
+             AND sw.WAREHOUSE_CODE = #{wareHouseCode}
+          </if>
+          UNION ALL
+
+          SELECT sw.WAREHOUSE_CODE,sw.order_no,sw.id,SW.WAREHOUSE_SHORT,SW.ENTERPRISE_NAME,sw.ENTERPRISE_ID
+          FROM T_STORAGE_WAREHOUSE sw  INNER JOIN  T_STORE_ENTERPRISE e
+          ON sw.ENTERPRISE_NAME=e.ENTERPRISE_NAME
+          WHERE sw.ISHOST = 'Y'
+          <if test="wareHouseCode != null and wareHouseCode != ''">
+            AND sw.WAREHOUSE_CODE = #{wareHouseCode}
+          </if>
+        )
+        ORDER BY  order_no,id
+    </select>
+
+
+    <select id="listWarehouseByHost" parameterType="Map" resultMap="BaseResultMap">
+        select * from T_STORAGE_WAREHOUSE where ENTERPRISE_ID=#{enterpriseId}
+    </select>
+
+    <select id="getWarehouseIdByShortname" parameterType="java.lang.String" resultType="java.lang.String">
+        select ID from T_STORAGE_WAREHOUSE where WAREHOUSE_SHORT=#{shortName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getWarehouseById" parameterType="String" resultMap="BaseResultMap">
+        select * from T_STORAGE_WAREHOUSE where id=#{_param,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findConnectorByShortName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM (
+            SELECT
+            a.ID,a.WAREHOUSE_SHORT,b.ENTERPRISE_NAME,b.CONTACTS,b.CONTACTNUMBER
+            FROM
+            <include refid="tablename"></include> a
+            LEFT JOIN T_STORE_ENTERPRISE b ON b.ID = a.ENTERPRISE_ID
+            <where>
+                a.WAREHOUSE_SHORT = #{warehouseShort}
+            </where>
+        ) t WHERE rownum = 1
+    </select>
+
+    <select id="getWarehouseList" resultMap="BaseResultMap">
+      select * from <include refid="tablename"/> ORDER BY ORDER_NO
+    </select>
+
+    <select id="getWareHouseByEnterpriseName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="columns"/> FROM T_STORAGE_WAREHOUSE
+        <where>
+            <if test="_parameter != null and _parameter != ''">
+                ENTERPRISE_NAME = #{_parameter,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWareHouseList" resultType="java.lang.String">
+        SELECT
+	    *
+      FROM
+        (
+            SELECT
+                WAREHOUSE
+            FROM
+                T_STORAGE_STOREHOUSE
+            WHERE
+                WAREHOUSE_CODE IN ( SELECT WAREHOUSE_CODE FROM t_storage_warehouse WHERE organization_code = 'CBL' )
+            ORDER BY
+                CREATE_DATE,
+                ENCODE DESC
+        )
+    </select>
+
+    <select id="selectWareHouse" resultType="java.lang.Integer">
+       select count(*) from T_STORAGE_STOREHOUSE where WAREHOUSE_ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectOilcan" resultType="java.lang.Integer">
+       select count(*) from T_STORAGE_OILCAN where WAREHOUSE_ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectIdByCode" resultType="String">
+        select ID  from T_STORAGE_WAREHOUSE where WAREHOUSE_CODE = #{code}
+
+    </select>
+
+    <select id="getWarehouseShortById" parameterType="java.lang.String" resultType="java.lang.String">
+        select warehouse_short from t_storage_warehouse where id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getWarehouseShortByTypeWithCBK" resultType="java.lang.String">
+        select distinct warehouse_short from t_storage_warehouse where warehouse_type='储备库'
+    </select>
+
+    <select id="getProxySwtzPointList" parameterType="String" resultType="String">
+        SELECT
+            WAREHOUSE_SHORT
+        FROM
+            T_STORAGE_WAREHOUSE
+        WHERE
+            ENTERPRISE_ID = ( SELECT ENTERPRISE_ID FROM T_STORAGE_WAREHOUSE WHERE ID = #{warehouseId} )
+            or WAREHOUSE_SHORT = '舟山库'
+    </select>
+
+
+    <select id="getWarehouseByCondition" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT <include refid="columns"/> FROM T_STORAGE_WAREHOUSE
+        <where>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                ENTERPRISE_ID = #{enterpriseId,jdbcType=VARCHAR}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+              AND  (WAREHOUSE_NAME LIKE concat(concat('%',#{warehouseName}),'%') OR WAREHOUSE_SHORT LIKE concat(concat('%',#{warehouseName}),'%') )
+            </if>
+        </where>
+    </select>
+
+    <select id="getStoreWarehouseByTypeWithCBK" resultMap="BaseResultMap">
+        select ID,WAREHOUSE_CODE,WAREHOUSE_SHORT
+        FROM T_STORAGE_WAREHOUSE
+        where WAREHOUSE_TYPE = '储备库'
+        order by ORDER_NO
+    </select>
+
+    <select id="countHostWarehouse" parameterType="String" resultType="java.lang.Integer">
+      select count(*) from T_STORAGE_WAREHOUSE
+        <where>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND ENTERPRISE_ID = #{enterpriseId}
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                AND id != #{warehouseId}
+            </if>
+            AND ISHOST = 'Y'
+        </where>
+    </select>
+
+
+    <select id="selectWarehouseListByEnterprise" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        ${start}
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tablename"/>
+        <where>
+        <if test="name != null and name != ''">
+            AND  WAREHOUSE_NAME  LIKE concat(concat('%',#{name}),'%')
+        </if>
+        <if test="shortName != null and shortName != ''">
+            AND  WAREHOUSE_SHORT  LIKE concat(concat('%',#{shortName}),'%')
+        </if>
+
+        <if test="enterpriseId != null and enterpriseId != ''">
+            AND ENTERPRISE_Id = #{enterpriseId,jdbcType=VARCHAR}
+        </if>
+        </where>
+        ORDER BY ORDER_NO ASC
+        ${end}
+    </select>
+
+
+    <select id="getStorageWarehouseShortByEnterpriseId" parameterType="String" resultType="String">
+
+        SELECT
+        WAREHOUSE_SHORT
+        FROM
+        <include refid="tablename"/>
+        <where>
+            <if test="_parameter != null and _parameter != ''">
+                AND ENTERPRISE_Id = #{enterpriseId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY ORDER_NO ASC
+
+    </select>
+
+
+
+    <select id="listWarehouseByCompany" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        ${start}
+        SELECT ID,WAREHOUSE_CODE,warehouse_name,warehouse_short,warehouse_type,enterprise_name,enterprise_id FROM (
+        SELECT w.ID,w.WAREHOUSE_CODE,w.warehouse_name,w.warehouse_short,w.warehouse_type,w.enterprise_name,w.ORDER_NO,w.ENTERPRISE_ID
+        FROM t_storage_warehouse w
+        )
+        <where>
+            <if test="warehouse_type!=null and warehouse_type!=''">
+                AND warehouse_type LIKE '%${warehouse_type}%'
+            </if>
+            <if test="warehouseName!=null and warehouseName!=''">
+                AND warehouse_name LIKE '%${warehouseName}%'
+            </if>
+            <if test="warehouseShort!=null and warehouseShort!=''">
+                AND warehouse_short LIKE '%${warehouseShort}%'
+            </if>
+            <if test="enterpriseName!=null and enterpriseName!=''">
+                AND enterprise_name LIKE '%${enterpriseName}%'
+            </if>
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND WAREHOUSE_CODE LIKE '%${warehouseCode}%'
+            </if>
+            <if test="excludeWarehouseId!=null and excludeWarehouseId.size()>0">
+                AND ID NOT IN
+                (<foreach collection="excludeWarehouseId" item="item" separator=",">#{item}</foreach>)
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND ENTERPRISE_ID = #{enterpriseId}
+            </if>
+        </where>
+        order by ORDER_NO
+        ${end}
+    </select>
+
+
+    <select id="countWarehouseByCompany" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(0)
+        FROM (
+        SELECT w.ID, w.WAREHOUSE_CODE,w.warehouse_name,w.warehouse_short,w.warehouse_type,w.enterprise_name,w.ENTERPRISE_ID
+        FROM t_storage_warehouse w
+        )
+        <where>
+            <if test="warehouse_type!=null and warehouse_type!=''">
+                AND warehouse_type LIKE '%${warehouse_type}%'
+            </if>
+            <if test="warehouseName!=null and warehouseName!=''">
+                AND warehouse_name LIKE '%${warehouseName}%'
+            </if>
+            <if test="warehouseShort!=null and warehouseShort!=''">
+                AND warehouse_short LIKE '%${warehouseShort}%'
+            </if>
+            <if test="enterpriseName!=null and enterpriseName!=''">
+                AND enterprise_name LIKE '%${enterpriseName}%'
+            </if>
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND WAREHOUSE_CODE LIKE '%${warehouseCode}%'
+            </if>
+            <if test="excludeWarehouseId!=null and excludeWarehouseId.size()>0">
+                AND ID NOT IN
+                (<foreach collection="excludeWarehouseId" item="item" separator=",">#{item}</foreach>)
+            </if>
+            <if test="enterpriseId != null and enterpriseId != ''">
+                AND ENTERPRISE_ID = #{enterpriseId}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="manReport" parameterType="Map" resultType="com.dhc.fastersoft.entity.ManuReportData">
+
+          SELECT
+                T_STORE_ENTERPRISE.ENTERPRISE_NAME AS enterpriseName,
+                T_STORAGE_WAREHOUSE.WAREHOUSE_SHORT AS storageShortName,
+                T_STORAGE_WAREHOUSE.ID AS id
+          from
+                T_STORE_ENTERPRISE,
+                T_STORAGE_WAREHOUSE
+          WHERE
+                T_STORE_ENTERPRISE.ID = T_STORAGE_WAREHOUSE.ENTERPRISE_ID
+			    AND ENTERPRISE_ID=#{enterpriseId}
+
+    </select>
+
+    <select id="findWareHouseNumberByStorage" parameterType="string" resultType="string">
+        SELECT
+              T_STORAGE_STOREHOUSE.ENCODE
+        from
+              T_STORAGE_STOREHOUSE
+        WHERE
+              T_STORAGE_STOREHOUSE.WAREHOUSE_ID = #{wareHouseId}
+        order by ENCODE
+    </select>
+
+    <select id="findWareId" parameterType="string" resultType="com.dhc.fastersoft.entity.ManuReportData">
+
+          SELECT
+                T_STORE_ENTERPRISE.ENTERPRISE_NAME AS enterpriseName,
+                T_STORAGE_WAREHOUSE.WAREHOUSE_SHORT AS storageShortName,
+                T_STORAGE_WAREHOUSE.ID AS id
+          from
+                T_STORE_ENTERPRISE,
+                T_STORAGE_WAREHOUSE
+          WHERE
+                T_STORE_ENTERPRISE.ID = T_STORAGE_WAREHOUSE.ENTERPRISE_ID
+			    AND ENTERPRISE_ID=#{enterpriseId}
+
+    </select>
+
+    <select id="findAllWareHouseByEnterpriseId" parameterType="string" resultType="com.dhc.fastersoft.entity.EnterpriseWarehouse">
+
+        SELECT
+              T_STORAGE_WAREHOUSE.ID AS id,
+              T_STORAGE_WAREHOUSE.WAREHOUSE_SHORT AS enterpriseWareHouseName
+        FROM
+              T_STORAGE_WAREHOUSE
+        WHERE
+              T_STORAGE_WAREHOUSE.ENTERPRISE_ID = #{enterpriseId}
+
+    </select>
+
+    <select id="findWareNumberByStorage" parameterType="string" resultType="string">
+        SELECT
+              T_STORAGE_STOREHOUSE.ENCODE
+        from
+              T_STORAGE_STOREHOUSE
+        WHERE
+              T_STORAGE_STOREHOUSE.WAREHOUSE_ID = #{id}
+        order by ENCODE
+    </select>
+
+    <select id="findStoreHouse" parameterType="Map" resultType="com.dhc.fastersoft.entity.ManuReportData">
+
+		  select
+                T_STORAGE_WAREHOUSE.ID as id,
+		        T_STORAGE_WAREHOUSE.WAREHOUSE_SHORT	as storageShortName
+          FROM
+                T_STORAGE_WAREHOUSE
+          WHERE
+                T_STORAGE_WAREHOUSE.ENTERPRISE_ID = (select ENTERPRISE_ID from T_ROTATE_NOTICE_DETAIL where BATCH_NUMBER = #{manuBatNum})
+
+    </select>
+
+
+</mapper>
+

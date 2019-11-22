@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.CustomerInformationMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.CustomerInformation" >
+    <result column="ID" property="id" jdbcType="OTHER" />
+    <result column="CLIENT_NAME" property="clientName" jdbcType="OTHER" />
+    <result column="CLIENT_TYPE" property="clientType" jdbcType="OTHER" />
+    <result column="ORGANIZATION_CODE" property="organizationCode" jdbcType="OTHER" />
+    <result column="SOCIAL_CREDIT_CODE" property="socialCreditCode" jdbcType="OTHER" />
+    <result column="ENTERPRISE_NATURE" property="enterpriseNature" jdbcType="OTHER" />
+    <result column="REGIST_TYPE" property="registType" jdbcType="OTHER" />
+    <result column="BUSINESS_NO" property="businessNo" jdbcType="OTHER" />
+    <result column="EXTRA_QUALIFICATION" property="extraQualification" jdbcType="OTHER" />
+    <result column="PROVINCE" property="province" jdbcType="OTHER" />
+    <result column="PROVINCE_CODE" property="provinceCode" jdbcType="OTHER" />
+    <result column="CITY" property="city" jdbcType="OTHER" />
+    <result column="CITY_CODE" property="cityCode" jdbcType="OTHER" />
+    <result column="AREA" property="area" jdbcType="OTHER" />
+    <result column="AREA_CODE" property="areaCode" jdbcType="OTHER" />
+    <result column="POSTALCODE" property="postalcode" jdbcType="OTHER" />
+    <result column="PERSON_INCHARGE" property="personIncharge" jdbcType="OTHER" />
+    <result column="CONTACTOR" property="contactor" jdbcType="OTHER" />
+    <result column="CONTACT_TEL" property="contactTel" jdbcType="OTHER" />
+    <result column="CONTACT_FAX" property="contactFax" jdbcType="OTHER" />
+    <result column="INVOICE_TITLE" property="invoiceTitle" jdbcType="OTHER" />
+    <result column="TAX_ID" property="taxId" jdbcType="OTHER" />
+    <result column="DEPOSIT_BANK" property="depositBank" jdbcType="OTHER" />
+    <result column="DEPOSIT_ACCOUNT" property="depositAccount" jdbcType="OTHER" />
+    <result column="TELEPHONE" property="telephone" jdbcType="OTHER" />
+    <result column="ADDRESS" property="address" jdbcType="OTHER" />
+    <result column="INDUSTRY" property="industry" jdbcType="OTHER" />
+    <result column="PROCESS_VARIETY" property="processVariety" jdbcType="OTHER" />
+    <result column="PROCESS_CAPABILITY" property="processCapability" jdbcType="OTHER" />
+    <result column="BANK_CREDIT_RATING" property="bankCreditRating" jdbcType="OTHER" />
+    <result column="FIXED_ASSETS" property="fixedAssets" jdbcType="VARCHAR" />
+    <result column="REGISTERED_CAPITAL" property="registeredCapital" jdbcType="VARCHAR" />
+    <result column="EMPLOYED_NUM" property="employedNum" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="OTHER" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="OTHER" />
+    <result column="BLACKLIST" property="blacklist" jdbcType="OTHER" />
+    <result column="COUNT" property="count" jdbcType="OTHER" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+    <result column="IDCARD" property="idCard" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="select">
+        ID,
+        CLIENT_NAME,
+        CLIENT_TYPE,
+        ORGANIZATION_CODE,
+        SOCIAL_CREDIT_CODE,
+        ENTERPRISE_NATURE,
+        REGIST_TYPE,
+        BUSINESS_NO,
+        EXTRA_QUALIFICATION,
+        PROVINCE,
+        PROVINCE_CODE,
+        CITY,
+        CITY_CODE,
+        AREA,
+        AREA_CODE,
+        POSTALCODE,
+        PERSON_INCHARGE,
+        CONTACTOR,
+        CONTACT_TEL,
+        CONTACT_FAX,
+        INVOICE_TITLE,
+        TAX_ID,
+        DEPOSIT_BANK,
+        DEPOSIT_ACCOUNT,
+        TELEPHONE,
+        ADDRESS,
+        INDUSTRY,
+        PROCESS_VARIETY,
+        PROCESS_CAPABILITY,
+        BANK_CREDIT_RATING,
+        FIXED_ASSETS,
+        REGISTERED_CAPITAL,
+        EMPLOYED_NUM,
+        CREATOR,
+        CREATE_DATE,
+        COMPANY,
+        (case when BLACKLIST='1' then '白名单' when BLACKLIST='2' then '黑名单'end) BLACKLIST ,
+        REMARK,
+        IDCARD
+  </sql>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.CustomerInformation" >
+     insert into T_CLIENT_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ID,
+      <if test="clientName != null" >
+        CLIENT_NAME,
+      </if>
+      <if test="clientType != null" >
+        CLIENT_TYPE,
+      </if>
+      <if test="organizationCode != null" >
+        ORGANIZATION_CODE,
+      </if>
+      <if test="socialCreditCode != null" >
+        SOCIAL_CREDIT_CODE,
+      </if>
+      <if test="enterpriseNature != null" >
+        ENTERPRISE_NATURE,
+      </if>
+      <if test="registType != null" >
+        REGIST_TYPE,
+      </if>
+      <if test="businessNo != null" >
+        BUSINESS_NO,
+      </if>
+      <if test="extraQualification != null" >
+        EXTRA_QUALIFICATION,
+      </if>
+      <if test="province != null" >
+        PROVINCE,
+      </if>
+      <if test="provinceCode != null" >
+        PROVINCE_CODE,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="cityCode != null" >
+        CITY_CODE,
+      </if>
+      <if test="area != null" >
+        AREA,
+      </if>
+      <if test="areaCode != null" >
+        AREA_CODE,
+      </if>
+      <if test="postalcode != null" >
+        POSTALCODE,
+      </if>
+      <if test="personIncharge != null" >
+        PERSON_INCHARGE,
+      </if>
+      <if test="contactor != null" >
+        CONTACTOR,
+      </if>
+      <if test="contactTel != null" >
+        CONTACT_TEL,
+      </if>
+      <if test="contactFax != null" >
+        CONTACT_FAX,
+      </if>
+      <if test="invoiceTitle != null" >
+        INVOICE_TITLE,
+      </if>
+      <if test="taxId != null" >
+        TAX_ID,
+      </if>
+      <if test="depositBank != null" >
+        DEPOSIT_BANK,
+      </if>
+      <if test="depositAccount != null" >
+        DEPOSIT_ACCOUNT,
+      </if>
+      <if test="telephone != null" >
+        TELEPHONE,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="industry != null" >
+        INDUSTRY,
+      </if>
+      <if test="processVariety != null" >
+        PROCESS_VARIETY,
+      </if>
+      <if test="processCapability != null" >
+        PROCESS_CAPABILITY,
+      </if>
+      <if test="bankCreditRating != null" >
+        BANK_CREDIT_RATING,
+      </if>
+      <if test="fixedAssets != null" >
+        FIXED_ASSETS,
+      </if>
+      <if test="registeredCapital != null" >
+        REGISTERED_CAPITAL,
+      </if>
+      <if test="employedNum != null" >
+        EMPLOYED_NUM,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="company != null" >
+        COMPANY,
+      </if>
+        <if test="creatorId != null" >
+            CREATORID,
+        </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    <if test="idCard != null" >
+        IDCARD,
+    </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      seq_on_test.nextval,
+      <if test="clientName != null" >
+        #{clientName,jdbcType=OTHER},
+      </if>
+      <if test="clientType != null" >
+        #{clientType,jdbcType=OTHER},
+      </if>
+      <if test="organizationCode != null" >
+        #{organizationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="socialCreditCode != null" >
+        #{socialCreditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseNature != null" >
+        #{enterpriseNature,jdbcType=OTHER},
+      </if>
+      <if test="registType != null" >
+        #{registType,jdbcType=OTHER},
+      </if>
+      <if test="businessNo != null" >
+        #{businessNo,jdbcType=OTHER},
+      </if>
+      <if test="extraQualification != null" >
+        #{extraQualification,jdbcType=OTHER},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=OTHER},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=OTHER},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=OTHER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=OTHER},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=OTHER},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=OTHER},
+      </if>
+      <if test="postalcode != null" >
+        #{postalcode,jdbcType=OTHER},
+      </if>
+      <if test="personIncharge != null" >
+        #{personIncharge,jdbcType=OTHER},
+      </if>
+      <if test="contactor != null" >
+        #{contactor,jdbcType=OTHER},
+      </if>
+      <if test="contactTel != null" >
+        #{contactTel,jdbcType=OTHER},
+      </if>
+      <if test="contactFax != null" >
+        #{contactFax,jdbcType=OTHER},
+      </if>
+      <if test="invoiceTitle != null" >
+        #{invoiceTitle,jdbcType=OTHER},
+      </if>
+      <if test="taxId != null" >
+        #{taxId,jdbcType=OTHER},
+      </if>
+      <if test="depositBank != null" >
+        #{depositBank,jdbcType=OTHER},
+      </if>
+      <if test="depositAccount != null" >
+        #{depositAccount,jdbcType=OTHER},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=OTHER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=OTHER},
+      </if>
+      <if test="industry != null" >
+        #{industry,jdbcType=OTHER},
+      </if>
+      <if test="processVariety != null" >
+        #{processVariety,jdbcType=OTHER},
+      </if>
+      <if test="processCapability != null" >
+        #{processCapability,jdbcType=OTHER},
+      </if>
+      <if test="bankCreditRating != null" >
+        #{bankCreditRating,jdbcType=OTHER},
+      </if>
+      <if test="fixedAssets != null" >
+        #{fixedAssets,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredCapital != null" >
+        #{registeredCapital,jdbcType=VARCHAR},
+      </if>
+      <if test="employedNum != null" >
+        #{employedNum,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        to_date(#{createDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+
+        <if test="creatorId != null" >
+            #{creatorId,jdbcType=VARCHAR},
+        </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=OTHER},
+      </if>
+        <if test="idCard != null" >
+            #{idCard,jdbcType=VARCHAR},
+        </if>
+    </trim>
+  </insert>
+ <select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		${start} SELECT <include refid="select"/>
+		<!-- ID,CLIENT_NAME,SOCIAL_CREDIT_CODE,ORGANIZATION_CODE,REGIST_TYPE,EXTRA_QUALIFICATION,PERSON_INCHARGE,TELEPHONE,CONTACTOR,EMPLOYED_NUM, (case when BLACKLIST='1' then '白名单' when BLACKLIST='2' then '黑名单'end) BLACKLIST -->  
+		from  T_CLIENT_INFO
+		<where>
+			<if test="clientName!=null and clientName!=''">
+				CLIENT_NAME LIKE '%${clientName}%' 
+			</if>
+			<if test="enterpriseNature!=null and enterpriseNature!=''">
+				AND ENTERPRISE_NATURE LIKE '%${enterpriseNature}%' 
+			</if>
+			<if test="industry!=null and industry!=''">
+				AND INDUSTRY LIKE '%${industry}%' 
+			</if>
+			<if test="blacklist!=null and blacklist!=''">
+				AND BLACKLIST LIKE '%${blacklist}%' 
+			</if>
+		</where>
+		ORDER BY CREATE_DATE DESC ,id DESC
+		${end}
+	</select>
+	<!-- 总条数 -->
+  <select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0) FROM T_CLIENT_INFO 
+		 <where>
+			<if test="clientName!=null and clientName!=''">
+				CLIENT_NAME LIKE '%${clientName}%' 
+			</if>
+			<if test="enterpriseNature!=null and enterpriseNature!=''">
+				AND ENTERPRISE_NATURE LIKE '%${enterpriseNature}%' 
+			</if>
+			<if test="industry!=null and industry!=''">
+				AND INDUSTRY LIKE '%${industry}%' 
+			</if>
+			<if test="blacklist!=null and blacklist!=''">
+				AND BLACKLIST LIKE '%${blacklist}%' 
+			</if>
+		</where>
+	</select>
+	
+		<!-- 判断是否已存在 -->
+  <select id="checkIsAdd" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0) FROM T_CLIENT_INFO 
+		 <where>
+				SOCIAL_CREDIT_CODE ='${socialCreditCode}' 		
+		</where>
+	</select>
+	
+	<select id="query" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		SELECT ID,  CLIENT_NAME,SOCIAL_CREDIT_CODE,ORGANIZATION_CODE,REGIST_TYPE,EXTRA_QUALIFICATION,PERSON_INCHARGE,TELEPHONE,CONTACTOR,EMPLOYED_NUM,BLACKLIST from  T_CLIENT_INFO
+		<where>
+			<if test="clientName!=null and clientName!=''">
+				CLIENT_NAME LIKE '%${clientName}%' 
+			</if>
+			<if test="enterpriseNature!=null and enterpriseNature!=''">
+				AND ENTERPRISE_NATURE LIKE '%${enterpriseNature}%' 
+			</if>
+			<if test="industry!=null and industry!=''">
+				AND INDUSTRY LIKE '%${industry}%' 
+			</if>
+			<if test="blacklist!=null and blacklist!=''">
+				AND BLACKLIST LIKE '%${blacklist}%' 
+			</if>
+		</where>
+		ORDER BY CREATE_DATE DESC
+		
+	</select>
+    <update id="update" parameterType="com.dhc.fastersoft.entity.CustomerInformation">
+        UPDATE T_CLIENT_INFO
+        <set>
+            <if test="clientName != null">
+                CLIENT_NAME='${clientName}',
+            </if>
+            <if test="clientType != null">
+                CLIENT_TYPE='${clientType}',
+            </if>
+            <if test="organizationCode != null">
+                ORGANIZATION_CODE='${organizationCode}',
+            </if>
+            <if test="socialCreditCode != null">
+                SOCIAL_CREDIT_CODE='${socialCreditCode}',
+            </if>
+            <if test="enterpriseNature != null">
+                ENTERPRISE_NATURE='${enterpriseNature}',
+            </if>
+            <if test="registType != null">
+                REGIST_TYPE='${registType}',
+            </if>
+            <if test="businessNo != null">
+                BUSINESS_NO='${businessNo}',
+            </if>
+            <if test="extraQualification != null">
+                EXTRA_QUALIFICATION='${extraQualification}',
+            </if>
+            <if test="province != null">
+                PROVINCE='${province}',
+            </if>
+            <if test="provinceCode != null">
+                PROVINCE_CODE='${provinceCode}',
+            </if>
+            <if test="city != null">
+                CITY='${city}',
+            </if>
+            <if test="cityCode != null">
+                CITY_CODE='${cityCode}',
+            </if>
+            <if test="area != null">
+                AREA='${area}',
+            </if>
+            <if test="areaCode != null">
+                AREA_CODE='${areaCode}',
+            </if>
+            <if test="postalcode != null">
+                POSTALCODE='${postalcode}',
+            </if>
+            <if test="personIncharge != null">
+                PERSON_INCHARGE='${personIncharge}',
+            </if>
+            <if test="contactor != null">
+                CONTACTOR='${contactor}',
+            </if>
+            <if test="contactTel != null">
+                CONTACT_TEL='${contactTel}',
+            </if>
+            <if test="contactFax != null">
+                CONTACT_FAX='${contactFax}',
+            </if>
+            <if test="invoiceTitle != null">
+                INVOICE_TITLE='${invoiceTitle}',
+            </if>
+            <if test="taxId != null">
+                TAX_ID='${taxId}',
+            </if>
+            <if test="depositBank != null">
+                DEPOSIT_BANK='${depositBank}',
+            </if>
+            <if test="depositAccount != null">
+                DEPOSIT_ACCOUNT='${depositAccount}',
+            </if>
+            <if test="telephone != null">
+                TELEPHONE='${telephone}',
+            </if>
+            <if test="address != null">
+                ADDRESS='${address}',
+            </if>
+            <if test="industry != null">
+                INDUSTRY='${industry}',
+            </if>
+            <if test="processVariety != null">
+                PROCESS_VARIETY='${processVariety}',
+            </if>
+            <if test="processCapability != null">
+                PROCESS_CAPABILITY='${processCapability}',
+            </if>
+            <if test="bankCreditRating != null">
+                BANK_CREDIT_RATING='${bankCreditRating}',
+            </if>
+            FIXED_ASSETS = #{fixedAssets,jdbcType=VARCHAR},
+            REGISTERED_CAPITAL = #{registeredCapital,jdbcType=VARCHAR},
+            <if test="employedNum != null">
+                EMPLOYED_NUM='${employedNum}',
+            </if>
+            <if test="creator != null">
+                CREATOR='${creator}',
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE=TO_DATE('${createDate}','yyyy-mm-dd,hh24:mi:ss'),
+            </if>
+            <if test="company != null">
+                COMPANY='${company}',
+            </if>
+            <if test="creatorId != null">
+                creatorId=#{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                REMARK='${remark}',
+            </if>
+            <if test="idCard != null">
+                IDCARD='${idCard}'
+            </if>
+        </set>
+        WHERE ID='${id}'
+    </update>
+	<update id="outblacklist" parameterType="java.lang.String" >
+	UPDATE T_CLIENT_INFO SET
+		BLACKLIST='1'
+	WHERE ID='${id}'
+				
+	</update>
+	<update id="inblacklist" parameterType="java.lang.String" >
+	UPDATE T_CLIENT_INFO SET
+		BLACKLIST='2'
+	WHERE ID='${id}'
+				
+	</update>
+
+    <select id="clientNameList" resultType="String">
+        SELECT CLIENT_NAME FROM T_CLIENT_INFO
+    </select>
+
+	<select id="getCIById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select <include refid="select"/> from T_CLIENT_INFO WHERE ID='${id}'
+	</select>
+
+    <select id="getClientIdByName" parameterType="java.lang.String" resultType="java.lang.String">
+        select ID from T_CLIENT_INFO WHERE CLIENT_NAME=#{name,jdbcType=VARCHAR}
+    </select>
+    <select id="getClientInfoByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from T_CLIENT_INFO WHERE CLIENT_NAME=#{name,jdbcType=VARCHAR}
+    </select>
+
+	<delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_CLIENT_INFO WHERE ID='${id}'
+	</delete>
+	<select id="listEcharts" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select * from (
+	select to_char(PROVINCE) PROVINCE , COUNT(PROVINCE) AS COUNT,INDUSTRY from T_CLIENT_INFO where PROVINCE  in (
+    select PROVINCE from (
+    select PROVINCE,count,row_number() over ( order by count desc ) as  rn from (
+    SELECT PROVINCE, COUNT(ID) AS count  FROM T_CLIENT_INFO 
+    group by PROVINCE 
+    ) ) 
+     where  rn&lt;=10
+      
+    )  group by PROVINCE ,INDUSTRY
+    union all
+    select '其他' PROVINCE, COUNT(PROVINCE) AS COUNT,INDUSTRY from T_CLIENT_INFO where PROVINCE not in (
+    select PROVINCE from (
+    select PROVINCE,count,row_number() over ( order by count desc ) as  rn from (
+    SELECT PROVINCE, COUNT(ID) AS count  FROM T_CLIENT_INFO 
+    group by PROVINCE
+    ) ) 
+      where  rn &lt;=10
+    
+    )group by INDUSTRY)
+    
+    	<where>
+			<if test="industry!=null and industry!=''">
+				 INDUSTRY LIKE '%${industry}%' 
+			</if>
+		</where>
+	</select>
+
+    <select id="getIdByClientNameOrsocialCreditCode" resultType="String">
+      select id from t_client_info
+      where CLIENT_NAME = #{clientName, jdbcType=VARCHAR} or SOCIAL_CREDIT_CODE = #{socialCreditCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.system.SysFileDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.system.SysFile" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
+    <result column="FILE_SIZE" property="fileSize" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="SAVING_DAYS" property="savingDays" jdbcType="DECIMAL" />
+    <result column="PHYSICAL_PATH" property="physicalPath" jdbcType="VARCHAR" />
+    <result column="DOWNLOAD_URL" property="downloadUrl" jdbcType="VARCHAR" />
+    <result column="FILE_RENAME" property="fileRename" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GROUP_ID, FILE_NAME, FILE_TYPE, FILE_SIZE, CREATOR, CREATE_DATE, SAVING_DAYS, 
+    PHYSICAL_PATH, DOWNLOAD_URL, FILE_RENAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_FILE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_SYS_FILE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.system.SysFile" >
+    insert into T_SYS_FILE (ID, GROUP_ID, FILE_NAME, 
+      FILE_TYPE, FILE_SIZE, CREATOR, 
+      CREATE_DATE, SAVING_DAYS, PHYSICAL_PATH, 
+      DOWNLOAD_URL, FILE_RENAME)
+    values (#{id,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{fileType,jdbcType=VARCHAR}, #{fileSize,jdbcType=DECIMAL}, #{creator,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{savingDays,jdbcType=DECIMAL}, #{physicalPath,jdbcType=VARCHAR}, 
+      #{downloadUrl,jdbcType=VARCHAR}, #{fileRename,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.system.SysFile" >
+    insert into T_SYS_FILE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="fileType != null" >
+        FILE_TYPE,
+      </if>
+      <if test="fileSize != null" >
+        FILE_SIZE,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="savingDays != null" >
+        SAVING_DAYS,
+      </if>
+      <if test="physicalPath != null" >
+        PHYSICAL_PATH,
+      </if>
+      <if test="downloadUrl != null" >
+        DOWNLOAD_URL,
+      </if>
+      <if test="fileRename != null" >
+        FILE_RENAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        #{fileSize,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="savingDays != null" >
+        #{savingDays,jdbcType=DECIMAL},
+      </if>
+      <if test="physicalPath != null" >
+        #{physicalPath,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadUrl != null" >
+        #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fileRename != null" >
+        #{fileRename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.system.SysFile" >
+    update T_SYS_FILE
+    <set >
+      <if test="groupId != null" >
+        GROUP_ID = #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        FILE_SIZE = #{fileSize,jdbcType=DECIMAL},
+      </if>
+      <if test="creator != null" >
+        CREATOR = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="savingDays != null" >
+        SAVING_DAYS = #{savingDays,jdbcType=DECIMAL},
+      </if>
+      <if test="physicalPath != null" >
+        PHYSICAL_PATH = #{physicalPath,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadUrl != null" >
+        DOWNLOAD_URL = #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fileRename != null" >
+        FILE_RENAME = #{fileRename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.system.SysFile" >
+    update T_SYS_FILE
+    set GROUP_ID = #{groupId,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+      FILE_SIZE = #{fileSize,jdbcType=DECIMAL},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      SAVING_DAYS = #{savingDays,jdbcType=DECIMAL},
+      PHYSICAL_PATH = #{physicalPath,jdbcType=VARCHAR},
+      DOWNLOAD_URL = #{downloadUrl,jdbcType=VARCHAR},
+      FILE_RENAME = #{fileRename,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+ 
+  	<delete id="deleteByGroupId" parameterType="java.lang.String">
+        delete FROM T_SYS_FILE WHERE GROUP_ID=#{groupId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_SYS_FILE WHERE ID='${id}'
+	</delete>
+	<select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from T_SYS_FILE WHERE ID='${id}'
+	</select>
+    <select id="getFilesByGroupId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+		  ID, GROUP_ID, FILE_NAME, 
+      FILE_TYPE, FILE_SIZE, CREATOR, 
+      CREATE_DATE, SAVING_DAYS, PHYSICAL_PATH, 
+      DOWNLOAD_URL, FILE_RENAME
+		FROM T_SYS_FILE WHERE GROUP_ID=#{groupId,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteByGroupIds" parameterType="java.util.List" >
+        delete from T_SYS_FILE where GROUP_ID in
+        <foreach item="idList" collection="list" open="(" separator="," close=")">
+            #{idList}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,1146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.StorageStoreHouseDao">
+    <resultMap id="storageStoreHouseResultMap" type="com.dhc.fastersoft.entity.StorageStoreHouse">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="WAREHOUSE" property="warehouse" jdbcType="VARCHAR"/>
+        <result column="ENCODE" property="encode" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="ENABLE_DATE" property="enableDate" jdbcType="TIMESTAMP"/>
+        <result column="STRUCTURE" property="structure" jdbcType="VARCHAR"/>
+        <result column="BULK_HEIGHT" property="bulkHeight" jdbcType="DECIMAL"/>
+        <result column="GATE_NUM" property="gateNum" jdbcType="DECIMAL"/>
+        <result column="CFA" property="cfa" jdbcType="VARCHAR"/>
+        <result column="SILO_DIAMETER" property="siloDiameter" jdbcType="DECIMAL"/>
+        <result column="SILO_BORE" property="siloBore" jdbcType="DECIMAL"/>
+        <result column="SILO_VOLUME" property="siloVolume" jdbcType="DECIMAL"/>
+        <result column="GATE_HEIGHT" property="gateHeight" jdbcType="DECIMAL"/>
+        <result column="GATE_WIDTH" property="gateWidth" jdbcType="DECIMAL"/>
+        <result column="EAVES_HEIGHT" property="eavesHeight" jdbcType="DECIMAL"/>
+        <result column="DESIGNED_CAPACITY" property="designedCapacity" jdbcType="DECIMAL"/>
+        <result column="AUTHORIZED_CAPACITY" property="authorizedCapacity" jdbcType="DECIMAL"/>
+        <result column="BULK_AREA" property="bulkArea" jdbcType="VARCHAR"/>
+        <result column="VENT_NUM" property="ventNum" jdbcType="DECIMAL"/>
+        <result column="DUCT_TYPE" property="ductType" jdbcType="VARCHAR"/>
+        <result column="SILO_TIGHTNESS" property="siloTightness" jdbcType="VARCHAR"/>
+        <result column="AXIAL_NUM" property="axialNum" jdbcType="DECIMAL"/>
+        <result column="HEAT_INSULATION" property="heatInsulation" jdbcType="VARCHAR"/>
+        <result column="CREATOR" property="creator" jdbcType="VARCHAR"/>
+
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="WAREHOUSE_CODE" property="warehouseCode" jdbcType="VARCHAR"/>
+        <result column="STORE_TYPE" property="storeType" jdbcType="VARCHAR"/>
+        <result column="KEEPER" property="keeper" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="BUILDING_TYPE" property="buildingType" jdbcType="VARCHAR"/>
+        <result column="LENGTH" property="length" jdbcType="DECIMAL"/>
+        <result column="WIDTH" property="width" jdbcType="DECIMAL"/>
+        <result column="HEIGHT" property="height" jdbcType="DECIMAL"/>
+        <result column="LONGITUDE" property="longitude" jdbcType="VARCHAR"/>
+        <result column="LATITUDE" property="latitude" jdbcType="VARCHAR"/>
+        <result column="STOREHOUSE_NAME" jdbcType="VARCHAR" property="storehouseName"/>
+        <result column="CREATORID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+        <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="DECIMAL"/>
+    </resultMap>
+    <resultMap id="storageStoreHouseResultMap1" type="com.dhc.fastersoft.entity.StorageStoreHouse">
+        <result column="ss.ID" property="id" jdbcType="VARCHAR"/>
+        <result column="ss.WAREHOUSE" property="warehouse" jdbcType="VARCHAR"/>
+        <result column="ss.ENCODE" property="encode" jdbcType="VARCHAR"/>
+        <result column="ss.TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="ss.STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="ENABLE_DATE" property="enableDate" jdbcType="TIMESTAMP"/>
+        <result column="ss.STRUCTURE" property="structure" jdbcType="VARCHAR"/>
+        <result column="ss.BULK_HEIGHT" property="bulkHeight" jdbcType="DECIMAL"/>
+        <result column="ss.GATE_NUM" property="gateNum" jdbcType="DECIMAL"/>
+        <result column="ss.CFA" property="cfa" jdbcType="VARCHAR"/>
+        <result column="ss.SILO_DIAMETER" property="siloDiameter" jdbcType="DECIMAL"/>
+        <result column="ss.SILO_BORE" property="siloBore" jdbcType="DECIMAL"/>
+        <result column="ss.SILO_VOLUME" property="siloVolume" jdbcType="DECIMAL"/>
+        <result column="ss.GATE_HEIGHT" property="gateHeight" jdbcType="DECIMAL"/>
+        <result column="ss.GATE_WIDTH" property="gateWidth" jdbcType="DECIMAL"/>
+        <result column="ss.EAVES_HEIGHT" property="eavesHeight" jdbcType="DECIMAL"/>
+        <result column="DESIGNED_CAPACITY" property="designedCapacity" jdbcType="DECIMAL"/>
+        <result column="ss.AUTHORIZED_CAPACITY" property="authorizedCapacity" jdbcType="DECIMAL"/>
+        <result column="ss.BULK_AREA" property="bulkArea" jdbcType="VARCHAR"/>
+        <result column="ss.VENT_NUM" property="ventNum" jdbcType="DECIMAL"/>
+        <result column="ss.DUCT_TYPE" property="ductType" jdbcType="VARCHAR"/>
+        <result column="ss.SILO_TIGHTNESS" property="siloTightness" jdbcType="VARCHAR"/>
+        <result column="ss.AXIAL_NUM" property="axialNum" jdbcType="DECIMAL"/>
+        <result column="ss.HEAT_INSULATION" property="heatInsulation" jdbcType="VARCHAR"/>
+        <result column="ss.CREATOR" property="creator" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="ss.WAREHOUSE_CODE" property="warehouseCode" jdbcType="VARCHAR"/>
+        <result column="ss.STORE_TYPE" property="storeType" jdbcType="VARCHAR"/>
+        <result column="ss.KEEPER" property="keeper" jdbcType="VARCHAR"/>
+        <result column="ss.REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="ss.BUILDING_TYPE" property="buildingType" jdbcType="VARCHAR"/>
+        <result column="ss.LENGTH" property="length" jdbcType="DECIMAL"/>
+        <result column="ss.WIDTH" property="width" jdbcType="DECIMAL"/>
+        <result column="ss.HEIGHT" property="height" jdbcType="DECIMAL"/>
+        <result column="ss.LONGITUDE" property="longitude" jdbcType="VARCHAR"/>
+        <result column="ss.LATITUDE" property="latitude" jdbcType="VARCHAR"/>
+        <!--<result column="ss.STOREHOUSE_NAME" jdbcType="VARCHAR" property="storehouseName"/>-->
+        <result column="STOREHOUSE_NAME" property="storehouseName" jdbcType="VARCHAR"/>
+        <result column="ss.CREATORID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="ss.ISSTOP" property="isStop" jdbcType="VARCHAR"/>
+        <result column="ss.ORDER_NO" property="orderNo" jdbcType="DECIMAL"/>
+    </resultMap>
+    <resultMap id="storageStoreHouseResultMap2" type="com.dhc.fastersoft.entity.StorageStoreHouse">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="WAREHOUSE" property="warehouse" jdbcType="VARCHAR"/>
+        <result column="ENCODE" property="encode" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="ENABLE_DATE" property="enableDate" jdbcType="TIMESTAMP"/>
+        <result column="STRUCTURE" property="structure" jdbcType="VARCHAR"/>
+        <result column="BULK_HEIGHT" property="bulkHeight" jdbcType="DECIMAL"/>
+        <result column="GATE_NUM" property="gateNum" jdbcType="DECIMAL"/>
+        <result column="CFA" property="cfa" jdbcType="VARCHAR"/>
+        <result column="SILO_DIAMETER" property="siloDiameter" jdbcType="DECIMAL"/>
+        <result column="SILO_BORE" property="siloBore" jdbcType="DECIMAL"/>
+        <result column="SILO_VOLUME" property="siloVolume" jdbcType="DECIMAL"/>
+        <result column="GATE_HEIGHT" property="gateHeight" jdbcType="DECIMAL"/>
+        <result column="GATE_WIDTH" property="gateWidth" jdbcType="DECIMAL"/>
+        <result column="EAVES_HEIGHT" property="eavesHeight" jdbcType="DECIMAL"/>
+        <result column="DESIGNED_CAPACITY" property="designedCapacity" jdbcType="DECIMAL"/>
+        <result column="AUTHORIZED_CAPACITY" property="authorizedCapacity" jdbcType="DECIMAL"/>
+        <result column="BULK_AREA" property="bulkArea" jdbcType="VARCHAR"/>
+        <result column="VENT_NUM" property="ventNum" jdbcType="DECIMAL"/>
+        <result column="DUCT_TYPE" property="ductType" jdbcType="VARCHAR"/>
+        <result column="SILO_TIGHTNESS" property="siloTightness" jdbcType="VARCHAR"/>
+        <result column="AXIAL_NUM" property="axialNum" jdbcType="DECIMAL"/>
+        <result column="HEAT_INSULATION" property="heatInsulation" jdbcType="VARCHAR"/>
+        <result column="CREATOR" property="creator" jdbcType="VARCHAR"/>
+
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="WAREHOUSE_CODE" property="warehouseCode" jdbcType="VARCHAR"/>
+        <result column="STORE_TYPE" property="storeType" jdbcType="VARCHAR"/>
+        <result column="KEEPER" property="keeper" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="BUILDING_TYPE" property="buildingType" jdbcType="VARCHAR"/>
+        <result column="LENGTH" property="length" jdbcType="DECIMAL"/>
+        <result column="WIDTH" property="width" jdbcType="DECIMAL"/>
+        <result column="HEIGHT" property="height" jdbcType="DECIMAL"/>
+        <result column="LONGITUDE" property="longitude" jdbcType="VARCHAR"/>
+        <result column="LATITUDE" property="latitude" jdbcType="VARCHAR"/>
+        <result column="STOREHOUSE_NAME" jdbcType="VARCHAR" property="storehouseName"/>
+        <result column="CREATORID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+        <result column="ISSTOP" property="isStop" jdbcType="VARCHAR"/>
+        <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="columns">
+        ID,
+        WAREHOUSE,
+        ENCODE,
+        TYPE,
+        STATUS,
+        TO_CHAR(ENABLE_DATE,'YYYY-MM-DD') ENABLE_DATE,
+        STRUCTURE,
+        BULK_HEIGHT,
+        GATE_NUM,
+        CFA,
+        SILO_DIAMETER,
+        SILO_BORE,
+        SILO_VOLUME,
+        GATE_HEIGHT,
+        GATE_WIDTH,
+        EAVES_HEIGHT,
+        DESIGNED_CAPACITY,
+        AUTHORIZED_CAPACITY,
+        BULK_AREA,
+        VENT_NUM,
+        DUCT_TYPE,
+        SILO_TIGHTNESS,
+        AXIAL_NUM,
+        HEAT_INSULATION,
+        CREATOR,
+        TO_CHAR(CREATE_DATE,'yyyy-mm-dd,hh24:mi:ss') CREATE_DATE,
+        WAREHOUSE_CODE,
+        STORE_TYPE,
+        KEEPER,
+        REMARK,
+        BUILDING_TYPE,
+        LENGTH,
+        WIDTH,
+        HEIGHT,
+        LONGITUDE,
+        LATITUDE,
+        STOREHOUSE_NAME,
+        CREATORID,
+        ISSTOP,
+        ORDER_NO
+    </sql>
+    <sql id="columns2">
+        a.ID,
+        a.WAREHOUSE,
+        a.ENCODE,
+        a.TYPE,
+        a.STATUS,
+        a.STRUCTURE,
+        a.BULK_HEIGHT,
+        a.GATE_NUM,
+        a.CFA,
+        a.SILO_DIAMETER,
+        a.SILO_BORE,
+        a.SILO_VOLUME,
+        a.GATE_HEIGHT,
+        a.GATE_WIDTH,
+        a.EAVES_HEIGHT,
+        a.DESIGNED_CAPACITY,
+        a.AUTHORIZED_CAPACITY,
+        a.BULK_AREA,
+        a.VENT_NUM,
+        a.DUCT_TYPE,
+        a.SILO_TIGHTNESS,
+        a.AXIAL_NUM,
+        a.HEAT_INSULATION,
+        a.CREATOR,
+        a.WAREHOUSE_CODE,
+        a.STORE_TYPE,
+        a.KEEPER,
+        a.REMARK,
+        a.BUILDING_TYPE,
+        a.LENGTH,
+        a.WIDTH,
+        a.HEIGHT,
+        a.LONGITUDE,
+        a.LATITUDE,
+        a.STOREHOUSE_NAME,
+        a.CREATORID,
+        a.ORDER_NO,
+        b.ADDRESS
+    </sql>
+    <sql id="columns1">
+        ss.ID,
+        sw.WAREHOUSE_SHORT AS WAREHOUSE,
+        ss.ENCODE,
+        ss.TYPE,
+        ss.STATUS,
+        TO_CHAR(ss.ENABLE_DATE,'YYYY-MM-DD') ENABLE_DATE,
+        ss.STRUCTURE,
+        ss.BULK_HEIGHT,
+        ss.GATE_NUM,
+        ss.CFA,
+        ss.SILO_DIAMETER,
+        ss.SILO_BORE,
+        ss.SILO_VOLUME,
+        ss.GATE_HEIGHT,
+        ss.GATE_WIDTH,
+        ss.EAVES_HEIGHT,
+        DESIGNED_CAPACITY,
+        ss.AUTHORIZED_CAPACITY,
+        ss.BULK_AREA,
+        ss.VENT_NUM,
+        ss.DUCT_TYPE,
+        ss.SILO_TIGHTNESS,
+        ss.AXIAL_NUM,
+        ss.HEAT_INSULATION,
+        ss.CREATOR,
+        TO_CHAR(ss.CREATE_DATE,'yyyy-mm-dd,hh24:mi:ss') CREATE_DATE,
+        ss.WAREHOUSE_CODE,
+        ss.STORE_TYPE,
+        ss.KEEPER,
+        ss.REMARK,
+        ss.BUILDING_TYPE,
+        ss.LENGTH,
+        ss.WIDTH,
+        ss.HEIGHT,
+        ss.LONGITUDE,
+        ss.LATITUDE,
+        STOREHOUSE_NAME,
+        ss.CREATORID,
+        ss.ISSTOP,
+        ss.ORDER_NO
+    </sql>
+    <sql id="columns3">
+        ssh.ID,
+        t.WAREHOUSE_SHORT AS WAREHOUSE,
+        ssh.ENCODE,
+        ssh.TYPE,
+        ssh.STATUS,
+        TO_CHAR(ssh.ENABLE_DATE,'YYYY-MM-DD') ENABLE_DATE,
+        ssh.STRUCTURE,
+        ssh.BULK_HEIGHT,
+        ssh.GATE_NUM,
+        ssh.CFA,
+        ssh.SILO_DIAMETER,
+        ssh.SILO_BORE,
+        ssh.SILO_VOLUME,
+        ssh.GATE_HEIGHT,
+        ssh.GATE_WIDTH,
+        ssh.EAVES_HEIGHT,
+        ssh.DESIGNED_CAPACITY,
+        ssh.AUTHORIZED_CAPACITY,
+        ssh.BULK_AREA,
+        ssh.VENT_NUM,
+        ssh.DUCT_TYPE,
+        ssh.SILO_TIGHTNESS,
+        ssh.AXIAL_NUM,
+        ssh.HEAT_INSULATION,
+        ssh.CREATOR,
+        TO_CHAR(ssh.CREATE_DATE,'yyyy-mm-dd,hh24:mi:ss') CREATE_DATE,
+        ssh.WAREHOUSE_CODE,
+        ssh.STORE_TYPE,
+        ssh.KEEPER,
+        ssh.REMARK,
+        ssh.BUILDING_TYPE,
+        ssh.LENGTH,
+        ssh.WIDTH,
+        ssh.HEIGHT,
+        ssh.LONGITUDE,
+        ssh.LATITUDE,
+        ssh.STOREHOUSE_NAME,
+        ssh.CREATORID,
+        ssh.ISSTOP,
+        ssh.WAREHOUSE_ID,
+        ssh.ORDER_NO
+    </sql>
+
+    <sql id="tablename"> T_STORAGE_STOREHOUSE </sql>
+    <sql id="oilcanTableName">T_STORAGE_OILCAN</sql>
+    <sql id="warehouseTableName">T_STORAGE_WAREHOUSE</sql>
+
+
+    <insert id="saveForSingle" parameterType="com.dhc.fastersoft.entity.StorageStoreHouse">
+        insert into T_STORAGE_STOREHOUSE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="warehouse != null">
+                WAREHOUSE,
+            </if>
+            <if test="encode != null">
+                ENCODE,
+            </if>
+            <if test="type != null">
+                TYPE,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="enableDate != null">
+                ENABLE_DATE,
+            </if>
+            <if test="structure != null">
+                STRUCTURE,
+            </if>
+            <if test="bulkHeight != null">
+                BULK_HEIGHT,
+            </if>
+            <if test="gateNum != null">
+                GATE_NUM,
+            </if>
+            <if test="cfa != null">
+                CFA,
+            </if>
+            <if test="siloDiameter != null">
+                SILO_DIAMETER,
+            </if>
+            <if test="siloBore != null">
+                SILO_BORE,
+            </if>
+            <if test="siloVolume != null">
+                SILO_VOLUME,
+            </if>
+            <if test="gateHeight != null">
+                GATE_HEIGHT,
+            </if>
+            <if test="gateWidth != null">
+                GATE_WIDTH,
+            </if>
+            <if test="eavesHeight != null">
+                EAVES_HEIGHT,
+            </if>
+            <if test="designedCapacity != null">
+                DESIGNED_CAPACITY,
+            </if>
+            <if test="authorizedCapacity != null">
+                AUTHORIZED_CAPACITY,
+            </if>
+            <if test="bulkArea != null">
+                BULK_AREA,
+            </if>
+            <if test="ventNum != null">
+                VENT_NUM,
+            </if>
+            <if test="ductType != null">
+                DUCT_TYPE,
+            </if>
+            <if test="siloTightness != null">
+                SILO_TIGHTNESS,
+            </if>
+            <if test="axialNum != null">
+                AXIAL_NUM,
+            </if>
+            <if test="heatInsulation != null">
+                HEAT_INSULATION,
+            </if>
+            <if test="creator != null">
+                CREATOR,
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE,
+            </if>
+            <if test="warehouseCode != null">
+                WAREHOUSE_CODE,
+            </if>
+            <if test="storeType != null">
+                STORE_TYPE,
+            </if>
+            <if test="keeper != null">
+                KEEPER,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="buildingType != null">
+                BUILDING_TYPE,
+            </if>
+            <if test="length != null">
+                LENGTH,
+            </if>
+            <if test="width != null">
+                WIDTH,
+            </if>
+            <if test="height != null">
+                HEIGHT,
+            </if>
+            <if test="longitude != null">
+                LONGITUDE,
+            </if>
+            <if test="latitude != null">
+                LATITUDE,
+            </if>
+            <if test="creatorId != null">
+                 CREATORID,
+            </if>
+
+            <if test="storehouseName != null">
+                STOREHOUSE_NAME,
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID,
+            </if>
+            <if test="isStop != null">
+                ISSTOP,
+            </if>
+            <if test="orderNo != null">
+                ORDER_NO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouse != null">
+                #{warehouse,jdbcType=VARCHAR},
+            </if>
+            <if test="encode != null">
+                #{encode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="enableDate != null">
+                to_date(#{enableDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd,hh24:mi:ss'),
+            </if>
+            <if test="structure != null">
+                #{structure,jdbcType=VARCHAR},
+            </if>
+            <if test="bulkHeight != null">
+                #{bulkHeight,jdbcType=DECIMAL},
+            </if>
+            <if test="gateNum != null">
+                #{gateNum,jdbcType=DECIMAL},
+            </if>
+            <if test="cfa != null">
+                #{cfa,jdbcType=VARCHAR},
+            </if>
+            <if test="siloDiameter != null">
+                #{siloDiameter,jdbcType=DECIMAL},
+            </if>
+            <if test="siloBore != null">
+                #{siloBore,jdbcType=DECIMAL},
+            </if>
+            <if test="siloVolume != null">
+                #{siloVolume,jdbcType=DECIMAL},
+            </if>
+            <if test="gateHeight != null">
+                #{gateHeight,jdbcType=DECIMAL},
+            </if>
+            <if test="gateWidth != null">
+                #{gateWidth,jdbcType=DECIMAL},
+            </if>
+            <if test="eavesHeight != null">
+                #{eavesHeight,jdbcType=DECIMAL},
+            </if>
+            <if test="designedCapacity != null">
+                #{designedCapacity,jdbcType=DECIMAL},
+            </if>
+            <if test="authorizedCapacity != null">
+                #{authorizedCapacity,jdbcType=DECIMAL},
+            </if>
+            <if test="bulkArea != null">
+                #{bulkArea,jdbcType=VARCHAR},
+            </if>
+            <if test="ventNum != null">
+                #{ventNum,jdbcType=DECIMAL},
+            </if>
+            <if test="ductType != null">
+                #{ductType,jdbcType=VARCHAR},
+            </if>
+            <if test="siloTightness != null">
+                #{siloTightness,jdbcType=VARCHAR},
+            </if>
+            <if test="axialNum != null">
+                #{axialNum,jdbcType=DECIMAL},
+            </if>
+            <if test="heatInsulation != null">
+                #{heatInsulation,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                to_date(#{createDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd,hh24:mi:ss'),
+            </if>
+            <if test="warehouseCode != null">
+                #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="storeType != null">
+                #{storeType,jdbcType=VARCHAR},
+            </if>
+            <if test="keeper != null">
+                #{keeper,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="buildingType != null">
+                #{buildingType,jdbcType=VARCHAR},
+            </if>
+            <if test="length != null">
+                #{length,jdbcType=DECIMAL},
+            </if>
+            <if test="width != null">
+                #{width,jdbcType=DECIMAL},
+            </if>
+            <if test="height != null">
+                #{height,jdbcType=DECIMAL},
+            </if>
+            <if test="longitude != null">
+                #{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null">
+                #{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=VARCHAR},
+            </if>
+            <if test="storehouseName != null">
+                #{storehouseName,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId},
+            </if>
+            <if test="isStop != null">
+                #{isStop},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo},
+            </if>
+        </trim>
+    </insert>
+    <!-- <insert id="saveForSingle" parameterType="com.dhc.fastersoft.entity.StorageStoreHouse">
+      insert into <include refid="tablename"></include> (ID, WAREHOUSE, ENCODE,
+        TYPE, STATUS, ENABLE_DATE,
+        STRUCTURE, BULK_HEIGHT, GATE_NUM,
+        CFA, SILO_DIAMETER, SILO_BORE,
+        SILO_VOLUME, GATE_HEIGHT, GATE_WIDTH,
+        EAVES_HEIGHT, DESIGNED_CAPACITY, AUTHORIZED_CAPACITY,
+        BULK_AREA, VENT_NUM, DUCT_TYPE,
+        SILO_TIGHTNESS, AXIAL_NUM, HEAT_INSULATION,
+        CREATOR, CREATE_DATE)
+      values (#{id,jdbcType=VARCHAR}, #{warehouse,jdbcType=VARCHAR}, #{encode,jdbcType=VARCHAR},
+        #{type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, to_date(#{enableDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd,hh24:mi:ss'),
+        #{structure,jdbcType=VARCHAR}, #{bulkHeight,jdbcType=DECIMAL}, #{gateNum,jdbcType=DECIMAL},
+        #{cfa,jdbcType=DECIMAL}, #{siloDiameter,jdbcType=DECIMAL}, #{siloBore,jdbcType=DECIMAL},
+        #{siloVolume,jdbcType=DECIMAL}, #{gateHeight,jdbcType=DECIMAL}, #{gateWidth,jdbcType=DECIMAL},
+        #{eavesHeight,jdbcType=DECIMAL}, #{designedCapacity,jdbcType=DECIMAL}, #{authorizedCapacity,jdbcType=DECIMAL},
+        #{bulkArea,jdbcType=DECIMAL}, #{ventNum,jdbcType=DECIMAL}, #{ductType,jdbcType=VARCHAR},
+        #{siloTightness,jdbcType=VARCHAR}, #{axialNum,jdbcType=DECIMAL}, #{heatInsulation,jdbcType=VARCHAR},
+        #{creator,jdbcType=VARCHAR}, SYSDATE)
+    </insert> -->
+
+    <select id="getNextId" resultType="java.lang.String">
+    SELECT SEQ_STORAGESTOREHOUSE.NEXTVAL FROM DUAL
+  </select>
+
+    <select id="selectMonthBzw" resultType="java.lang.Integer" parameterType="com.dhc.fastersoft.entity.StorageStoreHouse">
+        SELECT count(*) FROM T_REPORT_MONTH_BZW  where REPORT_WAREHOUSE_ID = #{warehouseId} and STOREHOUSE = #{encode}
+      </select>
+    <select id="selectMonthSwtz" resultType="java.lang.Integer" parameterType="com.dhc.fastersoft.entity.StorageStoreHouse">
+        SELECT count(*) FROM T_REPORT_MONTH_SWTZ  where EXTENDS_WAREHOUSE_ID = #{warehouseId} and STOREHOUSE = #{encode}
+      </select>
+    <select id="selectPlanDetall" resultType="java.lang.Integer" parameterType="com.dhc.fastersoft.entity.StorageStoreHouse">
+        SELECT count(*) FROM T_ROTATE_PLAN_DETAIL  where WAREHOUSE_ID = #{warehouseId} and BARN_NUMBER = #{encode}
+      </select>
+    <select id="selectQualitySample" resultType="java.lang.Integer" parameterType="com.dhc.fastersoft.entity.StorageStoreHouse">
+        SELECT count(*) FROM T_QUALITY_SAMPLE  where WAREHOUSE_ID = #{warehouseId} and STOREHOUSE = #{encode}
+      </select>
+
+
+    <update id="updateForSingle" parameterType="com.dhc.fastersoft.entity.StorageStoreHouse" >
+      update
+      <include refid="tablename"></include>
+      set
+
+
+        WAREHOUSE = #{warehouse,jdbcType=VARCHAR},
+       ENCODE = #{encode,jdbcType=VARCHAR},
+        TYPE = #{type,jdbcType=VARCHAR},
+       STATUS = #{status,jdbcType=VARCHAR},
+
+       ENABLE_DATE = to_date(#{enableDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'),
+
+       STRUCTURE = #{structure,jdbcType=VARCHAR},
+       BULK_HEIGHT = #{bulkHeight,jdbcType=DECIMAL},
+       GATE_NUM = #{gateNum,jdbcType=DECIMAL},
+        CFA = #{cfa,jdbcType=DECIMAL},
+       SILO_DIAMETER = #{siloDiameter,jdbcType=DECIMAL},
+       SILO_BORE = #{siloBore,jdbcType=DECIMAL},
+        SILO_VOLUME = #{siloVolume,jdbcType=DECIMAL},
+       GATE_HEIGHT = #{gateHeight,jdbcType=DECIMAL},
+       GATE_WIDTH = #{gateWidth,jdbcType=DECIMAL},
+        EAVES_HEIGHT = #{eavesHeight,jdbcType=DECIMAL},
+       DESIGNED_CAPACITY = #{designedCapacity,jdbcType=DECIMAL},
+       AUTHORIZED_CAPACITY = #{authorizedCapacity,jdbcType=DECIMAL},
+        BULK_AREA = #{bulkArea,jdbcType=DECIMAL},
+       VENT_NUM = #{ventNum,jdbcType=DECIMAL},
+       DUCT_TYPE = #{ductType,jdbcType=VARCHAR},
+        SILO_TIGHTNESS = #{siloTightness,jdbcType=VARCHAR},
+       AXIAL_NUM = #{axialNum,jdbcType=DECIMAL},
+       HEAT_INSULATION = #{heatInsulation,jdbcType=VARCHAR},
+
+        WAREHOUSE_CODE=#{warehouseCode,jdbcType=VARCHAR},
+
+
+        STORE_TYPE=#{storeType,jdbcType=VARCHAR},
+
+
+        KEEPER=#{keeper,jdbcType=VARCHAR},
+
+
+        REMARK=#{remark,jdbcType=VARCHAR},
+
+
+        BUILDING_TYPE=#{buildingType,jdbcType=VARCHAR},
+
+
+        LENGTH=#{length,jdbcType=DECIMAL},
+
+
+        WIDTH=#{width,jdbcType=DECIMAL},
+
+
+        HEIGHT= #{height,jdbcType=DECIMAL},
+
+
+        LONGITUDE=#{longitude,jdbcType=VARCHAR},
+
+
+        LATITUDE=#{latitude,jdbcType=VARCHAR},
+
+       CREATORID=#{creatorId,jdbcType=VARCHAR},
+        STOREHOUSE_NAME=#{storehouseName,jdbcType=VARCHAR},
+        ISSTOP = #{isStop,jdbcType=VARCHAR},
+        ORDER_NO = #{orderNo,jdbcType=DECIMAL}
+       WHERE ID='${id}'
+    </update>
+
+    <select id="count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        select count(ssh.ID) from
+        <include refid="tablename"></include> ssh  left join T_STORAGE_WAREHOUSE t ON ssh.WAREHOUSE_ID = t.ID
+        <where>
+            <if test="warehouse != null and warehouse != ''">
+                AND t.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                AND ssh.WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="encode != null and encode != ''">
+                AND ssh.ENCODE LIKE '%${encode}%'
+            </if>
+            <if test="status != null and status != ''">
+                AND ssh.STATUS LIKE '%${status}%'
+            </if>
+            <if test="type != null and type != ''">
+                AND ssh.TYPE LIKE '%${type}%'
+            </if>
+            <if test="minCapacity != null and minCapacity != ''">
+                AND ssh.AUTHORIZED_CAPACITY >= TO_NUMBER('${minCapacity}')
+            </if>
+            <if test="maxCapacity != null and maxCapacity != ''">
+                AND ssh.AUTHORIZED_CAPACITY &lt;= TO_NUMBER('${maxCapacity}')
+            </if>
+            <if test="flag == 'dc'">
+                AND ssh.WAREHOUSE_CODE NOT IN (SELECT WAREHOUSE_CODE FROM t_storage_warehouse WHERE organization_code =
+                'CBL')
+            </if>
+            <if test="flag != 'dc' and flag !='' and flag != null">
+                AND ssh.WAREHOUSE_CODE IN (SELECT WAREHOUSE_CODE FROM t_storage_warehouse WHERE organization_code = 'CBL')
+            </if>
+            <!--<if test="warehouseCode != null and warehouseCode != ''">-->
+                <!--AND warehouse_code = #{warehouseCode, jdbcType=VARCHAR}-->
+            <!--</if>-->
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND (ssh.WAREHOUSE_CODE IN (SELECT WAREHOUSE_CODE FROM T_STORAGE_WAREHOUSE WHERE  ENTERPRISE_NAME = #{enterpriseName, jdbcType=VARCHAR})
+                OR ssh.WAREHOUSE_CODE = #{enterpriseName, jdbcType=VARCHAR})
+            </if>
+            <if test="isStop != null and isStop != ''">
+                AND ssh.ISSTOP = #{isStop}
+            </if>
+        </where>
+    </select>
+
+    <select  id="list" parameterType="java.util.HashMap" resultMap="storageStoreHouseResultMap2">
+        ${start}
+        SELECT
+        <include refid="columns3"/>
+        FROM
+        <include refid="tablename"/> ssh  left join T_STORAGE_WAREHOUSE t ON ssh.WAREHOUSE_ID = t.ID
+        <where>
+            <if test="warehouse != null and warehouse != ''">
+                AND t.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                AND ssh.WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="encode != null and encode != ''">
+                AND ssh.ENCODE LIKE '%${encode}%'
+            </if>
+
+            <if test="encode1 != null and encode1 != ''">
+                AND ssh.ENCODE = '${encode1}'
+            </if>
+            <if test="type != null and type != ''">
+                AND ssh.TYPE LIKE '%${type}%'
+            </if>
+            <if test="status != null and status != ''">
+                AND ssh.STATUS LIKE '%${status}%'
+            </if>
+            <if test="isStop != null and isStop != ''">
+                AND ssh.ISSTOP LIKE '%${isStop}%'
+            </if>
+            <if test="minCapacity != null and minCapacity != ''">
+                AND ssh.AUTHORIZED_CAPACITY >= TO_NUMBER('${minCapacity}')
+            </if>
+            <if test="maxCapacity != null and maxCapacity != ''">
+                AND ssh.AUTHORIZED_CAPACITY &lt;= TO_NUMBER('${maxCapacity}')
+            </if>
+            <if test="flag == 'dc'">
+                AND ssh.WAREHOUSE_CODE NOT IN (SELECT WAREHOUSE_CODE FROM t_storage_warehouse WHERE organization_code = 'CBL')
+            </if>
+            <if test="flag != 'dc' and flag !='' and flag != null" >
+                AND ssh.WAREHOUSE_CODE IN (SELECT WAREHOUSE_CODE FROM t_storage_warehouse WHERE organization_code = 'CBL')
+            </if>
+            <if test="warehouseCode != null and warehouseCode != ''">
+                AND ssh.warehouse_code = #{warehouseCode, jdbcType=VARCHAR}
+            </if>
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND (ssh.WAREHOUSE_CODE IN (SELECT WAREHOUSE_CODE FROM T_STORAGE_WAREHOUSE WHERE  ENTERPRISE_NAME = #{enterpriseName, jdbcType=VARCHAR})
+                OR ssh.WAREHOUSE_CODE = #{enterpriseName, jdbcType=VARCHAR})
+            </if>
+        </where>
+        ORDER BY ssh.CREATE_DATE DESC,ssh.ENCODE DESC
+        ${end}
+    </select>
+
+    <select id="getSingle" parameterType="java.lang.String" resultMap="storageStoreHouseResultMap">
+        SELECT
+        <include refid="columns3"/>
+        FROM
+        <include refid="tablename"/> ssh  left join T_STORAGE_WAREHOUSE t ON ssh.WAREHOUSE_ID = t.ID
+        <where>
+            ssh.ID = '${id}'
+        </where>
+    </select>
+
+    <delete id="remove">
+        delete
+        from
+        <include refid="tablename"></include>
+        <where>
+            ID = '${id}'
+        </where>
+    </delete>
+
+    <select id="getStoreEncode" parameterType="java.lang.String" resultMap="storageStoreHouseResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tablename"/>
+    </select>
+
+    <select id="getEncodeByWarehouse" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        ENCODE,STATUS
+        FROM
+        <include refid="tablename"/>
+        WHERE WAREHOUSE = '${warehouse}'
+    </select>
+    <select id="getEncodeByWarehouseId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        E.ENCODE,E.STATUS,E.WAREHOUSE_ID
+        FROM
+        <include refid="tablename"/> E  left join T_STORAGE_WAREHOUSE t ON E.WAREHOUSE_ID = t.ID
+        WHERE E.WAREHOUSE_ID = '${warehouseId}'
+        order by E.ORDER_NO
+    </select>
+
+    <select id="getEncodeAndOilByWarehouse" resultType="String">
+        select ssh.ENCODE,ssh.STATUS
+          FROM <include refid="tablename" /> ssh left join T_STORAGE_WAREHOUSE t ON ssh.WAREHOUSE_ID = t.ID
+        where ssh.WAREHOUSE_ID = #{warehouse}
+        <if test="isHasOil!=null and isHasOil=='true'">
+        UNION ALL
+          SELECT
+            CAST(
+              OILCAN_SERIAL AS NVARCHAR2 ( 100 )),null
+          FROM
+          T_STORAGE_OILCAN
+          where warehouse = #{warehouse}
+        </if>
+    </select>
+
+    <select id="getByEncodeAndWarehouse" parameterType="java.lang.String" resultMap="storageStoreHouseResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tablename"/>
+        where
+        ENCODE = #{0}
+        AND WAREHOUSE = #{1}
+    </select>
+
+    <select id="getAllEncode" resultType="java.lang.String">
+        SELECT DISTINCT
+        ENCODE
+        FROM
+        <include refid="tablename"/>
+    </select>
+
+    <select id="listStorehouseOfWarehouse" parameterType="java.lang.String" resultMap="storageStoreHouseResultMap">
+        SELECT * FROM T_STORAGE_STOREHOUSE ss left join T_STORAGE_WAREHOUSE t ON ss.WAREHOUSE_ID = t.ID
+        <where>
+            <if test="_parameter != null and _parameter != ''">
+                AND t.ID = #{_parameter}
+            </if>
+        </where>
+    </select>
+
+    <select id="proxyCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="tablename"></include> ss
+        LEFT  JOIN T_STORAGE_WAREHOUSE sw ON  (ss.WAREHOUSE_CODE = sw.WAREHOUSE_CODE)
+        <where>
+            1 = 1
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND sw.ENTERPRISE_NAME = '${enterpriseName}'
+            </if>
+            <if test="warehouse != null and warehouse != ''">
+                AND sw.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+            </if>
+            <if test="encode != null and encode != ''">
+                AND ss.ENCODE LIKE '%${encode}%'
+            </if>
+            <if test="status != null and status != ''">
+                AND ss.STATUS LIKE '%${status}%'
+            </if>
+            <if test="type != null and type != ''">
+                AND ss.TYPE LIKE '%${type}%'
+            </if>
+            <if test="minCapacity != null and minCapacity != ''">
+                AND ss.AUTHORIZED_CAPACITY >= TO_NUMBER('${minCapacity}')
+            </if>
+            <if test="isStop != null and isStop !=''">
+                AND ss.isStop like concat('%',concat(#{isStop},'%'))
+            </if>
+            <if test="maxCapacity != null and maxCapacity != ''">
+                AND ss.AUTHORIZED_CAPACITY &lt;= TO_NUMBER('${maxCapacity}')
+            </if>
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND ss.WAREHOUSE_CODE IN (<foreach collection="warehouseCode" item="item" separator=",">#{item}</foreach>)
+            </if>
+
+            <if test= 'dataScope =="1" and kudianCodes !=null'>
+                AND ss.WAREHOUSE_CODE NOT IN (<foreach collection="kudianCodes" item="item" separator=",">#{item}</foreach>)
+            </if>
+            <!--<if test="warehouseCode != null and warehouseCode != ''">
+            AND WAREHOUSE_CODE IN (${warehouseCode})
+            </if>-->
+           <!-- <if test="enterpriseName != null and enterpriseName != ''">
+                AND (WAREHOUSE_CODE IN (SELECT WAREHOUSE_CODE FROM T_STORAGE_WAREHOUSE WHERE  ENTERPRISE_NAME = #{enterpriseName, jdbcType=VARCHAR})
+                OR WAREHOUSE_CODE = #{enterpriseName, jdbcType=VARCHAR})
+            </if>-->
+
+        </where>
+    </select>
+
+
+
+    <select  id="proxyList" parameterType="java.util.HashMap" resultMap="storageStoreHouseResultMap1">
+        ${start}
+        SELECT
+        <include refid="columns1"/>
+        FROM
+        <include refid="tablename"/> ss
+        LEFT  JOIN T_STORAGE_WAREHOUSE sw ON  (ss.WAREHOUSE_CODE = sw.WAREHOUSE_CODE)
+        <where>
+            1 = 1
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND sw.ENTERPRISE_NAME = '${enterpriseName}'
+            </if>
+            <if test="warehouse != null and warehouse != ''">
+                AND sw.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+            </if>
+            <if test="encode != null and encode != ''">
+                AND ss.ENCODE LIKE '%${encode}%'
+            </if>
+            <if test="type != null and type != ''">
+                AND ss.TYPE LIKE '%${type}%'
+            </if>
+            <if test="status != null and status != ''">
+                AND ss.STATUS LIKE '%${status}%'
+            </if>
+            <if test="isStop != null and isStop != ''">
+                AND ss.ISSTOP LIKE '%${isStop}%'
+            </if>
+            <if test="minCapacity != null and minCapacity != ''">
+                AND ss.AUTHORIZED_CAPACITY >= TO_NUMBER('${minCapacity}')
+            </if>
+            <if test="maxCapacity != null and maxCapacity != ''">
+                AND ss.AUTHORIZED_CAPACITY &lt;= TO_NUMBER('${maxCapacity}')
+            </if>
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND ss.WAREHOUSE_CODE IN (<foreach collection="warehouseCode" item="item" separator=",">#{item}</foreach>)
+            </if>
+            <if test= 'dataScope =="1" and kudianCodes !=null'>
+                AND ss.WAREHOUSE_CODE NOT IN (<foreach collection="kudianCodes" item="item" separator=",">#{item}</foreach>)
+            </if>
+
+            <!--<if test="warehouseCode != null and warehouseCode != ''">
+                AND warehouse_code IN (#{warehouseCode, jdbcType=VARCHAR})
+            </if>-->
+            <!--<if test="enterpriseName != null and enterpriseName != ''">
+                AND (WAREHOUSE_CODE IN (SELECT WAREHOUSE_CODE FROM T_STORAGE_WAREHOUSE WHERE  ENTERPRISE_NAME = #{enterpriseName, jdbcType=VARCHAR})
+                OR WAREHOUSE_CODE = #{enterpriseName, jdbcType=VARCHAR})
+            </if>-->
+        </where>
+        ORDER BY ss.id DESC
+        ${end}
+    </select>
+
+    <select id="storeHouseCount" resultType="java.lang.Integer">
+        select  count(1) from <include refid="tablename" />
+        <where>
+            <if test="warehouseCode != null and warehouseCode!=''">
+                AND WAREHOUSE_CODE = #{warehouseCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="listStoreHouseByWarehouseCode" resultMap="storageStoreHouseResultMap">
+        select <include refid="columns"/> from (
+          select t.*, ROWNUM RN from  (
+            select * from <include refid="tablename"/>
+              <where>
+                  AND WAREHOUSE_CODE = #{warehouseCode}
+              </where>) t
+          <where>
+              ROWNUM &lt; ${pageIndex} * ${pageSize} + 1
+          </where>
+        )
+        <where>
+            RN &gt; (${pageIndex} - 1) * ${pageSize}
+        </where>
+    </select>
+
+    <select id="listStoreHouseAndOilCanByWarehouse" resultType="java.lang.String">
+        SELECT
+        ENCODE
+        FROM
+        <include refid="tablename"/> a
+        left join <include refid="warehouseTableName"/> b
+        on a.WAREHOUSE_ID = b.ID
+        <where>
+          <if test="warehouseId !=null and warehouseId!=''">
+          and  b.ID = '${warehouseId}'
+          </if>
+            <if test="warehouseCode !=null and warehouseCode!=''">
+             and   b.WAREHOUSE_CODE = '${warehouseCode}'
+            </if>
+        </where>
+        Union ALL
+        SELECT
+        cast(OILCAN_SERIAL as nvarchar2(100))
+        FROM
+        <include refid="oilcanTableName"/> a
+        left join <include refid="warehouseTableName"/> b
+        on a.WAREHOUSE_CODE = b.WAREHOUSE_CODE
+        <where>
+            <if test="warehouseId !=null and warehouseId!=''">
+            and  b.ID = '${warehouseId}'
+            </if>
+            <if test="warehouseCode !=null and warehouseCode!=''">
+              and  b.WAREHOUSE_CODE = '${warehouseCode}'
+            </if>
+        </where>
+    </select>
+
+    <select id="getcountByWarehouseId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT
+        count(0)
+        FROM
+        <include refid="tablename"/>
+        <where>
+            WAREHOUSE_ID = #{warehouseId}
+        </where>
+    </select>
+
+    <!--搜索仓罐号和油管号-->
+    <select id="findAllByWarehouseId" parameterType="java.util.HashMap" resultMap="storageStoreHouseResultMap">
+        ${start}
+        SELECT
+        a.ID,
+        b.WAREHOUSE_SHORT as WAREHOUSE,
+        a.ENCODE,
+        a.TYPE,
+        a.AUTHORIZED_CAPACITY,
+        b.ADDRESS
+        FROM
+        <include refid="tablename"/> a
+        left join <include refid="warehouseTableName"/> b
+        on a.WAREHOUSE_ID = b.ID
+        <where>
+            WAREHOUSE_ID = #{warehouseId}
+        </where>
+
+        UNION
+        SELECT
+            cast(c.ID as nvarchar2(100)),
+            cast(d.WAREHOUSE_SHORT as nvarchar2(100)),
+            cast(OILCAN_SERIAL as nvarchar2(100)),
+            cast(OILCAN_TYPE as nvarchar2(100)),
+            cast(replace(AUTHORIZED_CAPACITY,'吨','') as number(20)),
+            ADDRESS
+        FROM
+        T_STORAGE_OILCAN c
+        LEFT JOIN T_STORAGE_WAREHOUSE d ON c.WAREHOUSE_ID = d.ID
+        <where>
+            WAREHOUSE_ID = #{warehouseId}
+        </where>
+        ${end}
+    </select>
+
+
+    <select id="countStorehouseOfWarehouseName" resultType="java.lang.Integer">
+        select count(1) from
+        <include refid="tablename"/> a
+        left join <include refid="warehouseTableName"/> b
+        on a.WAREHOUSE_ID = b.ID
+        <where>
+            <if test="warehouseName!=null and warehouseName!=''">
+                b.WAREHOUSE_SHORT = #{warehouseName}
+            </if>
+        </where>
+    </select>
+
+    <select id="listStorehouseOfWarehouseName" resultMap="storageStoreHouseResultMap">
+        ${start}
+        select a.* from <include refid="tablename"/> a
+        left join <include refid="warehouseTableName"/> b
+        on a.WAREHOUSE_ID = b.ID
+        <where>
+            <if test="warehouseName!=null and warehouseName!=''">
+                b.WAREHOUSE_SHORT = #{warehouseName}
+            </if>
+        </where>
+        ${end}
+    </select>
+
+
+    <select id="count1" parameterType="java.util.HashMap" resultType="int">
+        select count(*) from
+        <include refid="tablename"></include>
+        <where>
+            <if test="warehouse != null and warehouse != ''">
+                AND WAREHOUSE LIKE '%${warehouse}%'
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                AND WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="encode != null and encode != ''">
+                AND ENCODE = #{encode}
+            </if>
+            <if test="status != null and status != ''">
+                AND STATUS LIKE '%${status}%'
+            </if>
+            <if test="type != null and type != ''">
+                AND TYPE LIKE '%${type}%'
+            </if>
+            <if test="minCapacity != null and minCapacity != ''">
+                AND AUTHORIZED_CAPACITY >= TO_NUMBER('${minCapacity}')
+            </if>
+            <if test="maxCapacity != null and maxCapacity != ''">
+                AND AUTHORIZED_CAPACITY &lt;= TO_NUMBER('${maxCapacity}')
+            </if>
+            <if test="flag == 'dc'">
+                AND WAREHOUSE_CODE NOT IN (SELECT WAREHOUSE_CODE FROM t_storage_warehouse WHERE organization_code =
+                'CBL')
+            </if>
+            <if test="flag != 'dc' and flag !='' and flag != null">
+                AND WAREHOUSE_CODE IN (SELECT WAREHOUSE_CODE FROM t_storage_warehouse WHERE organization_code = 'CBL')
+            </if>
+            <!--<if test="warehouseCode != null and warehouseCode != ''">-->
+            <!--AND warehouse_code = #{warehouseCode, jdbcType=VARCHAR}-->
+            <!--</if>-->
+            <if test="enterpriseName != null and enterpriseName != ''">
+                AND (WAREHOUSE_CODE IN (SELECT WAREHOUSE_CODE FROM T_STORAGE_WAREHOUSE WHERE  ENTERPRISE_NAME = #{enterpriseName, jdbcType=VARCHAR})
+                OR WAREHOUSE_CODE = #{enterpriseName, jdbcType=VARCHAR})
+            </if>
+
+        </where>
+    </select>
+
+    <select id="countOil" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        select count(*) from
+        T_STORAGE_OILCAN
+        <where>
+
+            <if test="warehouseId != null and warehouseId != ''">
+                AND WAREHOUSE_ID = #{warehouseId}
+            </if>
+            <if test="encode != null and encode != ''">
+                AND OILCAN_SERIAL = #{encode}
+            </if>
+        </where>
+    </select>
+
+    <select id="countStoreHouseByEncode" parameterType="String" resultType="java.lang.Integer">
+        select count(*) from  <include refid="tablename"/>
+          where
+            ENCODE = #{encode}
+            and WAREHOUSE_ID = #{warehouseId}
+    </select>
+</mapper>

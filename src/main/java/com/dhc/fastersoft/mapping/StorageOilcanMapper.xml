@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.StorageOilcanDao">
+  <resultMap id="storageOilcanResultMap" type="com.dhc.fastersoft.entity.StorageOilcan">
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="WAREHOUSE" jdbcType="VARCHAR" property="warehouse" />
+    <result column="WAREHOUSE_ID" jdbcType="VARCHAR" property="warehouseId" />
+    <result column="OILCAN_SERIAL" jdbcType="VARCHAR" property="oilcanSerial" />
+    <result column="OILCAN_TYPE" jdbcType="VARCHAR" property="oilcanType" />
+    <result column="OILCAN_STATUS" jdbcType="VARCHAR" property="oilcanStatus" />
+    <result column="DELIVER_DATE" jdbcType="VARCHAR" property="deliverDate" />
+    <result column="OILCAN_BODY" jdbcType="VARCHAR" property="oilcanBody" />
+    <result column="OILCAN_TOP" jdbcType="VARCHAR" property="oilcanTop" />
+    <result column="OILCAN_FLOOR" jdbcType="VARCHAR" property="oilcanFloor" />
+    <result column="DESIGNED_CAPACITY" jdbcType="VARCHAR" property="designedCapacity" />
+    <result column="AUTHORIZED_CAPACITY" jdbcType="VARCHAR" property="authorizedCapacity" />
+    <result column="OILCAN_HEIGH" jdbcType="VARCHAR" property="oilcanHeigh" />
+    <result column="OILCAN_INNER_DIAMETER" jdbcType="VARCHAR" property="oilcanInnerDiameter" />
+    <result column="OILCAN_OUTER_DIAMETER" jdbcType="VARCHAR" property="oilcanOuterDiameter" />
+    <result column="DESIGNED_OIL_LINE" jdbcType="VARCHAR" property="designedOilLine" />
+    <result column="AUTHORIZED_OIL_LINE" jdbcType="VARCHAR" property="authorizedOilLine" />
+    <result column="HEAT_INSULATION" jdbcType="VARCHAR" property="heatInsulation" />
+    <result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="LONGITUDE" property="longitude" jdbcType="VARCHAR" />
+    <result column="LATITUDE" property="latitude" jdbcType="VARCHAR" />
+    <result column="OILCAN_NAME" property="oilcanName" jdbcType="VARCHAR" />
+    <result column="WAREHOUSE_CODE" property="warehouseCode" jdbcType="VARCHAR" />
+    <result column="CREATORID" property="creatorId" jdbcType="VARCHAR"/>
+    <result column="ORDER_NO" property="orderNo" jdbcType="DECIMAL"/>
+  </resultMap>
+  
+  <sql id="columns">
+	ID, WAREHOUSE,WAREHOUSE_ID, OILCAN_SERIAL,
+	OILCAN_TYPE, OILCAN_STATUS, DELIVER_DATE, 
+	OILCAN_BODY, OILCAN_TOP, OILCAN_FLOOR, 
+	DESIGNED_CAPACITY, AUTHORIZED_CAPACITY, OILCAN_HEIGH, 
+	OILCAN_INNER_DIAMETER, OILCAN_OUTER_DIAMETER, 
+	DESIGNED_OIL_LINE, AUTHORIZED_OIL_LINE, HEAT_INSULATION, 
+	CREATOR, CREATE_DATE, REMARK,LONGITUDE,LATITUDE,OILCAN_NAME,WAREHOUSE_CODE,CREATORID,
+	ORDER_NO
+  </sql>
+
+	<sql id="columnss">
+	tso.ID, house.WAREHOUSE_SHORT AS WAREHOUSE,tso.WAREHOUSE_ID, tso.OILCAN_SERIAL,
+	tso.OILCAN_TYPE, tso.OILCAN_STATUS, tso.DELIVER_DATE,
+	tso.OILCAN_BODY, tso.OILCAN_TOP, tso.OILCAN_FLOOR,
+	tso.DESIGNED_CAPACITY, tso.AUTHORIZED_CAPACITY, tso.OILCAN_HEIGH,
+	tso.OILCAN_INNER_DIAMETER, tso.OILCAN_OUTER_DIAMETER,
+	tso.DESIGNED_OIL_LINE, tso.AUTHORIZED_OIL_LINE, tso.HEAT_INSULATION,
+	tso.CREATOR, tso.CREATE_DATE, tso.REMARK,tso.LONGITUDE,tso.LATITUDE,tso.OILCAN_NAME,tso.WAREHOUSE_CODE,tso.CREATORID
+	,tso.ORDER_NO
+  </sql>
+  <sql id="tablename">
+    T_STORAGE_OILCAN
+  </sql>
+
+  <insert id="save" parameterType="com.dhc.fastersoft.entity.StorageOilcan">
+    insert into <include refid="tablename"></include> (<include refid="columns"></include>,ISSTOP)
+    values (#{id,jdbcType=VARCHAR}, #{warehouse,jdbcType=VARCHAR},#{warehouseId,jdbcType=VARCHAR}, #{oilcanSerial,jdbcType=VARCHAR},
+      #{oilcanType,jdbcType=VARCHAR}, #{oilcanStatus,jdbcType=VARCHAR}, #{deliverDate,jdbcType=VARCHAR}, 
+      #{oilcanBody,jdbcType=VARCHAR}, #{oilcanTop,jdbcType=VARCHAR}, #{oilcanFloor,jdbcType=VARCHAR}, 
+      #{designedCapacity,jdbcType=VARCHAR}, #{authorizedCapacity,jdbcType=VARCHAR}, #{oilcanHeigh,jdbcType=VARCHAR}, 
+      #{oilcanInnerDiameter,jdbcType=VARCHAR}, #{oilcanOuterDiameter,jdbcType=VARCHAR}, 
+      #{designedOilLine,jdbcType=VARCHAR}, #{authorizedOilLine,jdbcType=VARCHAR}, #{heatInsulation,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR}, 
+      #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{oilcanName,jdbcType=VARCHAR}, #{warehouseCode,jdbcType=VARCHAR},
+	  #{creatorId,jdbcType=VARCHAR},#{isStop,jdbcType=VARCHAR},#{orderNo,jdbcType=DECIMAL}
+      )
+  </insert>
+  
+  <select id="getPrimId" resultType="java.lang.String">
+  	select SEQ_STORAGE_OILCAN.NEXTVAL from dual
+  </select>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.StorageOilcan">
+  	update 
+  	<include refid="tablename"></include> 
+  	set 
+  	WAREHOUSE = #{warehouse,jdbcType=VARCHAR},WAREHOUSE_ID = #{warehouseId,jdbcType=VARCHAR}, OILCAN_SERIAL = #{oilcanSerial,jdbcType=VARCHAR},
+  	OILCAN_TYPE = #{oilcanType,jdbcType=VARCHAR}, OILCAN_STATUS = #{oilcanStatus,jdbcType=VARCHAR}, 
+  	DELIVER_DATE = #{deliverDate,jdbcType=VARCHAR}, OILCAN_BODY = #{oilcanBody,jdbcType=VARCHAR}, 
+  	OILCAN_TOP = #{oilcanTop,jdbcType=VARCHAR}, OILCAN_FLOOR = #{oilcanFloor,jdbcType=VARCHAR}, 
+  	DESIGNED_CAPACITY = #{designedCapacity,jdbcType=VARCHAR}, AUTHORIZED_CAPACITY = #{authorizedCapacity,jdbcType=VARCHAR}, 
+  	OILCAN_HEIGH = #{oilcanHeigh,jdbcType=VARCHAR}, OILCAN_INNER_DIAMETER = #{oilcanInnerDiameter,jdbcType=VARCHAR}, 
+  	OILCAN_OUTER_DIAMETER = #{oilcanOuterDiameter,jdbcType=VARCHAR}, DESIGNED_OIL_LINE = #{designedOilLine,jdbcType=VARCHAR}, 
+  	AUTHORIZED_OIL_LINE = #{authorizedOilLine,jdbcType=VARCHAR}, HEAT_INSULATION = #{heatInsulation,jdbcType=VARCHAR}, 
+  	CREATOR = #{creator,jdbcType=VARCHAR}, REMARK = #{remark,jdbcType=VARCHAR},
+  	LONGITUDE = #{longitude,jdbcType=VARCHAR},LATITUDE = #{latitude,jdbcType=VARCHAR},OILCAN_NAME = #{oilcanName,jdbcType=VARCHAR}
+	  ,ISSTOP = #{isStop,jdbcType=VARCHAR},ORDER_NO = #{orderNo,jdbcType=DECIMAL}
+  	<where>
+  	  ID = #{id}
+  	</where>
+  </update>
+  
+  <select id="count" parameterType="java.util.HashMap" resultType="_int">
+  	select count(tso.id)
+  	from <include refid="tablename"></include>  tso left join T_STORAGE_WAREHOUSE house ON tso.WAREHOUSE_ID = house.ID
+  	<where>
+  	  <if test="warehouse != null and warehouse != ''">
+  	    and house.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+  	  </if>
+  	  <if test="oilcanSerial != null and oilcanSerial != ''">
+  	    and tso.oilcan_Serial LIKE '%${oilcanSerial}%'
+  	  </if>
+  	  <if test="oilcanType != null and oilcanType != ''">
+  	    and tso.oilcan_Type LIKE '%${oilcanType}%'
+  	  </if>
+  	  <if test="oilcanStatus != null and oilcanStatus != ''">
+  	    and tso.oilcan_Status LIKE '%${oilcanStatus}%'
+  	  </if>
+  	  <if test="designedCapacity != null and designedCapacity != ''">
+  	    and tso.designed_Capacity LIKE '%${designedCapacity}%'
+  	  </if>
+  	  <if test="authorizedCapacity != null and authorizedCapacity != ''">
+  	    and tso.authorized_Capacity LIKE '%${authorizedCapacity}%'
+  	  </if>
+  	  <if test="designedOilLine != null and designedOilLine != ''">
+  	    and tso.designed_Oil_Line LIKE '%${designedOilLine}%'
+  	  </if>
+  	  <if test="authorizedOilLine != null and authorizedOilLine != ''">
+  	    and tso.authorized_Oil_Line LIKE '%${authorizedOilLine}%'
+  	  </if>
+  	  <if test="deliverDate != null and deliverDate != ''">
+  	    and tso.deliver_Date LIKE '%${deliverDate}%'
+  	  </if>
+  	  <if test="minCapacity != null and minCapacity != ''">
+  	  	
+   	  	AND tso.AUTHORIZED_CAPACITY >= '${minCapacity}'
+   	  </if>
+   	  <if test="maxCapacity != null and maxCapacity != ''">
+   	  	AND tso.AUTHORIZED_CAPACITY &lt;= '${maxCapacity}'
+   	  </if>
+   	  <if test="warehouseCode != null and warehouseCode != ''">
+   	  	AND tso.WAREHOUSE_CODE = #{warehouseCode}
+   	  </if>
+		<if test="warehouseId != null and warehouseId !=''">
+			AND tso.WAREHOUSE_ID = #{warehouseId}
+		</if>
+  	</where>
+  </select>
+  
+  <select id="list" parameterType="java.util.HashMap" resultMap="storageOilcanResultMap">
+    ${start}
+  	select <include refid="columnss"></include> ,tso.ISSTOP
+  	from <include refid="tablename"></include> tso left join T_STORAGE_WAREHOUSE house ON tso.WAREHOUSE_ID = house.ID
+  	<where>
+  	  <if test="warehouse != null and warehouse != ''">
+  	    and house.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+  	  </if>
+		<if test="warehouseId != null and warehouseId != ''">
+			and tso.WAREHOUSE_ID LIKE '%${warehouseId}%'
+		</if>
+  	  <if test="oilcanSerial != null and oilcanSerial != ''">
+  	    and tso.oilcan_Serial LIKE '%${oilcanSerial}%'
+  	  </if>
+  	  <if test="oilcanType != null and oilcanType != ''">
+  	    and tso.oilcan_Type LIKE '%${oilcanType}%'
+  	  </if>
+  	  <if test="oilcanStatus != null and oilcanStatus != ''">
+  	    and tso.oilcan_Status LIKE '%${oilcanStatus}%'
+  	  </if>
+  	  <if test="designedCapacity != null and designedCapacity != ''">
+  	    and tso.designed_Capacity LIKE '%${designedCapacity}%'
+  	  </if>
+  	  <if test="authorizedCapacity != null and authorizedCapacity != ''">
+  	    and tso.authorized_Capacity LIKE '%${authorizedCapacity}%'
+  	  </if>
+  	  <if test="designedOilLine != null and designedOilLine != ''">
+  	    and tso.designed_Oil_Line LIKE '%${designedOilLine}%'
+  	  </if>
+  	  <if test="authorizedOilLine != null and authorizedOilLine != ''">
+  	    and tso.authorized_Oil_Line LIKE '%${authorizedOilLine}%'
+  	  </if>
+  	  <if test="deliverDate != null and deliverDate != ''">
+  	    and tso.deliver_Date LIKE '%${deliverDate}%'
+  	  </if>
+  	  <if test="minCapacity != null and minCapacity != ''">
+  	  	
+   	  	AND tso.AUTHORIZED_CAPACITY >= '${minCapacity}'
+   	  </if>
+   	  <if test="maxCapacity != null and maxCapacity != ''">
+   	  	AND tso.AUTHORIZED_CAPACITY &lt;= '${maxCapacity}'
+   	  </if>
+		<if test="warehouseCode != null and warehouseCode != ''">
+			AND tso.WAREHOUSE_CODE = #{warehouseCode}
+		</if>
+		<if test="isStop != null and isStop != ''">
+			AND tso.ISSTOP = #{isStop}
+		</if>
+  	</where>
+  	ORDER BY tso.CREATE_DATE DESC
+    ${end}
+  </select>
+
+  <select id="get" parameterType="java.lang.String" resultMap="storageOilcanResultMap">
+    select <include refid="columnss"></include>,tso.ISSTOP
+  	from <include refid="tablename"></include> tso left join T_STORAGE_WAREHOUSE house ON tso.WAREHOUSE_ID = house.ID
+  	<where>
+		tso.ID = #{id}
+  	</where>
+  </select>
+  
+  <delete id="remove" parameterType="java.lang.String">
+    delete 
+    from 
+    <include refid="tablename"></include>
+    <where>
+      ID = #{id}
+    </where>
+  </delete>
+
+	<select id="selectMonthBzw" resultType="java.lang.Integer" parameterType="com.dhc.fastersoft.entity.StorageOilcan">
+        SELECT count(*) FROM T_REPORT_MONTH_BZW  where REPORT_WAREHOUSE_ID = #{warehouseId} and STOREHOUSE = #{oilcanSerial}
+      </select>
+	<select id="selectMonthSwtz" resultType="java.lang.Integer" parameterType="com.dhc.fastersoft.entity.StorageOilcan">
+        SELECT count(*) FROM T_REPORT_MONTH_SWTZ  where EXTENDS_WAREHOUSE_ID = #{warehouseId} and STOREHOUSE = #{oilcanSerial}
+      </select>
+	<select id="selectPlanDetall" resultType="java.lang.Integer" parameterType="com.dhc.fastersoft.entity.StorageOilcan">
+        SELECT count(*) FROM T_ROTATE_PLAN_DETAIL  where WAREHOUSE_ID = #{warehouseId} and BARN_NUMBER = #{oilcanSerial}
+      </select>
+	<select id="selectQualitySample" resultType="java.lang.Integer" parameterType="com.dhc.fastersoft.entity.StorageOilcan">
+        SELECT count(*) FROM T_QUALITY_SAMPLE  where WAREHOUSE_ID = #{warehouseId} and STOREHOUSE = #{oilcanSerial}
+      </select>
+  <select id="getBySerialAndWarehouse" parameterType="java.lang.String" resultMap="storageOilcanResultMap">
+    SELECT
+	<include refid="columns" />
+	FROM
+	<include refid="tablename" />
+    where
+    	oilcan_Serial = #{0}
+    	AND WAREHOUSE = #{1}
+  </select>
+  
+  
+</mapper>

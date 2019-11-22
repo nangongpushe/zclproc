@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualitySampleMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualitySample" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SAMPLE_NO" property="sampleNo" jdbcType="OTHER" />
+    <result column="QUANTITY" property="quantity" jdbcType="OTHER" />
+    <result column="SAMPLE_SOUCE" property="sampleSouce" jdbcType="OTHER" />
+    <result column="EXECUTOR" property="executor" jdbcType="OTHER" />
+    <result column="STORAGE_WAY" property="storageWay" jdbcType="OTHER" />
+    <result column="STOREHOUSE" property="storehouse" jdbcType="OTHER" />
+    <result column="VARIETY" property="variety" jdbcType="OTHER" />
+    <result column="HARVEST_YEAR" property="harvestYear" jdbcType="OTHER" />
+    <result column="ORIGIN" property="origin" jdbcType="OTHER" />
+    <result column="SAMPLING_DATE" property="samplingDate" jdbcType="TIMESTAMP" />
+    <result column="SAMPLING_PEOPLE" property="samplingPeople" jdbcType="OTHER" />
+    <result column="TEST_PEOPLE" property="testPeople" jdbcType="OTHER" />
+    <result column="TEST_DATE" property="testDate" jdbcType="TIMESTAMP" />
+      <result column="TEST_END_DATE" property="testEndDate" jdbcType="TIMESTAMP" />
+    <result column="TEST_STATUS" property="testStatus" jdbcType="OTHER" />
+    <result column="REMARK" property="remark" jdbcType="OTHER" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+    <result column="VARIETY_TYPE" property="varietyType" jdbcType="VARCHAR" />
+    <result column="VALID_TYPE" property="validType" jdbcType="VARCHAR" />
+    <result column="STORE_TIME" property="storeTime" jdbcType="TIMESTAMP" />
+    <result column="DEAL_SERIAL" property="dealSerial" jdbcType="VARCHAR" />
+    <result column="TASK_PRIORITY" property="taskPriority" jdbcType="VARCHAR"/>
+    <result column="STORE_NATURE" property="storeNature" jdbcType="VARCHAR" />
+    <result column="STORE_TYPE" property="storeType" jdbcType="VARCHAR" />
+    <result column="IN_STORE_YEAR" property="inStoreYear" jdbcType="VARCHAR"/>
+      <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR" />
+      <result column="CHECK_TYPE" property="checkType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="criteria">
+  		<where>
+			  <if test="sampleNo != null and  sampleNo !=''" >
+	              AND SAMPLE_NO LIKE '%${sampleNo}%'
+		      </if>
+		      <if test="quantity != null and quantity !=''" >
+		          AND QUANTITY LIKE '%${quantity}%'
+		      </if>
+		       <if test="creator != null and creator !=''" >
+		          AND CREATOR LIKE '%${creator}%'
+		      </if>
+		      <if test="variety != null and variety != ''" >
+		          AND VARIETY LIKE '%${variety}%'
+		      </if>
+		      <if test="testStatus != null and testStatus != ''" >
+		          AND TEST_STATUS LIKE '%${testStatus}%'
+		      </if>
+		      <if test="samplingDate != null and samplingDate != ''" >
+		          AND SAMPLING_DATE LIKE to_date('${samplingDate}','yyyy-MM-dd')
+		      </if>
+		      <if test="dealSerial != null and dealSerial != ''" >
+		          AND DEAL_SERIAL LIKE '%${dealSerial}%'
+		      </if>
+		      <if test="storehouse != null and storehouse != ''" >
+		          AND STOREHOUSE LIKE '%${storehouse}%'
+		      </if>
+		      <if test="harvestYear != null and harvestYear != ''" >
+		          AND HARVEST_YEAR = to_date('${harvestYear}','YYYY-MM-DD')
+		      </if>
+              <if test="origin != null and origin != ''" >
+                  AND ORIGIN LIKE '%${origin}%'
+              </if>
+              <if test="sampleSouce != null and sampleSouce != ''" >
+                  AND SAMPLE_SOUCE like concat(concat('%',#{sampleSouce}),'%')
+              </if>
+              <if test="company != null and company != ''" >
+              	<choose>
+              		<when test="type == 'dc'">
+	                  	AND COMPANY IN 
+	                  	<foreach collection="company" item="c" open="(" close=")" separator=",">
+	                  		#{c.warehouseName}
+	                  	</foreach>
+              		</when>
+              		<otherwise>
+              			AND COMPANY = #{company}
+              		</otherwise>
+              	</choose>
+              </if>
+			  <if test="validType != null and validType != ''" >
+                  AND VALID_TYPE = #{validType}
+              </if>
+            <if test="checkType != null and checkType != ''">
+                AND CHECK_TYPE = #{checkType}
+            </if>
+		</where>
+  </sql>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.QualitySample" >
+    insert into T_QUALITY_SAMPLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ID,
+      <if test="sampleNo != null" >
+        SAMPLE_NO,
+      </if>
+      <if test="quantity != null" >
+        QUANTITY,
+      </if>
+      <if test="sampleSouce != null" >
+        SAMPLE_SOUCE,
+      </if>
+      <if test="executor != null" >
+        EXECUTOR,
+      </if>
+      <if test="storageWay != null" >
+        STORAGE_WAY,
+      </if>
+      <if test="storehouse != null" >
+        STOREHOUSE,
+      </if>
+      <if test="variety != null" >
+        VARIETY,
+      </if>
+      <if test="harvestYear != null" >
+        HARVEST_YEAR,
+      </if>
+      <if test="origin != null" >
+        ORIGIN,
+      </if>
+      <if test="samplingDate != null" >
+        SAMPLING_DATE,
+      </if>
+      <if test="samplingPeople != null" >
+        SAMPLING_PEOPLE,
+      </if>
+      <if test="testPeople != null" >
+        TEST_PEOPLE,
+      </if>
+      <if test="testDate != null and testDate != '' " >
+        TEST_DATE,
+      </if>
+        <if test="testEndDate != null and testEndDate != ''" >
+            TEST_END_DATE,
+        </if>
+      <if test="testStatus != null" >
+        TEST_STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="company != null" >
+        COMPANY,
+      </if>
+      <if test="varietyType != null" >
+        VARIETY_TYPE,
+      </if>
+      <if test="validType != null" >
+        VALID_TYPE,
+      </if>
+      <if test="storeTime != null" >
+        STORE_TIME,
+      </if>
+      <if test="dealSerial != null" >
+        DEAL_SERIAL,
+      </if>
+      <if test="taskPriority != null">
+      	TASK_PRIORITY,
+      </if>
+      <if test="storeNature != null" >
+        STORE_NATURE,
+      </if>
+      <if test="storeType != null" >
+        STORE_TYPE,
+      </if>
+      <if test="inStoreYear != null">
+      	IN_STORE_YEAR,
+      </if>
+      <if test="warehouseId != null">
+        WAREHOUSE_ID,
+      </if>
+      <if test="checkType!=null and checkType!=''">
+            CHECK_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+     SEQ_QUALITY_SAMPLE.nextval,
+      <if test="sampleNo != null" >
+        #{sampleNo,jdbcType=OTHER},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=OTHER},
+      </if>
+      <if test="sampleSouce != null" >
+        #{sampleSouce,jdbcType=OTHER},
+      </if>
+      <if test="executor != null" >
+        #{executor,jdbcType=OTHER},
+      </if>
+      <if test="storageWay != null" >
+        #{storageWay,jdbcType=OTHER},
+      </if>
+      <if test="storehouse != null" >
+        #{storehouse,jdbcType=OTHER},
+      </if>
+      <if test="variety != null" >
+        #{variety,jdbcType=OTHER},
+      </if>
+      <if test="harvestYear != null" >
+       TO_DATE(#{harvestYear,jdbcType=TIMESTAMP},'yyyy') ,
+      </if>
+      <if test="origin != null" >
+        #{origin,jdbcType=OTHER},
+      </if>
+      <if test="samplingDate != null" >
+        TO_DATE(#{samplingDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') ,
+      </if>
+      <if test="samplingPeople != null" >
+        #{samplingPeople,jdbcType=OTHER},
+      </if>
+      <if test="testPeople != null" >
+        #{testPeople,jdbcType=OTHER},
+      </if>
+      <if test="testDate != null and testDate != ''" >
+        TO_DATE(#{testDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') ,
+      </if>
+    <if test="testEndDate != null and testEndDate != ''" >
+        TO_DATE(#{testEndDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') ,
+    </if>
+      <if test="testStatus != null" >
+        #{testStatus,jdbcType=OTHER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=OTHER},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        TO_DATE(#{createDate,jdbcType=TIMESTAMP},'yyyy-mm-dd,hh24:mi:ss') ,
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="varietyType != null" >
+        #{varietyType,jdbcType=VARCHAR},
+      </if>
+      <if test="validType != null" >
+        #{validType,jdbcType=VARCHAR},
+      </if>
+      <if test="storeTime != null" >
+        #{storeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealSerial != null" >
+        #{dealSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="taskPriority != null" >
+        #{taskPriority,jdbcType=VARCHAR},
+      </if>
+      <if test="storeNature != null" >
+        #{storeNature,jdbcType=VARCHAR},
+      </if>
+      <if test="storeType != null" >
+        #{storeType,jdbcType=VARCHAR},
+      </if>
+      <if test="inStoreYear != null" >
+        #{inStoreYear,jdbcType=VARCHAR},
+      </if>
+        <if test="warehouseId != null" >
+            #{warehouseId,jdbcType=VARCHAR},
+        </if>
+        <if test="checkType!=null and checkType!=''">
+            #{checkType,jdbcType=INTEGER},
+        </if>
+    </trim>
+  </insert>
+   <select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		${start}  SELECT a.ID,a.SAMPLE_NO,a.QUANTITY,TSW.WAREHOUSE_SHORT AS SAMPLE_SOUCE,a.STOREHOUSE,a.VARIETY,
+		TO_CHAR(a.HARVEST_YEAR,'YYYY') HARVEST_YEAR,a.ORIGIN,
+		TO_CHAR(a.SAMPLING_DATE,'YYYY-MM-DD') SAMPLING_DATE,
+		a.SAMPLING_PEOPLE,
+		a.TEST_PEOPLE,
+       a.EXECUTOR,
+		TO_CHAR(a.TEST_DATE,'YYYY-MM-DD') TEST_DATE,
+		a.TEST_STATUS,a.DEAL_SERIAL,a.STORE_TIME,a.VALID_TYPE,a.VARIETY_TYPE,a.CREATOR,a.IN_STORE_YEAR,a.STORE_NATURE, a.WAREHOUSE_ID,a.CHECK_TYPE
+		FROM T_QUALITY_SAMPLE a left join T_STORAGE_WAREHOUSE TSW on a.WAREHOUSE_ID = TSW.id
+       <if test="isHasImportation != null and isHasImportation">
+           LEFT JOIN T_ROTATE_CONCLUTE_DETAIL B ON A.DEAL_SERIAL = B.DEAL_SERIAL
+           LEFT JOIN T_ROTATE_CONCLUTE C ON B.DEAL_ID = C.ID
+       </if>
+       <where>
+           <if test="warehouseCode != null and warehouseCode != ''">
+               AND TSW.WAREHOUSE_CODE = #{warehouseCode}
+           </if>
+           <if test="sampleNo != null and  sampleNo !=''" >
+               AND a.SAMPLE_NO LIKE '%${sampleNo}%'
+           </if>
+           <if test="quantity != null and quantity !=''" >
+               AND a.QUANTITY LIKE '%${quantity}%'
+           </if>
+           <if test="creator != null and creator !=''" >
+               AND a.CREATOR LIKE '%${creator}%'
+           </if>
+           <if test="variety != null and variety != ''" >
+               AND a.VARIETY LIKE '%${variety}%'
+           </if>
+           <if test="testStatus != null and testStatus != ''" >
+               AND a.TEST_STATUS LIKE '%${testStatus}%'
+           </if>
+           <if test="samplingDate != null and samplingDate != ''" >
+               AND a.SAMPLING_DATE LIKE to_date('${samplingDate}','yyyy-MM-dd')
+           </if>
+           <if test="dealSerial != null and dealSerial != ''" >
+               AND a.DEAL_SERIAL LIKE '%${dealSerial}%'
+           </if>
+           <if test="storehouse != null and storehouse != ''" >
+               AND a.STOREHOUSE LIKE '%${storehouse}%'
+           </if>
+           <if test='harvestYear != null and harvestYear != "" ' >
+
+              and to_char(a.HARVEST_YEAR,'yyyy') = #{harvestYear}
+           </if>
+           <if test="origin != null and origin != ''" >
+               AND a.ORIGIN LIKE '%${origin}%'
+           </if>
+           <if test="sampleSouce != null and sampleSouce != ''" >
+               AND TSW.WAREHOUSE_SHORT like concat(concat('%',#{sampleSouce}),'%')
+           </if>
+           <if test="company != null and company != ''" >
+               <choose>
+                   <when test="type == 'dc'">
+                       AND a.COMPANY IN
+                       <foreach collection="company" item="c" open="(" close=")" separator=",">
+                           #{c.warehouseName}
+                       </foreach>
+                   </when>
+                   <otherwise>
+                       AND a.COMPANY = #{company}
+                   </otherwise>
+               </choose>
+           </if>
+           <if test="validType != null and validType != ''" >
+               AND a.VALID_TYPE = #{validType}
+           </if>
+           <if test="checkType != null and checkType != ''">
+               AND a.CHECK_TYPE = #{checkType}
+           </if>
+           <if test="userIsNotZSK != null and userIsNotZSK == 'true' and sampleSouce != null and sampleSouce =='舟山库'">
+               AND 0=1
+           </if>
+           <if test="isHasImportation != null and isHasImportation == 'true' and sampleSouce != null and sampleSouce == '舟山库'">
+               OR (A.SAMPLE_SOUCE='舟山库' and c.invite_TYPE = '进口粮采购' AND a.VALID_TYPE = '入库质检')
+           </if>
+       </where>
+
+		/*ORDER BY CREATE_DATE DESC  */
+       order by   NLSSORT (
+       SAMPLE_NO,
+       'NLS_SORT=SCHINESE_PINYIN_M'
+       ) DESC
+		${end}
+	</select>
+	<select id="query" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		SELECT ID,SAMPLE_NO,QUANTITY,STOREHOUSE,VARIETY,
+		TO_CHAR(HARVEST_YEAR,'YYYY') HARVEST_YEAR,ORIGIN,   
+		TO_CHAR(SAMPLING_DATE,'YYYY-MM-DD') SAMPLING_DATE,
+		SAMPLING_PEOPLE,
+		TEST_PEOPLE,   
+		TO_CHAR(TEST_DATE,'YYYY-MM-DD') TEST_DATE,
+		TEST_STATUS,DEAL_SERIAL,STORE_TIME,VALID_TYPE,VARIETY_TYPE,SAMPLE_SOUCE, WAREHOUSE_ID, CHECK_TYPE
+		FROM T_QUALITY_SAMPLE  
+		<include refid="criteria"/>
+		ORDER BY CREATE_DATE  DESC
+		
+	</select>
+	<select id="getMessage" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		SELECT T_QUALITY_SAMPLE.ID,SAMPLE_NO,QUANTITY,STOREHOUSE,VARIETY,
+		TO_CHAR(HARVEST_YEAR,'YYYY') HARVEST_YEAR,ORIGIN,   
+		TO_CHAR(SAMPLING_DATE,'YYYY-MM-DD') SAMPLING_DATE,
+		SAMPLING_PEOPLE,
+		TEST_PEOPLE,   
+		TO_CHAR(TEST_DATE,'YYYY-MM-DD') TEST_DATE,
+        TO_CHAR(TEST_END_DATE,'YYYY-MM-DD') TEST_END_DATE,
+		TEST_STATUS,DEAL_SERIAL,STORE_TIME,VALID_TYPE,VARIETY_TYPE,COMPANY,
+		STORE_NATURE,STORE_TYPE,IN_STORE_YEAR,EXECUTOR, WAREHOUSE_ID,house.WAREHOUSE_SHORT as SAMPLE_SOUCE, CHECK_TYPE
+		FROM T_QUALITY_SAMPLE
+        LEFT JOIN T_STORAGE_WAREHOUSE house on T_QUALITY_SAMPLE.WAREHOUSE_ID = house.id
+		<where>
+			<if test="wareHouseIds!=null">
+				AND house.ID IN(<foreach collection="wareHouseIds" separator="," item="item">#{item}</foreach>)
+			</if>
+            <if test="checkType!=null and checkType != ''">
+                AND CHECK_TYPE = #{checkType}
+            </if>
+		</where>
+		ORDER BY TEST_DATE  
+		
+	</select>
+	 <!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_SAMPLE a left join T_STORAGE_WAREHOUSE TSW ON A.WAREHOUSE_ID = TSW.ID
+        <if test="isHasImportation != null and isHasImportation">
+            LEFT JOIN T_ROTATE_CONCLUTE_DETAIL B ON A.DEAL_SERIAL = B.DEAL_SERIAL
+            LEFT JOIN T_ROTATE_CONCLUTE C ON B.DEAL_ID = C.ID
+        </if>
+        <where>
+            <if test="warehouseCode != null and warehouseCode != ''">
+                AND TSW.WAREHOUSE_CODE = #{warehouseCode}
+            </if>
+            <if test="sampleNo != null and  sampleNo !=''" >
+                AND a.SAMPLE_NO LIKE '%${sampleNo}%'
+            </if>
+            <if test="quantity != null and quantity !=''" >
+                AND a.QUANTITY LIKE '%${quantity}%'
+            </if>
+            <if test="creator != null and creator !=''" >
+                AND a.CREATOR LIKE '%${creator}%'
+            </if>
+            <if test="variety != null and variety != ''" >
+                AND a.VARIETY LIKE '%${variety}%'
+            </if>
+            <if test="testStatus != null and testStatus != ''" >
+                AND a.TEST_STATUS LIKE '%${testStatus}%'
+            </if>
+            <if test="samplingDate != null and samplingDate != ''" >
+                AND a.SAMPLING_DATE LIKE to_date('${samplingDate}','yyyy-MM-dd')
+            </if>
+            <if test="dealSerial != null and dealSerial != ''" >
+                AND a.DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="storehouse != null and storehouse != ''" >
+                AND a.STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            <if test="harvestYear != null and harvestYear != ''" >
+                AND #{harvestYear} = to_char(a.HARVEST_YEAR, 'yyyy')
+            </if>
+            <if test="origin != null and origin != ''" >
+                AND a.ORIGIN LIKE '%${origin}%'
+            </if>
+            <if test="sampleSouce != null and sampleSouce != ''" >
+                AND TSW.WAREHOUSE_SHORT like concat(concat('%',#{sampleSouce}),'%')
+            </if>
+            <if test="company != null and company != ''" >
+                <choose>
+                    <when test="type == 'dc'">
+                        AND a.COMPANY IN
+                        <foreach collection="company" item="c" open="(" close=")" separator=",">
+                            #{c.warehouseName}
+                        </foreach>
+                    </when>
+                    <otherwise>
+                        AND a.COMPANY = #{company}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="validType != null and validType != ''" >
+                AND a.VALID_TYPE = #{validType}
+            </if>
+            <if test="checkType != null and checkType != ''">
+                AND a.CHECK_TYPE = #{checkType}
+            </if>
+            <if test="userIsNotZSK != null and userIsNotZSK == 'true' and sampleSouce != null and sampleSouce =='舟山库'">
+                AND 0=1
+            </if>
+            <if test="isHasImportation != null and isHasImportation == 'true' and sampleSouce != null and sampleSouce == '舟山库'">
+                OR (A.SAMPLE_SOUCE='舟山库' and c.invite_TYPE = '进口粮采购' AND a.VALID_TYPE = '入库质检')
+            </if>
+
+        </where>
+	</select>
+	<select id="countCheck" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_SAMPLE WHERE SAMPLE_NO='${sampleNo}'
+		
+	</select>
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_SAMPLE 
+	</select>
+	<update id="update" parameterType="com.dhc.fastersoft.entity.CustomerInformation">
+			UPDATE T_QUALITY_SAMPLE SET
+      <trim  suffixOverrides=",">
+      <if test="quantity != null" >
+        QUANTITY='${quantity}',
+      </if>
+      <if test="sampleSouce != null" >
+        SAMPLE_SOUCE='${sampleSouce}',
+      </if>
+      <if test="executor != null" >
+        EXECUTOR='${executor}',
+      </if>
+      <if test="storageWay != null" >
+        STORAGE_WAY='${storageWay}',
+      </if>
+      <if test="storehouse != null" >
+        STOREHOUSE='${storehouse}',
+      </if>
+      <if test="variety != null" >
+        VARIETY='${variety}',
+      </if>
+      <if test="harvestYear != null" >
+        HARVEST_YEAR=to_date('${harvestYear}','yyyy'),
+      </if>
+      <if test="origin != null" >
+        ORIGIN='${origin}',
+      </if>
+      <if test="samplingDate != null" >
+        SAMPLING_DATE=to_date('${samplingDate}','yyyy-MM-dd HH24:mi:ss'),
+      </if>
+      <if test="samplingPeople != null" >
+        SAMPLING_PEOPLE='${samplingPeople}',
+      </if>
+      <if test="testPeople != null" >
+        TEST_PEOPLE='${testPeople}',
+      </if>
+      <if test="testDate != null" >
+        TEST_DATE=to_date('${testDate}','yyyy-MM-dd HH24:mi:ss'),
+      </if>
+        <if test="testEndDate != null" >
+            TEST_END_DATE=to_date('${testEndDate}','yyyy-MM-dd HH24:mi:ss'),
+        </if>
+      <if test="testStatus != null" >
+        TEST_STATUS='${testStatus}',
+      </if>
+      <if test="remark != null" >
+        REMARK='${remark}',
+      </if>
+       <if test="creator != null" >
+       CREATOR='${creator}',
+      </if>
+      <if test="createDate != null" >
+       CREATE_DATE= to_date('${createDate}','yyyy-MM-dd HH24:mi:ss'),
+      </if>
+      <if test="company != null" >
+       COMPANY= '${company}',
+      </if>
+      <if test="varietyType != null" >
+        VARIETY_TYPE='${varietyType}',
+      </if>
+      <if test="validType != null" >
+        VALID_TYPE='${validType}',
+      </if>
+      <if test="storeTime != null" >
+        STORE_TIME=#{storeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealSerial != null" >
+        DEAL_SERIAL='${dealSerial}',
+      </if>
+      <if test="taskPriority != null" >
+        TASK_PRIORITY='${taskPriority}',
+      </if>
+      <if test="storeNature != null" >
+        STORE_NATURE= #{storeNature},
+      </if>
+      <if test="storeType != null" >
+        STORE_TYPE='${storeType}',
+      </if>
+      <if test="inStoreYear != null" >
+        IN_STORE_YEAR='${inStoreYear}',
+      </if>
+        <if test="sampleNo != null" >
+            SAMPLE_NO='${sampleNo}',
+        </if>
+          <if test="warehouseId != null" >
+              WAREHOUSE_ID='${warehouseId}',
+
+          </if>
+          <if test="checkType!=null and checkType!=''">
+              CHECK_TYPE = #{checkType},
+          </if>
+      </trim>
+      		  WHERE ID='${id}'
+	</update>
+	<select id="getQSById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+	A.ID,
+	A.SAMPLE_NO,
+	A.QUANTITY,
+	B.WAREHOUSE_SHORT AS SAMPLE_SOUCE,
+	A.EXECUTOR,
+	A.STORAGE_WAY,
+	A.STOREHOUSE,
+	A.VARIETY,
+	TO_CHAR( HARVEST_YEAR, 'YYYY' ) HARVEST_YEAR,
+	A.ORIGIN,
+	TO_CHAR( SAMPLING_DATE, 'yyyy-MM-dd' ) SAMPLING_DATE,
+	A.SAMPLING_PEOPLE,
+	A.TEST_PEOPLE,
+	TO_CHAR( TEST_DATE, 'yyyy-MM-dd hh24:mi:ss' ) TEST_DATE,
+	TO_CHAR( TEST_END_DATE, 'yyyy-MM-dd hh24:mi:ss' ) TEST_END_DATE,
+	A.TEST_STATUS,
+	A.REMARK,
+	A.TASK_PRIORITY,
+	A.DEAL_SERIAL,
+	A.STORE_TIME,
+	A.VALID_TYPE,
+	A.VARIETY_TYPE,
+	A.STORE_NATURE,
+	A.STORE_TYPE,
+	A.IN_STORE_YEAR,
+	A.WAREHOUSE_ID,
+	A.CHECK_TYPE
+    FROM
+	T_QUALITY_SAMPLE A
+	LEFT JOIN T_STORAGE_WAREHOUSE B ON A.WAREHOUSE_ID = B.ID WHERE A.ID='${id}'
+	</select>
+	
+	<update id="updateSampleStatus" parameterType="java.util.Map">
+		UPDATE T_QUALITY_SAMPLE SET TEST_STATUS = #{testStatus} WHERE SAMPLE_NO = #{sampleNo}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_QUALITY_SAMPLE WHERE ID='${id}'
+	</delete>
+	
+	<select id="getQualityInfo" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT t.sample_no FROM (
+      		SELECT SAMPLE_NO,CREATE_DATE FROM T_QUALITY_SAMPLE
+      		WHERE
+      		  DEAL_SERIAL = #{dealSerial}
+      		  AND VALID_TYPE = #{validType}
+      		  <if test="storehouse != null and storehouse != '' ">
+                  AND STOREHOUSE = #{storehouse}
+              </if>
+      		ORDER BY CREATE_DATE ${sort}
+    	) t WHERE rownum = 1
+	</select>
+
+    <select id="getSampleInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT * FROM (
+        SELECT * FROM T_QUALITY_SAMPLE WHERE DEAL_SERIAL = #{dealSerial} ORDER BY CREATE_DATE ${sort}
+        ) t WHERE rownum = 1
+    </select>
+
+
+    <select id="getInSampleList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT DEAL_SERIAL
+		FROM T_QUALITY_SAMPLE
+        <where>
+            <if test="!froeign">
+                <if test="receiveId != null and receiveId != ''">
+                    AND WAREHOUSE_ID = #{receiveId,jdbcType=VARCHAR}
+                </if>
+                <if test="encode != null and encode != ''">
+                    AND STOREHOUSE = #{encode,jdbcType=VARCHAR}
+                </if>
+            </if>
+
+            <if test="harvestYear != null and harvestYear != ''">
+                AND to_char(HARVEST_YEAR,'yyyy') = #{harvestYear,jdbcType=VARCHAR}
+            </if>
+            <if test="grainType != null and grainType != ''">
+                AND VARIETY = #{grainType,jdbcType=VARCHAR}
+            </if>
+            <if test="origin != null and origin != ''">
+                AND ORIGIN = #{origin,jdbcType=VARCHAR}
+            </if>
+            and valid_type = '入库质检'
+            and deal_serial is not null
+        </where>
+        order by create_date,in_store_year desc
+    </select>
+</mapper>

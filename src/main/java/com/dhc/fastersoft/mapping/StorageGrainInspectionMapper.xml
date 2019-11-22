@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.StorageGrainInspectionDao">
+    <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.StorageGrainInspection">
+        <result column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="WAREHOUSE" jdbcType="VARCHAR" property="warehouse"/>
+        <result column="WAREHOUSE_ID" jdbcType="VARCHAR" property="warehouseId"/>
+        <result column="ENCODE" jdbcType="VARCHAR" property="encode"/>
+        <result column="WEATHER" jdbcType="VARCHAR" property="weather"/>
+        <result column="QUANTITY" jdbcType="VARCHAR" property="quantity"/>
+        <result column="DEW" jdbcType="DECIMAL" property="dew"/>
+        <result column="IMPURITY" jdbcType="DECIMAL" property="impurity"/>
+        <result column="STOREHOUSE_TEMP" jdbcType="DECIMAL" property="storehouseTemp"/>
+        <result column="TEMPERATURE" jdbcType="DECIMAL" property="temperature"/>
+        <result column="STOREHOUSE_WET" jdbcType="DECIMAL" property="storehouseWet"/>
+        <result column="AIR_WET" jdbcType="DECIMAL" property="airWet"/>
+        <result column="TOP_MAX" jdbcType="DECIMAL" property="topMax"/>
+        <result column="TOP_MIN" jdbcType="DECIMAL" property="topMin"/>
+        <result column="TOP_AVG" jdbcType="DECIMAL" property="topAvg"/>
+        <result column="TOP_MIDDLE_MAX" jdbcType="DECIMAL" property="topMiddleMax"/>
+        <result column="TOP_MIDDLE_MIN" jdbcType="DECIMAL" property="topMiddleMin"/>
+        <result column="TOP_MIDDLE_AVG" jdbcType="DECIMAL" property="topMiddleAvg"/>
+        <result column="LOW_MIDDLE_MAX" jdbcType="DECIMAL" property="lowMiddleMax"/>
+        <result column="LOW_MIDDLE_MIN" jdbcType="DECIMAL" property="lowMiddleMin"/>
+        <result column="LOW_MIDDLE_AVG" jdbcType="DECIMAL" property="lowMiddleAvg"/>
+        <result column="LOW_MAX" jdbcType="DECIMAL" property="lowMax"/>
+        <result column="LOW_MIN" jdbcType="DECIMAL" property="lowMin"/>
+        <result column="LOW_AVG" jdbcType="DECIMAL" property="lowAvg"/>
+        <result column="TEMPERATURE_AVG" jdbcType="DECIMAL" property="temperatureAvg"/>
+        <result column="TEMPERATURE_ABNORMAL" jdbcType="VARCHAR" property="temperatureAbnormal"/>
+        <result column="PEST_CHECK_TYPE" jdbcType="VARCHAR" property="pestCheckType"/>
+        <result column="PEST_SAMPLE_SITE" jdbcType="VARCHAR" property="pestSampleSite"/>
+        <result column="CHECK_NUM" jdbcType="DECIMAL" property="checkNum"/>
+        <result column="PEST_SPOT" jdbcType="DECIMAL" property="pestSpot"/>
+        <result column="PEST_INSECT" jdbcType="VARCHAR" property="pestInsect"/>
+        <result column="PEST_NAMES" jdbcType="VARCHAR" property="pestNames"/>
+        <result column="PEST_DENSITY" jdbcType="DECIMAL" property="pestDensity"/>
+        <result column="MAJOR_PEST_DENSITY" jdbcType="DECIMAL" property="majorPestDensity"/>
+        <result column="PEST_LEVEL" jdbcType="VARCHAR" property="pestLevel"/>
+        <result column="SUFFOCATE" jdbcType="VARCHAR" property="suffocate"/>
+        <result column="HYGIENE" jdbcType="VARCHAR" property="hygiene"/>
+        <result column="CREATOR" jdbcType="VARCHAR" property="creator"/>
+        <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="HEAT" jdbcType="VARCHAR" property="heat"/>
+        <result column="ROT" jdbcType="VARCHAR" property="rot"/>
+        <result column="SHED_LEAKAGE" jdbcType="VARCHAR" property="shedLeakage"/>
+        <result column="WALL_LEAKAGE" jdbcType="VARCHAR" property="wallLeakage"/>
+        <result column="DOOR_LEAKAGE" jdbcType="VARCHAR" property="doorLeakage"/>
+        <result column="SHED_CRACK" jdbcType="VARCHAR" property="shedCrack"/>
+        <result column="WALL_CRACK" jdbcType="VARCHAR" property="wallCrack"/>
+        <result column="DOOR_CRACK" jdbcType="VARCHAR" property="doorCrack"/>
+        <result column="LIGHT" jdbcType="VARCHAR" property="light"/>
+        <result column="STAIRS" jdbcType="VARCHAR" property="stairs"/>
+        <result column="FACILITIES" jdbcType="VARCHAR" property="facilities"/>
+        <result column="MOUSE" jdbcType="VARCHAR" property="mouse"/>
+        <result column="COBWEB" jdbcType="VARCHAR" property="cobweb"/>
+        <result column="CHECK_SITUATION" jdbcType="VARCHAR" property="checkSituation"/>
+        <result column="CHECK_PROPERTY" jdbcType="VARCHAR" property="checkProperty"/>
+        <result column="CHECK_CHARGE" jdbcType="VARCHAR" property="checkCharge"/>
+        <result column="CHECKER" jdbcType="VARCHAR" property="checker"/>
+        <result column="KEEPER" jdbcType="VARCHAR" property="keeper"/>
+        <result column="REPORT_DATE" jdbcType="TIMESTAMP" property="reportDate"/>
+        <result column="ADVICE" jdbcType="VARCHAR" property="advice"/>
+        <result column="CREATORID" property="creatorId" jdbcType="VARCHAR"/>
+        <result column="SPACE_OXY" jdbcType="DECIMAL" property="spaceOxy"/>
+        <result column="GRAIN_BULK_OXY" jdbcType="DECIMAL" property="grainBulkOxy"/>
+        <result column="SPACE_PHOSPHINE" jdbcType="DECIMAL" property="spacePhosphine"/>
+        <result column="GRAIN_BULK_PHOSPHINE" jdbcType="DECIMAL" property="grainBulkPhosphine"/>
+        <result column="WAREHOUSE_CODE" jdbcType="VARCHAR" property="warehouseCode"/>
+        <result column="B.STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="GRAIN_TYPE" property="grainType" jdbcType="VARCHAR"/>
+        <!--去数据库加一个字段对应 存在隐患，处理意见ADVICE-->
+    </resultMap>
+
+
+    <sql id="columns">
+        ID
+        ,
+        WAREHOUSE,
+        WAREHOUSE_ID,
+        ENCODE,
+        WEATHER,
+        QUANTITY,
+        DEW,
+        IMPURITY,
+        STOREHOUSE_TEMP,
+        TEMPERATURE,
+        STOREHOUSE_WET,
+        AIR_WET,
+        TOP_MAX,
+        TOP_MIN,
+        TOP_AVG,
+        TOP_MIDDLE_MAX,
+        TOP_MIDDLE_MIN,
+        TOP_MIDDLE_AVG,
+        LOW_MIDDLE_MAX,
+        LOW_MIDDLE_MIN,
+        LOW_MIDDLE_AVG,
+        LOW_MAX,
+        LOW_MIN,
+        LOW_AVG,
+        TEMPERATURE_AVG,
+        TEMPERATURE_ABNORMAL,
+        PEST_CHECK_TYPE,
+        PEST_SAMPLE_SITE,
+        CHECK_NUM,
+        PEST_SPOT,
+        PEST_INSECT,
+        PEST_NAMES,
+        PEST_DENSITY,
+        MAJOR_PEST_DENSITY,
+        PEST_LEVEL,
+        SUFFOCATE,
+        HYGIENE,
+        CREATOR,
+        CREATE_DATE,
+        REMARK,
+        HEAT,
+        ROT,
+        SHED_LEAKAGE,
+        WALL_LEAKAGE,
+        DOOR_LEAKAGE,
+        SHED_CRACK,
+        WALL_CRACK,
+        DOOR_CRACK,
+        LIGHT,
+        STAIRS,
+        FACILITIES,
+        MOUSE,
+        COBWEB,
+        CHECK_SITUATION,
+        CHECK_PROPERTY,
+        CHECK_CHARGE,
+        CHECKER,
+        KEEPER,
+        REPORT_DATE,
+        ADVICE,
+        CREATORID,
+        SPACE_OXY,
+        GRAIN_BULK_OXY,
+        SPACE_PHOSPHINE,
+        GRAIN_BULK_PHOSPHINE,
+        WAREHOUSE_CODE,
+        GRAIN_TYPE
+    </sql>
+    <sql id="selectColumns">
+        ID
+        ,
+        WAREHOUSE,
+        ENCODE,
+        WEATHER,
+        QUANTITY,
+        DEW,
+        IMPURITY,
+        STOREHOUSE_TEMP,
+        TEMPERATURE,
+        STOREHOUSE_WET,
+        AIR_WET,
+        TOP_MAX,
+        TOP_MIN,
+        TOP_AVG,
+        TOP_MIDDLE_MAX,
+        TOP_MIDDLE_MIN,
+        TOP_MIDDLE_AVG,
+        LOW_MIDDLE_MAX,
+        LOW_MIDDLE_MIN,
+        LOW_MIDDLE_AVG,
+        LOW_MAX,
+        LOW_MIN,
+        LOW_AVG,
+        TEMPERATURE_AVG,
+        TEMPERATURE_ABNORMAL,
+        PEST_CHECK_TYPE,
+        PEST_SAMPLE_SITE,
+        CHECK_NUM,
+        PEST_SPOT,
+        PEST_INSECT,
+        PEST_NAMES,
+        PEST_DENSITY,
+        MAJOR_PEST_DENSITY,
+        PEST_LEVEL,
+        SUFFOCATE,
+        HYGIENE,
+        CREATOR,
+        CREATE_DATE,
+        REMARK,
+        HEAT,
+        ROT,
+        SHED_LEAKAGE,
+        WALL_LEAKAGE,
+        DOOR_LEAKAGE,
+        SHED_CRACK,
+        WALL_CRACK,
+        DOOR_CRACK,
+        LIGHT,
+        STAIRS,
+        FACILITIES,
+        MOUSE,
+        COBWEB,
+        CHECK_SITUATION,
+        CHECK_PROPERTY,
+        CHECK_CHARGE,
+        CHECKER,
+        KEEPER,
+        REPORT_DATE,
+        ADVICE
+        ,
+        SPACE_OXY,
+        GRAIN_BULK_OXY,
+        SPACE_PHOSPHINE,
+        GRAIN_BULK_PHOSPHINE,
+        WAREHOUSE_CODE,
+        GRAIN_TYPE
+    </sql>
+    <sql id="selectColumnss">
+        A
+        .
+        ID
+        ,
+        house
+        .
+        WAREHOUSE_SHORT
+        AS
+        WAREHOUSE,
+        A
+        .
+        ENCODE,
+        A
+        .
+        WEATHER,
+        A
+        .
+        QUANTITY,
+        A
+        .
+        DEW,
+        A
+        .
+        IMPURITY,
+        A
+        .
+        STOREHOUSE_TEMP,
+        A
+        .
+        TEMPERATURE,
+        A
+        .
+        STOREHOUSE_WET,
+        A
+        .
+        AIR_WET,
+        A
+        .
+        TOP_MAX,
+        A
+        .
+        TOP_MIN,
+        A
+        .
+        TOP_AVG,
+        A
+        .
+        TOP_MIDDLE_MAX,
+        A
+        .
+        TOP_MIDDLE_MIN,
+        A
+        .
+        TOP_MIDDLE_AVG,
+        A
+        .
+        LOW_MIDDLE_MAX,
+        A
+        .
+        LOW_MIDDLE_MIN,
+        A
+        .
+        LOW_MIDDLE_AVG,
+        A
+        .
+        LOW_MAX,
+        A
+        .
+        LOW_MIN,
+        A
+        .
+        LOW_AVG,
+        A
+        .
+        TEMPERATURE_AVG,
+        A
+        .
+        TEMPERATURE_ABNORMAL,
+        A
+        .
+        PEST_CHECK_TYPE,
+        A
+        .
+        PEST_SAMPLE_SITE,
+        A
+        .
+        CHECK_NUM,
+        A
+        .
+        PEST_SPOT,
+        A
+        .
+        PEST_INSECT,
+        A
+        .
+        PEST_NAMES,
+        A
+        .
+        PEST_DENSITY,
+        A
+        .
+        MAJOR_PEST_DENSITY,
+        A
+        .
+        PEST_LEVEL,
+        A
+        .
+        SUFFOCATE,
+        A
+        .
+        HYGIENE,
+        A
+        .
+        CREATOR,
+        A
+        .
+        CREATE_DATE,
+        A
+        .
+        REMARK,
+        A
+        .
+        HEAT,
+        A
+        .
+        ROT,
+        A
+        .
+        SHED_LEAKAGE,
+        A
+        .
+        WALL_LEAKAGE,
+        A
+        .
+        DOOR_LEAKAGE,
+        A
+        .
+        SHED_CRACK,
+        A
+        .
+        WALL_CRACK,
+        A
+        .
+        DOOR_CRACK,
+        A
+        .
+        LIGHT,
+        A
+        .
+        STAIRS,
+        A
+        .
+        FACILITIES,
+        A
+        .
+        MOUSE,
+        A
+        .
+        COBWEB,
+        A
+        .
+        CHECK_SITUATION,
+        A
+        .
+        CHECK_PROPERTY,
+        A
+        .
+        CHECK_CHARGE,
+        A
+        .
+        CHECKER,
+        A
+        .
+        KEEPER,
+        A
+        .
+        REPORT_DATE,
+        A
+        .
+        ADVICE
+        ,
+        A
+        .
+        SPACE_OXY,
+        A
+        .
+        GRAIN_BULK_OXY,
+        A
+        .
+        SPACE_PHOSPHINE,
+        A
+        .
+        GRAIN_BULK_PHOSPHINE,
+        A
+        .
+        WAREHOUSE_CODE,
+        A
+        .
+        GRAIN_TYPE
+    </sql>
+    <sql id="tablename">
+        T_STORAGE_GRAIN_INSPECTION
+    </sql>
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.StorageGrainInspection">
+        insert into <include refid="tablename"></include> (
+        <include refid="columns"></include>
+        )
+        values (#{id,jdbcType=VARCHAR}, #{warehouse,jdbcType=VARCHAR},#{warehouseId,jdbcType=VARCHAR},
+        #{encode,jdbcType=VARCHAR},
+        #{weather,jdbcType=VARCHAR}, #{quantity,jdbcType=VARCHAR}, #{dew,jdbcType=DECIMAL},
+        #{impurity,jdbcType=DECIMAL}, #{storehouseTemp,jdbcType=DECIMAL}, #{temperature,jdbcType=DECIMAL},
+        #{storehouseWet,jdbcType=DECIMAL}, #{airWet,jdbcType=DECIMAL}, #{topMax,jdbcType=DECIMAL},
+        #{topMin,jdbcType=DECIMAL}, #{topAvg,jdbcType=DECIMAL}, #{topMiddleMax,jdbcType=DECIMAL},
+        #{topMiddleMin,jdbcType=DECIMAL}, #{topMiddleAvg,jdbcType=DECIMAL}, #{lowMiddleMax,jdbcType=DECIMAL},
+        #{lowMiddleMin,jdbcType=DECIMAL}, #{lowMiddleAvg,jdbcType=DECIMAL}, #{lowMax,jdbcType=DECIMAL},
+        #{lowMin,jdbcType=DECIMAL}, #{lowAvg,jdbcType=DECIMAL}, #{temperatureAvg,jdbcType=DECIMAL},
+        #{temperatureAbnormal,jdbcType=VARCHAR}, #{pestCheckType,jdbcType=VARCHAR}, #{pestSampleSite,jdbcType=VARCHAR},
+        #{checkNum,jdbcType=DECIMAL}, #{pestSpot,jdbcType=DECIMAL}, #{pestInsect,jdbcType=VARCHAR},
+        #{pestNames,jdbcType=VARCHAR}, #{pestDensity,jdbcType=DECIMAL}, #{majorPestDensity,jdbcType=DECIMAL},
+        #{pestLevel,jdbcType=VARCHAR}, #{suffocate,jdbcType=VARCHAR}, #{hygiene,jdbcType=VARCHAR},
+        #{creator,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR},
+        #{heat,jdbcType=VARCHAR}, #{rot,jdbcType=VARCHAR}, #{shedLeakage,jdbcType=VARCHAR},
+        #{wallLeakage,jdbcType=VARCHAR}, #{doorLeakage,jdbcType=VARCHAR}, #{shedCrack,jdbcType=VARCHAR},
+        #{wallCrack,jdbcType=VARCHAR}, #{doorCrack,jdbcType=VARCHAR}, #{light,jdbcType=VARCHAR},
+        #{stairs,jdbcType=VARCHAR}, #{facilities,jdbcType=VARCHAR}, #{mouse,jdbcType=VARCHAR},
+        #{cobweb,jdbcType=VARCHAR}, #{checkSituation,jdbcType=VARCHAR}, #{checkProperty,jdbcType=VARCHAR},
+        #{checkCharge,jdbcType=VARCHAR}, #{checker,jdbcType=VARCHAR},
+        #{keeper,jdbcType=VARCHAR},#{reportDate,jdbcType=TIMESTAMP},#{advice,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=VARCHAR}, #{spaceOxy,jdbcType=DECIMAL}, #{grainBulkOxy,jdbcType=DECIMAL},
+        #{spacePhosphine,jdbcType=DECIMAL}, #{grainBulkPhosphine,jdbcType=DECIMAL},
+        #{warehouseCode,jdbcType=VARCHAR},#{grainType,jdbcType=VARCHAR}
+        )
+    </insert>
+    <select id="getPrimId" resultType="java.lang.String">
+        select SEQ_STORAGE_GRAIN_INSPECTION.NEXTVAL
+        from dual
+    </select>
+
+
+    <select id="count" parameterType="java.util.HashMap" resultType="_int">
+        SELECT COUNT(DISTINCT A.ID)
+        FROM <include refid="tablename"></include> A
+
+        LEFT JOIN T_STORAGE_STOREHOUSE B ON A.ENCODE = B.ENCODE AND A.WAREHOUSE_CODE = B.WAREHOUSE_CODE
+        left join T_STORAGE_WAREHOUSE house ON A.WAREHOUSE_ID = house.ID
+
+        <where>
+            <if test="storehouseStatus != null and storehouseStatus != ''">
+                AND B.STATUS LIKE '%${storehouseStatus}%'
+            </if>
+            <if test="warehouse != null and warehouse != ''">
+                AND house.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+            </if>
+            <if test="warehouseId!=null and warehouseId!=''">
+                and A.WAREHOUSE_ID ='${warehouseId}'
+            </if>
+            <if test="warehouse1 != null and warehouse1 != ''">
+                AND house.WAREHOUSE_SHORT IN ('${warehouse1}')
+            </if>
+
+
+            <if test="storehouseEncode != null and storehouseEncode != ''">
+                AND A.encode LIKE '%${storehouseEncode}%'
+            </if>
+            <if test="checkProperty != null and checkProperty != ''">
+                AND A.check_Property LIKE '%${checkProperty}%'
+            </if>
+            <if test="reportDate != null and reportDate != ''">
+                AND TO_CHAR(report_Date,'YYYY"-"MM"-"DD') LIKE '%${reportDate}%'
+            </if>
+            <if test="creator != null and creator != ''">
+                AND A.CREATOR = #{creator,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumnss"></include>
+        FROM <include refid="tablename"></include> A left join T_STORAGE_WAREHOUSE house ON A.WAREHOUSE_ID = house.ID
+        <where>
+            A.ID = #{id}
+        </where>
+    </select>
+
+    <select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        ${start}
+        SELECT
+        DISTINCT
+        A.ID, house.WAREHOUSE_SHORT AS WAREHOUSE, A.ENCODE, A.
+        WEATHER, A.QUANTITY, A.DEW, A.
+        IMPURITY, A.STOREHOUSE_TEMP, A.TEMPERATURE, A.
+        STOREHOUSE_WET, A.AIR_WET, A.TOP_MAX, A.
+        TOP_MIN, A.TOP_AVG, A.TOP_MIDDLE_MAX, A.
+        TOP_MIDDLE_MIN, A.TOP_MIDDLE_AVG, A.LOW_MIDDLE_MAX, A.
+        LOW_MIDDLE_MIN, A.LOW_MIDDLE_AVG, A.LOW_MAX, A.
+        LOW_MIN, A.LOW_AVG, A.TEMPERATURE_AVG, A.
+        TEMPERATURE_ABNORMAL, A.PEST_CHECK_TYPE, A.PEST_SAMPLE_SITE, A.
+        CHECK_NUM, A.PEST_SPOT, A.PEST_INSECT, A.
+        PEST_NAMES, A.PEST_DENSITY, A.MAJOR_PEST_DENSITY, A.
+        PEST_LEVEL, A.SUFFOCATE, A.HYGIENE, A.
+        CREATOR, A.CREATE_DATE, A.REMARK, A.
+        HEAT, A.ROT, A.SHED_LEAKAGE, A.
+        WALL_LEAKAGE, A.DOOR_LEAKAGE, A.SHED_CRACK, A.
+        WALL_CRACK, A.DOOR_CRACK, A.LIGHT, A.
+        STAIRS, A.FACILITIES, A.MOUSE, A.
+        COBWEB, A.CHECK_SITUATION, A.CHECK_PROPERTY, A.
+        CHECK_CHARGE, A.CHECKER, A.KEEPER, A.REPORT_DATE,A.ADVICE, B.STATUS,A.GRAIN_TYPE
+
+
+        FROM <include refid="tablename"></include> A LEFT JOIN T_STORAGE_STOREHOUSE B ON A.ENCODE = B.ENCODE AND
+        A.WAREHOUSE_CODE = B.WAREHOUSE_CODE
+        left join T_STORAGE_WAREHOUSE house ON A.WAREHOUSE_ID = house.ID
+
+        <where>
+            <if test="storehouseStatus != null and storehouseStatus != ''">
+                AND B.STATUS LIKE '%${storehouseStatus}%'
+            </if>
+            <if test="warehouse != null and warehouse != ''">
+                AND house.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+            </if>
+            <if test="warehouseId!=null and warehouseId!=''">
+                and A.WAREHOUSE_ID ='${warehouseId}'
+            </if>
+            <if test="storehouseEncode != null and storehouseEncode != ''">
+                AND A.encode LIKE '%${storehouseEncode}%'
+            </if>
+            <if test="checkProperty != null and checkProperty != ''">
+                AND A.check_Property LIKE '%${checkProperty}%'
+            </if>
+            <if test="reportDate != null and reportDate != ''">
+                AND TO_CHAR(A.report_Date,'YYYY"-"MM"-"DD') LIKE '%${reportDate}%'
+            </if>
+            <if test="warehouse1 != null and warehouse1 != ''">
+                AND house.WAREHOUSE_SHORT IN ('${warehouse1}')
+            </if>
+            <if test="creator != null and creator != ''">
+                AND A.CREATOR = #{creator,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY A.CREATE_DATE DESC
+        ${end}
+    </select>
+
+    <select id="listByWarehouse" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT
+        A.ID,
+        A.ENCODE,
+        A.QUANTITY,
+        A.GRAIN_TYPE,
+        A.STOREHOUSE_TEMP,
+        A.STOREHOUSE_WET,
+        A.TOP_MAX,
+        A.LOW_MIN,
+        A.TEMPERATURE_AVG
+        FROM <include refid="tablename"></include> A LEFT JOIN
+            (
+            SELECT * FROM(
+            SELECT Translate(C.ID USING CHAR_CS) AS ID ,Translate(C.ENCODE USING CHAR_CS) AS ENCODE  ,C.WAREHOUSE_ID,C.ORDER_NO FROM T_STORAGE_STOREHOUSE C
+            UNION
+            SELECT D.ID,D.OILCAN_SERIAL AS ENCODE,D.WAREHOUSE_ID,D.ORDER_NO FROM T_STORAGE_OILCAN D)
+            )
+          B ON A.ENCODE = B.ENCODE AND
+          A.WAREHOUSE_ID = B.WAREHOUSE_ID
+        <where>
+            A.WAREHOUSE LIKE '%${warehouse}%'
+            AND A.report_Date>=to_timestamp('${reportDate}','yyyy-mm-dd')
+        </where>
+        ORDER BY A.report_Date  DESC, B.ORDER_NO ASC
+    </select>
+
+    <select id="findMaxDateByWarehouse" parameterType="java.util.HashMap" resultType="String">
+        SELECT to_char(max(A.REPORT_DATE),'yyyy-MM-dd')
+        FROM <include refid="tablename"></include> A LEFT JOIN T_STORAGE_STOREHOUSE B ON A.ENCODE = B.ENCODE AND
+        A.WAREHOUSE_CODE = B.WAREHOUSE_CODE
+        <where>
+            A.WAREHOUSE LIKE '%${warehouse}%'
+        </where>
+        ORDER BY A.report_Date DESC
+    </select>
+    <delete id="remove" parameterType="java.lang.String">
+        DELETE
+        FROM
+        <include refid="tablename"></include>
+        <where>
+            ID = #{id}
+        </where>
+    </delete>
+
+    <update id="update" parameterType="com.dhc.fastersoft.entity.StorageGrainInspection">
+        UPDATE
+        <include refid="tablename"></include>
+        SET
+        WAREHOUSE=#{warehouse,jdbcType=VARCHAR},WAREHOUSE_ID=#{warehouseId,jdbcType=VARCHAR},ENCODE=#{encode,jdbcType=VARCHAR},WEATHER=#{weather,jdbcType=VARCHAR},
+        QUANTITY=#{quantity,jdbcType=VARCHAR},DEW=#{dew,jdbcType=DECIMAL},IMPURITY=#{impurity,jdbcType=DECIMAL},storehouse_Temp=#{storehouseTemp,jdbcType=DECIMAL},temperature=#{temperature,jdbcType=DECIMAL},
+        storehouse_Wet= #{storehouseWet,jdbcType=DECIMAL},air_Wet=#{airWet,jdbcType=DECIMAL},
+        pest_Check_Type=#{pestCheckType,jdbcType=VARCHAR},pest_Sample_Site=#{pestSampleSite,jdbcType=VARCHAR},check_Num=#{checkNum,jdbcType=DECIMAL},pest_Spot=#{pestSpot,jdbcType=DECIMAL},pest_Insect=#{pestInsect,jdbcType=VARCHAR},
+        pest_Names=#{pestNames,jdbcType=VARCHAR},pest_Density=#{pestDensity,jdbcType=DECIMAL},major_Pest_Density=#{majorPestDensity,jdbcType=DECIMAL},pest_Level=#{pestLevel,jdbcType=VARCHAR},hygiene=#{hygiene,jdbcType=VARCHAR},
+        remark=#{remark,jdbcType=VARCHAR},shed_Leakage=#{shedLeakage,jdbcType=VARCHAR},
+        wall_Leakage=#{wallLeakage,jdbcType=VARCHAR},door_Leakage=#{doorLeakage,jdbcType=VARCHAR},shed_Crack=#{shedCrack,jdbcType=VARCHAR},
+        mouse=#{mouse,jdbcType=VARCHAR},
+        check_Situation=#{checkSituation,jdbcType=VARCHAR},check_Property=#{checkProperty,jdbcType=VARCHAR},check_Charge=#{checkCharge,jdbcType=VARCHAR},checker=#{checker,jdbcType=VARCHAR},keeper=#{keeper,jdbcType=VARCHAR},report_date=#{reportDate,jdbcType=TIMESTAMP},
+        advice=#{advice,jdbcType=VARCHAR},TEMPERATURE_AVG=#{temperatureAvg,jdbcType=DECIMAL},SPACE_OXY=#{spaceOxy,jdbcType=DECIMAL},GRAIN_BULK_OXY=#{grainBulkOxy,jdbcType=DECIMAL},SPACE_PHOSPHINE=#{spacePhosphine,jdbcType=DECIMAL}
+        ,GRAIN_BULK_PHOSPHINE=#{grainBulkPhosphine,jdbcType=DECIMAL},WAREHOUSE_CODE=#{warehouseCode,jdbcType=VARCHAR},GRAIN_TYPE=#{grainType,jdbcType=VARCHAR}
+
+        <where>
+            ID = #{id,jdbcType=VARCHAR}
+        </where>
+    </update>
+
+    <select id="listForECahrt" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT
+        <include refid="selectColumns"></include>
+        FROM
+        <include refid="tablename"></include>
+        <where>
+            WAREHOUSE_ID = #{warehouse}
+            AND ENCODE = #{encode}
+            AND (REPORT_DATE BETWEEN TO_DATE(#{statisticBeginDate},'YYYY"-"MM"-"DD') AND
+            TO_DATE(#{statisticEndDate},'YYYY"-"MM"-"DD'))
+        </where>
+        ORDER BY REPORT_DATE ASC
+    </select>
+
+    <select id="getTimeCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT
+        count(*)
+        from
+        <include refid="tablename"/>
+        <where>
+            WAREHOUSE = #{warehouse}
+            AND ENCODE = #{encode}
+            AND TO_CHAR(REPORT_DATE,'YYYY"-"MM"-"DD') = #{reportDate}
+        </where>
+    </select>
+
+    <select id="statistics" resultType="java.util.Map">
+        SELECT
+        REPORT_DATE ,
+        listagg ( WAREHOUSE_ID||':'||count,',' ) within group(order by temp.REPORT_DATE) as data
+        FROM
+        (
+        SELECT
+        to_date(to_char(t.REPORT_DATE,'yyyy-MM-dd'),'yyyy-MM-dd') as REPORT_DATE,
+        t.WAREHOUSE_ID,
+        ( SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE ID = t.WAREHOUSE_ID ) AS WAREHOUSE_NAME,
+        count( t.WAREHOUSE_CODE ) AS count
+        FROM
+
+        (select to_date(to_char(t1.REPORT_DATE,'yyyy-MM-dd'),'yyyy-MM-dd') REPORT_DATE ,
+        t1.WAREHOUSE_ID , t1.WAREHOUSE_CODE, t1.encode
+        from T_STORAGE_GRAIN_INSPECTION t1 GROUP BY
+        to_date(to_char(t1.REPORT_DATE,'yyyy-MM-dd'),'yyyy-MM-dd'),
+        t1.WAREHOUSE_ID ,t1.encode , t1.WAREHOUSE_CODE  HAVING
+        t1.WAREHOUSE_ID IN ( SELECT id FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE = '储备库' ))t
+        GROUP BY
+        t.REPORT_DATE,
+        t.WAREHOUSE_ID
+        HAVING
+        t.WAREHOUSE_ID IN ( SELECT id FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE = '储备库' )
+        ORDER BY
+        t.REPORT_DATE DESC
+        ) temp
+        <where>
+            <if test="startDate != null and startDate != ''">
+                and REPORT_DATE &gt;= TO_DATE(#{startDate},'yyyy-MM-dd')
+            </if>
+            <if test="endDate != null and endDate != '' ">
+                and REPORT_DATE &lt;= TO_DATE(#{endDate}, 'yyyy-MM-dd')
+            </if>
+        </where>
+        GROUP BY
+        REPORT_DATE
+        ORDER BY
+        REPORT_DATE DESC
+    </select>
+</mapper>

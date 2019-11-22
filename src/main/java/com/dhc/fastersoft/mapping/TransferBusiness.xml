@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.TransferBusinessDao">
+	<resultMap type="com.dhc.fastersoft.entity.TransferBusiness" id="transferResultMap">
+		<id column="ID" property="id" jdbcType="NVARCHAR" />
+		<result column="UNIT_NAME" property="unitName" jdbcType="NVARCHAR" />
+		<result column="TRANSFER_DATE" property="transferDate" jdbcType="TIMESTAMP" />
+		<result column="REPORT_TIME" property="reportTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="NVARCHAR" />
+		<result column="TOTAL_INCOME" property="totalIncome" jdbcType="DOUBLE" />
+		<result column="TOTAL_EXPEND" property="totalExpend" jdbcType="DOUBLE" />
+		<result column="TOTAL_PROFITS" property="totalProfits" jdbcType="DOUBLE" />
+		<result column="CREATOR" property="creator" jdbcType="NVARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="NVARCHAR" />
+		<result column="TOTAL_COUNT" property="totalCount" jdbcType="DOUBLE"/>
+		<collection property="transferDetail" ofType="com.dhc.fastersoft.entity.TransferBusinessDetail">
+			<id column="D_ID" property="id" jdbcType="NVARCHAR"/>
+			<result column="BUSINESS_ID" property="businessId" jdbcType="NVARCHAR"/>
+			<result column="SHIPPER_NAME" property="shipperName" jdbcType="NVARCHAR"/>
+			<result column="GOODS_NAME" property="goodsName" jdbcType="NVARCHAR"/>
+			<result column="ARRIVAL_DATE" property="arrivalDate" jdbcType="NVARCHAR"/>
+			<result column="QUANTITY" property="quantity" jdbcType="DOUBLE"/>
+			<result column="DESTINATION" property="destination" jdbcType="NVARCHAR"/>
+			<result column="SHIP_TYPE" property="shipType" jdbcType="NVARCHAR"/>
+			<result column="INCOME" property="income" jdbcType="DOUBLE"/>
+			<result column="EXPEND" property="expend" jdbcType="DOUBLE"/>
+			<result column="PROFITS" property="profits" jdbcType="DOUBLE"/>
+		</collection>
+	</resultMap>
+	
+	<sql id="columns">
+		ID,UNIT_NAME,TRANSFER_DATE,REPORT_TIME,STATUS,TOTAL_INCOME,
+		TOTAL_EXPEND,TOTAL_PROFITS,CREATOR,REMARK,TOTAL_COUNT
+	</sql>
+	
+	<sql id="detail-columns">
+		ID,BUSINESS_ID,SHIPPER_NAME,GOODS_NAME,ARRIVAL_DATE,QUANTITY,
+		DESTINATION,SHIP_TYPE,INCOME,EXPEND,PROFITS
+	</sql>
+	
+	<sql id="columns-select">
+		m.ID,UNIT_NAME,TRANSFER_DATE,REPORT_TIME,STATUS,TOTAL_INCOME,
+		TOTAL_EXPEND,TOTAL_PROFITS,CREATOR,REMARK,TOTAL_COUNT
+	</sql>
+	
+	<sql id="detail-columns-select">
+		c.ID AS D_ID,BUSINESS_ID,SHIPPER_NAME,GOODS_NAME,ARRIVAL_DATE,QUANTITY,
+		DESTINATION,SHIP_TYPE,INCOME,EXPEND,PROFITS
+	</sql>
+	
+	<insert id="SaveTransfer" parameterType="com.dhc.fastersoft.entity.TransferBusiness">
+		begin
+		INSERT INTO T_TRANSFER_BUSINESS(<include refid="columns"/>)
+		VALUES(
+			#{id},#{unitName},#{transferDate},#{reportTime},#{status},#{totalIncome},
+			#{totalExpend},#{totalProfits},#{creator},#{remark,jdbcType=NVARCHAR},#{totalCount}
+		);
+		<foreach collection="transferDetail" item="detail" separator=";">
+			INSERT INTO T_TRANSFER_BUSINESS_DETAIL(<include refid="detail-columns"/>)
+			VALUES(
+				#{detail.id},#{id},#{detail.shipperName},#{detail.goodsName},
+				#{detail.arrivalDate},#{detail.quantity},#{detail.destination},#{detail.shipType},#{detail.income},
+				#{detail.expend},#{detail.profits}
+			)
+		</foreach>
+		;end;
+	</insert>
+	
+	<select id="ListTransfer"  parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="transferResultMap">
+		SELECT * FROM (
+			SELECT A.*, ROWNUM RN
+			FROM (SELECT
+				<include refid="columns" />
+				FROM T_TRANSFER_BUSINESS
+			) A
+			<where>
+				<if test="entity.unitName != null and entity.unitName != ''">
+					AND UNIT_NAME LIKE concat(concat('%',#{entity.unitName}),'%')
+				</if>
+				<if test="entity.transferDate != null and entity.transferDate != ''">
+					AND TRANSFER_DATE = #{entity.transferDate}
+				</if>
+				<if test="entity.status != null and entity.status != ''">
+					AND STATUS = #{entity.status}
+				</if>
+				AND ROWNUM &lt;= #{pageIndex} * #{pageSize}
+			</where>
+			ORDER BY REPORT_TIME DESC
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetTotcalCount" parameterType="com.dhc.fastersoft.utils.PageUtil"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM T_TRANSFER_BUSINESS
+		<where>
+			<if test="entity.unitName != null and entity.unitName != ''">
+				AND UNIT_NAME LIKE concat(concat('%',#{entity.unitName}),'%')
+			</if>
+			<if test="entity.transferDate != null and entity.transferDate != ''">
+				AND TRANSFER_DATE = #{entity.transferDate}
+			</if>
+			<if test="entity.status != null and entity.status != ''">
+				AND STATUS = #{entity.status}
+			</if>
+		</where>
+	</select>
+
+	<select id="GetTransfer" parameterType="java.lang.String" resultMap="transferResultMap">
+		SELECT <include refid="columns-select"/>,<include refid="detail-columns-select"/> FROM 
+		T_TRANSFER_BUSINESS m LEFT JOIN T_TRANSFER_BUSINESS_DETAIL c ON m.ID = c.BUSINESS_ID
+		WHERE m.ID = #{_parameter}
+	</select>
+	
+	<update id="UpdateTransfer" parameterType="com.dhc.fastersoft.entity.TransferBusiness">
+		begin
+		UPDATE T_TRANSFER_BUSINESS SET TRANSFER_DATE = #{transferDate},REMARK = #{remark,jdbcType=NVARCHAR},STATUS = #{status},
+		TOTAL_INCOME = #{totalIncome},TOTAL_EXPEND = #{totalExpend},TOTAL_PROFITS = #{totalProfits},
+		TOTAL_COUNT = #{totalCount} WHERE ID = #{id};
+		
+		DELETE FROM T_TRANSFER_BUSINESS_DETAIL WHERE BUSINESS_ID = #{id};
+		
+		<foreach collection="transferDetail" item="detail">
+			INSERT INTO T_TRANSFER_BUSINESS_DETAIL(<include refid="detail-columns"/>)
+			VALUES(
+				#{detail.id},#{id},#{detail.shipperName,jdbcType=NVARCHAR},#{detail.goodsName,jdbcType=NVARCHAR},
+				#{detail.arrivalDate,jdbcType=NVARCHAR},#{detail.quantity,jdbcType=DOUBLE},#{detail.destination,jdbcType=NVARCHAR},#{detail.shipType,jdbcType=NVARCHAR},
+			#{detail.income,jdbcType=DOUBLE},
+				#{detail.expend,jdbcType=DOUBLE},#{detail.profits,jdbcType=DOUBLE}
+			);
+		</foreach>
+		end;
+	</update>
+	
+	<delete id="DeleteTransfer" parameterType="java.lang.String">
+		DELETE FROM T_TRANSFER_BUSINESS WHERE ID = #{_parameter}
+	</delete>
+</mapper> 

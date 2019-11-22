@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateFreightDetailDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateFreightDetail" id="rotateFreightDetailResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="tenders" column="TENDERS" jdbcType="NVARCHAR" />
+		<result property="dealSerial" column="DEAL_SERIAL" jdbcType="NVARCHAR" />
+		<result property="shipType" column="SHIP_TYPE" jdbcType="NVARCHAR" />
+		<result property="deliveryAddress" column="DELIVERY_ADDRESS" jdbcType="NVARCHAR" />
+		<result property="receiveAddress" column="RECEIVE_ADDRESS" jdbcType="NVARCHAR" />
+		<result property="distance" column="DISTANCE" jdbcType="INTEGER" />
+		<result property="planNumber" column="PLAN_NUMBER" jdbcType="INTEGER" />	
+		<result property="groupId" column="GROUP_ID" jdbcType="NVARCHAR" />
+		<result property="clientName" column="CLIENT_NAME" jdbcType="NVARCHAR" />	
+		<result property="price" column="PRICE" jdbcType="NVARCHAR" />	
+		<result property="remark" column="REMARK" jdbcType="NVARCHAR" />	
+		<result property="freightId" column="FREIGHT_ID" jdbcType="NVARCHAR" />	
+		<result property="inviteType" column="INVITE_TYPE" jdbcType="NVARCHAR" />
+		<result property="clientId" column="CLIENT_ID" jdbcType="NVARCHAR" />
+	</resultMap>
+</mapper>

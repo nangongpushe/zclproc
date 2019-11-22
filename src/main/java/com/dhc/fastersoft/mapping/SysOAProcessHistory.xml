@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.system.SysOAProcessHistoryDao">
+	<resultMap id="oaProcessHistoryResultMap" type="com.dhc.fastersoft.entity.system.SysOAProcessHistory">
+		<result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="MESSAGE" property="message" jdbcType="VARCHAR" />
+		<result column="STRACK_TRACE" property="strackTrace" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="AddLog" parameterType="com.dhc.fastersoft.entity.system.SysOAProcessHistory">
+		INSERT INTO T_SYS_OAPROCESS_HISTORY(START_TIME,END_TIME,MESSAGE,STRACK_TRACE)
+		VALUES(
+			#{startTime},#{endTime},#{message},#{strackTrace}
+		)
+	</insert>
+</mapper>

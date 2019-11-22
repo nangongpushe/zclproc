@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoreTemplateItemDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.store.StoreTemplateItem" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TEMPLET_ID" property="templetId" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="ITEM_ID" property="itemId" jdbcType="VARCHAR" />
+    <result column="STANDARD" property="standard" jdbcType="VARCHAR" />
+    <result column="VALUE" property="itemName" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  
+  
+   <sql id="Base_Column_List" >
+     ID id, TEMPLET_ID templetId, PARENT_ID parentId, ITEM_ID itemId, STANDARD standard
+  </sql>
+  
+  <select id="getOneClassList" parameterType="java.lang.String" resultMap="BaseResultMap">
+  
+		SELECT ID id, PARENTID parentId,VALUE itemName FROM T_SYS_DICT WHERE ID IN(
+		SELECT T2.PARENTID FROM 
+		(SELECT * FROM T_SYS_DICT WHERE ID IN(select PARENT_ID from t_store_templet_item where TEMPLET_ID=#{templetId,jdbcType=VARCHAR} GROUP BY PARENT_ID)) 
+		T2 GROUP BY T2.PARENTID)
+		
+	</select>  
+	
+	<select id="getTwoClassList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		SELECT ID id, PARENTID parentId,VALUE itemName FROM (SELECT * FROM T_SYS_DICT WHERE ID IN(select PARENT_ID from t_store_templet_item where TEMPLET_ID='${templetId}' GROUP BY PARENT_ID))
+ 		TT WHERE TT.PARENTID='${parentId}'
+		
+	</select>  
+	
+	
+   <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+			<include refid="Base_Column_List" />
+		 FROM T_STORE_TEMPLET_ITEM 	
+		 WHERE 1=1
+		
+		${end}
+	</select>
+	
+	 
+	
+	 <select id="getItemListByTemplateId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  
+	
+		 SELECT 
+		  temp.ID id, temp.TEMPLET_ID templetId, temp.PARENT_ID parentId, sys.ID itemId, temp.STANDARD standard,
+			sys.VALUE itemName
+		 FROM T_STORE_TEMPLET_ITEM  temp,T_SYS_DICT	sys
+		 where 
+		  temp.TEMPLET_ID=#{templateId,jdbcType=VARCHAR}
+		 and temp.ITEM_ID=sys.ID
+		
+	</select>   
+	
+	<select id="getItemListByParentId" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		SELECT 
+		  temp.ID id, temp.TEMPLET_ID templetId, temp.PARENT_ID parentId, sys.ID itemId, temp.STANDARD standard,
+			sys.VALUE itemName
+		 FROM T_STORE_TEMPLET_ITEM  temp,T_SYS_DICT	sys
+		 where temp.PARENT_ID='${parentId}'
+		 and temp.TEMPLET_ID='${templateId}'
+		 and temp.ITEM_ID=sys.ID
+		
+	</select>  
+	
+		
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_STORE_TEMPLET_ITEM  
+		WHERE 1=1		
+	</select>
+	
+
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.store.StoreTemplateItem" >
+	    insert into T_STORE_TEMPLET_ITEM (ID, TEMPLET_ID, PARENT_ID, 
+      ITEM_ID, STANDARD)
+    values (#{id,jdbcType=VARCHAR}, #{templetId,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{itemId,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.store.StoreTemplateItem">
+	 update T_STORE_TEMPLET_ITEM
+    set ID = #{id,jdbcType=VARCHAR},
+      TEMPLET_ID = #{templetId,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      ITEM_ID = #{itemId,jdbcType=VARCHAR},
+      STANDARD = #{standard,jdbcType=VARCHAR}
+	
+		WHERE ID='${id}'
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORE_TEMPLET_ITEM
+		WHERE  TEMPLET_ID=#{templetId,jdbcType=VARCHAR}
+	</delete>
+ 
+
+</mapper>

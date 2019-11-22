@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.report.ReportSwtzDao">
+    <resultMap id="ReportSwtzResultMap" type="com.dhc.fastersoft.entity.report.ReportSwtz">
+        <result column="REPORT_ID" property="reportId" jdbcType="VARCHAR"/>
+        <result column="REPORT_MONTH" property="reportMonth" jdbcType="VARCHAR"/>
+        <result column="REPORT_WAREHOUSE" property="reportWarehouse" jdbcType="VARCHAR"/>
+        <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR"/>
+        <result column="WAREHOUSE" property="warehouse" jdbcType="VARCHAR"/>
+        <result column="STOREHOUSE" property="storehouse" jdbcType="VARCHAR"/>
+        <result column="VARIETY" property="variety" jdbcType="VARCHAR"/>
+        <result column="QUANTITY" property="quantity" jdbcType="DECIMAL"/>
+        <result column="ORIGIN" property="origin" jdbcType="VARCHAR"/>
+        <result column="HARVEST_YEAR" property="harvestYear" jdbcType="VARCHAR"/>
+        <result column="BROWN" property="brown" jdbcType="DECIMAL"/>
+        <result column="UNIT_WEIGHT" property="unitWeight" jdbcType="DECIMAL"/>
+        <result column="IMPURITY" property="impurity" jdbcType="DECIMAL"/>
+        <result column="DEW" property="dew" jdbcType="DECIMAL"/>
+        <result column="YELLOW_RICE" property="yellowRice" jdbcType="DECIMAL"/>
+        <result column="UNSOUND_GRAIN" property="unsoundGrain" jdbcType="DECIMAL"/>
+        <result column="WET_GLUTEN" property="wetGluten" jdbcType="DECIMAL"/>
+        <result column="KOH" property="koh" jdbcType="DECIMAL"/>
+        <result column="MMOL" property="mmol" jdbcType="DECIMAL"/>
+        <result column="ADVISED_DEPOSIT" property="advisedDeposit" jdbcType="DECIMAL"/>
+        <result column="SLIGHTLY_UNSUITABLE" property="slightlyUnsuitable" jdbcType="DECIMAL"/>
+        <result column="SEVERE_UNSUITABLE" property="severeUnsuitable" jdbcType="DECIMAL"/>
+        <result column="ORDERNUM" property="ordernum" jdbcType="DECIMAL"/>
+        <result column="PACKING" property="packing" jdbcType="DECIMAL"/>
+        <result column="BULK" property="bulk" jdbcType="DECIMAL"/>
+        <result column="DEAL_SERIAL" property="dealSerial" jdbcType="VARCHAR"/>
+        <result column="EXTENDS_WAREHOUSE" property="extendsWarehouse" jdbcType="VARCHAR"/>
+        <result column="EXTENDS_WAREHOUSE_ID" property="extendsWarehouseId" jdbcType="VARCHAR"/>
+        <result column="ROTATE_NUMBER" property="rotateNumber" jdbcType="DECIMAL"/>
+        <result column="DETAIL_NUMBER" property="detailNumber" jdbcType="DECIMAL"/>
+        <result column="ENTERPRISE_SHORT_NAME" property="enterpriseShortName" jdbcType="VARCHAR"/>
+        <result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="KCTJChartsVOResultMap" type="com.dhc.fastersoft.vo.KCTJChartsVO">
+        <result column="REPORT_WAREHOUSE" property="reportWarehouse" jdbcType="VARCHAR"/>
+        <result column="VARIETY" property="variety" jdbcType="VARCHAR"/>
+        <result column="QUANTITYTOTAL" property="quantityTotal" jdbcType="DECIMAL"/>
+        <result column="ADVISEDTOTAL" property="advisedTotal" jdbcType="DECIMAL"/>
+        <result column="SLIGHTLYTOTAL" property="slightlyTotal" jdbcType="DECIMAL"/>
+        <result column="SEVERETOTAL" property="severeTotal" jdbcType="DECIMAL"/>
+        <result column="warehouse_type" property="warehouseType" jdbcType="VARCHAR"/>
+        <result column="orderNo" property="orderNo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="columns">
+      REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+      REPORT_NAME, WAREHOUSE, STOREHOUSE,
+      VARIETY, QUANTITY, ORIGIN,
+      HARVEST_YEAR, BROWN, UNIT_WEIGHT,
+      IMPURITY, DEW, YELLOW_RICE,
+      UNSOUND_GRAIN, WET_GLUTEN, KOH,
+      MMOL, ADVISED_DEPOSIT, SLIGHTLY_UNSUITABLE,
+      SEVERE_UNSUITABLE,ORDERNUM,PACKING,BULK,DEAL_SERIAL,EXTENDS_WAREHOUSE,EXTENDS_WAREHOUSE_ID
+  </sql>
+
+    <sql id="InventoryStatisticsQueryCondition">
+		T.report_id IN(
+      	SELECT id FROM t_report_month WHERE gather_id IN (
+		            SELECT id FROM t_report_month
+		            WHERE report_name='粮油库存实物台账月报表'
+		            AND report_status='汇总通过'
+	            ))
+	</sql>
+    <sql id="InventoryStatisticsQueryCondition1">
+        <if test="reportWarehouse!=null and reportWarehouse!=''">
+            AND WS.ID = #{reportWarehouse}
+        </if>
+        <if test="month!=null and month!=''">
+            and REPORT_MONTH = #{month}
+        </if>
+        <if test="variety!=null and variety!=''">
+            AND VARIETY = #{variety}
+        </if>
+        <if test="harvestYear!=null and harvestYear!=''">
+            AND HARVEST_YEAR = #{harvestYear}
+        </if>
+        <if test="origin!=null and origin!=''">
+            AND ORIGIN = #{origin}
+        </if>
+    </sql>
+    <sql id="InventoryStatisticsQueryCondition2">
+        <if test="warehouseType!=null and warehouseType!=''">
+            AND WS.WAREHOUSE_TYPE = #{warehouseType}
+        </if>
+        <if test="province!=null and province!=''">
+            AND WS.PROVINCE = #{province}
+        </if>
+        <if test="city!=null and city!=''">
+            AND WS.CITY = #{city}
+        </if>
+        <if test="district!=null and district!=''">
+            AND WS.AREA = #{district}
+        </if>
+    </sql>
+
+    <sql id="tablename"> T_REPORT_MONTH_SWTZ </sql>
+
+    <insert id="add" parameterType="com.dhc.fastersoft.entity.report.ReportSwtz">
+        insert into
+        <include refid="tablename"/>
+        (
+        <include refid="columns"/>
+        )
+        values (#{reportId,jdbcType=VARCHAR}, #{reportMonth,jdbcType=VARCHAR}, #{reportWarehouse,jdbcType=VARCHAR},
+        #{reportName,jdbcType=VARCHAR}, #{warehouse,jdbcType=VARCHAR}, #{storehouse,jdbcType=VARCHAR},
+        #{variety,jdbcType=VARCHAR}, #{quantity,jdbcType=DECIMAL}, #{origin,jdbcType=VARCHAR},
+        #{harvestYear,jdbcType=VARCHAR}, #{brown,jdbcType=DECIMAL}, #{unitWeight,jdbcType=DECIMAL},
+        #{impurity,jdbcType=DECIMAL}, #{dew,jdbcType=DECIMAL}, #{yellowRice,jdbcType=DECIMAL},
+        #{unsoundGrain,jdbcType=DECIMAL}, #{wetGluten,jdbcType=DECIMAL}, #{koh,jdbcType=DECIMAL},
+        #{mmol,jdbcType=DECIMAL}, #{advisedDeposit,jdbcType=DECIMAL}, #{slightlyUnsuitable,jdbcType=DECIMAL},
+        #{severeUnsuitable,jdbcType=DECIMAL}, #{ordernum,jdbcType=DECIMAL}, #{packing,jdbcType=DECIMAL},
+        #{bulk,jdbcType=DECIMAL},
+        #{dealSerial,jdbcType=VARCHAR},#{extendsWarehouse,jdbcType=VARCHAR},#{extendsWarehouseId,jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="deleteByMonthHouse" parameterType="HashMap">
+        DELETE FROM
+        <include refid="tablename"/>
+        WHERE
+        REPORT_MONTH=#{reportMonth} AND REPORT_WAREHOUSE = #{reportWarehouse} AND REPORT_NAME = #{reportName}
+    </delete>
+
+    <select id="listSwtzByReportId" parameterType="String" resultMap="ReportSwtzResultMap">
+	  SELECT  REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+	  REPORT_NAME, WAREHOUSE, STOREHOUSE,
+	  VARIETY, QUANTITY, ORIGIN,
+	  HARVEST_YEAR, BROWN, UNIT_WEIGHT,
+	  IMPURITY, DEW, YELLOW_RICE,
+	  UNSOUND_GRAIN, WET_GLUTEN, KOH,DEAL_SERIAL,
+	  MMOL, ADVISED_DEPOSIT, SLIGHTLY_UNSUITABLE,SEVERE_UNSUITABLE,
+	  e.WAREHOUSE_SHORT EXTENDS_WAREHOUSE,EXTENDS_WAREHOUSE_ID,
+	  BULK,PACKING
+	  FROM   T_REPORT_MONTH_SWTZ  left  join T_STORAGE_WAREHOUSE e ON e.id=EXTENDS_WAREHOUSE_ID
+
+	  WHERE REPORT_ID = #{reportId} ORDER BY ORDERNUM
+  </select>
+
+    <select id="listSwtz" parameterType="HashMap" resultMap="ReportSwtzResultMap">
+
+
+        SELECT REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+        REPORT_NAME, WAREHOUSE, STOREHOUSE,
+        VARIETY, QUANTITY, ORIGIN,
+        HARVEST_YEAR, BROWN, UNIT_WEIGHT,
+        IMPURITY, DEW, YELLOW_RICE,
+        UNSOUND_GRAIN, WET_GLUTEN, KOH,DEAL_SERIAL,
+        MMOL, ADVISED_DEPOSIT, SLIGHTLY_UNSUITABLE,
+        e.WAREHOUSE_SHORT EXTENDS_WAREHOUSE,EXTENDS_WAREHOUSE_ID
+        FROM T_REPORT_MONTH_SWTZ left join T_STORAGE_WAREHOUSE e ON e.id=EXTENDS_WAREHOUSE_ID
+        WHERE REPORT_MONTH = #{reportMonth}
+        <!--AND-->
+        <!--REPORT_WAREHOUSE-->
+        <!--&lt;!&ndash;<choose>&ndash;&gt;-->
+            <!--&lt;!&ndash;<when test="areafilter">= #{reportWarehouse}</when>&ndash;&gt;-->
+            <!--&lt;!&ndash;<otherwise>IN (#{reportWarehouse})</otherwise>&ndash;&gt;-->
+        <!--&lt;!&ndash;</choose>&ndash;&gt;-->
+        <if test="reportId != null and reportId != ''">
+            AND REPORT_ID = #{reportId}
+        </if>
+        <if test="storehouse != null and storehouse != ''">
+            AND STOREHOUSE = #{storehouse}
+        </if>
+        <if test="minHarvestYear != null and minHarvestYear != ''">
+            AND HARVEST_YEAR &gt;= #{minHarvestYear}
+        </if>
+        <if test="maxHarvestYear != null and maxHarvestYear != ''">
+            AND HARVEST_YEAR &lt;= #{maxHarvestYear}
+        </if>
+        <if test="variety != null and variety != ''">
+            AND VARIETY = #{variety}
+        </if>
+        <if test="minQuantity != null and minQuantity != ''">
+            AND QUANTITY &gt;= #{minQuantity}
+        </if>
+        <if test="maxQuantity != null and maxQuantity != ''">
+            AND QUANTITY &lt;= #{maxQuantity}
+        </if>
+    </select>
+
+    <delete id="deleteByReportId" parameterType="String">
+        DELETE FROM
+        <include refid="tablename"/>
+        WHERE
+        REPORT_ID=#{reportId}
+    </delete>
+
+    <insert id="summary" parameterType="com.dhc.fastersoft.entity.report.ReportMonth">
+        INSERT INTO
+        <include refid="tablename"/>
+        (REPORT_ID, REPORT_MONTH,
+        REPORT_NAME, REPORT_WAREHOUSE,
+        VARIETY, ORIGIN, HARVEST_YEAR, QUANTITY,
+        ADVISED_DEPOSIT, SLIGHTLY_UNSUITABLE,
+        SEVERE_UNSUITABLE,PACKING,BULK)
+        SELECT
+        #{id},#{reportMonth},#{reportName},REPORT_WAREHOUSE,VARIETY,ORIGIN,HARVEST_YEAR,SUM(nvl(QUANTITY,0)),SUM(nvl(ADVISED_DEPOSIT,0)),SUM(nvl(SLIGHTLY_UNSUITABLE,0)),SUM(nvl(SEVERE_UNSUITABLE,0)),SUM(nvl(PACKING,0)),SUM(nvl(BULK,0))
+        FROM
+        <include refid="tablename"/>
+        WHERE REPORT_ID IN (${reportIds}) GROUP BY REPORT_WAREHOUSE,VARIETY,ORIGIN,HARVEST_YEAR ORDER BY
+        REPORT_WAREHOUSE
+    </insert>
+
+    <select id="pageQuery" parameterType="java.util.HashMap"
+            resultMap="ReportSwtzResultMap">
+        ${start}
+        SELECT swtz.REPORT_ID, swtz.REPORT_MONTH, swtz.REPORT_WAREHOUSE,
+        swtz.REPORT_NAME, swtz.WAREHOUSE, swtz.STOREHOUSE,
+        swtz.VARIETY, swtz.QUANTITY, swtz.ORIGIN,
+        swtz.HARVEST_YEAR, swtz.BROWN, swtz.UNIT_WEIGHT,
+        swtz.IMPURITY, swtz.DEW, swtz.YELLOW_RICE,
+        swtz.UNSOUND_GRAIN, swtz.WET_GLUTEN, swtz.KOH,
+        swtz.MMOL, swtz.ADVISED_DEPOSIT, swtz.SLIGHTLY_UNSUITABLE,swtz.SEVERE_UNSUITABLE,
+        swtz.PACKING,swtz.BULK,
+        e.WAREHOUSE_SHORT EXTENDS_WAREHOUSE,swtz.EXTENDS_WAREHOUSE_ID
+        FROM T_REPORT_MONTH_SWTZ swtz left join T_STORAGE_WAREHOUSE e ON e.id=swtz.EXTENDS_WAREHOUSE_ID
+        <where>
+            exists(
+                SELECT 1 FROM t_report_month rm
+                WHERE swtz.report_id=rm.id and exists(
+                    SELECT 1 FROM t_report_month rm2
+                    WHERE rm.gather_id=rm2.id and report_name='粮油库存实物台账月报表' AND report_status='汇总通过' ))
+
+            <if test="variety!=null and variety!=''">
+                AND swtz.VARIETY = #{variety}
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND swtz.ORIGIN LIKE '%${origin}%'
+            </if>
+            <if test="minQuantity!=null and minQuantity!=''">
+                AND swtz.QUANTITY &gt;= #{minQuantity}
+            </if>
+            <if test="maxQuantity!=null and maxQuantity!=''">
+                AND swtz.QUANTITY &lt;= #{maxQuantity}
+            </if>
+            <if test="reportMonth!=null and reportMonth!=''">
+                AND swtz.REPORT_MONTH = #{reportMonth}
+            </if>
+            <if test="minMonth!=null and minMonth!=''">
+                AND swtz.HARVEST_YEAR >= #{minMonth}
+            </if>
+            <if test="maxMonth!=null and maxMonth!=''">
+                AND swtz.HARVEST_YEAR &lt;= #{maxMonth}
+            </if>
+            <if test="minQuota!=null and minQuota!='' and quota!=null and quota!=''">
+
+                AND to_number(
+                case
+                when regexp_like(${quota},'&lt;|＜') and to_number(regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')) &gt; #{minQuota} then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                when regexp_like(${quota},'&gt;|＞') then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                when not(regexp_like(${quota},'&lt;|＜') and regexp_like(${quota},'&gt;|＞')) then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                else '' end ) &gt; = #{minQuota}
+            </if>
+            <if test="maxQuota!=null and maxQuota!='' and quota!=null and quota!=''">
+
+                AND to_number(
+                case
+                when regexp_like(${quota},'&gt;|＞') and to_number(regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')) &lt; #{maxQuota} then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                when regexp_like(${quota},'&lt;|＜') then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                when not(regexp_like(${quota},'&lt;|＜') and regexp_like(${quota},'&gt;|＞')) then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                else '' end ) &lt; = #{maxQuota}
+            </if>
+            <if test="warehouse!=null and warehouse!=''">
+                AND swtz.EXTENDS_WAREHOUSE LIKE '%${warehouse}%'
+            </if>
+            <if test="excludeWarehouseId!=null and excludeWarehouseId.size()>0">
+                AND swtz.EXTENDS_WAREHOUSE_ID NOT IN
+                (<foreach collection="excludeWarehouseId" item="item" separator=",">#{item}</foreach>)
+            </if>
+            <if test="storeSuperviseItems!=null and storeSuperviseItems.size()>0">
+                AND swtz.EXTENDS_WAREHOUSE_ID IN
+                (<foreach collection="storeSuperviseItems" item="item" separator=",">#{item.warehouseId,jdbcType=VARCHAR}</foreach>)
+            </if>
+
+            <if test="storehouse!=null and storehouse!=''">
+                AND swtz.STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            <if test="receiptYear!=null and receiptYear!=''">
+                AND swtz.HARVEST_YEAR LIKE '%${receiptYear}%'
+            </if>
+            <if test="enterpriseId!=null and enterpriseId!=''">
+                AND swtz.EXTENDS_WAREHOUSE_ID in (select id from t_storage_warehouse where enterprise_id=#{enterpriseId,jdbcType=VARCHAR})
+            </if>
+        </where>
+        ORDER BY REPORT_MONTH DESC,e.order_no,STOREHOUSE, report_id,VARIETY,HARVEST_YEAR
+        ${end}
+    </select>
+
+    <select id="getRecordCount" parameterType="java.util.HashMap" resultType="Integer">
+
+        SELECT count(*) FROM T_REPORT_MONTH_SWTZ swtz
+
+        <where>
+             exists(
+                SELECT 1 FROM t_report_month rm
+                WHERE swtz.report_id=rm.id and exists(
+                    SELECT 1 FROM t_report_month rm2
+                    WHERE rm.gather_id=rm2.id and report_name='粮油库存实物台账月报表' AND report_status='汇总通过' ))
+
+            <if test="variety!=null and variety!=''">
+                AND VARIETY = #{variety}
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND ORIGIN LIKE '%${origin}%'
+            </if>
+            <if test="minQuantity!=null and minQuantity!=''">
+                AND QUANTITY &gt;= #{minQuantity}
+            </if>
+            <if test="maxQuantity!=null and maxQuantity!=''">
+                AND QUANTITY &lt;= #{maxQuantity}
+            </if>
+            <if test="reportMonth!=null and reportMonth!=''">
+                AND REPORT_MONTH = #{reportMonth}
+            </if>
+            <if test="minMonth!=null and minMonth!=''">
+                AND HARVEST_YEAR >= #{minMonth}
+            </if>
+            <if test="maxMonth!=null and maxMonth!=''">
+                AND HARVEST_YEAR &lt;= #{maxMonth}
+            </if>
+            <if test="minQuota!=null and minQuota!='' and quota!=null and quota!=''">
+
+               AND to_number(
+                    case
+                    when regexp_like(${quota},'&lt;|＜') and to_number(regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')) &gt; #{minQuota} then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                    when regexp_like(${quota},'&gt;|＞') then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                    when not(regexp_like(${quota},'&lt;|＜') and regexp_like(${quota},'&gt;|＞')) then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                    else '' end ) &gt; = #{minQuota}
+
+            </if>
+            <if test="maxQuota!=null and maxQuota!='' and quota!=null and quota!=''">
+
+               AND to_number(
+                    case
+                    when regexp_like(${quota},'&gt;|＞') and to_number(regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')) &lt; #{maxQuota} then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                    when regexp_like(${quota},'&lt;|＜') then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                    when not(regexp_like(${quota},'&lt;|＜') and regexp_like(${quota},'&gt;|＞')) then regexp_substr(${quota},'([[:digit:]]+\.[[:digit:]]+)|[[:digit:]]+')
+                    else '' end ) &lt; = #{maxQuota}
+
+            </if>
+            <if test="excludeWarehouseId!=null and excludeWarehouseId.size()>0">
+                AND EXTENDS_WAREHOUSE_ID NOT IN
+                (<foreach collection="excludeWarehouseId" item="item" separator=",">#{item}</foreach>)
+            </if>
+            <if test="storeSuperviseItems!=null and storeSuperviseItems.size()>0">
+                AND swtz.EXTENDS_WAREHOUSE_ID IN
+                (<foreach collection="storeSuperviseItems" item="item" separator=",">#{item.warehouseId,jdbcType=VARCHAR}</foreach>)
+            </if>
+
+            <if test="warehouse!=null and warehouse!=''">
+                AND EXTENDS_WAREHOUSE LIKE '%${warehouse}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            <if test="receiptYear!=null and receiptYear!=''">
+                AND HARVEST_YEAR LIKE '%${receiptYear}%'
+            </if>
+            <if test="enterpriseId!=null and enterpriseId!=''">
+                AND swtz.EXTENDS_WAREHOUSE_ID in (select id from t_storage_warehouse where enterprise_id=#{enterpriseId,jdbcType=VARCHAR})
+            </if>
+        </where>
+    </select>
+
+    <select id="getCharts" parameterType="java.util.HashMap" resultMap="KCTJChartsVOResultMap">
+        select
+        T.report_warehouse,
+        T.variety,
+        sum(T.quantity) quantityTotal,
+        sum(T.advised_deposit) advisedTotal,
+        sum(T.slightly_unsuitable) slightlytotal,
+        sum(T.severe_unsuitable) severetotal
+        from
+        <include refid="tablename"/>
+        T
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <if test="reportWarehouseId!=null and reportWarehouseId!=''">
+                AND T.REPORT_ID IN (SELECT ID from T_REPORT_MONTH WHERE REPORT_WAREHOUSE_ID=#{reportWarehouseId} and
+                REPORT_NAME='粮油库存实物台账月报表')
+            </if>
+            <if test="reportWarehouse!=null and reportWarehouse!=''">
+                and T.EXTENDS_WAREHOUSE = #{reportWarehouse}
+            </if>
+
+            <if test="month!=null and month!=''">
+                and T.REPORT_MONTH = #{month}
+            </if>
+            <if test="variety!=null and variety!=''">
+                AND T.VARIETY = #{variety}
+            </if>
+            <if test="harvestYear!=null and harvestYear!=''">
+                AND T.HARVEST_YEAR = #{harvestYear}
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND T.ORIGIN = #{origin}
+            </if>
+        </where>
+        group by T.VARIETY,T.REPORT_WAREHOUSE
+    </select>
+
+
+    <select id="listMaxKCTJMonth" parameterType="java.util.HashMap" resultType="String">
+        select
+        to_char(max(to_date(T.REPORT_MONTH,'yyyy-MM')),'yyyy-MM') REPORT_MONTH
+        from
+        <include refid="tablename"/>
+        T
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <if test="reportWarehouseId!=null and reportWarehouseId!=''">
+                AND T.REPORT_ID IN (SELECT ID from T_REPORT_MONTH WHERE REPORT_WAREHOUSE_ID=#{reportWarehouseId} and
+                REPORT_NAME='粮油库存实物台账月报表')
+            </if>
+            <if test="reportWarehouse!=null and reportWarehouse!=''">
+                and T.EXTENDS_WAREHOUSE = #{reportWarehouse}
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                and T.STOREHOUSE = #{storehouse}
+            </if>
+        </where>
+
+    </select>
+
+
+
+    <select id="listSumSwtzByReportId" parameterType="String" resultMap="ReportSwtzResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tablename"/>
+        WHERE REPORT_ID = #{reportId} ORDER BY REPORT_WAREHOUSE
+    </select>
+
+    <select id="getReportSwtz" parameterType="java.util.HashMap" resultMap="ReportSwtzResultMap">
+        SELECT REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+        REPORT_NAME, WAREHOUSE, STOREHOUSE,
+        VARIETY, QUANTITY, ORIGIN,
+        HARVEST_YEAR, BROWN, UNIT_WEIGHT,
+        IMPURITY, DEW, YELLOW_RICE,
+        UNSOUND_GRAIN, WET_GLUTEN, KOH,
+        MMOL, ADVISED_DEPOSIT, SLIGHTLY_UNSUITABLE,
+        e.WAREHOUSE_SHORT EXTENDS_WAREHOUSE,EXTENDS_WAREHOUSE_ID
+        FROM T_REPORT_MONTH_SWTZ left join T_STORAGE_WAREHOUSE e ON e.id=EXTENDS_WAREHOUSE_ID
+
+        <where>
+            <if test="reportId!=null and reportId!=''">
+                AND REPORT_ID = #{reportId}
+            </if>
+            <if test="reportMonth!=null and reportMonth!=''">
+                AND REPORT_MONTH = #{reportMonth}
+            </if>
+            <if test="reportWarehouse!=null and reportWarehouse!=''">
+                AND EXTENDS_WAREHOUSE = #{reportWarehouse}
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE = #{storehouse}
+            </if>
+            <if test="variety!=null and variety!=''">
+                AND VARIETY = #{variety}
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND ORIGIN = #{origin}
+            </if>
+            <if test="harvestYear!=null and harvestYear!=''">
+                AND HARVEST_YEAR = #{harvestYear}
+            </if>
+        </where>
+    </select>
+
+    <select id="getCurrMonthQuantity" parameterType="java.util.HashMap" resultType="java.lang.String">
+        SELECT SUM(QUANTITY) FROM
+        <include refid="tablename"/>
+        <where>
+            <if test="reportMonth!=null">
+                AND REPORT_MONTH = '${reportMonth}'
+            </if>
+            <if test="reportWarehouse!=null">
+                AND REPORT_WAREHOUSE = '${reportWarehouse}'
+            </if>
+            <if test="storehouse!=null">
+                AND STOREHOUSE = '${storehouse}'
+            </if>
+        </where>
+    </select>
+
+    <select id="getLastMonthQuantity" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.StorageGrainInspectionDao.BaseResultMap">
+        SELECT  COALESCE(SUM(QUANTITY),0) QUANTITY,VARIETY AS GRAIN_TYPE  FROM
+        <include refid="tablename"/>
+        <where>
+            <if test='reportMonth!=null and reportMonth !="" '>
+                AND REPORT_MONTH = '${reportMonth}'
+            </if>
+            <if test="reportWarehouse!=null">
+                AND REPORT_WAREHOUSE = '${reportWarehouse}'
+            </if>
+            <if test="storehouse!=null">
+                AND STOREHOUSE = '${storehouse}'
+            </if>
+        </where>
+        GROUP BY REPORT_MONTH,REPORT_WAREHOUSE,STOREHOUSE,VARIETY
+    </select>
+
+    <select id="listSumSwtz" parameterType="String" resultMap="ReportSwtzResultMap">
+        SELECT E.id enterprise_id,E.short_name enterprise_short_name,VARIETY,ORIGIN,HARVEST_YEAR,
+            SUM(nvl(QUANTITY,0)) QUANTITY,
+            SUM(nvl(ADVISED_DEPOSIT,0)) ADVISED_DEPOSIT,
+            SUM(nvl(SLIGHTLY_UNSUITABLE,0)) SLIGHTLY_UNSUITABLE,
+            SUM(nvl(SEVERE_UNSUITABLE,0)) SEVERE_UNSUITABLE,
+            SUM(nvl(PACKING,0)) PACKING,
+            SUM(nvl(BULK,0)) BULK
+        FROM T_REPORT_MONTH_SWTZ swtz
+        INNER JOIN t_storage_warehouse sw
+        ON swtz.extends_warehouse_id = sw.id
+        INNER JOIN T_STORE_ENTERPRISE E
+        ON sw.enterprise_id=e.id
+        INNER JOIN (SELECT ID FROM t_report_month WHERE gather_id=#{gatherId}) T
+        ON swtz.report_id=t.id
+        GROUP BY e.id,e.short_name,VARIETY,ORIGIN,HARVEST_YEAR ,order_no ORDER BY order_no ASC
+    </select>
+
+    <select id="listSwtzForWebApi" parameterType="HashMap" resultMap="ReportSwtzResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tablename"/>
+        <where>
+            <if test="reportMonth != null and reportMonth != ''">
+                AND REPORT_MONTH = #{reportMonth}
+            </if>
+            <if test="reportWarehouse != null and reportWarehouse != ''">
+                AND REPORT_WAREHOUSE = #{reportWarehouse}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getLastestQuantity" parameterType="HashMap" resultType="java.lang.Double">
+        SELECT QUANTITY FROM
+        (
+        SELECT
+        <include refid="tablename"/>.*,ROWNUM rn
+        FROM
+        <include refid="tablename"/>
+        <where>
+            <if test="reportWarehouse != null and reportWarehouse != ''">
+                AND REPORT_WAREHOUSE = #{reportWarehouse}
+            </if>
+            <if test="storehouse != null and storehouse != ''">
+                AND STOREHOUSE = #{storehouse}
+            </if>
+            <if test="variety != null and variety != ''">
+                AND VARIETY = #{variety}
+            </if>
+        </where>
+        ORDER BY REPORT_MONTH DESC
+        ) t WHERE t.rn = 1
+    </select>
+
+    <select id="querySumByMonth" parameterType="HashMap" resultMap="ReportSwtzResultMap">
+        SELECT variety,report_month,sum(quantity) quantity FROM
+        <include refid="tablename"/>
+        WHERE report_id IN(
+        SELECT c.id FROM t_report_month c,t_report_month p WHERE p.report_name='粮油库存实物台账月报表' AND p.report_status='汇总通过'
+        AND c.REPORT_WAREHOUSE_id=#{reportWarehouseId} AND p.report_month&gt;=#{monthStart} AND p.report_month&lt;=#{monthEnd}
+        AND c.gather_id=p.id
+        ) group by report_month,variety
+    </select>
+
+    <select id="getSumQuantity" parameterType="java.util.HashMap" resultType="java.lang.String">
+        SELECT SUM(QUANTITY) FROM
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <include refid="InventoryStatisticsQueryCondition1"/>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+    </select>
+    <select id="getSumQuantityByReportwarehouse" parameterType="java.util.HashMap" resultMap="KCTJChartsVOResultMap">
+        select
+        T.Extends_Warehouse reportWarehouse,
+        WS.ORDER_NO orderNo,
+        sum(T.quantity) quantityTotal,
+        sum(T.advised_deposit) advisedTotal,
+        sum(T.slightly_unsuitable) slightlytotal,
+        sum(T.severe_unsuitable) severetotal
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <include refid="InventoryStatisticsQueryCondition1"/>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+        group by T.Extends_Warehouse,WS.ORDER_NO ORDER BY WS.ORDER_NO ASC
+    </select>
+
+    <select id="getMaxQuantityByReportwarehouse" parameterType="java.util.HashMap" resultType="java.lang.String">
+        select
+        max(nvl(sum(T.quantity),0)) as maxquantity
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <include refid="InventoryStatisticsQueryCondition1"/>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+        group by T.Extends_Warehouse
+    </select>
+
+    <select id="getDistinctVariety" parameterType="java.util.HashMap" resultMap="KCTJChartsVOResultMap">
+        select
+        sum(T.quantity) quantityTotal,
+        T.VARIETY AS variety
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <include refid="InventoryStatisticsQueryCondition1"/>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+        group by T.VARIETY
+    </select>
+
+    <select id="getDistinctHarvestYear" parameterType="java.util.HashMap" resultMap="ReportSwtzResultMap">
+        select
+        sum(T.quantity) quantity,
+        T.HARVEST_YEAR AS harvestYear
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <include refid="InventoryStatisticsQueryCondition1"/>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+        group by T.HARVEST_YEAR
+    </select>
+    <select id="getSumQuantityByVariety" parameterType="java.util.HashMap" resultType="String">
+        select
+        sum(T.quantity) quantityTotal
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            AND T.variety=#{variety}
+            AND T.Extends_Warehouse = #{reportWarehouse}
+            <if test="month!=null and month!=''">
+                and T.REPORT_MONTH = #{month}
+            </if>
+            <if test="harvestYear!=null and harvestYear!=''">
+                AND T.HARVEST_YEAR = #{harvestYear}
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND T.ORIGIN = #{origin}
+            </if>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+    </select>
+
+    <select id="getSumQuantityByHarvestYear" parameterType="java.util.HashMap" resultType="String">
+        select
+        sum(T.quantity) quantityTotal
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            AND T.HARVEST_YEAR=#{harvestYear}
+            AND T.Extends_Warehouse = #{reportWarehouse}
+            <if test="month!=null and month!=''">
+                and T.REPORT_MONTH = #{month}
+            </if>
+            <if test="variety!=null and variety!=''">
+                AND T.VARIETY = #{variety}
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND T.ORIGIN = #{origin}
+            </if>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+    </select>
+
+    <select id="getSumQuantityPinzhi" parameterType="java.util.HashMap" resultMap="KCTJChartsVOResultMap">
+        select
+        sum(T.advised_deposit) advisedTotal,
+        sum(T.slightly_unsuitable) slightlytotal,
+        sum(T.severe_unsuitable) severetotal
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <include refid="InventoryStatisticsQueryCondition1"/>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+    </select>
+
+    <select id="pageQuery1" parameterType="java.util.HashMap"
+            resultMap="ReportSwtzResultMap">
+        ${start}
+        SELECT REPORT_ID, REPORT_MONTH,e.WAREHOUSE_SHORT AS REPORT_WAREHOUSE,
+        REPORT_NAME, WAREHOUSE, STOREHOUSE,
+        VARIETY, QUANTITY, ORIGIN,
+        HARVEST_YEAR, BROWN, UNIT_WEIGHT,
+        IMPURITY, DEW, YELLOW_RICE,
+        UNSOUND_GRAIN, WET_GLUTEN, KOH,
+        PACKING,BULK,DEAL_SERIAL,
+        MMOL, ADVISED_DEPOSIT, SLIGHTLY_UNSUITABLE,
+        e.WAREHOUSE_SHORT EXTENDS_WAREHOUSE,EXTENDS_WAREHOUSE_ID,T.ROTATE_NUMBER AS ROTATE_NUMBER,ROUND(NVL(T.DETAIL_NUMBER,0),3) AS
+        DETAIL_NUMBER,T.ID AS PLANDETAILID
+        FROM T_REPORT_MONTH_SWTZ left join T_STORAGE_WAREHOUSE e ON e.id=EXTENDS_WAREHOUSE_ID
+        INNER JOIN T_ROTATE_PLAN_MAIN_DETAIL T
+        ON VARIETY = T.FOOD_TYPE AND HARVEST_YEAR = T.YIELD_TIME
+        <where>
+            <if test="excludeOutConditionList!=null and excludeOutConditionList.size()>0">
+                not EXISTS (
+                SELECT * FROM
+                (<foreach collection="excludeOutConditionList" item="item" index="index" separator=" " >
+                    SELECT a.warehouse_short,b.encode from T_Storage_warehouse a left JOIN
+
+                (
+                SELECT * FROM(
+                SELECT Translate(C.ID USING CHAR_CS) AS ID ,Translate(C.ENCODE USING CHAR_CS) AS ENCODE  ,C.WAREHOUSE_ID,C.ORDER_NO FROM T_STORAGE_STOREHOUSE C
+                UNION
+                SELECT D.ID,D.OILCAN_SERIAL AS ENCODE,D.WAREHOUSE_ID,D.ORDER_NO FROM T_STORAGE_OILCAN D)
+                )b
+                    on a.id = b.warehouse_id where a.warehouse_short = #{item.libraryName,jdbcType=VARCHAR}
+                    and b.encode = #{item.barnNumber,jdbcType=VARCHAR}
+                    union
+                </foreach>
+                SELECT a.warehouse_short,b.encode from T_Storage_warehouse a left JOIN
+                (
+                SELECT * FROM(
+                SELECT Translate(C.ID USING CHAR_CS) AS ID ,Translate(C.ENCODE USING CHAR_CS) AS ENCODE  ,C.WAREHOUSE_ID,C.ORDER_NO FROM T_STORAGE_STOREHOUSE C
+                UNION
+                SELECT D.ID,D.OILCAN_SERIAL AS ENCODE,D.WAREHOUSE_ID,D.ORDER_NO FROM T_STORAGE_OILCAN D)
+                ) b
+                on a.id = b.warehouse_id where a.warehouse_short = ''
+                and b.encode = '')c where c.warehouse_short = e.warehouse_short and c.encode = storehouse
+                )
+            </if>
+            and report_id IN(
+            SELECT id FROM t_report_month WHERE gather_id IN (
+            SELECT id FROM t_report_month
+            WHERE report_name='粮油库存实物台账月报表'
+            AND report_status='汇总通过'
+            )
+            AND T.ID IN (SELECT ID FROM T_ROTATE_PLAN_MAIN_DETAIL WHERE PLAN_ID = #{plandetailid})
+            AND T.ROTATE_TYPE='轮出'
+            <if test="variety!=null and variety!=''">
+                AND VARIETY LIKE '%${variety}%'
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND ORIGIN LIKE '%${origin}%'
+            </if>
+            <if test="minQuantity!=null and minQuantity!=''">
+                AND QUANTITY &gt;= #{minQuantity}
+            </if>
+            <if test="maxQuantity!=null and maxQuantity!=''">
+                AND QUANTITY &lt;= #{maxQuantity}
+            </if>
+            <if test="reportMonth!=null and reportMonth!=''">
+                AND REPORT_MONTH = #{reportMonth}
+            </if>
+            <if test="minQuota!=null and minQuota!='' and quota!=null and quota!=''">
+                AND ${quota} &gt;= #{minQuota}
+            </if>
+            <if test="maxQuota!=null and maxQuota!='' and quota!=null and quota!=''">
+                AND ${quota} &lt;= #{maxQuota}
+            </if>
+            <if test="warehouse!=null and warehouse!=''">
+                AND REPORT_WAREHOUSE LIKE '%${warehouse}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            <if test="receiptYear!=null and receiptYear!=''">
+                AND HARVEST_YEAR LIKE '%${receiptYear}%'
+            </if>
+            <if test="extendsWarehouse !=null and extendsWarehouse !=''">
+                AND e.WAREHOUSE_SHORT LIKE '%${extendsWarehouse}%'
+            </if>
+            <if test="warehouseCode != null and warehouseCode !='' ">
+                AND e.WAREHOUSE_CODE = #{warehouseCode}
+            </if>
+            <if test="warehouse_type !=null and warehouse_type !=''">
+                AND e.warehouse_type LIKE '%${warehouse_type}%'
+            </if>
+            <if test='excludeOutIds!=null and excludeOutIds!="" '>
+                AND ID NOT IN
+                <foreach item="item" index="index" collection="excludeOutIds.split(',')"  open="(" separator="," close=")">
+                    '${item}'
+                </foreach>
+            </if>
+            )
+        </where>
+        ORDER BY REPORT_MONTH DESC,report_id,VARIETY,STOREHOUSE,HARVEST_YEAR
+        ${end}
+    </select>
+
+    <select id="getRecordCount1" parameterType="java.util.HashMap" resultType="Integer">
+        SELECT count(0) FROM
+        <include refid="tablename"/>left join T_STORAGE_WAREHOUSE e ON e.id=EXTENDS_WAREHOUSE_ID
+        INNER JOIN T_ROTATE_PLAN_MAIN_DETAIL T
+        ON VARIETY = T.FOOD_TYPE AND HARVEST_YEAR = T.YIELD_TIME
+        <where>
+            <if test="excludeOutConditionList!=null and excludeOutConditionList.size()>0">
+                not EXISTS (
+                SELECT * FROM
+                (<foreach collection="excludeOutConditionList" item="item" index="index" separator=" " >
+                SELECT a.warehouse_short,b.encode from T_Storage_warehouse a left JOIN
+                (
+                SELECT * FROM(
+                SELECT Translate(C.ID USING CHAR_CS) AS ID ,Translate(C.ENCODE USING CHAR_CS) AS ENCODE  ,C.WAREHOUSE_ID,C.ORDER_NO FROM T_STORAGE_STOREHOUSE C
+                UNION
+                SELECT D.ID,D.OILCAN_SERIAL AS ENCODE,D.WAREHOUSE_ID,D.ORDER_NO FROM T_STORAGE_OILCAN D)
+                )b
+                on a.id = b.warehouse_id where a.warehouse_short = #{item.libraryName,jdbcType=VARCHAR}
+                and b.encode = #{item.barnNumber,jdbcType=VARCHAR}
+                union
+            </foreach>
+                SELECT a.warehouse_short,b.encode from T_Storage_warehouse a left JOIN
+                (
+                SELECT * FROM(
+                SELECT Translate(C.ID USING CHAR_CS) AS ID ,Translate(C.ENCODE USING CHAR_CS) AS ENCODE  ,C.WAREHOUSE_ID,C.ORDER_NO FROM T_STORAGE_STOREHOUSE C
+                UNION
+                SELECT D.ID,D.OILCAN_SERIAL AS ENCODE,D.WAREHOUSE_ID,D.ORDER_NO FROM T_STORAGE_OILCAN D)
+                ) b
+                on a.id = b.warehouse_id where a.warehouse_short = ''
+                and b.encode = '')c where c.warehouse_short = e.warehouse_short and c.encode = storehouse
+                )
+            </if>
+            and
+            report_id IN(
+            SELECT id FROM t_report_month WHERE gather_id IN (
+            SELECT id FROM t_report_month
+            WHERE report_name='粮油库存实物台账月报表'
+            AND report_status='汇总通过'
+            )
+            AND T.ID IN (SELECT ID FROM T_ROTATE_PLAN_MAIN_DETAIL WHERE PLAN_ID = #{plandetailid})
+            AND T.ROTATE_TYPE='轮出'
+            <if test="variety!=null and variety!=''">
+                AND VARIETY LIKE '%${variety}%'
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND ORIGIN LIKE '%${origin}%'
+            </if>
+            <if test="minQuantity!=null and minQuantity!=''">
+                AND QUANTITY &gt;= #{minQuantity}
+            </if>
+            <if test="maxQuantity!=null and maxQuantity!=''">
+                AND QUANTITY &lt;= #{maxQuantity}
+            </if>
+            <if test="reportMonth!=null and reportMonth!=''">
+                AND REPORT_MONTH = #{reportMonth}
+            </if>
+            <if test="minQuota!=null and minQuota!='' and quota!=null and quota!=''">
+                AND ${quota} &gt;= #{minQuota}
+            </if>
+            <if test="maxQuota!=null and maxQuota!='' and quota!=null and quota!=''">
+                AND ${quota} &lt;= #{maxQuota}
+            </if>
+            <if test="warehouse!=null and warehouse!=''">
+                AND REPORT_WAREHOUSE LIKE '%${warehouse}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            <if test="receiptYear!=null and receiptYear!=''">
+                AND HARVEST_YEAR LIKE '%${receiptYear}%'
+            </if>
+            <if test="warehouseCode != null and warehouseCode !='' ">
+                AND e.WAREHOUSE_CODE = #{warehouseCode}
+            </if>
+            <if test="extendsWarehouse !=null and extendsWarehouse !=''">
+                AND e.WAREHOUSE_SHORT LIKE '%${extendsWarehouse}%'
+            </if>
+            <if test="warehouse_type !=null and warehouse_type !=''">
+                AND e.warehouse_type LIKE '%${warehouse_type}%'
+            </if>
+            )
+        </where>
+    </select>
+
+    <select id="getSumQuantityByEnterpriseid" parameterType="java.util.HashMap" resultMap="KCTJChartsVOResultMap">
+        select
+        SE.SHORT_NAME reportWarehouse,
+        MIN(WS.ORDER_NO) orderNo,
+        sum(T.quantity) quantityTotal,
+        sum(T.advised_deposit) advisedTotal,
+        sum(T.slightly_unsuitable) slightlytotal,
+        sum(T.severe_unsuitable) severetotal
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        INNER JOIN T_STORE_ENTERPRISE SE
+        ON WS.ENTERPRISE_ID = SE.ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <include refid="InventoryStatisticsQueryCondition1"/>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+        group by SE.SHORT_NAME ORDER BY orderNo
+    </select>
+
+    <select id="geMaxQuantityByEnterpriseid" parameterType="java.util.HashMap" resultType="java.lang.String">
+        select
+        max(nvl(sum(T.quantity),0)) AS maxquantity
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        INNER JOIN T_STORE_ENTERPRISE SE
+        ON WS.ENTERPRISE_ID = SE.ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            <include refid="InventoryStatisticsQueryCondition1"/>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+        group by SE.SHORT_NAME
+    </select>
+
+    <select id="getSumByEnterpriseidVariety" parameterType="java.util.HashMap" resultType="String">
+        select
+        sum(T.quantity) quantityTotal
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        INNER JOIN T_STORE_ENTERPRISE SE
+        ON WS.ENTERPRISE_ID = SE.ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            AND T.variety=#{variety}
+            AND SE.SHORT_NAME = #{reportWarehouse}
+            <if test="month!=null and month!=''">
+                and T.REPORT_MONTH = #{month}
+            </if>
+            <if test="harvestYear!=null and harvestYear!=''">
+                AND T.HARVEST_YEAR = #{harvestYear}
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND T.ORIGIN = #{origin}
+            </if>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+    </select>
+
+    <select id="getSumByYearEnterpriseid" parameterType="java.util.HashMap" resultType="String">
+        select
+        sum(T.quantity) quantityTotal
+        from
+        <include refid="tablename"/>
+        T
+        INNER JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = T.EXTENDS_WAREHOUSE_ID
+        INNER JOIN T_STORE_ENTERPRISE SE
+        ON WS.ENTERPRISE_ID = SE.ID
+        <where>
+            <include refid="InventoryStatisticsQueryCondition"/>
+            AND T.HARVEST_YEAR=#{harvestYear}
+            AND SE.SHORT_NAME = #{reportWarehouse}
+            <if test="month!=null and month!=''">
+                and T.REPORT_MONTH = #{month}
+            </if>
+            <if test="variety!=null and variety!=''">
+                AND T.VARIETY = #{variety}
+            </if>
+            <if test="origin!=null and origin!=''">
+                AND T.ORIGIN = #{origin}
+            </if>
+            <include refid="InventoryStatisticsQueryCondition2"/>
+        </where>
+    </select>
+</mapper>

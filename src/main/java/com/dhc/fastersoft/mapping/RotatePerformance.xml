@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotatePerformanceDao">
+	<resultMap id="rotatePerformanceResultMap" type="com.dhc.fastersoft.entity.RotatePerformance">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="HANDLE_TIME" property="handleTime" jdbcType="DATE" />
+		<result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="DELIVERY_PLACE" property="deliveryPlace" jdbcType="VARCHAR" />
+		<result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR" />
+		<result column="UNIT" property="unit" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="DEAL_SERIAL" property="dealSerial" jdbcType="VARCHAR" />
+		<result column="BID_SERIAL" property="bidSerial" jdbcType="INTEGER"/>
+		<result column="STOREHOUSE" property="storehouse" jdbcType="INTEGER"/>
+		<result column="TAKE_END" property="takeEnd" jdbcType="VARCHAR"/>
+		<result column="DELIVERY_END" property="deliveryEnd" jdbcType="VARCHAR"/>
+		<result column="GRAIN_TYPE" property="grainType" jdbcType="VARCHAR"/>
+		<result column="DEAL_UNIT" property="dealUnit" jdbcType="VARCHAR"/>
+		<result column="DEAL_UNIT_ID" property="dealUnitId" jdbcType="VARCHAR"/>
+		<result column="QUANTITY" property="quantity" jdbcType="VARCHAR"/>
+		<result column="IN_PLAN_QUANTITY" property="inPlanQuantity" jdbcType="VARCHAR"/>
+		<result column="PROCESS_DETAIL" property="processDetail" jdbcType="VARCHAR"/>
+		<result column="ANNEX" property="annex" jdbcType="VARCHAR"/>
+		<result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+		<result column="WAREHOUSE_NAME" property="warehouseName" jdbcType="VARCHAR"/>
+		<result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="columns">
+		ID,OPERATOR,HANDLE_TIME,DEPARTMENT,TYPE,
+		DELIVERY_PLACE,WAREHOUSE_ID,UNIT,STATUS,DEAL_SERIAL,
+		BID_SERIAL,STOREHOUSE,TAKE_END,DELIVERY_END,
+		GRAIN_TYPE,DEAL_UNIT,DEAL_UNIT_ID,QUANTITY,IN_PLAN_QUANTITY,
+		PROCESS_DETAIL,ANNEX,REMARK,ENTERPRISE_ID
+	</sql>
+	
+	<sql id="s_columns">
+		ID,(select name from t_sys_user where id = OPERATOR) OPERATOR,HANDLE_TIME,DEPARTMENT,TYPE,
+		DELIVERY_PLACE,UNIT,STATUS,DEAL_SERIAL,
+		BID_SERIAL,STOREHOUSE,TAKE_END,DELIVERY_END,
+		GRAIN_TYPE,DEAL_UNIT,QUANTITY,IN_PLAN_QUANTITY,
+		PROCESS_DETAIL,ANNEX,REMARK,DEAL_UNIT_ID ,WAREHOUSE_ID
+	</sql>
+	
+	<insert id="AddRotatePerformance" parameterType="com.dhc.fastersoft.entity.RotatePerformance">
+		INSERT INTO T_ROTATE_PERFORMANCE(<include refid="columns"/>)
+		VALUES(
+			#{id},#{operator},#{handleTime},#{department,jdbcType=VARCHAR},#{type},
+			#{deliveryPlace},#{warehouseId},#{unit},#{status},#{dealSerial},
+			#{bidSerial},#{storehouse},#{takeEnd},#{deliveryEnd},
+			#{grainType},#{dealUnit},#{dealUnitId},#{quantity},#{inPlanQuantity},
+			#{processDetail},#{annex,jdbcType=VARCHAR},#{remark},#{enterpriseId,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="ListLimitPerformance" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="rotatePerformanceResultMap">
+		SELECT * FROM (
+			SELECT A.*, ROWNUM RN
+			FROM (SELECT
+				<include refid="s_columns" />
+				FROM
+				T_ROTATE_PERFORMANCE
+				ORDER BY HANDLE_TIME DESC
+			) A
+			<where>
+				<if test="entity.type != null and entity.type != ''">
+					AND TYPE LIKE concat(concat('%','${entity.type}'),'%')
+				</if>
+				<if test="entity.dealSerial != null and entity.dealSerial != ''">
+					AND DEAL_SERIAL LIKE concat(concat('%','${entity.dealSerial}'),'%')
+				</if>
+				<if test="entity.bidSerial != null  and entity.bidSerial != ''">
+					AND BID_SERIAL LIKE concat(concat('%','${entity.bidSerial}'),'%')
+				</if>
+				<if test="entity.storehouse != null and entity.storehouse != ''">
+					AND STOREHOUSE LIKE concat(concat('%','${entity.storehouse}'),'%')
+				</if>
+				<if test="entity.takeEnd != null and entity.takeEnd != ''">
+					AND (TAKE_END = #{entity.takeEnd} or TAKE_END = to_char(to_date(#{entity.takeEnd},'yyyy-MM-dd'),'yyyy-fmMM-dd'))
+				</if>
+				<if test="entity.deliveryEnd != null and entity.deliveryEnd != ''">
+					AND (TAKE_END = #{entity.deliveryEnd} or TAKE_END = to_char(to_date(#{entity.deliveryEnd},'yyyy-MM-dd'),'yyyy-fmMM-dd'))
+				</if>
+				<if test="entity.grainType != null and entity.grainType != ''">
+					AND GRAIN_TYPE LIKE concat(concat('%','${entity.grainType}'),'%')
+				</if>
+				<if test="entity.status != null and entity.status != ''">
+					AND STATUS LIKE concat(concat('%','${entity.status}'),'%')
+				</if>
+				<if test="entity.handleTime != null and entity.handleTime !=''">
+					AND HANDLE_TIME =  #{entity.handleTime}
+				</if>
+				<if test="entity.operator != null and entity.operator !=''">
+					AND OPERATOR LIKE concat(concat('%','${entity.operator}'),'%')
+				</if>
+				<if test="entity.warehouseId != null and entity.warehouseId !=''">
+					AND WAREHOUSE_ID  =  #{entity.warehouseId,jdbcType=VARCHAR}
+				</if>
+				<if test="entity.dealUnitId != null and entity.dealUnitId !=''">
+					AND DEAL_UNIT_ID  =  #{entity.dealUnitId,jdbcType=VARCHAR}
+				</if>
+				/*And ROWNUM &lt;= '${pageIndex}'*'${pageSize}'*/
+				<if test="entity.deliveryPlace != null and entity.deliveryPlace !=''">
+					AND DELIVERY_PLACE LIKE concat(concat('%',#{entity.deliveryPlace}),'%')
+				</if>
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			</where>
+		)
+		WHERE RN > ('${pageIndex}' - 1) * '${pageSize}'
+	</select>
+	
+	<select id="GetTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(ID) FROM T_ROTATE_PERFORMANCE
+		<where>
+			<if test="entity.type != null and entity.type != ''">
+				AND TYPE LIKE concat(concat('%',#{entity.type}),'%')
+			</if>
+			<if test="entity.dealSerial != null and entity.dealSerial != ''">
+				AND DEAL_SERIAL LIKE concat(concat('%',#{entity.dealSerial}),'%')
+			</if>
+			<if test="entity.bidSerial != null and entity.bidSerial != ''">
+				AND BID_SERIAL LIKE concat(concat('%',#{entity.bidSerial}),'%')
+			</if>
+			<if test="entity.storehouse != null and entity.storehouse != ''">
+				AND STOREHOUSE LIKE concat(concat('%',#{entity.storehouse}),'%')
+			</if>
+			<if test="entity.takeEnd != null and entity.takeEnd != ''">
+				AND TAKE_END LIKE concat(concat('%',#{entity.takeEnd}),'%')
+			</if>
+			<if test="entity.grainType != null and entity.grainType != ''">
+				AND GRAIN_TYPE LIKE concat(concat('%',#{entity.grainType}),'%')
+			</if>
+			<if test="entity.status != null and entity.status != ''">
+				AND STATUS LIKE concat(concat('%',#{entity.status}),'%')
+			</if>
+			<if test="entity.handleTime != null and entity.handleTime != ''">
+				AND HANDLE_TIME = #{entity.handleTime}
+			</if>
+			<if test="entity.operator != null and entity.operator != ''">
+				AND OPERATOR LIKE concat(concat('%',#{entity.operator}),'%')
+			</if>
+			<if test="entity.warehouseId != null and entity.warehouseId !=''">
+				AND WAREHOUSE_ID  =  #{entity.warehouseId,jdbcType=VARCHAR}
+			</if>
+			<if test="entity.dealUnitId != null and entity.dealUnitId !=''">
+				AND DEAL_UNIT_ID  =  #{entity.dealUnitId,jdbcType=VARCHAR}
+			</if>
+			<if test="entity.deliveryPlace != null and entity.deliveryPlace != ''">
+					AND DELIVERY_PLACE LIKE concat(concat('%',#{entity.deliveryPlace}),'%')
+				</if>
+		</where>
+	</select>
+
+	<select id="GetRotatePerformance" parameterType="java.lang.String" resultMap="rotatePerformanceResultMap">
+		SELECT
+			ID,
+			( SELECT name FROM t_sys_user WHERE id = OPERATOR ) OPERATOR,
+			HANDLE_TIME,
+			DEPARTMENT,
+			TYPE,
+			(select ENTERPRISE_NAME FROM T_STORE_ENTERPRISE where id = ENTERPRISE_ID) as DELIVERY_PLACE,
+			(select CLIENT_NAME from T_CLIENT_INFO where id = DEAL_UNIT_ID) as DEAL_UNIT,
+			(select WAREHOUSE_SHORT from T_STORAGE_WAREHOUSE WHERE id = WAREHOUSE_ID) as WAREHOUSE_NAME,
+			UNIT,
+			STATUS,
+			DEAL_SERIAL,
+			BID_SERIAL,
+			STOREHOUSE,
+			TAKE_END,
+			DELIVERY_END,
+			GRAIN_TYPE,
+			QUANTITY,
+			IN_PLAN_QUANTITY,
+			PROCESS_DETAIL,
+			ANNEX,
+			REMARK,
+			DEAL_UNIT_ID,
+			WAREHOUSE_ID,
+			ENTERPRISE_ID
+		FROM T_ROTATE_PERFORMANCE
+		WHERE ID = #{_parameter}
+	</select>
+
+	<update id="UpdateRotatePerformance" parameterType="com.dhc.fastersoft.entity.RotatePerformance">
+		UPDATE T_ROTATE_PERFORMANCE SET
+		<trim suffixOverrides="," >
+		<if test="handleTime != null and handleTime != ''">
+			HANDLE_TIME = #{handleTime},
+		</if>
+		<if test="department != null and department != ''">
+			DEPARTMENT = #{department,jdbcType=VARCHAR},
+		</if>
+		<if test="type != null and type != ''">
+			TYPE = #{type,jdbcType=VARCHAR},
+		</if>
+		<if test="deliveryPlace != null and deliveryPlace != ''">
+			DELIVERY_PLACE = #{deliveryPlace,jdbcType=VARCHAR},
+		</if>
+		<if test="warehouseId != null and warehouseId != ''">
+			WAREHOUSE_ID = #{warehouseId,jdbcType=VARCHAR},
+		</if>
+		<if test="unit != null and unit != ''">
+			UNIT = #{unit,jdbcType=VARCHAR},
+		</if>
+		<if test="status != null and status != ''">
+			STATUS = #{status,jdbcType=VARCHAR},
+		</if>
+		<if test="dealSerial != null and dealSerial != ''">
+			DEAL_SERIAL = #{dealSerial,jdbcType=VARCHAR},
+		</if>
+		<if test="bidSerial != null and bidSerial != ''">
+			BID_SERIAL = #{bidSerial,jdbcType=VARCHAR},
+		</if>
+		<if test="storehouse != null and storehouse != ''">
+			STOREHOUSE = #{storehouse,jdbcType=VARCHAR},
+		</if>
+		<if test="takeEnd != null and takeEnd != ''">
+			TAKE_END = #{takeEnd,jdbcType=VARCHAR},
+		</if>
+		<if test="deliveryEnd != null and deliveryEnd != ''">
+			DELIVERY_END = #{deliveryEnd,jdbcType=VARCHAR},
+		</if>
+		<if test="grainType != null and grainType != ''">
+			GRAIN_TYPE = #{grainType,jdbcType=VARCHAR},
+		</if>
+		<if test="dealUnit != null and dealUnit != ''">
+			DEAL_UNIT = #{dealUnit,jdbcType=VARCHAR},
+		</if>
+		<if test="dealUnitId != null and dealUnitId != ''">
+			DEAL_UNIT_ID = #{dealUnitId,jdbcType=VARCHAR},
+		</if>
+		<if test="quantity != null and quantity != ''">
+			QUANTITY = #{quantity,jdbcType=VARCHAR},
+		</if>
+		<if test="inPlanQuantity != null and inPlanQuantity != ''">
+			IN_PLAN_QUANTITY = #{inPlanQuantity,jdbcType=VARCHAR},
+		</if>
+		<if test="processDetail != null and processDetail != ''">
+			PROCESS_DETAIL = #{processDetail,jdbcType=VARCHAR},
+		</if>
+		<if test="handleTime != null and handleTime != ''">
+			REMARK = #{remark,jdbcType=VARCHAR},
+		</if>
+			ENTERPRISE_ID = #{enterpriseId,jdbcType=VARCHAR}
+		</trim>
+		WHERE ID = #{id}
+	</update>
+</mapper>

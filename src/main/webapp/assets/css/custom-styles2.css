@@ -1,0 +1,89 @@
+body {
+	font-family: "Microsoft YaHei";
+}
+
+.container {
+	background: #fff;
+	width: 96%;
+}
+
+.clear-m {
+	margin: 0;
+}
+
+.breadcrumb li {
+	color: #777;
+}
+
+.container-box{
+	margin-left: 20px;
+    margin-right: 20px;
+    width:auto!important;
+    border-top:2px solid #2ab4a8;
+	height: 100%;
+	background-color: white;
+}
+
+.breadcrumb li.active {
+	color: #333;
+}
+.row{
+	margin-left:0;
+	margin-right:0;
+}
+.title {
+	font-weight: 500;
+	margin: 10px 0;
+	color: #2ab4a8;
+	border-bottom:1px solid #2ab4a8;
+}
+.layui-field-title legend {
+	font-size: 20px;
+	font-weight: bold;
+	color: #2ab4a8;
+/* 	border-bottom:1px solid #2ab4a8; */
+	margin-left:0;
+}
+.layui-row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+}
+#search{
+	border-bottom: 2px solid #e2e2e2;
+}
+#search .layui-form-label{
+	 width: 100px;
+    font-weight: bold;
+    padding: 9px 0;
+    text-align: center;
+    font-size: 14px;
+}
+button#add{
+	margin-top:5px;
+	margin-left:10px;
+}
+.layui-table-view{
+	margin: 10px 10px;
+}
+
+.container-box>form,#editinfo{
+	font-size:14px;
+}
+
+/* .layui-table-body .layui-btn+.layui-btn {
+    margin-left: 0px;
+    margin-right:0px;
+} */
+
+/* .layui-table td span {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+} */
+
+.btn:hover, .btn:link, .btn:active, .btn:visited{
+	background-color:#fff;
+	color:#23527c;
+	border-color:#fff;
+}

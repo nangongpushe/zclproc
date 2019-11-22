@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateInviteDetailDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateInviteDetail" id="rotateInviteDetailResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR"/>
+		<result property="inviteID" column="INVITE_ID" jdbcType="NVARCHAR" />
+		<result property="bidSerial" column="BID_SERIAL" jdbcType="NVARCHAR" />
+		<result property="competitiveUnit" column="COMPETITIVE_UNIT" jdbcType="NVARCHAR" />
+		<result property="num" column="NUM" jdbcType="NVARCHAR" />
+		<result property="startingPrice" column="STARTING_PRICE" jdbcType="NVARCHAR" />
+		<result property="competitivePrice" column="COMPETITIVE_PRICE" jdbcType="NVARCHAR" />
+		<result property="bidPrice" column="BID_PRICE" jdbcType="NVARCHAR" />
+		<result property="bail" column="BAIL" jdbcType="NVARCHAR" />
+		<result property="loanPaymentEndDate" column="LOANPAYMENTENDDATE" jdbcType="NVARCHAR" />
+		<result property="competitiveUnitId" column="COMPETITIVE_UNIT_ID" jdbcType="NVARCHAR" />
+	</resultMap>
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.StorageGrainInspectionTempDao">
+    <resultMap id="tempResultMap" type="com.dhc.fastersoft.entity.StorageGrainInspectionTemp">
+        <result	column="ID"	jdbcType="VARCHAR"	property="id"/>
+        <result	column="INSPECTION_ID" jdbcType="VARCHAR"	property="p_id"/>
+        <result	column="PLACEID" jdbcType="VARCHAR"	property="placeId"/>
+        <result	column="TOPMAX"	jdbcType="DECIMAL"	property="topMax"/>
+        <result	column="TOPMIN"	jdbcType="DECIMAL"	property="topMin"/>
+        <result	column="TOPAVG"	jdbcType="DECIMAL"	property="topAvg"/>
+
+    </resultMap>
+
+    <sql id="select_temp">
+        ID,INSPECTION_ID,PLACEID,TOPMAX,TOPMIN,TOPAVG
+    </sql>
+
+    <sql id="Related">
+        T_STORAGE_GRAIN_INSPECTION_D t INNER JOIN T_STORAGE_GRAIN_INSPECTION ts
+    </sql>
+
+    <sql id="tablename">
+        T_STORAGE_GRAIN_INSPECTION_D
+    </sql>
+
+    <select id="selectStorageGrainInspectionTempByPid" resultMap="tempResultMap">
+        SELECT
+        <include refid="select_temp"/>
+        FROM
+        <!--<include refid="Related"/>-->
+        <include refid="tablename"/>
+        WHERE
+        INSPECTION_ID=#{p_id}
+    </select>
+
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.StorageGrainInspectionTemp">
+        insert into <include refid="tablename"/> (<include refid="select_temp"/>)
+        values
+        (sequence_Temp.Nextval,#{p_id},#{placeId},#{topMax},#{topMin},#{topAvg} )
+    </insert>
+
+    <delete id="remove">
+        DELETE
+        FROM <include refid="tablename"></include>
+        <where>
+            INSPECTION_ID=#{p_id}
+        </where>
+    </delete>
+
+    <!--<update id="update">
+        UPDATE
+        <include refid="tablename"></include>
+        SET
+       TOPMAX=#{topMax},TOPMIN=#{topMin},
+        TOPAVG=#{topAvg}, PLACEID=#{placeId}
+        <where>
+            P_ID=#{p_id}
+        </where>
+    </update>-->
+</mapper>

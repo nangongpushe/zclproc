@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualityThirdItemMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualityThirdItem" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="THIRD_ID" property="thirdId" jdbcType="VARCHAR" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="GRADE" property="grade" jdbcType="VARCHAR" />
+    <result column="STANDARD" property="standard" jdbcType="VARCHAR" />
+    <result column="RESULT" property="result" jdbcType="VARCHAR" />
+    <result column="D_REMARK" property="remark" jdbcType="VARCHAR"/>
+    <result column="ORDER_NO" property="orderNo" jdbcType="DECIMAL"/>
+  </resultMap>
+  <select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_THIRD_ITEM WHERE THIRD_ID='${id}'
+	</select>
+  <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from T_QUALITY_THIRD_ITEM WHERE THIRD_ID='${id}' ORDER BY ORDER_NO ASC
+  </select>
+  <delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_QUALITY_THIRD_ITEM WHERE THIRD_ID='${id}'
+	</delete>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.QualityThirdItem" >
+    insert into T_QUALITY_THIRD_ITEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="thirdId != null" >
+        THIRD_ID,
+      </if>
+      <if test="itemName != null" >
+        ITEM_NAME,
+      </if>
+      <if test="grade != null" >
+        GRADE,
+      </if>
+      <if test="standard != null" >
+        STANDARD,
+      </if>
+      <if test="result != null" >
+        RESULT,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdId != null" >
+        #{thirdId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null" >
+        #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+   <select id="queryByThirdId" parameterType="java.util.List" resultMap="BaseResultMap">
+		SELECT * FROM T_QUALITY_THIRD_ITEM WHERE THIRD_ID IN
+		<foreach collection="list" item="ids" open="(" close=")" separator=",">
+			#{ids}
+		</foreach>
+	</select>
+  
+</mapper>

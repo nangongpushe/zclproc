@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.yearReport.ReportYearDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.yearReport.ReportYear" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="REPORT_YEAR" property="reportYear" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="REPORT_STATUS" property="reportStatus" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, REPORT_YEAR, REPORT_NAME, REPORT_STATUS, CREATOR, CREATE_DATE, REMARK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_REPORT_YEAR
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_REPORT_YEAR
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYear" >
+    insert into T_REPORT_YEAR (ID, REPORT_YEAR, REPORT_NAME, 
+      REPORT_STATUS, CREATOR, CREATE_DATE, 
+      REMARK)
+    values (#{id,jdbcType=VARCHAR}, #{reportYear,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR}, 
+      #{reportStatus,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYear" >
+    insert into T_REPORT_YEAR
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="reportYear != null" >
+        REPORT_YEAR,
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME,
+      </if>
+      <if test="reportStatus != null" >
+        REPORT_STATUS,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="reportYear != null" >
+        #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="reportStatus != null" >
+        #{reportStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYear" >
+    update T_REPORT_YEAR
+    <set >
+      <if test="reportYear != null" >
+        REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="reportStatus != null" >
+        REPORT_STATUS = #{reportStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        CREATOR = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectByProperty" resultMap="BaseResultMap" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYear" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_REPORT_YEAR
+  	<where>
+	  <if test="reportYear != null and reportYear!=''" >
+       AND REPORT_YEAR = #{reportYear,jdbcType=VARCHAR}
+      </if>
+      <if test="reportName != null and reportName!=''" >
+        AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+      </if>
+      <if test="reportStatus != null" >
+       AND REPORT_STATUS = #{reportStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="creator != null" >
+       AND CREATOR = #{creator,jdbcType=VARCHAR}
+      </if>
+      <if test="createDate != null" >
+       AND CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="remark != null" >
+       AND REMARK = #{remark,jdbcType=VARCHAR}
+      </if>
+  	</where>
+  </select>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYear" >
+    update T_REPORT_YEAR
+    set REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      REPORT_STATUS = #{reportStatus,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

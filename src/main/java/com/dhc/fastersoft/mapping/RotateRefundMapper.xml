@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateRefundDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateRefund" id="rotateRefundResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="bidSerial" column="BID_SERIAL" jdbcType="VARCHAR" />
+		<result property="company" column="COMPANY" jdbcType="VARCHAR" />
+		<result property="dealDate" column="DEAL_DATE" jdbcType="DATE" />
+		<result property="dealDates" column="DEAL_DATES" jdbcType="VARCHAR" />
+		<result property="dealType" column="DEAL_TYPE" jdbcType="VARCHAR" />	
+		<result property="dealNumber" column="DEAL_NUMBER" jdbcType="DOUBLE" />
+		<result property="dealAmount" column="DEAL_AMOUNT" jdbcType="DOUBLE" />
+		<result property="refundAmount" column="REFUND_AMOUNT" jdbcType="DOUBLE" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="companyId" column="COMPANY_ID" jdbcType="VARCHAR"/>
+		<result property="concluteDetailId" column="CONCLUTE_DETAIL_ID" jdbcType="VARCHAR"/>
+		<result property="surplusBail" column="SURPLUS_BAIL" jdbcType="DECIMAL"/>
+		<result property="mainId" column="MAIN_ID" jdbcType="VARCHAR"/>
+		<result property="groupId" column="GROUPID" jdbcType="VARCHAR"/>
+		<result property="serial" column="SERIAL" jdbcType="VARCHAR"/>
+		<result property="department" column="DEPARTMENT" jdbcType="VARCHAR" />
+		<result property="handleTime" column="HANDLE_TIME" jdbcType="TIMESTAMP" />
+		<result property="operator" column="OPERATOR" jdbcType="VARCHAR" />
+		<result property="maxGroupId" column="MAXGROUPID" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="columns_main">
+		ID,BID_SERIAL,
+		COMPANY,DEAL_DATE,DEAL_TYPE,DEAL_NUMBER,DEAL_AMOUNT,
+		REFUND_AMOUNT,REMARK,COMPANY_ID,CONCLUTE_DETAIL_ID,MAIN_ID,GROUPID
+	</sql>
+
+
+	<sql id="s_columns_main">
+		ID,BID_SERIAL,
+		COMPANY,DEAL_DATE,DEAL_TYPE,DEAL_NUMBER,DEAL_AMOUNT,
+		REFUND_AMOUNT,REMARK,COMPANY_ID,CONCLUTE_DETAIL_ID,MAIN_ID,GROUP
+	</sql>
+
+	<sql id="s_columns_main1">
+		tr.ID,(select name from t_sys_user where id = OPERATOR) OPERATOR,tr.DEPARTMENT,tr.HANDLE_TIME,tr.BID_SERIAL,
+		ti.CLIENT_NAME AS COMPANY,tr.DEAL_DATE,tr.DEAL_TYPE,tr.DEAL_NUMBER,tr.DEAL_AMOUNT,
+		tr.REFUND_AMOUNT,tr.REMARK,tr.MODIFIER,tr.MODIFY_TIME,tr.COMPANY_ID
+	</sql>
+	<sql id="table_main"> T_ROTATE_MARGIN_REFUND </sql>
+	
+
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.RotateRefund">
+		INSERT INTO T_ROTATE_MARGIN_REFUND
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(#{id,jdbcType=VARCHAR},
+		#{bidSerial,jdbcType=VARCHAR},
+		#{company,jdbcType=VARCHAR},
+		to_date(#{dealDates},'yyyy-mm-dd'),
+		#{dealType,jdbcType=VARCHAR},
+		#{dealNumber,jdbcType=VARCHAR},
+		#{dealAmount,jdbcType=DOUBLE},
+		#{refundAmount,jdbcType=DOUBLE},
+		#{remark,jdbcType=VARCHAR},
+		#{companyId,jdbcType=VARCHAR},
+		#{concluteDetailId,jdbcType=VARCHAR},
+        #{mainId,jdbcType=VARCHAR},
+		#{groupId,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotateRefund">
+		UPDATE T_ROTATE_MARGIN_REFUND
+		SET
+		DEPARTMENT = #{department,jdbcType=VARCHAR},
+		HANDLE_TIME = #{handleTime},
+		BID_SERIAL = #{bidSerial},
+		COMPANY = #{company,jdbcType=NVARCHAR},
+		DEAL_DATE =#{dealDate},
+		DEAL_TYPE=#{dealType},
+		DEAL_NUMBER =#{dealNumber},
+		DEAL_AMOUNT=#{dealAmount},
+		REFUND_AMOUNT=#{refundAmount},
+		REMARK=#{remark,jdbcType=NVARCHAR},
+		MODIFIER=#{modifier},
+		MODIFY_TIME = #{modifyTime},
+		COMPANY_ID = #{companyId,jdbcType=VARCHAR},
+		CONCLUTE_DETAIL_ID = #{concluteDetailId,jdbcType=VARCHAR}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	
+	
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(*)FROM (
+		SELECT count(*) FROM T_ROTATE_MARGIN_REFUND
+		<where>
+			<if test="company!=null and company!=''">
+				AND COMPANY LIKE '%${company}%'
+			</if>
+			<if test="dealDate!=null and dealDate!=''">
+				AND TO_CHAR(DEAL_DATE,'YYYY-MM-DD') = '${dealDate}'
+			</if>
+			<if test="bidSerial!=null and bidSerial!=''">
+				AND BID_SERIAL LIKE '%${bidSerial}%'
+			</if>
+			<if test="dealType!=null and dealType!=''">
+				AND DEAL_TYPE LIKE '%${dealType}%'
+			</if>
+			<if test="dealAmount!=null and dealAmount!=''">
+				AND DEAL_AMOUNT = '${dealAmount}'
+			</if>
+		</where>
+		GROUP BY MAIN_ID)
+	</select>
+
+	<!--<select id="list" parameterType="java.util.HashMap" resultMap="rotateRefundResultMap">-->
+		<!--<if test="pageIndex!=null">-->
+			<!--select * from ( select row_.*, rownum rownum_ from (-->
+		<!--</if>-->
+		<!--SELECT t1.ID,t3.name OPERATOR,t1.DEPARTMENT,t1.HANDLE_TIME,-->
+			<!--t1.BID_SERIAL,t4.client_name company,t1.DEAL_DATE,t1.DEAL_TYPE,t1.DEAL_NUMBER,-->
+			<!--t1.DEAL_AMOUNT,t1.REFUND_AMOUNT,t1.SERIAL,t1.MAIN_ID,t1.GROUPID-->
+		<!--FROM T_ROTATE_MARGIN_REFUND t1-->
+		<!--LEFT JOIN T_ROTATE_MARGIN_REFUND_MAIN t2-->
+		<!--LEFT JOIN T_SYS_USER T3 ON T1.OPERATOR = T3.ID-->
+		<!--LEFT JOIN T_CLIENT_INFO T4 ON T1.COMPANY_ID=T4.ID-->
+		<!--<where>-->
+			<!--<if test="company!=null and company!=''">-->
+				<!--AND t1.COMPANY LIKE '%${company}%'-->
+			<!--</if>-->
+			<!--<if test="dealDate!=null and dealDate!=''">-->
+				<!--AND TO_CHAR(t1.DEAL_DATE,'YYYY-MM-DD') = '${dealDate}'-->
+			<!--</if>-->
+			<!--<if test="bidSerial!=null and bidSerial!=''">-->
+				<!--AND t1.BID_SERIAL LIKE '%${bidSerial}%'-->
+			<!--</if>-->
+			<!--<if test="dealType!=null and dealType!=''">-->
+				<!--AND t1.DEAL_TYPE LIKE '%${dealType}%'-->
+			<!--</if>-->
+			<!--<if test="dealAmount!=null and dealAmount!=''">-->
+				<!--AND t1.DEAL_AMOUNT = '${dealAmount}'-->
+			<!--</if>-->
+		<!--</where>-->
+		<!--ORDER BY t1.HANDLE_TIME DESC-->
+		<!--<if test="pageIndex!=null">-->
+			<!--) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )-->
+			<!--where rownum_ > (#{pageIndex}-1) * #{pageSize}-->
+		<!--</if>-->
+	<!--</select>-->
+
+	<select id="list" parameterType="java.util.HashMap" resultMap="rotateRefundResultMap">
+		<if test="pageIndex!=null">
+			select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT
+		t2.ID MAIN_ID,t2.SERIAL SERIAL,
+		(SELECT listagg (T3.BID_SERIAL, ',') WITHIN GROUP (ORDER BY T3.BID_SERIAL) FROM (select main_id ,BID_SERIAL from T_ROTATE_mARGIN_REFUND group by main_id ,BID_SERIAL)
+		T3 where t3.main_id = t2.id) BID_SERIAL,
+		(SELECT listagg (T3.COMPANY, ',') WITHIN GROUP (ORDER BY T3.COMPANY) FROM (select main_id ,COMPANY from T_ROTATE_mARGIN_REFUND group by main_id ,COMPANY)
+		T3 where t3.main_id = t2.id) COMPANY,
+		(SELECT listagg (T3.DEAL_DATE, ',') WITHIN GROUP (ORDER BY T3.DEAL_DATE) FROM (select main_id ,to_char(DEAL_DATE,'yyyy-MM-dd') DEAL_DATE from T_ROTATE_mARGIN_REFUND group by main_id ,DEAL_DATE)
+		T3 where t3.main_id = t2.id) DEAL_DATES,
+		(SELECT T3.DEAL_TYPE FROM (select main_id ,DEAL_TYPE from T_ROTATE_mARGIN_REFUND group by main_id ,DEAL_TYPE) T3 where t3.main_id = t2.id) DEAL_TYPE,
+		(SELECT sum(t3.REFUND_AMOUNT) FROM (select main_id, REFUND_AMOUNT from T_ROTATE_mARGIN_REFUND) T3 where t3.main_id = t2.id) REFUND_AMOUNT,
+		t2.OPERATOR OPERATOR,t2.DEPARTMENT DEPARTMENT,t2.HANDLE_TIME HANDLE_TIME
+		FROM
+		T_ROTATE_MARGIN_REFUND_MAIN t2
+		WHERE
+		EXISTS (
+		SELECT DISTINCT
+		MAIN_ID
+		FROM
+		T_ROTATE_mARGIN_REFUND T1
+		<where>
+			t2.id=t1.MAIN_ID
+			<if test="company!=null and company!=''">
+				AND t1.COMPANY LIKE '%${company}%'
+			</if>
+			<if test="dealDate!=null and dealDate!=''">
+				AND TO_CHAR(t1.DEAL_DATE,'YYYY-MM-DD') = '${dealDate}'
+			</if>
+			<if test="serial!=null and serial!=''">
+				AND t2.SERIAL LIKE '%${serial}%'
+			</if>
+			<if test="dealType!=null and dealType!=''">
+				AND t1.DEAL_TYPE LIKE '%${dealType}%'
+			</if>
+			<if test="dealAmount!=null and dealAmount!=''">
+				AND t1.DEAL_AMOUNT = '${dealAmount}'
+			</if>
+		</where>)
+		ORDER BY t2.SERIAL DESC
+		<if test="pageIndex!=null">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM T_ROTATE_MARGIN_REFUND
+		<where>
+			MAIN_ID = #{_parameter}
+		</where>
+	</delete>
+
+	<select id="view" parameterType="java.lang.String" resultMap="rotateRefundResultMap">
+		SELECT t1.ID,t3.name OPERATOR,t1.DEPARTMENT,t1.HANDLE_TIME,
+			t1.BID_SERIAL,t5.client_name company,t1.DEAL_DATE,t1.DEAL_TYPE,t1.DEAL_NUMBER,
+			t1.DEAL_AMOUNT,t1.REFUND_AMOUNT,t1.REMARK,t1.CONCLUTE_DETAIL_ID,
+			t4.SURPLUS_BAIL
+		FROM T_ROTATE_MARGIN_REFUND t1
+		inner join (
+			select t2.CONCLUTE_DETAIL_ID,
+				(TO_NUMBER(NVL(T2.DEAL_AMOUNT,0))-SUM(TO_NUMBER(NVL(T2.REFUND_AMOUNT,0)))) SURPLUS_BAIL
+			from T_ROTATE_MARGIN_REFUND t2 group by t2.conclute_detail_id,t2.deal_amount) t4
+		on t1.CONCLUTE_DETAIL_ID=t4.conclute_detail_id
+		LEFT JOIN T_SYS_USER T3 ON T1.OPERATOR = T3.ID
+		LEFT JOIN T_CLIENT_INFO T5 ON T1.COMPANY_ID=T5.ID
+		<where>
+			T1.ID=#{_parameter}
+		</where>
+	</select>
+	
+	<select id="get" parameterType="java.lang.String" resultMap="rotateRefundResultMap">
+		SELECT t.*,case
+			when t.SURPLUS_BAIL_TEMP = 0 then
+				t.refund_amount
+			else
+				(t.SURPLUS_BAIL_TEMP+t.REFUND_AMOUNT)
+			end SURPLUS_BAIL FROM (
+
+				SELECT t1.ID,
+					t1.BID_SERIAL,T5.CLIENT_NAME COMPANY,t1.DEAL_DATE,t1.DEAL_TYPE,t1.DEAL_NUMBER,
+					t1.DEAL_AMOUNT,t1.REFUND_AMOUNT,t1.REMARK,t1.CONCLUTE_DETAIL_ID,t1.MAIN_ID,t1.GROUPID,
+					t4.SURPLUS_BAIL_TEMP
+				FROM T_ROTATE_MARGIN_REFUND t1
+				inner join (
+					select t2.CONCLUTE_DETAIL_ID,
+						(TO_NUMBER(NVL(T2.DEAL_AMOUNT,0))-SUM(TO_NUMBER(NVL(T2.REFUND_AMOUNT,0)))) SURPLUS_BAIL_TEMP
+					from T_ROTATE_MARGIN_REFUND t2 group by t2.conclute_detail_id,t2.deal_amount) t4
+				on t1.CONCLUTE_DETAIL_ID=t4.conclute_detail_id
+				LEFT JOIN T_CLIENT_INFO T5 ON T1.COMPANY_ID=T5.ID
+				<where>
+					t1.MAIN_ID=#{_parameter}
+				</where>
+		) t
+	</select>
+    <select id="getMaxGroupId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT MAX (GROUPID) MAXGROUPID
+        FROM T_ROTATE_MARGIN_REFUND
+        WHERE MAIN_ID=#{_parameter}
+    </select>
+	<select id="getInviteName" parameterType="com.dhc.fastersoft.entity.RotateRefund" resultType="java.lang.String">
+		SELECT t4.INVITE_NAME
+		FROM T_ROTATE_MARGIN_REFUND t1
+		LEFT JOIN T_ROTATE_CONCLUTE_DETAIL t2 ON t1.CONCLUTE_DETAIL_ID=t2.id
+		LEFT JOIN T_ROTATE_CONCLUTE t3 ON t3.id=t2.DEAL_ID
+		LEFT JOIN T_ROTATE_INVITE t4 ON t4.id=t3.INVITE_ID
+		WHERE t1.CONCLUTE_DETAIL_ID= #{concluteDetailId,jdbcType=VARCHAR} and t1.ID=#{id,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

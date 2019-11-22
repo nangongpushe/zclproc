@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotatePaymentDetailDao" >
+	<resultMap type="com.dhc.fastersoft.entity.RotatePaymentDetail" id="rotatePaymentDetailResultMap">
+		<result property="id"          column="ID"      jdbcType="NVARCHAR" />  
+		<result property="paymentId"      column="PAYMENT_ID"      jdbcType="NVARCHAR" />  
+		<result property="schemeName"     column="SCHEME_NAME"     jdbcType="NVARCHAR" />  
+		<result property="bidSerial"         column="BID_SERIAL" jdbcType="NVARCHAR" /> 
+		<result property="grainType"      column="GRAIN_TYPE"         jdbcType="NVARCHAR" />
+		<result property="quantity"      column="QUANTITY"       jdbcType="TIMESTAMP" />
+		<result property="price"      column="PRICE"    jdbcType="NVARCHAR" />
+		<result property="amount"      column="AMOUNT"    jdbcType="NVARCHAR" />
+		<result property="concluteId"      column="CONCLUTE_ID"    jdbcType="VARCHAR" />
+	</resultMap>
+</mapper>

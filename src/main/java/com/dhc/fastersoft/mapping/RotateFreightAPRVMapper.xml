@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateFreightAPRVDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateFreightAPRV" id="rotateFreightAPRVResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="grainType" column="GRAIN_TYPE" jdbcType="NVARCHAR" />	
+		<result property="totalQuantity" column="TOTAL_QUANTITY" jdbcType="NVARCHAR" />
+		<result property="totalBulk" column="TOTAL_BULK" jdbcType="NVARCHAR" />
+		<result property="totalPackage" column="TOTAL_PACKAGE" jdbcType="NVARCHAR" />
+		<result property="totalFreight" column="TOTAL_FREIGHT" jdbcType="NVARCHAR" />
+		<result property="totalOtherFee" column="TOTAL_OTHER_FEE" jdbcType="NVARCHAR" />
+		<result property="totalBoardFee" column="TOTAL_BOARD_FEE" jdbcType="NVARCHAR" />
+		<result property="totalWarehouseFee" column="TOTAL_WAREHOUSE_FEE" jdbcType="NVARCHAR" />
+		<result property="totalFee" column="TOTAL_FEE" jdbcType="NVARCHAR" />
+		<result property="status" column="STATUS" jdbcType="NVARCHAR" />
+		<result property="reportDate" column="REPORT_DATE" jdbcType="TIMESTAMP" />
+		<result property="reporter" column="REPORTER" jdbcType="NVARCHAR" />
+		<result property="reportUnit" column="REPORT_UNIT" jdbcType="NVARCHAR" />
+		<result property="reportUnitAddress" column="REPORT_UNIT_ADDRESS" jdbcType="NVARCHAR" />
+		<result property="gatherId" column="GATHER_ID" jdbcType="NVARCHAR" />
+		<result property="company" column="COMPANY" jdbcType="NVARCHAR" />
+		<result property="reporterId" column="REPORTER_ID" jdbcType="NVARCHAR" />
+		<result property="enterpriseId" column="ENTERPRISE_ID" jdbcType="VARCHAR" />
+		<collection property="detailList" resultMap="com.dhc.fastersoft.dao.RotateFreightAPRVDetailDao.rotateFreightAPRVDetailResultMap"></collection>
+	</resultMap>
+	
+	<sql id="columns_main">
+		ID,GRAIN_TYPE,TOTAL_QUANTITY,TOTAL_BULK,TOTAL_PACKAGE,TOTAL_FREIGHT,
+		TOTAL_OTHER_FEE,TOTAL_BOARD_FEE,TOTAL_WAREHOUSE_FEE,TOTAL_FEE,
+		STATUS,REPORT_DATE,REPORTER,REPORT_UNIT,REPORT_UNIT_ADDRESS,GATHER_ID,COMPANY,REPORTER_ID,ENTERPRISE_ID
+	</sql>
+	<sql id="columns_mains">
+		tp.ID,tp.GRAIN_TYPE,tp.TOTAL_QUANTITY,tp.TOTAL_BULK,tp.TOTAL_PACKAGE,tp.TOTAL_FREIGHT,
+		tp.TOTAL_OTHER_FEE,tp.TOTAL_BOARD_FEE,tp.TOTAL_WAREHOUSE_FEE,tp.TOTAL_FEE,
+		tp.STATUS,tp.REPORT_DATE,tp.REPORTER,tse.SHORT_NAME AS REPORT_UNIT,tp.REPORT_UNIT_ADDRESS,tp.GATHER_ID,tp.COMPANY,REPORTER_ID,tp.ENTERPRISE_ID
+	</sql>
+
+	<sql id="columns_detail">
+		ID,GRAIN_TYPE,REPORT_UNIT,OUT_UNIT,OUT_START_PLACE,
+		IN_AIM_PLACE,DISTANCE,SHIP_TYPE,QUANTITY,
+		BULK,PACKAGE_NUM,
+		FREIGHT,OTHER_FEE,BOARD_FEE,WAREHOUSE_FEE,
+		REMARK,REPORT_DATE,APRV_ID,TOTAL_FEE,PACKAGE_FREIGHT_UNIT,BULK_FREIGHT_UNIT,
+		PACKAGE_PRE_BOARD_RATE,PACKAGE_IN_STORE_RATE,BULK_PRE_BOARD_RATE,BULK_IN_STORE_RATE
+	</sql>
+	<sql id="columns_details">
+		fad.ID,fad.GRAIN_TYPE,tse.SHORT_NAME AS REPORT_UNIT,fad.OUT_UNIT,fad.OUT_START_PLACE,
+		fad.IN_AIM_PLACE,fad.DISTANCE,fad.SHIP_TYPE,fad.QUANTITY,
+		fad.BULK,fad.PACKAGE_NUM,
+		fad.FREIGHT,fad.OTHER_FEE,fad.BOARD_FEE,fad.WAREHOUSE_FEE,
+		fad.REMARK,fad.REPORT_DATE,fad.APRV_ID,fad.TOTAL_FEE,fad.PACKAGE_FREIGHT_UNIT,fad.BULK_FREIGHT_UNIT,
+		fad.PACKAGE_PRE_BOARD_RATE,fad.PACKAGE_IN_STORE_RATE,fad.BULK_PRE_BOARD_RATE,fad.BULK_IN_STORE_RATE
+	</sql>
+
+
+	<sql id="table_main"> T_ROTATE_FREIGHT_APRV </sql>
+
+	<sql id="table_detail"> T_ROTATE_FREIGHT_APRV_DETAIL </sql>
+	
+	<!-- 添加招标结果 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.RotateFreightAPRV">
+	begin
+	INSERT INTO
+	<include refid="table_main" />
+	(
+	<include refid="columns_main" />
+	)
+	VALUES
+	(#{id},#{grainType}
+	,#{totalQuantity,jdbcType=NVARCHAR}
+	,#{totalBulk,jdbcType=NVARCHAR}
+	,#{totalPackage,jdbcType=NVARCHAR}
+	,#{totalFreight,jdbcType=NVARCHAR}
+	,#{totalOtherFee,jdbcType=NVARCHAR}
+	,#{totalBoardFee,jdbcType=NVARCHAR}
+	,#{totalWarehouseFee,jdbcType=NVARCHAR}
+	,#{totalFee},#{status}
+	,#{reportDate}
+	,#{reporter}
+	,#{reportUnit},#{reportUnitAddress,jdbcType=NVARCHAR}
+	,#{gatherId,jdbcType=NVARCHAR},#{company},#{reporterId},#{enterpriseId,jdbcType=VARCHAR});
+	<foreach collection="detailList" item="item" separator=";">
+		INSERT INTO <include refid="table_detail" />
+		(<include refid="columns_detail" />)
+		VALUES(
+		#{item.id},#{item.grainType,jdbcType=NVARCHAR},#{item.reportUnit,jdbcType=NVARCHAR},#{item.outUnit,jdbcType=NVARCHAR},#{item.outStartPlace,jdbcType=NVARCHAR}
+		,#{item.inAimPlace,jdbcType=NVARCHAR},#{item.distance,jdbcType=NVARCHAR},#{item.shipType,jdbcType=NVARCHAR}
+		,#{item.quantity,jdbcType=NVARCHAR},#{item.bulk,jdbcType=NVARCHAR},#{item.packageNum,jdbcType=NVARCHAR}
+		,#{item.freight,jdbcType=NVARCHAR}
+		,#{item.otherFee},#{item.boardFee},#{item.warehouseFee},#{item.remark,jdbcType=NVARCHAR}
+		,#{item.reportDate, jdbcType=TIMESTAMP},#{id},#{item.totalFee},#{item.packageFreightUnit,jdbcType=DECIMAL},#{item.bulkFreightUnit,jdbcType=DECIMAL},#{item.packagePreBoardRate,jdbcType=DECIMAL},
+		#{item.packageInStoreRate,jdbcType=DECIMAL},#{item.bulkPreBoardRate,jdbcType=DECIMAL},#{item.bulkInStoreRate,jdbcType=DECIMAL}
+		)
+	</foreach>
+	;end;
+</insert>
+
+	
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotateFreightAPRV">
+		begin
+		UPDATE
+		<include refid="table_main" />
+		SET
+		GRAIN_TYPE = #{grainType},
+		TOTAL_QUANTITY=#{totalQuantity,jdbcType=NVARCHAR},
+
+		TOTAL_BULK=#{totalBulk,jdbcType=NVARCHAR},
+
+		TOTAL_PACKAGE=#{totalPackage,jdbcType=NVARCHAR},
+
+		TOTAL_FREIGHT=#{totalFreight,jdbcType=NVARCHAR},
+
+		TOTAL_OTHER_FEE=#{totalOtherFee,jdbcType=NVARCHAR},
+
+		TOTAL_BOARD_FEE=#{totalBoardFee,jdbcType=NVARCHAR},
+
+		TOTAL_WAREHOUSE_FEE=#{totalWarehouseFee,jdbcType=NVARCHAR},
+		ENTERPRISE_ID=#{enterpriseId,jdbcType=VARCHAR},
+		TOTAL_FEE=#{totalFee},
+		STATUS=#{status}
+		<where>
+			ID = #{id};
+		</where>
+		
+		DELETE FROM <include refid="table_detail" /> 
+		<where>
+			APRV_ID = #{id};
+		</where>
+		<foreach collection="detailList" item="item" separator=";">
+			INSERT INTO <include refid="table_detail" />
+			(<include refid="columns_detail" />)
+			VALUES(
+			#{item.id},#{item.grainType,jdbcType=NVARCHAR},#{item.reportUnit,jdbcType=NVARCHAR},#{item.outUnit,jdbcType=NVARCHAR},#{item.outStartPlace,jdbcType=NVARCHAR}
+			,#{item.inAimPlace,jdbcType=NVARCHAR},#{item.distance,jdbcType=NVARCHAR},#{item.shipType,jdbcType=NVARCHAR}
+			,#{item.quantity,jdbcType=NVARCHAR},#{item.bulk,jdbcType=NVARCHAR},#{item.packageNum,jdbcType=NVARCHAR}
+			,#{item.freight,jdbcType=NVARCHAR}
+			,#{item.otherFee},#{item.boardFee},#{item.warehouseFee},#{item.remark,jdbcType=NVARCHAR}
+			,#{item.reportDate, jdbcType=TIMESTAMP},#{id},#{item.totalFee},#{item.packageFreightUnit,jdbcType=DECIMAL},#{item.bulkFreightUnit,jdbcType=DECIMAL},#{item.packagePreBoardRate,jdbcType=DECIMAL},
+			#{item.packageInStoreRate,jdbcType=DECIMAL},#{item.bulkPreBoardRate,jdbcType=DECIMAL},#{item.bulkInStoreRate,jdbcType=DECIMAL}
+
+			)
+		</foreach>
+		;end;
+	</update>
+	
+	<!-- 查询单个 -->
+	<select id="getById" parameterType="java.lang.String"
+		resultMap="rotateFreightAPRVResultMap">
+		SELECT <include refid="columns_mains"/>
+		 FROM <include refid="table_main"/> tp  left  join T_STORE_ENTERPRISE tse ON tse.ID = tp.ENTERPRISE_ID
+		<where>
+			tp.ID = #{_parameter}
+		</where>
+	</select>
+	
+	<!-- 查询-->
+	<select id="list" parameterType="java.util.HashMap" resultMap="rotateFreightAPRVResultMap">
+		<if test="pageIndex!=null and pageIndex!='' and pageSize!=null and pageSize!=''">
+		select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT
+		<include refid="columns_mains" />
+		from
+		<include refid="table_main" /> tp  left  join T_STORE_ENTERPRISE tse ON tse.ID = tp.ENTERPRISE_ID
+		<where>
+			<if test="reportUnit!=null and reportUnit!=''">
+				AND tse.SHORT_NAME LIKE '%${reportUnit}%'
+			</if>
+			<if test="grainType!=null and grainType!=''">
+				AND tp.GRAIN_TYPE LIKE '%${grainType}%'
+			</if>
+			<if test="reportDate!=null and reportDate!=''">
+				AND tp.TO_CHAR(REPORT_DATE,'YYYY-MM-DD') = '${reportDate}'
+			</if>
+			<if test="status!=null and status!=''">
+				AND tp.STATUS LIKE '%${status}%'
+			</if>
+			<if test="outUnit!=null and outUnit!=''">
+				AND tp.ID IN (SELECT APRV_ID FROM T_ROTATE_FREIGHT_APRV_DETAIL WHERE OUT_UNIT LIKE '%${outUnit}%')
+			</if>
+			<if test="company!=null and company!=''">
+				AND tp.COMPANY = #{company}
+			</if>
+			<if test="exceptStatus!=null">
+				AND tp.STATUS NOT IN(<foreach collection="exceptStatus" item="item" separator=",">#{item}</foreach>)
+			</if>
+			<if test="gatherId!=null and gatherId!=''">
+				AND tp.GATHER_ID = #{gatherId}
+			</if>
+			<if test="cblCompany != null and cblCompany != ''">
+				AND not EXISTS (select 1 from T_ROTATE_FREIGHT_APRV temp where tp.id = temp.id and temp.COMPANY = #{cblCompany})
+			</if>
+		</where>
+		ORDER BY tp.REPORT_DATE DESC
+		<if test="pageIndex!=null and pageIndex!='' and pageSize!=null and pageSize!=''">
+		) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+		where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT COUNT(0)
+		from
+		<include refid="table_main" /> tp  left  join T_STORE_ENTERPRISE tse ON tse.ID = tp.ENTERPRISE_ID
+		<where>
+			<if test="reportUnit!=null and reportUnit!=''">
+				AND tse.SHORT_NAME LIKE '%${reportUnit}%'
+			</if>
+			<if test="grainType!=null and grainType!=''">
+				AND tp.GRAIN_TYPE LIKE '%${grainType}%'
+			</if>
+			<if test="reportDate!=null and reportDate!=''">
+				AND tp.TO_CHAR(REPORT_DATE,'YYYY-MM-DD') = '${reportDate}'
+			</if>
+			<if test="status!=null and status!=''">
+				AND tp.STATUS LIKE '%${status}%'
+			</if>
+			<if test="outUnit!=null and outUnit!=''">
+				AND tp.ID IN (SELECT APRV_ID FROM T_ROTATE_FREIGHT_APRV_DETAIL WHERE OUT_UNIT LIKE '%${outUnit}%')
+			</if>
+			<if test="company!=null and company!=''">
+				AND tp.COMPANY = #{company}
+			</if>
+			<if test="exceptStatus!=null">
+				AND tp.STATUS NOT IN(<foreach collection="exceptStatus" item="item" separator=",">#{item}</foreach>)
+			</if>
+			<if test="gatherId!=null and gatherId!=''">
+				AND tp.GATHER_ID = #{gatherId}
+			</if>	
+		</where>
+	</select>
+
+	
+	<!-- 更新状态 -->
+	<update id="updateStatus" parameterType="java.util.HashMap">
+		UPDATE 	<include refid="table_main" />
+		SET
+			STATUS = #{status}
+		<where>
+			<if test="id!=null and id!=''">
+				AND ID = #{id}
+			</if>
+			<if test="gatherId!=null and gatherId!=''">
+				AND GATHER_ID = #{gatherId}
+			</if>
+		</where>
+	</update>
+	<!--resultType="com.dhc.fastersoft.entity.RotateFreightAPRVDetail"-->
+	<select id="listDetail" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateFreightAPRVDetailDao.rotateFreightAPRVDetailResultMap">
+		SELECT <include refid="columns_details" /> FROM <include refid="table_detail" /> fad left join T_ROTATE_FREIGHT_APRV tr ON fad.APRV_ID = tr.ID
+		left  join T_STORE_ENTERPRISE tse ON tse.ID = tr.ENTERPRISE_ID
+		<where>
+			<if test="aprvId!=null and aprvId!=''">
+				AND fad.APRV_ID = #{aprvId}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		begin
+		DELETE FROM <include refid="table_main" />
+		WHERE ID = #{_parameter};
+		DELETE FROM <include refid="table_detail" />
+		WHERE APRV_ID = #{_parameter};
+		end;
+	</delete>
+	
+	<delete id="removeDetail" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_detail" />
+		WHERE APRV_ID = #{_parameter}
+	</delete>
+	
+	<update id="updateIsGather" parameterType="java.util.HashMap">
+		UPDATE 	<include refid="table_main" />
+		SET
+			IS_GATHER = #{isGather},
+			STATUS = #{status}
+		<where>
+				AND ID = #{id}
+		</where>
+	</update>
+	
+	<update id="updateIsReport" parameterType="java.util.HashMap">
+		UPDATE 	<include refid="table_main" />
+		SET
+			IS_REPORT = #{isReport},
+			STATUS = #{status}
+		<where>
+			<if test="grainType!=null and grainType!=''">
+				AND GRAIN_TYPE LIKE '%${grainType}%'
+			</if>
+			<if test="isGather!=null and isGather!=''">
+				AND IS_GATHER = #{isGather}
+			</if>
+			<if test="currentStatus!=null and currentStatus!=''">
+				AND STATUS = #{currentStatus}
+			</if>	
+		</where>
+	</update>
+	
+
+	
+	<!-- 汇总 -->
+	<sql id="columns_gather">
+		ID,GRAIN_TYPE,STATUS,GATHER_MAN,GATHER_TIME,FREIGHTAPRV_ID
+	</sql>
+	<sql id="table_gather"> T_ROTATE_FREIGHT_APRV_GATHER </sql>
+	
+	<insert id="saveGather" parameterType="com.dhc.fastersoft.entity.RotateFreightAPRVGather">
+		INSERT INTO
+		<include refid="table_gather" />
+		(
+		<include refid="columns_gather" />
+		)
+		VALUES
+		(#{id},#{grainType}
+		,#{status}
+		,#{gatherMan}
+		,#{gatherTime}
+		,#{freightAprvId}
+		)
+	</insert>
+	
+	<select id="getGather" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateFreightAPRVGatherDao.rotateFreightAPRVGatherResultMap">
+		SELECT <include refid="columns_gather" /> FROM <include refid="table_gather" />
+		<where>
+			<if test="grainType!=null and grainType!=''">
+				AND GRAIN_TYPE LIKE '%${grainType}%'
+			</if>
+			<if test="gatherMan!=null and gatherMan!=''">
+				AND GATHER_MAN LIKE '%${gatherMan}%'
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS LIKE '%${status}%'
+			</if>
+			<if test="freightAprvId!=null and freightAprvId!=''">
+				AND FREIGHTAPRV_ID = #{freightAprvId}
+
+			</if>
+		</where>
+	</select>
+	<update id="updateGatherStatus" parameterType="java.util.HashMap">
+		UPDATE <include refid="table_gather" />
+		SET STATUS = #{status}
+		WHERE 1=1
+		<if test="id!=null and id!=''">
+			AND ID = #{id}
+		</if>
+		<if test="freightAprvId!=null and freightAprvId!=''">
+			AND FREIGHTAPRV_ID = #{freightAprvId}
+		</if>
+	</update>
+	
+	<select id="listGather" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateFreightAPRVGatherDao.rotateFreightAPRVGatherResultMap">
+		select * from ( select row_.*, rownum rownum_ from (
+		SELECT
+		<include refid="columns_gather" />
+		from
+		<include refid="table_gather" />
+		<where>
+			<if test="grainType!=null and grainType!=''">
+				AND GRAIN_TYPE LIKE '%${grainType}%'
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS LIKE '%${status}%'
+			</if>
+			<if test="gatherMan!=null and gatherMan!=''">
+				AND GATHER_Man LIKE '%${gatherMan}%'
+			</if>
+			<if test="gatherTime!=null and gatherTime!=''">
+				AND TO_CHAR(GATHER_TIME,'YYYY-MM-DD') = #{gatherTime}
+			</if>
+			<if test="exceptStatus!=null">
+				AND STATUS NOT IN(<foreach collection="exceptStatus" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+		ORDER BY GATHER_TIME DESC
+		) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+		where rownum_ > (#{pageIndex}-1) * #{pageSize}
+	</select>
+	
+	<!-- 总条数 -->
+	<select id="countGather" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT COUNT(0)
+		from
+		<include refid="table_gather" />
+		<where>
+			<if test="grainType!=null and grainType!=''">
+				AND GRAIN_TYPE LIKE '%${grainType}%'
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS LIKE '%${status}%'
+			</if>
+			<if test="gatherMan!=null and gatherMan!=''">
+				AND GATHER_Man LIKE '%${gatherMan}%'
+			</if>
+			<if test="gatherTime!=null and gatherTime!=''">
+				AND TO_CHAR(GATHER_TIME,'YYYY-MM-DD') = #{gatherTime}
+			</if>
+			<if test="exceptStatus!=null">
+				AND STATUS NOT IN(<foreach collection="exceptStatus" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+	</select>
+	
+	<select id="listDetailGather" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateFreightAPRVDetailDao.rotateFreightAPRVDetailResultMap">
+		SELECT <include refid="columns_detail" /> FROM <include refid="table_detail" />
+		<where>
+			AND APRV_ID IN
+			(
+				SELECT ID FROM <include refid="table_main" /> 
+				WHERE GATHER_ID = #{gatherId}
+			)
+		</where>
+	</select>
+	
+	<update id="updateGatherId" parameterType="java.util.HashMap">
+		UPDATE 	<include refid="table_main" />
+		SET
+			GATHER_ID = #{gatherId},
+			STATUS = #{status}
+		<where>
+			<if test="id!=null and id!=''">
+				AND ID = #{id}
+			</if>
+		</where>
+	</update>
+	
+	<delete id="removeGather" parameterType="java.lang.String">
+	 	DELETE FROM <include refid="table_gather" /> WHERE ID = #{_parameter}
+	</delete>
+
+</mapper>

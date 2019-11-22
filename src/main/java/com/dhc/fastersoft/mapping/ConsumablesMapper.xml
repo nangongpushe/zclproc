@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.ConsumablesDao" >
+  <resultMap id="ConsumablesResultMap" type="com.dhc.fastersoft.entity.Consumables" >
+    <result column="ID" 				property="id" 				jdbcType="NVARCHAR" />
+    <result column="STOREHOUSE" 		property="storehouse" 		jdbcType="NVARCHAR" />
+    <result column="WAREHOUSE_ID" 		property="warehouseId" 		jdbcType="NVARCHAR" />
+    <result column="COMMODITY" 			property="commodity" 		jdbcType="NVARCHAR" />
+    <result column="MODEL" 				property="model" 			jdbcType="NVARCHAR" />
+    <result column="UNIT" 				property="unit" 			jdbcType="NVARCHAR" />
+    <result column="CUSTODIAN" 			property="custodian" 		jdbcType="NVARCHAR" />
+    <result column="INCOMING_QUANTITY" 	property="incomingQuantity" jdbcType="INTEGER" />
+    <result column="APPLY" 				property="apply" 			jdbcType="INTEGER" />
+    <result column="TOTAL_APPLY" 		property="totalApply" 		jdbcType="INTEGER" />
+    <result column="SURPLUS" 			property="surplus" 			jdbcType="INTEGER" />
+    <result column="UNIT_PRICE" 		property="unitPrice" 		jdbcType="DOUBLE" />
+    <result column="AMOUNT" 			property="amount" 			jdbcType="DOUBLE" />
+    <result column="MANUFACTURER" 		property="manufacturer" 	jdbcType="NVARCHAR" />
+    <result column="SERIAL_NUMBER" 		property="serialNumber" 	jdbcType="NVARCHAR" />
+    <result column="SUPPLIER" 			property="supplier" 		jdbcType="NVARCHAR" />
+    <result column="OPTIONS" 			property="options" 			jdbcType="NVARCHAR" />
+    <result column="GROUP_ID" 			property="groupId" 			jdbcType="NVARCHAR" />
+    <result column="STORAGE_DATE" 		property="storageDate" 		jdbcType="TIMESTAMP" />
+    <result column="STORAGE_PLACE" 		property="storagePlace" 	jdbcType="NVARCHAR" />
+    <result column="REMARK" 			property="remark" 			jdbcType="NVARCHAR" />
+     <result column="CREATOR" 			property="creator" 			jdbcType="NVARCHAR" />
+     <result column="CREATE_DATE" 		property="createDate" 	    jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  	<select id="pageQuery" parameterType="java.util.HashMap" resultMap="ConsumablesResultMap">
+		${start} 
+		SELECT
+		tmc.ID id,house.WAREHOUSE_SHORT AS STOREHOUSE, tmc.COMMODITY commodity,
+		tmc.MODEL model, tmc.UNIT unit, tmc.CUSTODIAN custodian, tmc.INCOMING_QUANTITY incomingQuantity,
+		tmc.APPLY apply, tmc.TOTAL_APPLY totalApply, tmc.SURPLUS surplus,
+		tmc.UNIT_PRICE unitPrice , tmc.AMOUNT amount, tmc.MANUFACTURER manufacturer,
+		tmc.SERIAL_NUMBER serialNumber, tmc.SUPPLIER supplier, tmc.OPTIONS options,
+		tmc.GROUP_ID groupId, TO_CHAR(tmc.STORAGE_DATE,'YYYY-MM-DD ')  storageDate, tmc.STORAGE_PLACE storagePlace,
+		tmc.REMARK remark,tmc.CREATOR creator, TO_CHAR(tmc.CREATE_DATE,'YYYY-MM-DD') createDate
+		 FROM T_MATERIAL_CONSUMABLES tmc left join T_STORAGE_WAREHOUSE house ON tmc.WAREHOUSE_ID = house.ID
+		 WHERE 1=1
+		 
+		
+		  <if test="commodity!=null and commodity!=''">
+			 and  tmc.COMMODITY  LIKE '%${commodity}%'
+		</if>
+		<if test="storehouse!=null and storehouse!=''">
+			 and  house.WAREHOUSE_SHORT ='${storehouse}'
+		</if>
+		<if test="warehouseId!=null and warehouseId!=''">
+			and  tmc.WAREHOUSE_ID ='${warehouseId}'
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(tmc.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(tmc.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(tmc.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD')
+		</if>		
+		order by tmc.CREATE_DATE DESC
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_MATERIAL_CONSUMABLES  tmc left join T_STORAGE_WAREHOUSE house ON tmc.WAREHOUSE_ID = house.ID
+		WHERE 1=1		 
+		 <if test="commodity!=null and commodity!=''">
+			 and  tmc.COMMODITY  LIKE '%${commodity}%'
+		</if>
+		<if test="storehouse!=null and storehouse!=''">
+			 and  house.WAREHOUSE_SHORT ='${storehouse}'
+		</if>
+		<if test="warehouseId!=null and warehouseId!=''">
+			and  tmc.WAREHOUSE_ID ='${warehouseId}'
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(tmc.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(tmc.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(tmc.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD')
+		</if>	
+		
+	</select>
+	
+	<select id="getConsumablesById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.Consumables">
+		SELECT 
+			tmc.ID id, house.WAREHOUSE_SHORT AS STOREHOUSE,tmc.WAREHOUSE_ID warehouseId, tmc.COMMODITY commodity,
+      		tmc.MODEL model, tmc.UNIT unit, tmc.CUSTODIAN custodian, tmc.INCOMING_QUANTITY incomingQuantity,
+      		tmc.APPLY apply, tmc.TOTAL_APPLY totalApply, tmc.SURPLUS surplus,
+      		tmc.UNIT_PRICE unitPrice , tmc.AMOUNT amount, tmc.MANUFACTURER manufacturer,
+      		tmc.SERIAL_NUMBER serialNumber, tmc.SUPPLIER supplier, tmc.OPTIONS options,
+      		tmc.GROUP_ID groupId, TO_CHAR(tmc.STORAGE_DATE,'YYYY-MM-DD ')  storageDate , tmc.STORAGE_PLACE storagePlace,
+      		tmc.REMARK remark,tmc.CREATOR creator, TO_CHAR(tmc.CREATE_DATE,'YYYY-MM-DD') createDate
+		 from T_MATERIAL_CONSUMABLES  tmc left join T_STORAGE_WAREHOUSE house ON tmc.WAREHOUSE_ID = house.ID
+		where tmc.ID=#{id,jdbcType=NVARCHAR}
+		
+	</select>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.Consumables" >
+    INSERT INTO T_MATERIAL_CONSUMABLES (ID, STOREHOUSE,WAREHOUSE_ID, COMMODITY,
+      MODEL, UNIT, CUSTODIAN, INCOMING_QUANTITY, 
+      APPLY, TOTAL_APPLY, SURPLUS, 
+      UNIT_PRICE, AMOUNT, MANUFACTURER, 
+      SERIAL_NUMBER, SUPPLIER, OPTIONS, 
+      GROUP_ID, STORAGE_DATE, STORAGE_PLACE, 
+      REMARK,CREATOR,CREATE_DATE)
+    VALUES (#{id,jdbcType=NVARCHAR}, #{storehouse,jdbcType=NVARCHAR},#{warehouseId,jdbcType=NVARCHAR}, #{commodity,jdbcType=NVARCHAR},
+      #{model,jdbcType=NVARCHAR}, #{unit,jdbcType=NVARCHAR}, #{custodian,jdbcType=NVARCHAR}, #{incomingQuantity,jdbcType=INTEGER}, 
+      #{apply,jdbcType=INTEGER}, #{totalApply,jdbcType=INTEGER}, #{surplus,jdbcType=INTEGER}, 
+      #{unitPrice,jdbcType=DOUBLE}, #{amount,jdbcType=DOUBLE}, #{manufacturer,jdbcType=NVARCHAR}, 
+      #{serialNumber,jdbcType=NVARCHAR}, #{supplier,jdbcType=NVARCHAR}, #{options,jdbcType=NVARCHAR}, 
+      #{groupId,jdbcType=NVARCHAR}, to_date(#{storageDate,jdbcType=TIMESTAMP}, 'yyyy/mm/dd'), #{storagePlace,jdbcType=NVARCHAR}, 
+      #{remark,jdbcType=NVARCHAR},#{creator,jdbcType=NVARCHAR},sysdate)
+  </insert>
+  <update id="update" parameterType="com.dhc.fastersoft.entity.Consumables">
+		UPDATE T_MATERIAL_CONSUMABLES SET 		
+		STOREHOUSE=#{storehouse,jdbcType=NVARCHAR},
+	  WAREHOUSE_ID=#{warehouseId,jdbcType=NVARCHAR},
+		COMMODITY=#{commodity,jdbcType=NVARCHAR},
+       	MODEL=#{model,jdbcType=NVARCHAR},
+       	UNIT=#{unit,jdbcType=NVARCHAR},
+        CUSTODIAN=#{custodian,jdbcType=NVARCHAR},
+        INCOMING_QUANTITY=#{incomingQuantity,jdbcType=INTEGER},
+      	APPLY=#{apply,jdbcType=INTEGER},
+        TOTAL_APPLY=#{totalApply,jdbcType=INTEGER},
+        SURPLUS=#{surplus,jdbcType=INTEGER},
+      	UNIT_PRICE=#{unitPrice,jdbcType=DOUBLE}, 
+      	AMOUNT=#{amount,jdbcType=DOUBLE},
+        MANUFACTURER=#{manufacturer,jdbcType=NVARCHAR}, 
+       SERIAL_NUMBER=#{serialNumber,jdbcType=NVARCHAR},
+       SUPPLIER=#{supplier,jdbcType=NVARCHAR},
+        OPTIONS=#{options,jdbcType=NVARCHAR},     
+       STORAGE_DATE=to_date(#{storageDate,jdbcType=TIMESTAMP}, 'yyyy/mm/dd'),
+       STORAGE_PLACE=#{storagePlace,jdbcType=NVARCHAR}, 
+       REMARK=#{remark,jdbcType=NVARCHAR},
+       CREATOR=#{creator,jdbcType=NVARCHAR},
+       CREATE_DATE=sysdate
+		<if test="groupId!=null and groupId!=''">
+			,GROUP_ID=#{groupId,jdbcType=NVARCHAR}
+		</if>
+	
+		WHERE ID='${id}'
+	</update>
+	
+	 <update id="updateApply" parameterType="com.dhc.fastersoft.entity.Consumables">
+		UPDATE T_MATERIAL_CONSUMABLES SET 				
+      	APPLY=#{apply,jdbcType=INTEGER},
+        TOTAL_APPLY=#{totalApply,jdbcType=INTEGER}, 
+        SURPLUS=#{surplus,jdbcType=INTEGER}    	
+		WHERE ID='${id}'
+	</update>
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_MATERIAL_CONSUMABLES
+		WHERE  ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+  
+</mapper>

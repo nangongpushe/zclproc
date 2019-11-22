@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.MaterialPurchaseDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.MaterialPurchase" >
+    <result column="ID" 			property="id" 				jdbcType="VARCHAR" />
+    <result column="PURCHASE_SERIAL" property="purchaseSerial"  jdbcType="VARCHAR" />
+    <result column="PURCHASE_DEPT" 	property="purchaseDept" 	jdbcType="VARCHAR" />
+    <result column="PURCHASE_MAN" 	property="purchaseMan" 		jdbcType="VARCHAR" />
+    <result column="PURCHASE_DATE" 	property="purchaseDate" 	jdbcType="TIMESTAMP" />
+    <result column="TOTAL_AMOUNT" 	property="totalAmount" 		jdbcType="DOUBLE" />
+    <result column="PURCHASE_REASON" property="purchaseReason" 	jdbcType="VARCHAR" />
+    <result column="GROUP_ID" 		property="groupId" 			jdbcType="VARCHAR" />
+    <result column="STATUS" 		property="status" 			jdbcType="VARCHAR" />
+	  <result column="ORIGIN_CODE" property="originCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+			ID id, PURCHASE_SERIAL purchaseSerial, PURCHASE_DEPT purchaseDept, PURCHASE_MAN purchaseMan, TO_CHAR(PURCHASE_DATE,'YYYY-MM-DD')  purchaseDate, TOTAL_AMOUNT totalAmount, 
+         	PURCHASE_REASON purchaseReason, GROUP_ID groupId, STATUS status
+		 	FROM T_MATERIAL_PURCHASE 	
+		 WHERE 1=1
+
+		  <if test="purchaseDept!=null and purchaseDept!=''">
+			 and  PURCHASE_DEPT like '%${purchaseDept}%'
+		</if>
+	  <if test="originCode!=null and originCode!=''">
+		  and  ORIGIN_CODE = '${originCode}'
+	  </if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(PURCHASE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(PURCHASE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(PURCHASE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>		
+		order by PURCHASE_DATE DESC
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_MATERIAL_PURCHASE  
+		WHERE 1=1		 
+		 <if test="purchaseDept!=null and purchaseDept!=''">
+			 and  PURCHASE_DEPT like '%${purchaseDept}%'
+		</if>
+		<if test="originCode!=null and originCode!=''">
+			and  ORIGIN_CODE = '${originCode}'
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(PURCHASE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(PURCHASE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(PURCHASE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>		
+		
+	</select>
+	
+	<select id="getMaterialPurchaseById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.MaterialPurchase">
+		SELECT 
+			ID id, PURCHASE_SERIAL purchaseSerial, PURCHASE_DEPT purchaseDept, PURCHASE_MAN purchaseMan, TO_CHAR(PURCHASE_DATE,'YYYY-MM-DD')  purchaseDate, 
+			TOTAL_AMOUNT totalAmount, PURCHASE_REASON purchaseReason, GROUP_ID groupId, STATUS status	
+			FROM T_MATERIAL_PURCHASE 
+		where ID=#{id,jdbcType=VARCHAR}
+		
+	</select>
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.MaterialPurchase" >
+ 	insert into T_MATERIAL_PURCHASE (ID, PURCHASE_SERIAL, PURCHASE_DEPT, 
+      PURCHASE_MAN, PURCHASE_DATE, TOTAL_AMOUNT, 
+      PURCHASE_REASON, GROUP_ID, STATUS,ORIGIN_CODE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{purchaseSerial,jdbcType=VARCHAR}, #{purchaseDept,jdbcType=VARCHAR}, 
+      #{purchaseMan,jdbcType=VARCHAR}, to_date(#{purchaseDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'), #{totalAmount,jdbcType=DOUBLE}, 
+      #{purchaseReason,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{originCode,jdbcType=VARCHAR}
+      )
+      
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.MaterialPurchase">
+	update T_MATERIAL_PURCHASE
+    set 
+      PURCHASE_SERIAL = #{purchaseSerial,jdbcType=VARCHAR},
+      PURCHASE_DEPT = #{purchaseDept,jdbcType=VARCHAR},
+      PURCHASE_MAN = #{purchaseMan,jdbcType=VARCHAR},
+      PURCHASE_DATE = to_date(#{purchaseDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'),
+      TOTAL_AMOUNT = #{totalAmount,jdbcType=DOUBLE},
+      PURCHASE_REASON = #{purchaseReason,jdbcType=VARCHAR},
+      GROUP_ID = #{groupId,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR}
+      WHERE ID='${id}'				
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_MATERIAL_PURCHASE
+		WHERE  ID=#{id,jdbcType=VARCHAR}
+	</delete>
+  
+</mapper>

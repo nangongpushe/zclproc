@@ -1,0 +1,86 @@
+.bg {
+	position: absolute;
+	top: 70px;
+	width: 100%;
+	z-index: -1;
+}
+
+.bg>img {
+	width: 100%;
+}
+
+.myfrom_box {
+	width: 33%;
+	margin: 240px auto;
+	margin-bottom: 0px;
+	background: url("../images/mask.png") no-repeat;
+	background-size: 100% 100%;
+	padding: 10px;
+}
+
+.myfrom {
+	width: 94%;
+	height: 94%;
+	margin: 2% auto;
+	background-color: white;
+	border-bottom: 1px solid #999;
+	-webkit-box-shadow: 0 10px 10px #999;
+	-moz-box-shadow: 0 10px 10px #999;
+	box-shadow: 0 2px 10px #999;
+	border-radius: 5px;
+	text-align: center;
+}
+
+.logo_title {
+	width: 80%;
+	margin-top: 50px;
+	margin-bottom: 30px;
+}
+
+.input_box {
+	width: 80%;
+	height: 45px;
+	line-height: 45px;
+	margin: 15px auto;
+	background-color: #f6fffd;
+	border: 1px solid #16a085;
+	border-radius: 5px;
+	text-align: left;
+}
+
+.input_box>input {
+	background-color: transparent;
+	border: none;
+	outline: none;
+	padding-left: 10px;
+	height: 40px;
+}
+
+.input_box>i {
+	border-left: 1px solid #16a085;
+}
+
+.input_box>span {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin: 0px 25px 0px 20px;
+}
+
+.btn_box>input {
+	width: 80%;
+	height: 45px;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	background-color: #16a085;
+	margin: 20px;
+	margin-bottom: 50px;
+	font-size: 18px;
+}
+
+.bottom_box {
+	text-align: center;
+	margin: 20px 0;
+	color: #68a6ad;
+}

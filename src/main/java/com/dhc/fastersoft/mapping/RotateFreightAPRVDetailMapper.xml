@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateFreightAPRVDetailDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateFreightAPRVDetail" id="rotateFreightAPRVDetailResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="grainType" column="GRAIN_TYPE" jdbcType="NVARCHAR" />
+		<result property="reportUnit" column="REPORT_UNIT" jdbcType="NVARCHAR" />
+		<result property="outUnit" column="OUT_UNIT" jdbcType="NVARCHAR" />
+		<result property="outStartPlace" column="OUT_START_PLACE" jdbcType="NVARCHAR" />
+		<result property="inAimPlace" column="IN_AIM_PLACE" jdbcType="NVARCHAR" />
+		<result property="distance" column="DISTANCE" jdbcType="NVARCHAR" />
+		<result property="shipType" column="SHIP_TYPE" jdbcType="NVARCHAR" />
+		<result property="quantity" column="QUANTITY" jdbcType="NVARCHAR" />
+		<result property="bulk" column="BULK" jdbcType="NVARCHAR" />
+		<result property="packageNum" column="PACKAGE_NUM" jdbcType="NVARCHAR" />
+		<!--<result property="freightUnit" column="FREIGHT_UNIT" jdbcType="NVARCHAR" />-->
+		<result property="freight" column="FREIGHT" jdbcType="NVARCHAR" />
+		<result property="otherFee" column="OTHER_FEE" jdbcType="NVARCHAR" />
+		<result property="boardFee" column="BOARD_FEE" jdbcType="NVARCHAR" />
+		<result property="warehouseFee" column="WAREHOUSE_FEE" jdbcType="NVARCHAR" />
+		<result property="totalFee" column="TOTAL_FEE" jdbcType="NVARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="NVARCHAR" />
+		<result property="reportDate" column="REPORT_DATE" jdbcType="TIMESTAMP" />
+		<result property="aprvId" column="APRV_ID" jdbcType="NVARCHAR" />
+
+		<result property="packageFreightUnit" column="PACKAGE_FREIGHT_UNIT" jdbcType="DECIMAL" />
+		<result property="bulkFreightUnit" column="BULK_FREIGHT_UNIT" jdbcType="DECIMAL" />
+		<result property="packagePreBoardRate" column="PACKAGE_PRE_BOARD_RATE" jdbcType="DECIMAL" />
+		<result property="packageInStoreRate" column="PACKAGE_IN_STORE_RATE" jdbcType="DECIMAL" />
+		<result property="bulkPreBoardRate" column="BULK_PRE_BOARD_RATE" jdbcType="DECIMAL" />
+		<result property="bulkInStoreRate" column="BULK_IN_STORE_RATE" jdbcType="DECIMAL" />
+		
+	</resultMap>
+	
+</mapper>

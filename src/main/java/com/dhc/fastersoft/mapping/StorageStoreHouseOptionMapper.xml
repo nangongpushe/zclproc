@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.StorageStoreHouseOptionDao">
+  <resultMap id="storageStoreHouseOptionResultMap" type="com.dhc.fastersoft.entity.StorageStoreHouseOption">
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="STOREHOUSE_ID" jdbcType="VARCHAR" property="storehouseId" />
+    <result column="REPAIR_DATE" jdbcType="TIMESTAMP" property="repairDate" />
+    <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName" />
+    <result column="CONSTRUCTION" jdbcType="VARCHAR" property="construction" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  
+  <sql id="tablename">T_STORAGE_STOREHOUSE_OPTIONS</sql>
+  
+  <sql id="columns">
+    ID, STOREHOUSE_ID, REPAIR_DATE, PROJECT_NAME, CONSTRUCTION, REMARK, CREATOR, CREATE_DATE
+  </sql>
+  
+  <insert id="save" parameterType="com.dhc.fastersoft.entity.StorageStoreHouseOption">
+    insert into <include refid="tablename"></include> (<include refid="columns"></include>)
+    values (#{id,jdbcType=VARCHAR}, #{storehouseId,jdbcType=VARCHAR}, #{repairDate,jdbcType=TIMESTAMP}, 
+      #{projectName,jdbcType=VARCHAR}, #{construction,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=VARCHAR}, SYSDATE)
+  </insert>
+  
+  <select id="list" parameterType="java.util.HashMap" resultMap="storageStoreHouseOptionResultMap">
+  	${start}
+  	select
+  	<include refid="columns"></include>
+  	from
+  	<include refid="tablename"></include>
+  	<where>
+  	  <if test="storehouseId != null and storehouseId != ''">
+   	  	AND STOREHOUSE_ID = #{storehouseId}
+   	  </if>
+  	</where>
+  	ORDER BY CREATE_DATE DESC
+  	${end}
+  </select>
+  
+  <select id="count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count(ID) 
+    from 
+    <include refid="tablename"></include> 
+ 	<where>
+	  <if test="storehouseId != null and storehouseId != ''">
+ 	  	AND STOREHOUSE_ID = #{storehouseId}
+ 	  </if>
+	</where>
+  </select>
+  
+  <select id="getNextId" resultType="java.lang.String">
+    SELECT SEQ_STORAGESTOREHOUSEOPTIONS.NEXTVAL FROM DUAL
+  </select>
+  
+  <delete id="remove" parameterType="java.lang.String">
+    delete 
+    from 
+    <include refid="tablename"></include>
+    <where>
+      ID = #{id}
+    </where>
+  </delete>
+  
+  <select id="getSingle" parameterType="java.lang.String" resultMap="storageStoreHouseOptionResultMap">
+  	select 
+  	<include refid="columns"></include>
+  	from
+  	<include refid="tablename"></include>
+  	<where>
+      ID = #{id}
+  	</where>
+  </select>
+
+  <update id="update" parameterType="com.dhc.fastersoft.entity.StorageStoreHouseOption">
+  	update 
+  	<include refid="tablename"></include>
+  	set 
+  	STOREHOUSE_ID = #{storehouseId,jdbcType=VARCHAR}, REPAIR_DATE = #{repairDate,jdbcType=TIMESTAMP},
+    PROJECT_NAME = #{projectName,jdbcType=VARCHAR}, CONSTRUCTION = #{construction,jdbcType=VARCHAR}, REMARK = #{remark,jdbcType=VARCHAR}, 
+    CREATOR = #{creator,jdbcType=VARCHAR}
+    <where>
+      ID = #{id}
+    </where>
+  </update>
+</mapper>

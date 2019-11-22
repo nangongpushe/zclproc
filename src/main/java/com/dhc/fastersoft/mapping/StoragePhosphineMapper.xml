@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoragePhosphineDao">
+	<resultMap type="com.dhc.fastersoft.entity.store.StoragePhosphine" id="StoragePhosphineResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="warehouse" column="WAREHOUSE" jdbcType="VARCHAR" />
+		<result property="warehouseId" column="WAREHOUSE_ID" jdbcType="VARCHAR"/>
+		<result property="encode" column="ENCODE" jdbcType="VARCHAR" />
+		<result property="fumigate" column="FUMIGATE" jdbcType="VARCHAR" />
+		<result property="average" column="AVERAGE" jdbcType="DATE" />
+		<result property="inspecteTime" column="INSPECTE_TIME" jdbcType="DATE" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result column="INSPECTOR_ID" jdbcType="VARCHAR" property="inspectorId" />
+		<!--<association property="inspector" column="INSPECTOR_ID"  select="com.dhc.fastersoft.dao.system.SysUserDao.getUserName"/>-->
+		<result column="INSPECTOR" jdbcType="VARCHAR" property="inspector" />
+		<result column="INSPECTORS" jdbcType="VARCHAR" property="inspectors" />
+		<result column="TEST_DEVICE" jdbcType="VARCHAR" property="testDevice" />
+		<collection property="pointList" resultMap="com.dhc.fastersoft.dao.store.StoragePhosphinePointDao.StoragePhosphinePointResultMap"></collection>
+	</resultMap>
+
+	<sql id="columns_main">
+		"ID",
+		"WAREHOUSE",
+		"WAREHOUSE_ID",
+		"ENCODE",
+		"FUMIGATE",
+		"AVERAGE",
+		"INSPECTOR",
+		"INSPECTE_TIME",
+		"REMARK",
+		"INSPECTOR_ID",
+		"INSPECTORS",
+		"TEST_DEVICE"
+	</sql>
+
+	<sql id="table_main"> T_STORAGE_PHOSPHINE </sql>
+	
+	<sql id="columns_detail">
+		"PHOSPHINE_ID",
+		"POINT",
+		"VALUE"
+	</sql>
+
+	<sql id="table_detail"> T_STORAGE_PHOSPHINE_POINTS </sql>
+	
+	<!-- 添加 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.store.StoragePhosphine">
+		begin
+		INSERT INTO
+		<include refid="table_main" />
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(
+		#{id},#{warehouse},#{warehouseId},
+		#{encode},#{fumigate},#{average},
+		#{inspector},#{inspecteTime},#{remark,jdbcType=VARCHAR},#{inspectorId,jdbcType=VARCHAR},#{inspectors,jdbcType=VARCHAR},
+		#{testDevice,jdbcType=VARCHAR}
+		);
+		
+		<foreach collection="pointList" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_detail" /> (<include refid="columns_detail"/>)
+			VALUES
+			(#{id},
+			#{item.point},
+			#{item.value})
+		</foreach>
+		;end;
+	</insert>
+
+
+	<update id="update" parameterType="com.dhc.fastersoft.entity.store.StoragePhosphine">
+		begin
+		UPDATE
+		<include refid="table_main" />
+		SET
+		"WAREHOUSE" = #{warehouse},
+		"WAREHOUSE_ID" = #{warehouseId},
+		"ENCODE" = #{encode},
+		"FUMIGATE" = #{fumigate},
+		"AVERAGE" = #{average},
+		"REMARK" = #{remark,jdbcType=VARCHAR},
+		"INSPECTE_TIME" = #{inspecteTime},
+		"INSPECTORS" = #{inspectors},
+		"INSPECTOR" = #{inspector},
+		"TEST_DEVICE" = #{testDevice}
+		WHERE ID = #{id};
+		
+		DELETE FROM <include refid="table_detail" /> 
+		WHERE PHOSPHINE_ID = #{id};
+		
+		<foreach collection="pointList" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_detail" /> (<include refid="columns_detail"/>)
+			VALUES
+			(#{id},
+			#{item.point},
+			#{item.value})
+		</foreach>
+		;end;
+	</update>
+	
+	
+	<select id="getById" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.store.StoragePhosphineDao.StoragePhosphineResultMap">
+		SELECT A."ID",
+		W.WAREHOUSE_SHORT AS WAREHOUSE,
+		A."WAREHOUSE_ID",
+		A."ENCODE",
+		A."FUMIGATE",
+		A."AVERAGE",
+		A."INSPECTOR",
+		A."INSPECTE_TIME",
+		A."REMARK",
+		A."INSPECTOR_ID",
+		A."INSPECTORS",
+		A."TEST_DEVICE" FROM <include refid="table_main" /> A LEFT JOIN T_STORAGE_WAREHOUSE W ON A.WAREHOUSE_ID = W.ID
+		WHERE A.ID = #{_parameter}
+	</select>
+	
+	<select id="getPointsByPhosphineId" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.store.StoragePhosphinePointDao.StoragePhosphinePointResultMap">
+		SELECT <include refid="columns_detail" /> FROM <include refid="table_detail" />
+		WHERE PHOSPHINE_ID = #{_parameter}
+	</select>
+	<!--FROM <include refid="table_main" /> a LEFT JOIN t_sys_user b ON a.INSPECTOR_ID=b.id   id="list"-->
+	<select id="list" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.store.StoragePhosphineDao.StoragePhosphineResultMap">
+		<if test="pageIndex!=null">
+		select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT a.ID,w.WAREHOUSE_SHORT AS WAREHOUSE,a.ENCODE,a.FUMIGATE,a.AVERAGE,a.INSPECTOR,a.INSPECTE_TIME,a.REMARK,a.INSPECTOR_ID,a.INSPECTORS
+		FROM <include refid="table_main" /> a LEFT JOIN T_STORAGE_WAREHOUSE w on w.ID = a.WAREHOUSE_ID
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND w.id like '%${warehouse}%'
+			</if>
+			<if test="encode!=null and encode!=''">
+				AND a.ENCODE like '%${encode}%'
+			</if>
+			<if test="fumigate!=null and fumigate!=''">
+				AND a.FUMIGATE = '${fumigate}'
+			</if>
+			<if test="inspector!=null and inspector!=''">
+				AND (a.INSPECTOR like '%${inspector}%' OR a.INSPECTORS LIKE '%${inspector}%')
+			</if>
+			<if test="inspecteTime !=null and inspecteTime !=''">
+				AND TO_CHAR(a.INSPECTE_TIME,'yyyy-mm-dd') like '%${inspecteTime}%'
+			</if>
+			<if test="ids!=null and ids!=''">
+				AND a.ID IN (<foreach collection="ids" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+		<if test="sortField!=null and sortField!=''">
+			ORDER BY a.${sortField} a.${sortType}
+		</if>
+		<if test="sortField==null or sortField==''">
+			ORDER BY a.INSPECTE_TIME DESC
+		</if>
+
+		<if test="pageIndex!=null">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	<!--SELECT count(*) FROM <include refid="table_main" /> a LEFT JOIN t_sys_user b ON a.INSPECTOR_ID=b.id-->
+	<select id="count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*) FROM T_STORAGE_PHOSPHINE a LEFT JOIN T_STORAGE_WAREHOUSE w on a.WAREHOUSE_ID = w.ID
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND w.id like '%${warehouse}%'
+			</if>
+			<if test="encode!=null and encode!=''">
+				AND a.ENCODE like '%${encode}%'
+			</if>
+			<if test="fumigate!=null and fumigate!=''">
+				AND a.FUMIGATE = '${fumigate}'
+			</if>
+			<if test="inspector != null and inspector!=''">
+				AND (a.INSPECTOR like '%${inspector}%' OR a.INSPECTORS LIKE '%${inspector}%')
+			</if>
+			<if test="inspecteTime !=null and inspecteTime !=''">
+				AND TO_CHAR(a.INSPECTE_TIME,'YYYY-MM-DD') like '%${inspecteTime}%'
+			</if>
+			<if test="ids!=null and ids!=''">
+				AND a.ID IN (<foreach collection="ids" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		begin
+		DELETE FROM <include refid="table_main" /> WHERE ID=#{_parameter};
+		DELETE FROM <include refid="table_detail" /> WHERE PHOSPHINE_ID=#{_parameter};
+		end;
+	</delete>
+		
+</mapper>

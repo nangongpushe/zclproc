@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateTakeTotalDao">
+    <resultMap id="TotalMap" type="com.dhc.fastersoft.entity.RotateTakeTotal">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="WAREHOUSE_SHORT" property="wareHouseShort" jdbcType="VARCHAR"/>
+        <result column="VARIETY" property="variety" jdbcType="VARCHAR"/>
+        <result column="WAREHOUE_YEAR" property="wareHouseYear" jdbcType="VARCHAR"/>
+        <result column="THIS_SHIPMENT" property="shipment" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="listRotateTakeTotal" resultMap="TotalMap">
+        select
+                WAREHOUSE_SHORT,
+                VARIETY,
+                WAREHOUE_YEAR,
+                sum(THIS_SHIPMENT) THIS_SHIPMENT
+        from
+            (select
+                    T_STORAGE_WAREHOUSE.WAREHOUSE_SHORT,
+                    T_ROTATE_TAKE.VARIETY,
+                    SUBSTR(WAREHOUE_YEAR, 0, 4) as WAREHOUE_YEAR,
+                    T_ROTATE_TAKE.THIS_SHIPMENT
+            from
+                    T_STORAGE_WAREHOUSE,
+                    T_ROTATE_TAKE,
+                    T_ROTATE_CONCLUTE_DETAIL,
+                    T_ROTATE_TAKE_MAIN
+            where
+                    T_ROTATE_TAKE_MAIN.STATUS = '已完成'
+                    and
+                    T_ROTATE_TAKE.MAIN_ID = T_ROTATE_TAKE_MAIN.ID
+                    and
+                    T_ROTATE_TAKE_MAIN.RECEIVE_WAREHOUSE_ID = T_STORAGE_WAREHOUSE.ID
+                    and
+                    T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL = T_ROTATE_TAKE.DEAL_SERIAL
+            )
+            group by WAREHOUSE_SHORT,VARIETY,WAREHOUE_YEAR
+            ORDER BY VARIETY,WAREHOUE_YEAR
+
+    </select>
+
+    <select id="limitByParams" parameterType="com.dhc.fastersoft.entity.RotateTakeTotal" resultMap="TotalMap">
+        select
+                WAREHOUSE_SHORT,
+                VARIETY,
+                WAREHOUE_YEAR,
+                sum(THIS_SHIPMENT) THIS_SHIPMENT
+        from
+                (select
+                        T_STORAGE_WAREHOUSE.WAREHOUSE_SHORT,
+                        T_ROTATE_TAKE.VARIETY,
+                        SUBSTR(WAREHOUE_YEAR, 0, 4) as WAREHOUE_YEAR,
+                        T_ROTATE_TAKE.THIS_SHIPMENT,
+                        to_char(T_ROTATE_TAKE_MAIN.COMPLETE_DATE, 'yyyy-mm-dd hh24:mi:ss') DIS_DATE
+                from
+                        T_STORAGE_WAREHOUSE,
+                        T_ROTATE_TAKE,
+                        T_ROTATE_CONCLUTE_DETAIL,
+                        T_ROTATE_TAKE_MAIN
+                where
+                        T_ROTATE_TAKE_MAIN.STATUS = '已完成'
+                        and
+                        T_ROTATE_TAKE.MAIN_ID = T_ROTATE_TAKE_MAIN.ID
+                        and
+                        T_ROTATE_TAKE_MAIN.RECEIVE_WAREHOUSE_ID = T_STORAGE_WAREHOUSE.ID
+                        and
+                        T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL = T_ROTATE_TAKE.DEAL_SERIAL
+                )
+        <where>
+                <if test="beginDistributionDate!=null and beginDistributionDate!=''">
+                    AND DIS_DATE &gt;= #{beginDistributionDate,jdbcType=VARCHAR}
+                </if>
+                <if test="endDistributionDate!=null and endDistributionDate!=''">
+                    AND DIS_DATE &lt;= #{endDistributionDate,jdbcType=VARCHAR}
+                </if>
+                <if test="wareHouseShort!=null and wareHouseShort!=''">
+                    AND WAREHOUSE_SHORT like '%${wareHouseShort}%'
+                </if>
+        </where>
+        group by WAREHOUSE_SHORT,VARIETY,WAREHOUE_YEAR
+        ORDER BY VARIETY,WAREHOUE_YEAR
+    </select>
+
+</mapper>

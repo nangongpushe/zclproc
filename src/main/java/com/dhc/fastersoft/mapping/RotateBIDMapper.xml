@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateBIDDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateBID" id="rotateBIDResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="bidName" column="BID_NAME" jdbcType="NVARCHAR" />
+		<result property="bidType" column="BID_TYPE" jdbcType="NVARCHAR" />
+		<result property="tenderee" column="TENDEREE" jdbcType="NVARCHAR" />
+		<result property="saler" column="SALER" jdbcType="NVARCHAR" />
+		<result property="saleDate" column="SALE_DATE" jdbcType="DATE" />
+		<result property="groupID" column="GROUP_ID" jdbcType="NVARCHAR" />
+		<result property="total" column="TOTAL" jdbcType="INTEGER" />
+		<result property="creator" column="CREATOR" jdbcType="NVARCHAR" />
+		<result property="createDate" column="CREATE_DATE" jdbcType="DATE" />
+		<result property="modifier" column="MODIFIER" jdbcType="NVARCHAR" />
+		<result property="modifyDate" column="MODIFY_DATE" jdbcType="DATE" />
+		<result property="remark" column="REMARK" jdbcType="NVARCHAR" />
+		<result property="foodType" column="FOOD_TYPE" jdbcType="NVARCHAR" />
+		<result property="dealDate" column="DEAL_DATE" jdbcType="DATE" />
+		<collection property="purchaseList" resultMap="com.dhc.fastersoft.dao.RotateBIDPurchaseDao.rotateBIDPurchaseResultMap"></collection>
+		<collection property="saleList" resultMap="com.dhc.fastersoft.dao.RotateBIDSaleDao.rotateBIDSaleResultMap"></collection>
+	</resultMap>
+
+	<sql id="columns_bid">
+		ID,BID_NAME,BID_TYPE,TENDEREE,SALER,SALE_DATE,
+		GROUP_ID,TOTAL,CREATOR,CREATE_DATE,MODIFIER,
+		MODIFY_DATE,REMARK,FOOD_TYPE,DEAL_DATE
+	</sql>
+	
+	<sql id="s_columns_bid">
+		ID,BID_NAME,BID_TYPE,TENDEREE,SALER,SALE_DATE,
+		GROUP_ID,TOTAL,(select name from t_sys_user where id = CREATOR) CREATOR,CREATE_DATE,MODIFIER,
+		MODIFY_DATE,REMARK,FOOD_TYPE,DEAL_DATE
+	</sql>
+
+	<sql id="columns_purchase">
+		ID,BID_ID,SCHEME_ID,SCHEME_NAME,BID_SERIAL,COMPANY,
+		STOREHOUSE,QUANTITY,PRODUCE_AREA,PRODUCE_YEAR,PACKAGE_TYPE,
+		GRAIN_SHAPE,DELIVERY_START,DELIVERY_END,OVERDUE_RATE,DAILY_RECEPTIVITY,
+		TRANSPORT_TYPE,CONTACT,CONTACT_NUMBER,WAREHOUSE_ID,PLANLEVEL,LOANPAYMENTENDDATE,ENTERPRISE_ID,
+		UNIT_WEIGHT,UNSOUND_GRAIN,IMPURITY,MINERAL,DEW,HARDNESS,TINCTURE,SMELL,WATER_ABSORPTION,
+        TASTING_SCORE,AFB1,FUSARIUM_SOLANI,ZEARALENONE,BROWN_RICE_RECOVERY,ADULTERATION,YELLOW_COLOURED_RICE,
+        WET_WHEAT_GLUTEN,ACID_VALUE,PEROXIDE_VALUE,TRIAZOPHOS,INSOLUBLE_IMPURITIES,DIMETHOATE,LINOLEIC_ACID,
+        LINOLENIC_ACID,HEATING_TEST,VOMITOXIN_CONTENT,TOTAL_MERCURY,ARSENIC,HEAD_RICE,INORGANIC_ARSENIC,
+        PALMITIC_ACID_P,PALMITIC_ACID,DURSBAN,SPECIFIC_GRAVITY,ODOUR,MOISTURE_AND_NVOLATILE_MATTER,
+        MOISTURE_AND_VOLATILE_MATTER,ISOCARBOPHOS,MERCURY,OLEIC_ACID,RESIDUAL_SOLVENT,STEARIC_ACID,
+        FATTY_ACID,ERUCIC_ACID,ARACHIDONIC_ACID,ARACHIDIC_ACID,HUSKED_RICE_IN_PEDDY,LEAD,
+        CHROMIUM,MALATHION
+	</sql>
+
+	<sql id="columns_purchase1">
+		t.ID,t.BID_ID,t.SCHEME_ID,t.SCHEME_NAME,t.BID_SERIAL,house.WAREHOUSE_SHORT AS COMPANY,
+		t.STOREHOUSE,t.QUANTITY,t.PRODUCE_AREA,t.PRODUCE_YEAR,t.PACKAGE_TYPE,
+		t.GRAIN_SHAPE,t.DELIVERY_START,t.DELIVERY_END,t.OVERDUE_RATE,t.DAILY_RECEPTIVITY,
+		t.TRANSPORT_TYPE,t.CONTACT,t.CONTACT_NUMBER,t.WAREHOUSE_ID,t.PLANLEVEL,t.LOANPAYMENTENDDATE,
+		t.UNIT_WEIGHT,t.UNSOUND_GRAIN,t.IMPURITY,t.MINERAL,t.DEW,t.HARDNESS,t.TINCTURE,t.SMELL,t.WATER_ABSORPTION,
+        t.TASTING_SCORE,t.AFB1,t.FUSARIUM_SOLANI,t.ZEARALENONE,t.BROWN_RICE_RECOVERY,t.ADULTERATION,t.YELLOW_COLOURED_RICE,
+        t.WET_WHEAT_GLUTEN,t.ACID_VALUE,t.PEROXIDE_VALUE,t.TRIAZOPHOS,t.INSOLUBLE_IMPURITIES,t.DIMETHOATE,t.LINOLEIC_ACID,
+        t.LINOLENIC_ACID,t.HEATING_TEST,t.VOMITOXIN_CONTENT,t.TOTAL_MERCURY,t.ARSENIC,t.HEAD_RICE,t.INORGANIC_ARSENIC,
+        t.PALMITIC_ACID_P,t.PALMITIC_ACID,t.DURSBAN,t.SPECIFIC_GRAVITY,t.ODOUR,t.MOISTURE_AND_NVOLATILE_MATTER,
+        t.MOISTURE_AND_VOLATILE_MATTER,t.ISOCARBOPHOS,t.MERCURY,t.OLEIC_ACID,t.RESIDUAL_SOLVENT,t.STEARIC_ACID,
+        t.FATTY_ACID,t.ERUCIC_ACID,t.ARACHIDONIC_ACID,t.ARACHIDIC_ACID,t.HUSKED_RICE_IN_PEDDY,t.LEAD,
+        t.CHROMIUM,t.MALATHION
+	</sql>
+
+	<sql id="columns_sale">
+		ID,BID_ID,SCHEME_ID,SCHEME_NAME,BID_SERIAL,TOTAL,
+		GRAIN_TYPE,PRODUCE_AREA,WAREHOUE_YEAR,STORAGE_TYPE,TAKE_START,
+		TAKE_END,DELIVERY_PLACE,UNIT_WEIGHT,UNSOUND_GRAIN,IMPURITY,
+		MINERAL,DEW,HARDNESS,TINCTURE,SMELL,WATER_ABSORPTION,TASTING_SCORE,
+		AFB1,FUSARIUM_SOLANI,ZEARALENONE,STORAGE_QUALITY,STORE_HOUSE,WAREHOUSE_ID,PLANLEVEL,
+		LEAD, CHROMIUM, MERCURY, ARSENIC, INORGANIC_ARSENIC, BROWN_RICE_RECOVERY, ADULTERATION,
+		HUSKED_RICE_IN_PEDDY, YELLOW_COLOURED_RICE, HEAD_RICE, FATTY_ACID, DIMETHOATE, TRIAZOPHOS,
+		DURSBAN, ISOCARBOPHOS, MALATHION, ODOUR, MOISTURE_AND_VOLATILE_MATTER, INSOLUBLE_IMPURITIES,
+		HEATING_TEST, ACID_VALUE, PEROXIDE_VALUE, RESIDUAL_SOLVENT, PALMITIC_ACID, STEARIC_ACID, OLEIC_ACID,
+		LINOLEIC_ACID, LINOLENIC_ACID, ARACHIDIC_ACID, ARACHIDIC_ONE_ACID, ERUCIC_ACID, SPECIFIC_GRAVITY
+	</sql>
+
+	<sql id="table_bid"> T_ROTATE_BID </sql>
+
+	<sql id="table_purchase"> T_ROTATE_BID_PURCHASE </sql>
+	
+	<sql id="table_sale"> T_ROTATE_BID_SALE </sql>
+	
+	<!-- 添加标的物 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.RotateBID">
+		begin
+		INSERT INTO
+		<include refid="table_bid" />
+		(
+		<include refid="columns_bid" />
+		)
+		VALUES
+		(#{id},#{bidName,jdbcType=NVARCHAR},#{bidType,jdbcType=NVARCHAR},
+		#{tenderee,jdbcType=NVARCHAR},#{saler,jdbcType=NVARCHAR},
+		#{saleDate,jdbcType=DATE},#{groupID,jdbcType=NVARCHAR},
+		#{total,jdbcType=INTEGER},#{creator,jdbcType=NVARCHAR},
+		#{createDate,jdbcType=DATE},#{modifier,jdbcType=NVARCHAR},
+		#{modifyDate,jdbcType=DATE},#{remark,jdbcType=NVARCHAR},
+		#{foodType,jdbcType=NVARCHAR},#{dealDate,jdbcType=DATE});
+
+		<if test="purchaseList!=null">
+			<foreach collection="purchaseList" item="item" separator=";">
+				INSERT INTO
+				<include refid="table_purchase" />
+				(
+				<include refid="columns_purchase" />
+				)
+				VALUES
+				(#{item.id},#{id},#{item.schemeID,jdbcType=NVARCHAR},
+				#{item.schemeName,jdbcType=NVARCHAR},#{item.bidSerial,jdbcType=NVARCHAR},
+				#{item.company,jdbcType=NVARCHAR},#{item.storeHouse,jdbcType=NVARCHAR},
+				#{item.quantity,jdbcType=NVARCHAR},#{item.produceArea,jdbcType=NVARCHAR},
+				#{item.produceYear,jdbcType=NVARCHAR},#{item.packageType,jdbcType=NVARCHAR},
+				#{item.grainShape,jdbcType=NVARCHAR},#{item.deliveryStart,jdbcType=NVARCHAR},
+				#{item.deliveryEnd,jdbcType=NVARCHAR},#{item.overdueRate,jdbcType=NVARCHAR},
+				#{item.dailyReceptivity,jdbcType=NVARCHAR},#{item.transportType,jdbcType=NVARCHAR},
+				#{item.contact,jdbcType=NVARCHAR},#{item.contactNumber,jdbcType=NVARCHAR},
+				#{item.wareHouseId,jdbcType=NVARCHAR},#{item.planLevel,jdbcType=NVARCHAR},
+				#{item.loanPaymentEndDate,jdbcType=NVARCHAR},#{item.enterpriseId, jdbcType=VARCHAR},
+				#{item.unitWeight,jdbcType=NVARCHAR},#{item.unsoundGrain,jdbcType=NVARCHAR},
+				#{item.impurity,jdbcType=NVARCHAR},#{item.mineral,jdbcType=NVARCHAR},
+				#{item.dew,jdbcType=NVARCHAR},#{item.hardness,jdbcType=NVARCHAR},
+				#{item.tincture,jdbcType=NVARCHAR},#{item.smell,jdbcType=NVARCHAR},
+				#{item.waterAbsorption,jdbcType=NVARCHAR},#{item.tastingScore,jdbcType=NVARCHAR},
+				#{item.AFB1,jdbcType=NVARCHAR},#{item.fusariumSolani,jdbcType=NVARCHAR},
+				#{item.zearalenone,jdbcType=NVARCHAR},#{item.brownRiceRecovery,jdbcType=NVARCHAR},
+				#{item.adulteration,jdbcType=NVARCHAR},#{item.yellowColouredRice,jdbcType=NVARCHAR},
+				#{item.wetWheatGluten,jdbcType=NVARCHAR},#{item.acidValue,jdbcType=NVARCHAR},
+				#{item.peroxideValue,jdbcType=NVARCHAR},#{item.triazophos,jdbcType=NVARCHAR},
+				#{item.insolubleImpurities,jdbcType=NVARCHAR},#{item.dimethoate,jdbcType=NVARCHAR},
+				#{item.linoleicAcid,jdbcType=NVARCHAR},#{item.linolenicAcid,jdbcType=NVARCHAR},
+				#{item.heatingTest,jdbcType=NVARCHAR},#{item.vomitoxinContent,jdbcType=NVARCHAR},
+				#{item.totalMercury,jdbcType=NVARCHAR},#{item.arsenic,jdbcType=NVARCHAR},
+				#{item.headRice,jdbcType=NVARCHAR},#{item.inorganicArsenic,jdbcType=NVARCHAR},
+				#{item.palmiticAcidP,jdbcType=NVARCHAR},#{item.palmiticAcid,jdbcType=NVARCHAR},
+				#{item.dursban,jdbcType=NVARCHAR},#{item.specificGravity,jdbcType=NVARCHAR},
+				#{item.odour,jdbcType=NVARCHAR},#{item.moistureAndNvolatileMatter,jdbcType=NVARCHAR},
+				#{item.moistureAndVolatileMatter,jdbcType=NVARCHAR},#{item.isocarbophos,jdbcType=NVARCHAR},
+				#{item.mercury,jdbcType=NVARCHAR},#{item.oleicAcid,jdbcType=NVARCHAR},
+				#{item.residualSolvent,jdbcType=NVARCHAR},#{item.stearicAcid,jdbcType=NVARCHAR},
+				#{item.fattyAcid,jdbcType=NVARCHAR},#{item.erucicAcid,jdbcType=NVARCHAR},
+				#{item.arachidonicAcid,jdbcType=NVARCHAR},#{item.arachidicAcid,jdbcType=NVARCHAR},
+				#{item.huskedRiceInPeddy,jdbcType=NVARCHAR},#{item.lead,jdbcType=NVARCHAR},
+				#{item.chromium,jdbcType=NVARCHAR},#{item.malathion,jdbcType=NVARCHAR})
+
+			</foreach>
+		</if>
+		<if test="saleList!=null">
+			<foreach collection="saleList" item="item" separator=";">
+				INSERT INTO
+				<include refid="table_sale" />
+				(
+				<include refid="columns_sale" />
+				)
+				VALUES
+				(#{item.id},#{id},#{item.schemeID,jdbcType=NVARCHAR},
+				#{item.schemeName,jdbcType=NVARCHAR},#{item.bidSerial,jdbcType=NVARCHAR},
+				#{item.total,jdbcType=INTEGER},#{item.grainType,jdbcType=NVARCHAR},
+				#{item.produceArea,jdbcType=NVARCHAR},#{item.warehouseYear,jdbcType=NVARCHAR},
+				#{item.storageType,jdbcType=NVARCHAR},#{item.takeStart,jdbcType=NVARCHAR},
+				#{item.takeEnd,jdbcType=NVARCHAR},#{item.deliveryPlace,jdbcType=NVARCHAR},
+				#{item.unitWeight,jdbcType=NVARCHAR},#{item.unsoundGrain,jdbcType=NVARCHAR},
+				#{item.impurity,jdbcType=NVARCHAR},#{item.mineral,jdbcType=NVARCHAR},
+				#{item.dew,jdbcType=NVARCHAR},#{item.hardness,jdbcType=NVARCHAR},
+				#{item.tincture,jdbcType=NVARCHAR},#{item.smell,jdbcType=NVARCHAR},
+				#{item.waterAbsorption,jdbcType=NVARCHAR},#{item.tastingScore,jdbcType=NVARCHAR},
+				#{item.AFB1,jdbcType=NVARCHAR},#{item.fusariumSolani,jdbcType=NVARCHAR},
+				#{item.zearalenone,jdbcType=NVARCHAR},#{item.storageQuality,jdbcType=NVARCHAR},
+				#{item.storehouse,jdbcType=NVARCHAR},#{item.wareHouseId,jdbcType=NVARCHAR},
+				#{item.planLevel,jdbcType=NVARCHAR},#{item.lead,jdbcType=NVARCHAR},
+				#{item.chromium,jdbcType=NVARCHAR}, #{item.mercury,jdbcType=NVARCHAR},
+				#{item.arsenic,jdbcType=NVARCHAR}, #{item.inorganicArsenic,jdbcType=NVARCHAR},
+				#{item.brownRiceRecovery,jdbcType=NVARCHAR}, #{item.adulteration,jdbcType=NVARCHAR},
+				#{item.huskedRiceInPeddy,jdbcType=NVARCHAR}, #{item.yellowColouredRice,jdbcType=NVARCHAR},
+				#{item.headRice,jdbcType=NVARCHAR}, #{item.fattyAcid,jdbcType=NVARCHAR},
+				#{item.dimethoate,jdbcType=NVARCHAR}, #{item.triazophos,jdbcType=NVARCHAR},
+				#{item.dursban,jdbcType=NVARCHAR}, #{item.isocarbophos,jdbcType=NVARCHAR},
+				#{item.malathion,jdbcType=NVARCHAR}, #{item.odour,jdbcType=NVARCHAR},
+				#{item.moistureAndVolatileMatter,jdbcType=NVARCHAR}, #{item.insolubleImpurities,jdbcType=NVARCHAR},
+				#{item.heatingTest,jdbcType=NVARCHAR}, #{item.acidValue,jdbcType=NVARCHAR},
+				#{item.peroxideValue,jdbcType=NVARCHAR}, #{item.residualSolvent,jdbcType=NVARCHAR},
+				#{item.palmiticAcid,jdbcType=NVARCHAR}, #{item.stearicAcid,jdbcType=NVARCHAR},
+				#{item.oleicAcid,jdbcType=NVARCHAR}, #{item.linoleicAcid,jdbcType=NVARCHAR},
+				#{item.linolenicAcid,jdbcType=NVARCHAR}, #{item.arachidicAcid,jdbcType=NVARCHAR},
+				#{item.arachidicOneAcid,jdbcType=NVARCHAR}, #{item.erucicAcid,jdbcType=NVARCHAR},
+				#{item.specificGravity,jdbcType=NVARCHAR}
+				)
+			</foreach>
+		</if>
+		;end;
+	</insert>
+	
+	<!-- 查询单个 -->
+	<select id="get" parameterType="java.lang.String"
+		resultMap="rotateBIDResultMap">
+		SELECT <include refid="s_columns_bid"/>
+		 FROM <include refid="table_bid"/>
+		<where>
+			ID = #{_parameter}
+		</where>
+	</select>
+	
+	<!-- 查询-->
+	<select id="list" parameterType="java.util.HashMap" resultMap="rotateBIDResultMap">
+		<if test="pageIndex!=null and pageIndex!=''">
+			select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT
+		<include refid="s_columns_bid" />
+		from
+		<include refid="table_bid" />
+		<where>
+			<if test="bidType!=null and bidType!=''">
+				AND BID_TYPE LIKE '%${bidType}%'
+			</if>
+			<if test="tenderee!=null and tenderee!=''">
+				AND TENDEREE LIKE '%${tenderee}%'
+			</if>
+			<if test="saler!=null and saler!=''">
+				AND SALER LIKE '%${saler}%'
+			</if>
+			<if test="foodType!=null and foodType!=''">
+				AND FOOD_TYPE LIKE '%${foodType}%'
+			</if>
+			<if test="createDate!=null and createDate!=''">
+				AND TO_CHAR(CREATE_DATE,'YYYY-MM-DD') = '${createDate}'
+			</if>
+		</where>
+		ORDER BY CREATE_DATE DESC
+		<if test="pageIndex!=null and pageIndex!='' and pageSize!=null and pageSize!=''">
+		) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+		where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0)
+		FROM
+		<include refid="table_bid" />
+		<where>
+			<if test="bidType!=null and bidType!=''">
+				AND BID_TYPE LIKE '%${bidType}%'
+			</if>
+			<if test="tenderee!=null and tenderee!=''">
+				AND TENDEREE LIKE '%${tenderee}%'
+			</if>
+			<if test="saler!=null and saler!=''">
+				AND SALER LIKE '%${saler}%'
+			</if>
+			<if test="foodType!=null and foodType!=''">
+				AND FOOD_TYPE LIKE '%${foodType}%'
+			</if>
+			<if test="createDate!=null and createDate!=''">
+				AND TO_CHAR(CREATE_DATE,'YYYY-MM-DD') = '${createDate}'
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询采购明细 -->
+	<select id="listPurchase" parameterType="java.lang.String"
+		resultMap="com.dhc.fastersoft.dao.RotateBIDPurchaseDao.rotateBIDPurchaseResultMap">
+		SELECT
+		<include refid="columns_purchase1" />,e.ENTERPRISE_NAME,e.ID as ENTERPRISE_ID
+		FROM
+		<include refid="table_purchase" /> t
+		LEFT JOIN T_STORAGE_WAREHOUSE house ON house.ID = t.WAREHOUSE_ID
+		LEFT JOIN T_STORE_ENTERPRISE e on t.ENTERPRISE_ID = e.id
+		<where>
+			t.BID_ID = #{_parameter}
+		</where>
+	</select>
+	
+	<!-- 查询单个采购明细 -->
+	<select id="getSinglePurchase" parameterType="java.lang.String"
+		resultMap="com.dhc.fastersoft.dao.RotateBIDPurchaseDao.rotateBIDPurchaseResultMap">
+		SELECT
+		<include refid="columns_purchase" />
+		FROM
+		<include refid="table_purchase" />
+		<where>
+			BID_ID = #{bidID} AND BID_SERIAL = #{bidSerial}
+		</where>
+	</select>
+	
+	<!-- 查询销售明细 -->
+	<select id="listSale" parameterType="java.lang.String"
+		resultMap="com.dhc.fastersoft.dao.RotateBIDSaleDao.rotateBIDSaleResultMap">
+		SELECT
+		<include refid="columns_sale" />
+		FROM
+		<include refid="table_sale" />
+		<where>
+			BID_ID = #{_parameter}
+		</where>
+	</select>
+	
+	<!-- 查询单个销售明细 -->
+	<select id="getSingleSale" parameterType="java.lang.String"
+		resultMap="com.dhc.fastersoft.dao.RotateBIDSaleDao.rotateBIDSaleResultMap">
+		SELECT
+		<include refid="columns_sale" />
+		FROM
+		<include refid="table_sale" />
+		<where>
+			BID_ID = #{bidID} AND BID_SERIAL = #{bidSerial}
+		</where>
+	</select>
+
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotateBID">
+		begin
+		UPDATE
+		<include refid="table_bid" />
+		SET
+		BID_NAME = #{bidName},BID_TYPE = #{bidType},
+		TENDEREE =	#{tenderee,jdbcType=NVARCHAR},
+		SALER=#{saler,jdbcType=NVARCHAR},
+		SALE_DATE =#{saleDate,jdbcType=DATE},
+		MODIFIER=#{modifier},
+		MODIFY_DATE=#{modifyDate},
+		REMARK=#{remark,jdbcType=NVARCHAR},
+		FOOD_TYPE=#{foodType,jdbcType=NVARCHAR},
+		TOTAL=#{total,jdbcType=INTEGER},
+		GROUP_ID=#{groupID,jdbcType=NVARCHAR},
+		DEAL_DATE=#{dealDate}
+		<where>
+			ID = #{id};
+		</where>
+		
+		DELETE FROM <include refid="table_purchase" /> 
+		<where>
+			BID_ID = #{id};
+		</where>
+		
+		DELETE FROM <include refid="table_sale" /> 
+		<where>
+			BID_ID = #{id};
+		</where>
+		
+		<if test="purchaseList!=null">
+			<foreach collection="purchaseList" item="item" separator=";">
+				INSERT INTO
+				<include refid="table_purchase" />
+				(
+				<include refid="columns_purchase" />
+				)
+				VALUES
+				(#{item.id},#{id},#{item.schemeID,jdbcType=NVARCHAR},
+				#{item.schemeName,jdbcType=NVARCHAR},#{item.bidSerial,jdbcType=NVARCHAR},
+				#{item.company,jdbcType=NVARCHAR},#{item.storeHouse,jdbcType=NVARCHAR},
+				#{item.quantity,jdbcType=NVARCHAR},#{item.produceArea,jdbcType=NVARCHAR},
+				#{item.produceYear,jdbcType=NVARCHAR},#{item.packageType,jdbcType=NVARCHAR},
+				#{item.grainShape,jdbcType=NVARCHAR},#{item.deliveryStart,jdbcType=NVARCHAR},
+				#{item.deliveryEnd,jdbcType=NVARCHAR},#{item.overdueRate,jdbcType=NVARCHAR},
+				#{item.dailyReceptivity,jdbcType=NVARCHAR},#{item.transportType,jdbcType=NVARCHAR},
+				#{item.contact,jdbcType=NVARCHAR},#{item.contactNumber,jdbcType=NVARCHAR},
+				#{item.wareHouseId,jdbcType=NVARCHAR},#{item.planLevel,jdbcType=NVARCHAR},
+				#{item.loanPaymentEndDate,jdbcType=NVARCHAR},#{item.enterpriseId,jdbcType=VARCHAR},
+				#{item.unitWeight,jdbcType=NVARCHAR},#{item.unsoundGrain,jdbcType=NVARCHAR},
+				#{item.impurity,jdbcType=NVARCHAR},#{item.mineral,jdbcType=NVARCHAR},
+				#{item.dew,jdbcType=NVARCHAR},#{item.hardness,jdbcType=NVARCHAR},
+				#{item.tincture,jdbcType=NVARCHAR},#{item.smell,jdbcType=NVARCHAR},
+				#{item.waterAbsorption,jdbcType=NVARCHAR},#{item.tastingScore,jdbcType=NVARCHAR},
+				#{item.AFB1,jdbcType=NVARCHAR},#{item.fusariumSolani,jdbcType=NVARCHAR},
+				#{item.zearalenone,jdbcType=NVARCHAR},#{item.brownRiceRecovery,jdbcType=NVARCHAR},
+				#{item.adulteration,jdbcType=NVARCHAR},#{item.yellowColouredRice,jdbcType=NVARCHAR},
+				#{item.wetWheatGluten,jdbcType=NVARCHAR},#{item.acidValue,jdbcType=NVARCHAR},
+				#{item.peroxideValue,jdbcType=NVARCHAR},#{item.triazophos,jdbcType=NVARCHAR},
+				#{item.insolubleImpurities,jdbcType=NVARCHAR},#{item.dimethoate,jdbcType=NVARCHAR},
+				#{item.linoleicAcid,jdbcType=NVARCHAR},#{item.linolenicAcid,jdbcType=NVARCHAR},
+				#{item.heatingTest,jdbcType=NVARCHAR},#{item.vomitoxinContent,jdbcType=NVARCHAR},
+				#{item.totalMercury,jdbcType=NVARCHAR},#{item.arsenic,jdbcType=NVARCHAR},
+				#{item.headRice,jdbcType=NVARCHAR},#{item.inorganicArsenic,jdbcType=NVARCHAR},
+				#{item.palmiticAcidP,jdbcType=NVARCHAR},#{item.palmiticAcid,jdbcType=NVARCHAR},
+				#{item.dursban,jdbcType=NVARCHAR},#{item.specificGravity,jdbcType=NVARCHAR},
+				#{item.odour,jdbcType=NVARCHAR},#{item.moistureAndNvolatileMatter,jdbcType=NVARCHAR},
+				#{item.moistureAndVolatileMatter,jdbcType=NVARCHAR},#{item.isocarbophos,jdbcType=NVARCHAR},
+				#{item.mercury,jdbcType=NVARCHAR},#{item.oleicAcid,jdbcType=NVARCHAR},
+				#{item.residualSolvent,jdbcType=NVARCHAR},#{item.stearicAcid,jdbcType=NVARCHAR},
+				#{item.fattyAcid,jdbcType=NVARCHAR},#{item.erucicAcid,jdbcType=NVARCHAR},
+				#{item.arachidonicAcid,jdbcType=NVARCHAR},#{item.arachidicAcid,jdbcType=NVARCHAR},
+				#{item.huskedRiceInPeddy,jdbcType=NVARCHAR},#{item.lead,jdbcType=NVARCHAR},
+				#{item.chromium,jdbcType=NVARCHAR},#{item.malathion,jdbcType=NVARCHAR})
+			</foreach>
+		</if>
+		<if test="saleList!=null">
+			<foreach collection="saleList" item="item" separator=";">
+				INSERT INTO
+				<include refid="table_sale" />
+				(
+				<include refid="columns_sale" />
+				)
+				VALUES
+				(#{item.id},#{id},#{item.schemeID,jdbcType=NVARCHAR},
+				#{item.schemeName,jdbcType=NVARCHAR},#{item.bidSerial,jdbcType=NVARCHAR},
+				#{item.total,jdbcType=INTEGER},#{item.grainType,jdbcType=NVARCHAR},
+				#{item.produceArea,jdbcType=NVARCHAR},#{item.warehouseYear,jdbcType=NVARCHAR},
+				#{item.storageType,jdbcType=NVARCHAR},#{item.takeStart,jdbcType=NVARCHAR},
+				#{item.takeEnd,jdbcType=NVARCHAR},#{item.deliveryPlace,jdbcType=NVARCHAR},
+				#{item.unitWeight,jdbcType=NVARCHAR},#{item.unsoundGrain,jdbcType=NVARCHAR},
+				#{item.impurity,jdbcType=NVARCHAR},#{item.mineral,jdbcType=NVARCHAR},
+				#{item.dew,jdbcType=NVARCHAR},#{item.hardness,jdbcType=NVARCHAR},
+				#{item.tincture,jdbcType=NVARCHAR},#{item.smell,jdbcType=NVARCHAR},
+				#{item.waterAbsorption,jdbcType=NVARCHAR},#{item.tastingScore,jdbcType=NVARCHAR},
+				#{item.AFB1,jdbcType=NVARCHAR},#{item.fusariumSolani,jdbcType=NVARCHAR},
+				#{item.zearalenone,jdbcType=NVARCHAR},#{item.storageQuality,jdbcType=NVARCHAR},
+				#{item.storehouse,jdbcType=NVARCHAR},#{item.wareHouseId,jdbcType=NVARCHAR},
+				#{item.planLevel,jdbcType=NVARCHAR},#{item.lead,jdbcType=NVARCHAR},
+				#{item.chromium,jdbcType=NVARCHAR}, #{item.mercury,jdbcType=NVARCHAR},
+				#{item.arsenic,jdbcType=NVARCHAR}, #{item.inorganicArsenic,jdbcType=NVARCHAR},
+				#{item.brownRiceRecovery,jdbcType=NVARCHAR}, #{item.adulteration,jdbcType=NVARCHAR},
+				#{item.huskedRiceInPeddy,jdbcType=NVARCHAR}, #{item.yellowColouredRice,jdbcType=NVARCHAR},
+				#{item.headRice,jdbcType=NVARCHAR}, #{item.fattyAcid,jdbcType=NVARCHAR},
+				#{item.dimethoate,jdbcType=NVARCHAR}, #{item.triazophos,jdbcType=NVARCHAR},
+				#{item.dursban,jdbcType=NVARCHAR}, #{item.isocarbophos,jdbcType=NVARCHAR},
+				#{item.malathion,jdbcType=NVARCHAR}, #{item.odour,jdbcType=NVARCHAR},
+				#{item.moistureAndVolatileMatter,jdbcType=NVARCHAR}, #{item.insolubleImpurities,jdbcType=NVARCHAR},
+				#{item.heatingTest,jdbcType=NVARCHAR}, #{item.acidValue,jdbcType=NVARCHAR},
+				#{item.peroxideValue,jdbcType=NVARCHAR}, #{item.residualSolvent,jdbcType=NVARCHAR},
+				#{item.palmiticAcid,jdbcType=NVARCHAR}, #{item.stearicAcid,jdbcType=NVARCHAR},
+				#{item.oleicAcid,jdbcType=NVARCHAR}, #{item.linoleicAcid,jdbcType=NVARCHAR},
+				#{item.linolenicAcid,jdbcType=NVARCHAR}, #{item.arachidicAcid,jdbcType=NVARCHAR},
+				#{item.arachidicOneAcid,jdbcType=NVARCHAR}, #{item.erucicAcid,jdbcType=NVARCHAR},
+				#{item.specificGravity,jdbcType=NVARCHAR}
+				)
+			</foreach>
+		</if>
+		;end;
+
+	</update>
+
+	<select id="sumQuantityByBidId" parameterType="java.util.HashMap"
+			resultType="java.math.BigDecimal">
+		SELECT nvl(SUM(QUANTITY),0) QUANTITY
+		FROM <include refid="table_purchase"/>
+		<where>
+			<if test="rotateSchemeDetailId!=null and rotateSchemeDetailId!=''">
+				AND SCHEME_ID = #{rotateSchemeDetailId}
+			</if>
+			<if test="rotateBIDId!=null and rotateBIDId!=''">
+				AND BID_ID = #{rotateBIDId}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="sumSaleQuantityByBidId" parameterType="java.util.HashMap"
+			resultType="java.math.BigDecimal">
+		SELECT  nvl(SUM(TOTAL),0) TOTAL
+		FROM <include refid="table_sale"/>
+		<where>
+			<if test="rotateSchemeDetailId!=null and rotateSchemeDetailId!=''">
+				AND SCHEME_ID = #{rotateSchemeDetailId}
+			</if>
+			<if test="rotateBIDId!=null and rotateBIDId!=''">
+				AND BID_ID = #{rotateBIDId}
+			</if>
+		</where>
+	</select>
+</mapper>

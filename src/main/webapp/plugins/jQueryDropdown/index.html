@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Dropdown.js - a lightweight dropdown of jQuery plugins </title>
+  <link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/bootstrap-3.3.4.css">
+  <script type="text/javascript" src="https://janking.github.io/dropdown/mock.js"></script>
+  <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+  <link rel="stylesheet" type="text/css" href="./jquery.dropdown.min.css">
+  <script src="./jquery.dropdown.min.js"></script>
+  <style>
+    body {
+      width: 80%;
+      margin: 0 auto;
+      padding-bottom: 200px;
+    }
+  </style>
+</head>
+
+<body>
+
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="text-info">多选、Option渲染</div><br>
+        <div class="dropdown-mul-2">
+          <select style="display:none" name="" id="mul-2" multiple placeholder="请选择">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3" selected>我是默认选中的</option>
+          <option value="4" disabled>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+        </div>
+      </div>
+    </div>
+
+  <script>
+
+
+    $('.dropdown-mul-2').dropdown({
+      limitCount: 5,
+      searchable: false,
+      choice: function() {
+        console.log('.dropdown-mul-2 picked');
+       var  aa= $('#mul-2').val();
+        alert(aa);
+      }
+    });
+
+
+  </script>
+</body>
+
+</html>

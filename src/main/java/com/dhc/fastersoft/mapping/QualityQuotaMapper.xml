@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualityQuotaMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualityQuota" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="QUOTA_NO" property="quotaNo" jdbcType="VARCHAR" />
+    <result column="QUOTA_NAME" property="quotaName" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="GRADE" property="grade" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+     <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="criteria">
+  		<where>1=1
+			  <if test="quotaNo != null and quotaNo != ''" >
+	             AND QUOTA_NO LIKE '%${quotaNo}%'
+		      </if>
+		      <if test="quotaName != null and quotaName != ''" >
+		          AND QUOTA_NAME LIKE '%${quotaName}%'
+		      </if>
+			  <if test="type != null and type != ''" >
+		          AND TYPE LIKE '%${type}%'
+		      </if>
+		</where>
+  </sql>
+  <!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_QUOTA
+		<include refid="criteria"/>
+	</select>
+	<!-- 查询重复 -->
+	<select id="countCheck" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_QUOTA
+		<where>
+			1=1
+			  <if test="quotaNo != null" >
+	             AND QUOTA_NO = '${quotaNo}'
+		      </if>
+		      <if test="grade != null" >
+		          AND GRADE = '${grade}'
+		      </if>
+			  <if test="type != null" >
+		          AND TYPE = '${type}'
+		      </if>
+		      <if test="quotaName != null" >
+		          AND QUOTA_NAME = '${quotaName}'
+		      </if>
+		</where>
+	</select>
+	<!-- 根据搜索条件查询计划列表 -->
+	<select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		${start} SELECT ID,
+        QUOTA_NO,
+        QUOTA_NAME,
+        TYPE,
+        GRADE,
+        CREATOR,
+        /*TO_CHAR(CREATE_DATE,'YYYY-MM-DD') CREATE_DATE,*/
+        CREATE_DATE,
+        COMPANY,
+        REMARK from T_QUALITY_QUOTA
+		<include refid="criteria"/> 
+		ORDER BY CREATE_DATE DESC
+		${end}
+	</select>
+	<select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from T_QUALITY_QUOTA WHERE ID='${id}'
+	</select>
+	<delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_QUALITY_QUOTA WHERE ID='${id}'
+	</delete>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.QualityQuota" >
+    insert into T_QUALITY_QUOTA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="quotaNo != null" >
+        QUOTA_NO,
+      </if>
+      <if test="quotaName != null" >
+        QUOTA_NAME,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="grade != null" >
+        GRADE,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="company != null" >
+        COMPANY,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="quotaNo != null" >
+        #{quotaNo,jdbcType=VARCHAR},
+      </if>
+      <if test="quotaName != null" >
+        #{quotaName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        to_date(#{createDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.dhc.fastersoft.entity.QualityQuota">
+			UPDATE T_QUALITY_QUOTA SET
+	<trim suffixOverrides="," >
+	  <if test="quotaNo != null" >
+        QUOTA_NO='${quotaNo}',
+      </if>
+      <if test="quotaName != null" >
+        QUOTA_NAME='${quotaName}',
+      </if>
+      <if test="type != null" >
+        TYPE='${type}',
+      </if>
+      <if test="grade != null" >
+        GRADE='${grade}',
+      </if>
+      <if test="creator != null" >
+        CREATOR='${creator}',
+      </if>
+       <if test="createDate != null" >
+        CREATE_DATE=TO_DATE('${createDate}','yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="company != null" >
+        COMPANY='${company}',
+      </if>
+      <if test="remark != null" >
+        REMARK='${remark}',
+      </if>
+      </trim>
+      		  WHERE ID='${id}'
+	</update>
+	
+	<select id="listQualityQuota" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.QualityQuotaMapper.BaseResultMap">
+		SELECT ID,QUOTA_NO,QUOTA_NAME,TYPE,GRADE FROM T_QUALITY_QUOTA
+		<where>
+			AND TYPE IS NOT NULL
+		</where>
+        ORDER BY substr(QUOTA_NO,length(QUOTA_NO)-3+1,3)
+	</select>
+	
+	<select id="getQualityQuota" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.QualityQuotaMapper.BaseResultMap">
+		SELECT ID,QUOTA_NO,QUOTA_NAME,TYPE,GRADE FROM T_QUALITY_QUOTA
+		<where>
+			<if test="id!=null and id!=''">
+				AND ID = #{id}
+			</if>
+			<if test="grainType!=null and grainType!=''">
+				AND TYPE = #{grainType}
+			</if>
+			<if test="grade!=null and grade!=''">
+				AND GRADE = #{grade}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

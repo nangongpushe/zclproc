@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateConcluteDetailDao">
+    <resultMap type="com.dhc.fastersoft.entity.RotateConcluteDetail" id="rotateConcluteDetailResultMap">
+        <result property="id" column="ID" jdbcType="VARCHAR"/>
+        <result property="dealID" column="DEAL_ID" jdbcType="VARCHAR"/>
+        <result property="schemeID" column="SCHEME_ID" jdbcType="VARCHAR"/>
+        <result property="dealSerial" column="DEAL_SERIAL" jdbcType="VARCHAR"/>
+        <result property="bidSerial" column="BID_SERIAL" jdbcType="VARCHAR"/>
+        <result property="deliveryPlace" column="DELIVERY_PLACE" jdbcType="VARCHAR"/>
+        <result property="receivePlace" column="RECEIVE_PLACE" jdbcType="VARCHAR"/>
+        <result property="storehouse" column="STOREHOUSE" jdbcType="VARCHAR"/>
+        <result property="grainType" column="GRAIN_TYPE" jdbcType="VARCHAR"/>
+        <result property="quantity" column="QUANTITY" jdbcType="VARCHAR"/>
+        <result property="produceArea" column="PRODUCE_AREA" jdbcType="VARCHAR"/>
+        <result property="produceYear" column="PRODUCE_YEAR" jdbcType="VARCHAR"/>
+        <result property="warehoueYear" column="WAREHOUE_YEAR" jdbcType="VARCHAR"/>
+        <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
+        <result property="dealPrice" column="DEAL_PRICE" jdbcType="DOUBLE"/>
+
+        <result property="dealAmount" column="DEAL_AMOUNT" jdbcType="DOUBLE"/>
+        <result property="receiveId" column="RECEIVE_ID" jdbcType="VARCHAR"/>
+        <result property="deliveryId" column="DELIVERY_ID" jdbcType="VARCHAR"/>
+        <result property="takeEnd" column="TAKE_END" jdbcType="VARCHAR"/>
+        <result property="deliveryStart" column="DELIVERY_START" jdbcType="VARCHAR"/>
+        <result property="deliveryEnd" column="DELIVERY_END" jdbcType="VARCHAR"/>
+        <result property="dealUnit" column="DEAL_UNIT" jdbcType="VARCHAR"/>
+        <result property="dealDate" column="DEAL_DATE" jdbcType="VARCHAR"/>
+        <result property="inviteType" column="INVITE_TYPE" jdbcType="VARCHAR"/>
+        <result property="schemeName" column="SCHEME_NAME" jdbcType="VARCHAR"/>
+        <result property="claimAmount" column="CLAIM_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="loanPaymentEndDate" column="LOANPAYMENTENDDATE" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="VARCHAR"/>
+        <result property="bail" column="BAIL" jdbcType="VARCHAR"/>
+        <result property="inviteId" column="INVITE_ID" jdbcType="VARCHAR"/>
+        <result property="inviteName" column="INVITE_NAME" jdbcType="VARCHAR"/>
+        <result property="surplusBail" column="SURPLUS_BAIL" jdbcType="DECIMAL"/>
+        <result property="enterpriseId" column="ENTERPRISE_ID" jdbcType="VARCHAR"/>
+        <result property="enterpriseName" column="ENTERPRISE_NAME" jdbcType="VARCHAR"/>
+        <result property="payedMoney" column="PAYED_MONEY" jdbcType="DECIMAL"/>
+        <result property="takedOrderNum" column="TAKED_ORDER_NUM" jdbcType="DECIMAL"/>
+        <result property="totalBail" column="BAIL" jdbcType="DECIMAL"/>
+        <result property="reTotalBail" column="RE_BAIL" jdbcType="DECIMAL"/>
+        <result property="type00" column="TYPE00" jdbcType="DECIMAL"/>
+        <result property="type01" column="TYPE01" jdbcType="DECIMAL"/>
+        <result property="type10" column="TYPE10" jdbcType="DECIMAL"/>
+        <result property="type11" column="TYPE11" jdbcType="DECIMAL"/>
+        <result property="type20" column="TYPE20" jdbcType="DECIMAL"/>
+        <result property="type21" column="TYPE21" jdbcType="DECIMAL"/>
+        <result property="type30" column="TYPE30" jdbcType="DECIMAL"/>
+        <result property="type31" column="TYPE31" jdbcType="DECIMAL"/>
+        <result property="type40" column="TYPE40" jdbcType="DECIMAL"/>
+        <result property="type41" column="TYPE41" jdbcType="DECIMAL"/>
+        <result property="type50" column="TYPE50" jdbcType="DECIMAL"/>
+        <result property="type51" column="TYPE51" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <resultMap type="com.dhc.fastersoft.entity.RotateConcluteDetail" id="rotateConcluteDetailResultMap1">
+        <result property="id" column="ID" jdbcType="VARCHAR"/>
+        <result property="dealID" column="DEAL_ID" jdbcType="VARCHAR"/>
+        <result property="schemeID" column="SCHEME_ID" jdbcType="VARCHAR"/>
+        <result property="dealSerial" column="DEAL_SERIAL" jdbcType="VARCHAR"/>
+        <result property="bidSerial" column="BID_SERIAL" jdbcType="VARCHAR"/>
+        <result property="deliveryPlace" column="DELIVERY_PLACE" jdbcType="VARCHAR"/>
+        <result property="receivePlace" column="RECEIVE_PLACE" jdbcType="VARCHAR"/>
+        <result property="deliveryId" column="DELIVERY_ID" jdbcType="NVARCHAR"/>
+        <result property="receiveId" column="RECEIVE_ID" jdbcType="NVARCHAR"/>
+        <result property="storehouse" column="STOREHOUSE" jdbcType="VARCHAR"/>
+        <result property="grainType" column="GRAIN_TYPE" jdbcType="VARCHAR"/>
+        <result property="quantity" column="QUANTITY" jdbcType="VARCHAR"/>
+        <result property="produceArea" column="PRODUCE_AREA" jdbcType="VARCHAR"/>
+        <result property="produceYear" column="PRODUCE_YEAR" jdbcType="VARCHAR"/>
+        <result property="warehoueYear" column="WAREHOUE_YEAR" jdbcType="VARCHAR"/>
+        <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
+        <result property="dealPrice" column="DEAL_PRICE" jdbcType="DOUBLE"/>
+        <result property="dealAmount" column="DEAL_AMOUNT" jdbcType="DOUBLE"/>
+        <result property="takeEnd" column="TAKE_END" jdbcType="VARCHAR"/>
+        <result property="deliveryStart" column="DELIVERY_START" jdbcType="VARCHAR"/>
+        <result property="deliveryEnd" column="DELIVERY_END" jdbcType="VARCHAR"/>
+        <result property="dealUnit" column="DEAL_UNIT" jdbcType="VARCHAR"/>
+        <result property="dealDate" column="DEAL_DATE" jdbcType="VARCHAR"/>
+        <result property="inviteType" column="INVITE_TYPE" jdbcType="VARCHAR"/>
+        <result property="schemeName" column="SCHEME_NAME" jdbcType="VARCHAR"/>
+        <result property="compleRate" column="COMPLE_RATE" jdbcType="DOUBLE"/>
+        <result property="schemeBatch" column="SCHEME_BATCH" jdbcType="VARCHAR"/>
+        <result property="startTime" column="START_TIME" jdbcType="VARCHAR"/>
+        <result property="endTime" column="END_TIME" jdbcType="VARCHAR"/>
+        <result property="biddingTime" column="BIDDING_TIME" jdbcType="VARCHAR"/>
+        <result property="loanPaymentEndDate" column="LOANPAYMENTENDDATE" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="VARCHAR"/>
+        <result property="deliveryId" column="DELIVERY_ID" jdbcType="VARCHAR"/>
+        <result property="receiveId" column="RECEIVE_ID" jdbcType="VARCHAR"/>
+        <result property="enterpriseId" column="ENTERPRISE_ID" jdbcType="VARCHAR"/>
+        <result property="enterpriseName" column="ENTERPRISE_NAME" jdbcType="VARCHAR"/>
+        <result property="surplusPlanNumber" column="SURPLUS_PLAN_NUMBER" jdbcType="DOUBLE"/>
+        <result property="batchNumber" column="BATCH_NUMBER" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="com.dhc.fastersoft.entity.ExportRotateSum" id="exprotRotateSumResultMap">
+        <result property="id" column="ID" jdbcType="VARCHAR"/>
+        <result property="dealID" column="DEAL_ID" jdbcType="VARCHAR"/>
+        <result property="schemeID" column="SCHEME_ID" jdbcType="VARCHAR"/>
+        <result property="dealSerial" column="DEAL_SERIAL" jdbcType="VARCHAR"/>
+        <result property="bidSerial" column="BID_SERIAL" jdbcType="VARCHAR"/>
+        <result property="deliveryPlace" column="DELIVERY_PLACE" jdbcType="VARCHAR"/>
+        <result property="receivePlace" column="RECEIVE_PLACE" jdbcType="VARCHAR"/>
+        <result property="storehouse" column="STOREHOUSE" jdbcType="VARCHAR"/>
+        <result property="grainType" column="GRAIN_TYPE" jdbcType="VARCHAR"/>
+        <result property="quantity" column="QUANTITY" jdbcType="VARCHAR"/>
+        <result property="produceArea" column="PRODUCE_AREA" jdbcType="VARCHAR"/>
+        <result property="produceYear" column="PRODUCE_YEAR" jdbcType="VARCHAR"/>
+        <result property="warehoueYear" column="WAREHOUE_YEAR" jdbcType="VARCHAR"/>
+        <result property="storageType" column="STORAGE_TYPE" jdbcType="VARCHAR"/>
+        <result property="dealPrice" column="DEAL_PRICE" jdbcType="DOUBLE"/>
+        <result property="dealAmount" column="DEAL_AMOUNT" jdbcType="DOUBLE"/>
+        <result property="receiveId" column="RECEIVE_ID" jdbcType="VARCHAR"/>
+        <result property="deliveryId" column="DELIVERY_ID" jdbcType="VARCHAR"/>
+        <result property="takeEnd" column="TAKE_END" jdbcType="VARCHAR"/>
+        <result property="deliveryStart" column="DELIVERY_START" jdbcType="VARCHAR"/>
+        <result property="deliveryEnd" column="DELIVERY_END" jdbcType="VARCHAR"/>
+        <result property="dealUnit" column="DEAL_UNIT" jdbcType="VARCHAR"/>
+        <result property="dealDate" column="DEAL_DATE" jdbcType="VARCHAR"/>
+        <result property="inviteType" column="INVITE_TYPE" jdbcType="VARCHAR"/>
+        <result property="schemeName" column="SCHEME_NAME" jdbcType="VARCHAR"/>
+        <result property="claimAmount" column="CLAIM_AMOUNT" jdbcType="VARCHAR"/>
+        <result property="loanPaymentEndDate" column="LOANPAYMENTENDDATE" jdbcType="VARCHAR"/>
+        <result property="warehouseId" column="WAREHOUSE_ID" jdbcType="VARCHAR"/>
+        <result property="bail" column="BAIL" jdbcType="VARCHAR"/>
+        <result property="inviteId" column="INVITE_ID" jdbcType="VARCHAR"/>
+        <result property="inviteName" column="INVITE_NAME" jdbcType="VARCHAR"/>
+        <result property="surplusBail" column="SURPLUS_BAIL" jdbcType="DECIMAL"/>
+        <result property="enterpriseId" column="ENTERPRISE_ID" jdbcType="VARCHAR"/>
+        <result property="enterpriseName" column="ENTERPRISE_NAME" jdbcType="VARCHAR"/>
+        <result property="payedMoney" column="PAYED_MONEY" jdbcType="DECIMAL"/>
+        <result property="takedOrderNum" column="TAKED_ORDER_NUM" jdbcType="DECIMAL"/>
+        <result property="totalBail" column="BAIL" jdbcType="DECIMAL"/>
+        <result property="reTotalBail" column="RE_BAIL" jdbcType="DECIMAL"/>
+        <result property="type00" column="TYPE00" jdbcType="DECIMAL"/>
+        <result property="type01" column="TYPE01" jdbcType="DECIMAL"/>
+        <result property="type10" column="TYPE10" jdbcType="DECIMAL"/>
+        <result property="type11" column="TYPE11" jdbcType="DECIMAL"/>
+        <result property="type20" column="TYPE20" jdbcType="DECIMAL"/>
+        <result property="type21" column="TYPE21" jdbcType="DECIMAL"/>
+        <result property="type30" column="TYPE30" jdbcType="DECIMAL"/>
+        <result property="type31" column="TYPE31" jdbcType="DECIMAL"/>
+        <result property="type40" column="TYPE40" jdbcType="DECIMAL"/>
+        <result property="type41" column="TYPE41" jdbcType="DECIMAL"/>
+        <result property="type50" column="TYPE50" jdbcType="DECIMAL"/>
+        <result property="type51" column="TYPE51" jdbcType="DECIMAL"/>
+    </resultMap>
+
+</mapper>

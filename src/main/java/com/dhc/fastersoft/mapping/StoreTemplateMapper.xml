@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoreTemplateDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.store.StoreTemplate" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TEMPLET_NO" property="templetNo" jdbcType="VARCHAR" />
+    <result column="TEMPLET_NAME" property="templetName" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+	  <result column="CREATORID" property="creatorId" jdbcType="VARCHAR" />
+  </resultMap>
+     <sql id="Base_Column_List" >
+     ss.ID,  ss.TEMPLET_NO templetNo,  ss.TEMPLET_NAME templetName,  to_char( ss.CREATE_DATE,'yyyy-mm-dd') createDate,  ss.REMARK remark,  ss.TYPE type
+  </sql>
+  
+   <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+		<include refid="Base_Column_List" />, sys.name  creator
+	   from  T_STORE_TEMPLET ss  left join
+	   T_SYS_USER sys ON ss.CREATORID=sys.ID
+	   WHERE 1=1
+
+		<if test="templetName!=null and templetName!=''">
+			 and   ss.TEMPLET_NAME LIKE '%${templetName}%'
+		</if>
+		<if test="type!=null and type!=''">
+			 and   ss.TYPE  = '${type}'
+		</if>
+		
+		${end}
+	</select>
+	
+	
+	 <select id="getStoreTemplateById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.store.StoreTemplate">
+  
+		SELECT 
+			<include refid="Base_Column_List" />
+		 FROM T_STORE_TEMPLET 	 ss
+		 where TEMPLET_NO=#{templetNo,jdbcType=VARCHAR}
+		
+	</select>   
+	
+		
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_STORE_TEMPLET  
+		WHERE 1=1		
+		<if test="templetName!=null and templetName!=''">
+			 and  TEMPLET_NAME  LIKE '%${templetName}%'
+		</if>
+		<if test="type!=null and type!=''">
+			 and  TYPE  = '${type}'
+		</if>
+	</select>
+	
+
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.store.StoreTemplate" >
+	     insert into T_STORE_TEMPLET (ID, TEMPLET_NO, TEMPLET_NAME, 
+      CREATOR, CREATE_DATE, REMARK,TYPE, CREATORID
+      )
+    values (#{id,jdbcType=VARCHAR}, #{templetNo,jdbcType=VARCHAR}, #{templetName,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=VARCHAR}, sysdate, #{remark,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{creatorId,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.store.StoreTemplate">
+	   update T_STORE_TEMPLET
+   		 set 
+      TEMPLET_NAME = #{templetName,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_DATE = sysdate,
+      REMARK = #{remark,jdbcType=VARCHAR},
+       CREATORID=#{creatorId,jdbcType=VARCHAR},
+		TYPE=#{type,jdbcType=VARCHAR}
+		WHERE ID='${id}'
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORE_TEMPLET
+		WHERE  ID=#{id,jdbcType=VARCHAR}
+	</delete>
+	
+  
+</mapper>

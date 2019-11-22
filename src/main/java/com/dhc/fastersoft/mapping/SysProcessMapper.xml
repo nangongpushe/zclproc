@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.system.SysProcessMapperDao">
+	<resultMap id="sysProcessMapperMap" type="com.dhc.fastersoft.entity.system.SysProcessMapper">
+		<id column="PROCESS_ID" property="processId" jdbcType="VARCHAR" />
+		<result column="BUSSINESS_ID" property="bussinessId" jdbcType="VARCHAR" />
+		<result column="TABLE_MAPPER" property="tableMapper" jdbcType="VARCHAR" />
+		<result column="FIELD_NAME" property="fieldName" jdbcType="VARCHAR" />
+		<result column="FIELD_VALUE" property="fieldValue" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="columns">
+		PROCESS_ID,BUSSINESS_ID,TABLE_MAPPER,FIELD_NAME,FIELD_VALUE
+	</sql>
+	
+	<insert id="AddSysProcessMapper" parameterType="com.dhc.fastersoft.entity.system.SysProcessMapper">
+		INSERT INTO T_SYS_PROCESS_MAPPER(<include refid="columns"/>)
+		VALUES(
+			#{processId},#{bussinessId},#{tableMapper},#{fieldName},#{fieldValue}
+		)
+	</insert>
+
+	<select id="GetSysProcessMapper" parameterType="HashMap" resultMap="sysProcessMapperMap">
+		SELECT <include refid="columns"/> FROM T_SYS_PROCESS_MAPPER
+		<where>
+
+			<if test="processId != null and processId !=''">
+				PROCESS_ID = #{processId}
+			</if>
+			<if test="bussinessId != null and bussinessId !=''">
+				BUSSINESS_ID = #{bussinessId}
+			</if>
+			<if test="tableMapper != null and tableMapper !=''">
+				and TABLE_MAPPER = #{tableMapper}
+			</if>
+			<if test="fieldName != null and fieldName !=''">
+				and FIELD_NAME = #{fieldName}
+			</if>
+			<if test="fieldValue != null and fieldValue !=''">
+				and FIELD_VALUE = #{fieldValue}
+			</if>
+		</where>
+		and rownum = 1
+	</select>
+
+	<delete id="delete" parameterType="java.lang.String">
+
+		DELETE FROM T_SYS_PROCESS_MAPPER
+		<where>
+
+			<if test="processId != null and processId !=''">
+				PROCESS_ID = #{processId}
+			</if>
+			<if test="bussinessId != null and bussinessId !=''">
+				BUSSINESS_ID = #{bussinessId}
+			</if>
+
+		</where>
+
+	</delete>
+</mapper>

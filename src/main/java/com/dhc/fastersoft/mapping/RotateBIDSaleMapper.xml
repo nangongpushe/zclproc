@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateBIDSaleDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateBIDSale" id="rotateBIDSaleResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="bidID" column="BID_ID" jdbcType="NVARCHAR" />
+		<result property="schemeID" column="SCHEME_ID" jdbcType="NVARCHAR" />
+		<result property="schemeName" column="SCHEME_NAME" jdbcType="NVARCHAR" />
+		<result property="bidSerial" column="BID_SERIAL" jdbcType="NVARCHAR" />
+		<result property="total" column="TOTAL" jdbcType="INTEGER" />
+		<result property="grainType" column="GRAIN_TYPE" jdbcType="NVARCHAR" />
+		<result property="produceArea" column="PRODUCE_AREA" jdbcType="NVARCHAR" />
+		<result property="warehouseYear" column="WAREHOUE_YEAR" jdbcType="NVARCHAR" />
+		<result property="storageType" column="STORAGE_TYPE" jdbcType="NVARCHAR" />
+		<result property="takeStart" column="TAKE_START" jdbcType="NVARCHAR" />
+		<result property="takeEnd" column="TAKE_END" jdbcType="NVARCHAR" />
+		<result property="deliveryPlace" column="DELIVERY_PLACE" jdbcType="NVARCHAR" />
+		<result property="unitWeight" column="UNIT_WEIGHT" jdbcType="NVARCHAR" />
+		<result property="unsoundGrain" column="UNSOUND_GRAIN" jdbcType="NVARCHAR" />
+		<result property="impurity" column="IMPURITY" jdbcType="NVARCHAR" />
+		<result property="mineral" column="MINERAL" jdbcType="NVARCHAR" />
+		<result property="dew" column="DEW" jdbcType="NVARCHAR" />
+		<result property="hardness" column="HARDNESS" jdbcType="NVARCHAR" />
+		<result property="tincture" column="TINCTURE" jdbcType="NVARCHAR" />
+		<result property="smell" column="SMELL" jdbcType="NVARCHAR" />
+		<result property="waterAbsorption" column="WATER_ABSORPTION" jdbcType="NVARCHAR" />
+		<result property="tastingScore" column="TASTING_SCORE" jdbcType="NVARCHAR" />
+		<result property="AFB1" column="AFB1" jdbcType="NVARCHAR" />
+		<result property="fusariumSolani" column="FUSARIUM_SOLANI" jdbcType="NVARCHAR" />
+		<result property="zearalenone" column="ZEARALENONE" jdbcType="NVARCHAR" />
+		<result property="storageQuality" column="STORAGE_QUALITY" jdbcType="NVARCHAR" />
+		<result property="storehouse" column="STORE_HOUSE" jdbcType="NVARCHAR" />
+		<result property="wareHouseId" column="WAREHOUSE_ID" jdbcType="NVARCHAR" />
+		<result property="planLevel" column="PLANLEVEL" jdbcType="NVARCHAR" />
+
+		<result property="lead" column="LEAD" jdbcType="NVARCHAR" />
+		<result property="chromium" column="CHROMIUM" jdbcType="NVARCHAR" />
+		<result property="mercury" column="MERCURY" jdbcType="NVARCHAR" />
+		<result property="arsenic" column="ARSENIC" jdbcType="NVARCHAR" />
+		<result property="inorganicArsenic" column="INORGANIC_ARSENIC" jdbcType="NVARCHAR" />
+		<result property="brownRiceRecovery" column="BROWN_RICE_RECOVERY" jdbcType="NVARCHAR" />
+		<result property="adulteration" column="ADULTERATION" jdbcType="NVARCHAR" />
+		<result property="huskedRiceInPeddy" column="HUSKED_RICE_IN_PEDDY" jdbcType="NVARCHAR" />
+		<result property="yellowColouredRice" column="YELLOW_COLOURED_RICE" jdbcType="NVARCHAR" />
+		<result property="headRice" column="HEAD_RICE" jdbcType="NVARCHAR" />
+		<result property="fattyAcid" column="FATTY_ACID" jdbcType="NVARCHAR" />
+		<result property="dimethoate" column="DIMETHOATE" jdbcType="NVARCHAR" />
+		<result property="triazophos" column="TRIAZOPHOS" jdbcType="NVARCHAR" />
+		<result property="dursban" column="DURSBAN" jdbcType="NVARCHAR" />
+		<result property="isocarbophos" column="ISOCARBOPHOS" jdbcType="NVARCHAR" />
+		<result property="malathion" column="MALATHION" jdbcType="NVARCHAR" />
+		<result property="odour" column="ODOUR" jdbcType="NVARCHAR" />
+		<result property="moistureAndVolatileMatter" column="MOISTURE_AND_VOLATILE_MATTER" jdbcType="NVARCHAR" />
+		<result property="insolubleImpurities" column="INSOLUBLE_IMPURITIES" jdbcType="NVARCHAR" />
+		<result property="heatingTest" column="HEATING_TEST" jdbcType="NVARCHAR" />
+		<result property="acidValue" column="ACID_VALUE" jdbcType="NVARCHAR" />
+		<result property="peroxideValue" column="PEROXIDE_VALUE" jdbcType="NVARCHAR" />
+		<result property="residualSolvent" column="RESIDUAL_SOLVENT" jdbcType="NVARCHAR" />
+		<result property="palmiticAcid" column="PALMITIC_ACID" jdbcType="NVARCHAR" />
+		<result property="stearicAcid" column="STEARIC_ACID" jdbcType="NVARCHAR" />
+		<result property="oleicAcid" column="OLEIC_ACID" jdbcType="NVARCHAR" />
+		<result property="linoleicAcid" column="LINOLEIC_ACID" jdbcType="NVARCHAR" />
+		<result property="linolenicAcid" column="LINOLENIC_ACID" jdbcType="NVARCHAR" />
+		<result property="arachidicAcid" column="ARACHIDIC_ACID" jdbcType="NVARCHAR" />
+		<result property="arachidicOneAcid" column="ARACHIDIC_ONE_ACID" jdbcType="NVARCHAR" />
+		<result property="erucicAcid" column="ERUCIC_ACID" jdbcType="NVARCHAR" />
+		<result property="specificGravity" column="SPECIFIC_GRAVITY" jdbcType="NVARCHAR" />
+
+	</resultMap>
+</mapper>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.system.SysPermissionDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.system.SysPermission" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="SORT" property="sort" jdbcType="DECIMAL" />
+    <result column="NOTE" property="note" jdbcType="VARCHAR" />
+    <result column="MENU_LEVEL" property="menuLevel" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, TYPE, URL, to_char(CREATE_TIME,'yyyy-MM-dd') CREATE_TIME, STATUS, PARENT_ID, SORT, NOTE, MENU_LEVEL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_PERMISSION
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_SYS_PERMISSION
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.system.SysPermission" >
+    insert into T_SYS_PERMISSION (ID, NAME, PARENT_ID, TYPE, 
+      URL, CREATE_TIME, STATUS, SORT, NOTE, MENU_LEVEL
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, sysdate, #{status,jdbcType=DECIMAL},#{sort,jdbcType=DECIMAL},#{note,jdbcType=VARCHAR}
+      ,#{menuLevel,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.system.SysPermission" >
+    insert into T_SYS_PERMISSION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="sort != null" >
+        SORT,
+      </if>
+      <if test="note != null" >
+        NOTE,
+      </if>
+      <if test="menuLevel != null" >
+        MENU_LEVEL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        sysdate,
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="menuLevel != null" >
+        #{menuLevel,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.system.SysPermission" >
+    update T_SYS_PERMISSION
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = sysdate,
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        NOTE = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="menuLevel != null" >
+        MENU_LEVEL = #{menuLevel,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.system.SysPermission" >
+    update T_SYS_PERMISSION
+      set NAME = #{name,jdbcType=VARCHAR},
+   	  PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=DECIMAL},
+      SORT = #{sort,jdbcType=DECIMAL},
+      NOTE = #{note,jdbcType=VARCHAR},
+      MENU_LEVEL = #{menuLevel,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+    <!-- 根据用ID查询permission -->
+  <select id="findPermissionByUserId" resultType="java.lang.String">
+  		select p.url from t_sys_permission p , t_sys_role_permission rp, t_sys_user_role ur 
+		where ur.USER_ID =#{id,jdbcType=VARCHAR} and p.id = rp.PERMISSION_ID and rp.ROLE_ID = ur.ROLE_ID
+  </select>
+  
+  
+  <select id="pageQuery" parameterType="java.util.HashMap"
+		resultMap="BaseResultMap">
+		${start} SELECT 
+		<include refid="Base_Column_List" />
+		from t_sys_permission
+		<where>
+			<if test="name!=null and name!=''">
+				and NAME LIKE '%${name}%'
+			</if>
+			<if test="type!=null and type!=''">
+				AND TYPE LIKE '%${type}%'
+			</if>
+			<if test="perId!=null and perId!=''">
+				and (ID = #{perId} OR PARENT_ID= #{perId})
+			</if>
+		</where>
+		ORDER BY SORT ASC,CREATE_TIME DESC nulls last,ID asc
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM t_sys_permission
+		<where>
+			<if test="name!=null and name!=''">
+				and NAME LIKE '%${name}%'
+			</if>
+			<if test="type!=null and type!=''">
+				AND TYPE LIKE '%${type}%'
+			</if>
+			<if test="perId!=null and perId!=''">
+				and (ID = #{perId} OR PARENT_ID= #{perId})
+			</if>
+		</where>
+	</select>
+	
+  <insert id="saveRolePermission" parameterType="java.util.HashMap" >
+    insert into t_sys_role_permission (ID, ROLE_ID, PERMISSION_ID
+      )
+    values (#{id,jdbcType=VARCHAR},#{roleId,jdbcType=VARCHAR}, #{permissionId,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+     <select id="selectAll"
+		resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		from t_sys_permission
+		ORDER BY SORT ASC nulls last
+	</select>
+	
+   <select id="selectRolePermission"
+		resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT 
+		p.ID, p.NAME, p.TYPE, p.URL, p.CREATE_TIME, p.STATUS
+		from t_sys_permission p,t_sys_role_permission rp 
+		where  rp.ROLE_ID = #{roleId,jdbcType=VARCHAR} AND p.id = rp.permission_ID
+	</select>
+ 
+    <delete id="deleteRolePermission" parameterType="java.lang.String" >
+	    delete from t_sys_role_permission
+	    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+	  </delete>
+	  
+ 	<select id="selectByUrl" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM t_sys_permission
+		WHERE URL like '%${_parameter}%' AND rownum = 1
+	</select> 
+</mapper>

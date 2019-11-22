@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.report.ReportBzwDao" >
+  <resultMap id="ReportBzwResultMap" type="com.dhc.fastersoft.entity.report.ReportBzw" >
+    <id column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="REPORT_MONTH" property="reportMonth" jdbcType="VARCHAR" />
+    <result column="REPORT_WAREHOUSE" property="reportWarehouse" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="MANAGE_PROPERTY" property="manageProperty" jdbcType="VARCHAR" />
+    <result column="PACKAGE_PROPERTY" property="packageProperty" jdbcType="VARCHAR" />
+    <result column="BIAOXIN" property="biaoxin" jdbcType="DECIMAL" />
+    <result column="BIAOJIU" property="biaojiu" jdbcType="DECIMAL" />
+    <result column="STOREHOUSE" property="storehouse" jdbcType="VARCHAR" />
+    <result column="SUBTOTAL" property="subtotal" jdbcType="DECIMAL" />
+    <result column="ORDERNUM" property="ordernum" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ZADAI" property="zadai" jdbcType="DECIMAL" />
+    <result column="FEIDAI" property="feidai" jdbcType="DECIMAL" />
+    <result column="REPORT_WAREHOUSE_ID" property="reportWarehouseId" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <sql id="columns" >
+    REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE, REPORT_NAME, MANAGE_PROPERTY, PACKAGE_PROPERTY, 
+    BIAOXIN, BIAOJIU, STOREHOUSE, SUBTOTAL, REMARK, ORDERNUM, ZADAI, FEIDAI, REPORT_WAREHOUSE_ID
+  </sql>
+
+  <sql id="columns1" >
+    tb.REPORT_ID, tb.REPORT_MONTH, tw.WAREHOUSE_SHORT AS REPORT_WAREHOUSE, tb.REPORT_NAME, tb.MANAGE_PROPERTY, tb.PACKAGE_PROPERTY,
+    tb.BIAOXIN, tb.BIAOJIU, tb.STOREHOUSE, tb.SUBTOTAL, tb.REMARK, tb.ORDERNUM, tb.ZADAI, tb.FEIDAI,tb.REPORT_WAREHOUSE_ID
+  </sql>
+
+  <sql id="tablename">T_REPORT_MONTH_BZW</sql>
+
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.report.ReportBzw" >
+    insert into <include refid="tablename"/> ( <include refid="columns"/> )
+    values (#{reportId,jdbcType=VARCHAR}, #{reportMonth,jdbcType=VARCHAR}, #{reportWarehouse,jdbcType=VARCHAR}, 
+      #{reportName,jdbcType=VARCHAR}, #{manageProperty,jdbcType=VARCHAR}, #{packageProperty,jdbcType=VARCHAR}, 
+      #{biaoxin,jdbcType=DECIMAL}, #{biaojiu,jdbcType=DECIMAL}, #{storehouse,jdbcType=DECIMAL},
+      #{subtotal,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{ordernum,jdbcType=DECIMAL},
+      #{zadai,jdbcType=DECIMAL}, #{feidai,jdbcType=DECIMAL}, #{reportWarehouseId,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="listBzwByMonthHouse" parameterType="HashMap" resultMap="ReportBzwResultMap">
+    SELECT <include refid="columns"/> FROM <include refid="tablename"/>
+    WHERE REPORT_MONTH = #{reportMonth} AND REPORT_WAREHOUSE = #{reportWarehouse} ORDER BY MANAGE_PROPERTY
+  </select>
+
+  <delete id="deleteByMonthHouse" parameterType="HashMap">
+    DELETE FROM <include refid="tablename"/> WHERE
+    REPORT_MONTH=#{reportMonth} AND REPORT_WAREHOUSE = #{reportWarehouse}
+  </delete>
+
+  <select id="listBzwByReportId" parameterType="String" resultMap="ReportBzwResultMap">
+    SELECT <include refid="columns1"/> FROM <include refid="tablename"/> tb
+    LEFT JOIN T_STORAGE_WAREHOUSE tw ON tb.REPORT_WAREHOUSE_ID = tw.ID
+    WHERE tb.REPORT_ID = #{reportId} ORDER BY ORDERNUM
+  </select>
+
+  <delete id="deleteByReportId" parameterType="String">
+    DELETE FROM T_REPORT_MONTH_BZW WHERE REPORT_ID=#{reportId}
+  </delete>
+
+  <insert id="summary" parameterType="com.dhc.fastersoft.entity.report.ReportMonth" >
+    INSERT INTO <include refid="tablename"/> (REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE, REPORT_NAME, MANAGE_PROPERTY, PACKAGE_PROPERTY,
+    GRAIN_SACK, TRANSPORT_SACK, EMPTY_SACK, SUBTOTAL)
+    SELECT #{id},#{reportMonth},#{reportWarehouse},#{reportName},MANAGE_PROPERTY,PACKAGE_PROPERTY,SUM(nvl(GRAIN_SACK,0)),SUM(nvl(TRANSPORT_SACK,0)),SUM(nvl(EMPTY_SACK,0)),SUM(nvl(SUBTOTAL,0))
+    FROM <include refid="tablename"/>
+    WHERE REPORT_ID IN (${reportIds}) GROUP BY MANAGE_PROPERTY,PACKAGE_PROPERTY
+  </insert>
+
+  <select id="listSumBzw" parameterType="Map" resultMap="ReportBzwResultMap">
+    SELECT report_warehouse,SUM(nvl(BIAOXIN,0)) biaoxin,SUM(nvl(BIAOJIU,0)) biaojiu FROM <include refid="tablename"/>
+    WHERE REPORT_ID IN (${reportIds}) 
+    <if test="packageProperty != null and packageProperty != ''">
+      AND PACKAGE_PROPERTY=#{packageProperty}
+    </if>
+    GROUP BY report_warehouse ORDER BY report_warehouse
+  </select>
+  <select id="listSumBzw1" parameterType="Map" resultMap="ReportBzwResultMap">
+    SELECT SUM(nvl(BIAOXIN,0)) biaoxin,SUM(nvl(BIAOJIU,0)) biaojiu,SUM(nvl(ZADAI,0)) zadai,SUM(nvl(FEIDAI,0)) feidai FROM <include refid="tablename"/>
+    WHERE REPORT_ID = #{reportIds}
+    <if test="packageProperty != null and packageProperty != ''">
+      AND PACKAGE_PROPERTY=#{packageProperty}
+    </if>
+  </select>
+
+  <select id="listSumBzwByReportId" parameterType="String" resultMap="ReportBzwResultMap">
+    SELECT package_property,SUM(nvl(BIAOXIN,0)) biaoxin,SUM(nvl(BIAOJIU,0)) biaojiu,SUM(nvl(ZADAI,0)) zadai,SUM(nvl(FEIDAI,0)) feidai,SUM(nvl(SUBTOTAL,0))subtotal  FROM t_report_month_bzw WHERE report_id=#{reportId} GROUP BY package_property
+  </select>
+</mapper>

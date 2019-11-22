@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StorageFumigateDao">
+	<resultMap type="com.dhc.fastersoft.entity.store.StorageFumigate" id="StorageFumigateResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="serial" column="SERIAL" jdbcType="VARCHAR" />
+		<result property="warehouse" column="WAREHOUSE" jdbcType="VARCHAR" />
+		<result property="warehouseId" column="WAREHOUSE_ID" jdbcType="VARCHAR"/>
+		<result property="weather" column="WEATHER" jdbcType="VARCHAR" />
+		<result property="temperature" column="TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="humidity" column="HUMIDITY" jdbcType="VARCHAR" />
+		<result property="storehouse" column="STOREHOUSE" jdbcType="VARCHAR" />
+		<result property="storehouseType" column="STOREHOUSE_TYPE" jdbcType="VARCHAR" />
+		<result property="storehouseStructure" column="STOREHOUSE_STRUCTURE" jdbcType="VARCHAR" />
+		<result property="storehouseVolume" column="STOREHOUSE_VOLUME" jdbcType="VARCHAR" />
+		<result property="stack" column="STACK" jdbcType="VARCHAR" />
+		<result property="gas" column="GAS" jdbcType="VARCHAR" />
+		<result property="sealing" column="SEALING" jdbcType="VARCHAR" />
+		<result property="storeDate" column="STORE_DATE" jdbcType="DATE" />
+		<result property="grainVolume" column="GRAIN_VOLUME" jdbcType="VARCHAR" />
+		<result property="spaceVolume" column="SPACE_VOLUME" jdbcType="VARCHAR" />
+		<result property="grainHeight" column="GRAIN_HEIGHT" jdbcType="VARCHAR" />
+		<result property="isFumigateLastYear" column="IS_FUMIGATE_LAST_YEAR" jdbcType="VARCHAR" />
+		<result property="grainType" column="GRAIN_TYPE" jdbcType="VARCHAR" />
+		<result property="realQuantity" column="REAL_QUANTITY" jdbcType="VARCHAR" />
+		<result property="impurity" column="IMPURITY" jdbcType="VARCHAR" />
+		<result property="storageTemperature" column="STORAGE_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="storageHumidity" column="STORAGE_HUMIDITY" jdbcType="VARCHAR" />
+		<result property="dew" column="DEW" jdbcType="VARCHAR" />
+		<result property="maxGrainTemperature" column="MAX_GRAIN_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="minGrainTemperature" column="MIN_GRAIN_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="averageGrainTemperature" column="AVERAGE_GRAIN_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="maxPestDensity" column="MAX_PEST_DENSITY" jdbcType="VARCHAR" />
+		<result property="among" column="AMONG" jdbcType="VARCHAR" />
+		<result property="discoverySite" column="DISCOVERY_SITE" jdbcType="VARCHAR" />
+		<result property="discoveryDate" column="DISCOVERY_DATE" jdbcType="DATE" />
+		<result property="drugName" column="DRUG_NAME" jdbcType="VARCHAR" />
+		<result property="personNumber" column="PERSON_NUMBER" jdbcType="VARCHAR" />
+		<result property="drugMethod" column="DRUG_METHOD" jdbcType="VARCHAR" />
+		<result property="fumigateType" column="FUMIGATE_TYPE" jdbcType="VARCHAR" />
+		<result property="unitDrugSpace" column="UNIT_DRUG_SPACE" jdbcType="VARCHAR" />
+		<result property="unitDrugGrain" column="UNIT_DRUG_GRAIN" jdbcType="VARCHAR" />
+		<result property="totalDrugSpace" column="TOTAL_DRUG_SPACE" jdbcType="VARCHAR" />
+		<result property="totalDrugGrain" column="TOTAL_DRUG_GRAIN" jdbcType="VARCHAR" />
+		<result property="applyDrugTime" column="APPLY_DRUG_TIME" jdbcType="VARCHAR" />
+		<result property="firstSupplyDate" column="FIRST_SUPPLY_DATE" jdbcType="DATE" />
+		<result property="firstSupplyQuantity" column="FIRST_SUPPLY_QUANTITY" jdbcType="VARCHAR" />
+		<result property="firstSupplyOperateTime" column="FIRST_SUPPLY_OPERATE_TIME" jdbcType="VARCHAR" />
+		<result property="supplyType" column="SUPPLY_TYPE" jdbcType="VARCHAR" />
+		<result property="isMultiSupply" column="IS_MULTI_SUPPLY" jdbcType="VARCHAR" />
+		<result property="totalSupplyCount" column="TOTAL_SUPPLY_COUNT" jdbcType="VARCHAR" />
+		<result property="totalSupplyQuantity" column="TOTAL_SUPPLY_QUANTITY" jdbcType="VARCHAR" />
+		
+		<result property="circulationType" column="CIRCULATION_TYPE" jdbcType="VARCHAR" />
+		<result property="totalCirculationTime" column="TOTAL_CIRCULATION_TIME" jdbcType="VARCHAR" />
+		<result property="releaseGasDate" column="RELEASE_GAS_DATE" jdbcType="DATE" />
+		<result property="releaseGasType" column="RELEASE_GAS_TYPE" jdbcType="VARCHAR" />
+		<result property="releaseGasTime" column="RELEASE_GAS_TIME" jdbcType="VARCHAR" />
+		<result property="draffDeal" column="DRAFF_DEAL" jdbcType="VARCHAR" />
+		<result property="drugPackageDeal" column="DRUG_PACKAGE_DEAL" jdbcType="VARCHAR" />
+		<result property="effectCheck" column="EFFECT_CHECK" jdbcType="VARCHAR" />
+		<result property="storeMan" column="STORE_MAN" jdbcType="VARCHAR" />
+		<result property="storeKeeper" column="STORE_KEEPER" jdbcType="VARCHAR" />
+		<result property="fumigateOperator" column="FUMIGATE_OPERATOR" jdbcType="VARCHAR" />
+		<result property="fumigateCommander" column="FUMIGATE_COMMANDER" jdbcType="VARCHAR" />
+		<result property="unitChargeMan" column="UNIT_CHARGE_MAN" jdbcType="VARCHAR" />
+		<result property="supervisor" column="SUPERVISOR" jdbcType="VARCHAR" />
+		<result property="storeChargeMan" column="STORE_CHARGE_MAN" jdbcType="VARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="reportTime" column="REPORT_TIME" jdbcType="TIMESTAMP" />
+
+		<result property="totalSupplyDosage" column="TOTAL_SUPPLY_DOSAGE" jdbcType="VARCHAR" />
+		<result property="totalCirculationStarttime" column="TOTAL_CIRCULATION_STARTTIME" jdbcType="VARCHAR" />
+		<result property="totalCirculationEndtime" column="TOTAL_CIRCULATION_ENDTIME" jdbcType="VARCHAR" />
+		<result column="CREATORID" jdbcType="VARCHAR" property="creatorId" />
+	</resultMap>
+
+	<sql id="columns_main">
+		"ID",
+		"SERIAL",
+		"WAREHOUSE",
+		"WAREHOUSE_ID",
+		"WEATHER",
+		"TEMPERATURE",
+		"HUMIDITY",
+		"STOREHOUSE",
+		"STOREHOUSE_TYPE",
+		"STOREHOUSE_STRUCTURE",
+		"STOREHOUSE_VOLUME",
+		"STACK",
+		"GAS",
+		"SEALING",
+		"STORE_DATE",
+		"GRAIN_VOLUME",
+		"SPACE_VOLUME",
+		"GRAIN_HEIGHT",
+		"IS_FUMIGATE_LAST_YEAR",
+		"GRAIN_TYPE",
+		"REAL_QUANTITY",
+		"IMPURITY",
+		"STORAGE_TEMPERATURE",
+		"STORAGE_HUMIDITY",
+		"DEW",
+		"MAX_GRAIN_TEMPERATURE",
+		"MIN_GRAIN_TEMPERATURE",
+		"AVERAGE_GRAIN_TEMPERATURE",
+		"MAX_PEST_DENSITY",
+		"AMONG",
+		"DISCOVERY_SITE",
+		"DISCOVERY_DATE",
+		"DRUG_NAME",
+		"PERSON_NUMBER",
+		"DRUG_METHOD",
+		"FUMIGATE_TYPE",
+		"UNIT_DRUG_SPACE",
+		"UNIT_DRUG_GRAIN",
+		"TOTAL_DRUG_SPACE",
+		"TOTAL_DRUG_GRAIN",
+		"APPLY_DRUG_TIME",
+		"FIRST_SUPPLY_DATE",
+		"FIRST_SUPPLY_QUANTITY",
+		"FIRST_SUPPLY_OPERATE_TIME",
+		"SUPPLY_TYPE",
+		"IS_MULTI_SUPPLY",
+		"TOTAL_SUPPLY_COUNT",
+		"TOTAL_SUPPLY_QUANTITY",
+		"CIRCULATION_TYPE",
+		"TOTAL_CIRCULATION_TIME",
+		"RELEASE_GAS_DATE",
+		"RELEASE_GAS_TYPE",
+		"RELEASE_GAS_TIME",
+		"DRAFF_DEAL",
+		"DRUG_PACKAGE_DEAL",
+		"EFFECT_CHECK",
+		"STORE_MAN",
+		"STORE_KEEPER",
+		"FUMIGATE_OPERATOR",
+		"FUMIGATE_COMMANDER",
+		"UNIT_CHARGE_MAN",
+		"SUPERVISOR",
+		"STORE_CHARGE_MAN",
+		"REMARK",
+		"REPORT_TIME",
+		"TOTAL_SUPPLY_DOSAGE",
+		"TOTAL_CIRCULATION_STARTTIME",
+		"TOTAL_CIRCULATION_ENDTIME",
+		"CREATORID"
+	</sql>
+	<sql id="columns_mains">
+	  	sf.ID,
+       sf.SERIAL,
+       t.WAREHOUSE_SHORT AS WAREHOUSE,
+       sf.WAREHOUSE_ID,
+       sf.WEATHER,
+       sf.TEMPERATURE,
+       sf.HUMIDITY,
+       sf.STOREHOUSE,
+       sf.STOREHOUSE_TYPE,
+       sf.STOREHOUSE_STRUCTURE,
+       sf.STOREHOUSE_VOLUME,
+       sf.STACK,
+       sf.GAS,
+       sf.SEALING,
+       sf.STORE_DATE,
+       sf.GRAIN_VOLUME,
+       sf.SPACE_VOLUME,
+       sf.GRAIN_HEIGHT,
+       sf.IS_FUMIGATE_LAST_YEAR,
+       sf.GRAIN_TYPE,
+       sf.REAL_QUANTITY,
+       sf.IMPURITY,
+       sf.STORAGE_TEMPERATURE,
+       sf.STORAGE_HUMIDITY,
+       sf.DEW,
+       sf.MAX_GRAIN_TEMPERATURE,
+       sf.MIN_GRAIN_TEMPERATURE,
+       sf.AVERAGE_GRAIN_TEMPERATURE,
+       sf.MAX_PEST_DENSITY,
+       sf.AMONG,
+       sf.DISCOVERY_SITE,
+       sf.DISCOVERY_DATE,
+       sf.DRUG_NAME,
+       sf.PERSON_NUMBER,
+       sf.DRUG_METHOD,
+       sf.FUMIGATE_TYPE,
+       sf.UNIT_DRUG_SPACE,
+       sf.UNIT_DRUG_GRAIN,
+       sf.TOTAL_DRUG_SPACE,
+       sf.TOTAL_DRUG_GRAIN,
+       sf.APPLY_DRUG_TIME,
+       sf.FIRST_SUPPLY_DATE,
+       sf.FIRST_SUPPLY_QUANTITY,
+       sf.FIRST_SUPPLY_OPERATE_TIME,
+       sf.SUPPLY_TYPE,
+       sf.IS_MULTI_SUPPLY,
+       sf.TOTAL_SUPPLY_COUNT,
+       sf.TOTAL_SUPPLY_QUANTITY,
+       sf.CIRCULATION_TYPE,
+       sf.TOTAL_CIRCULATION_TIME,
+       sf.RELEASE_GAS_DATE,
+       sf.RELEASE_GAS_TYPE,
+       sf.RELEASE_GAS_TIME,
+       sf.DRAFF_DEAL,
+       sf.DRUG_PACKAGE_DEAL,
+       sf.EFFECT_CHECK,
+       sf.STORE_MAN,
+       sf.STORE_KEEPER,
+       sf.FUMIGATE_OPERATOR,
+       sf.FUMIGATE_COMMANDER,
+       sf.UNIT_CHARGE_MAN,
+       sf.SUPERVISOR,
+       sf.STORE_CHARGE_MAN,
+       sf.REMARK,
+       sf.REPORT_TIME,
+       sf.TOTAL_SUPPLY_DOSAGE,
+       sf.TOTAL_CIRCULATION_STARTTIME,
+       sf.TOTAL_CIRCULATION_ENDTIME,
+       sf.CREATORID
+	</sql>
+
+	<sql id="table_main"> T_STORAGE_FUMIGATE </sql>
+	
+	
+	
+	<!-- 添加 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.store.StorageFumigate">
+		INSERT INTO
+		<include refid="table_main" />
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(
+		#{id},#{serial},#{warehouse},#{warehouseId},
+		#{weather},#{temperature},#{humidity},
+		#{storehouse},#{storehouseType},#{storehouseStructure,jdbcType=VARCHAR},
+		#{storehouseVolume,jdbcType=VARCHAR},#{stack,jdbcType=VARCHAR},#{gas,jdbcType=VARCHAR},
+		#{sealing,jdbcType=VARCHAR},#{storeDate},#{grainVolume,jdbcType=VARCHAR},
+		#{spaceVolume,jdbcType=VARCHAR},#{grainHeight,jdbcType=VARCHAR},#{isFumigateLastYear},
+		#{grainType},#{realQuantity},#{impurity},
+		#{storageTemperature},#{storageHumidity},#{dew},
+		#{maxGrainTemperature},#{minGrainTemperature},#{averageGrainTemperature},
+		#{maxPestDensity},#{among},#{discoverySite},
+		#{discoveryDate},#{drugName},#{personNumber},
+		#{drugMethod},#{fumigateType},#{unitDrugSpace},
+		#{unitDrugGrain},#{totalDrugSpace},#{totalDrugGrain},
+		#{applyDrugTime},#{firstSupplyDate,jdbcType=DATE},#{firstSupplyQuantity,jdbcType=VARCHAR},
+		#{firstSupplyOperateTime,jdbcType=VARCHAR},#{supplyType,jdbcType=VARCHAR},#{isMultiSupply,jdbcType=VARCHAR},
+		#{totalSupplyCount,jdbcType=VARCHAR},#{totalSupplyQuantity,jdbcType=VARCHAR},#{circulationType},
+		#{totalCirculationTime},#{releaseGasDate},#{releaseGasType},
+		#{releaseGasTime},#{draffDeal,jdbcType=VARCHAR},#{drugPackageDeal,jdbcType=VARCHAR},
+		#{effectCheck,jdbcType=VARCHAR},#{storeMan},#{storeKeeper},
+		#{fumigateOperator},#{fumigateCommander},#{unitChargeMan},
+		#{supervisor},#{storeChargeMan},#{remark,jdbcType=VARCHAR},
+		#{reportTime},
+		#{totalSupplyDosage,jdbcType=VARCHAR},#{totalCirculationStarttime,jdbcType=VARCHAR},#{totalCirculationEndtime,jdbcType=VARCHAR},
+		#{creatorId,jdbcType=VARCHAR}
+		)
+	</insert>
+
+
+	<update id="update" parameterType="com.dhc.fastersoft.entity.store.StorageFumigate">
+		UPDATE
+		<include refid="table_main" />
+		SET
+		"WAREHOUSE" = #{warehouse},
+		"WAREHOUSE_ID" = #{warehouseId},
+		"WEATHER" = #{weather},
+		"TEMPERATURE" = #{temperature},
+		"HUMIDITY" = #{humidity},
+		"STOREHOUSE" = #{storehouse},
+		"STOREHOUSE_TYPE" = #{storehouseType},
+		"STOREHOUSE_STRUCTURE" = #{storehouseStructure,jdbcType=VARCHAR},
+		"STOREHOUSE_VOLUME" = #{storehouseVolume,jdbcType=VARCHAR},
+		"STACK" = #{stack,jdbcType=VARCHAR},
+		"GAS" = #{gas,jdbcType=VARCHAR},
+		"SEALING" = #{sealing,jdbcType=VARCHAR},
+		"STORE_DATE" = #{storeDate},
+		"GRAIN_VOLUME" = #{grainVolume,jdbcType=VARCHAR},
+		"SPACE_VOLUME" = #{spaceVolume,jdbcType=VARCHAR},
+		"GRAIN_HEIGHT" = #{grainHeight,jdbcType=VARCHAR},
+		"IS_FUMIGATE_LAST_YEAR" = #{isFumigateLastYear},
+		"GRAIN_TYPE" = #{grainType},
+		"REAL_QUANTITY" = #{realQuantity},
+		"IMPURITY" = #{impurity},
+		"STORAGE_TEMPERATURE" = #{storageTemperature},
+		"STORAGE_HUMIDITY" = #{storageHumidity},
+		"DEW" = #{dew},
+		"MAX_GRAIN_TEMPERATURE" = #{maxGrainTemperature},
+		"MIN_GRAIN_TEMPERATURE" = #{minGrainTemperature},
+		"AVERAGE_GRAIN_TEMPERATURE" = #{averageGrainTemperature},
+		"MAX_PEST_DENSITY" = #{maxPestDensity},
+		"AMONG" = #{among},
+		"DISCOVERY_SITE" = #{discoverySite},
+		"DISCOVERY_DATE" = #{discoveryDate},
+		"DRUG_NAME" = #{drugName},
+		"PERSON_NUMBER" = #{personNumber},
+		"DRUG_METHOD" = #{drugMethod},
+		"FUMIGATE_TYPE" = #{fumigateType},
+		"UNIT_DRUG_SPACE" = #{unitDrugSpace},
+		"UNIT_DRUG_GRAIN" = #{unitDrugGrain},
+		"TOTAL_DRUG_SPACE" = #{totalDrugSpace},
+		"TOTAL_DRUG_GRAIN" = #{totalDrugGrain},
+		"APPLY_DRUG_TIME" = #{applyDrugTime},
+		"FIRST_SUPPLY_DATE" = #{firstSupplyDate,jdbcType=DATE},
+		"FIRST_SUPPLY_QUANTITY" = #{firstSupplyQuantity,jdbcType=VARCHAR},
+		"FIRST_SUPPLY_OPERATE_TIME" = #{firstSupplyOperateTime,jdbcType=VARCHAR},
+		"SUPPLY_TYPE" = #{supplyType,jdbcType=VARCHAR},
+		"IS_MULTI_SUPPLY" = #{isMultiSupply,jdbcType=VARCHAR},
+		"TOTAL_SUPPLY_COUNT" = #{totalSupplyCount,jdbcType=VARCHAR},
+		"TOTAL_SUPPLY_QUANTITY" = #{totalSupplyQuantity,jdbcType=VARCHAR},
+		"CIRCULATION_TYPE" = #{circulationType},
+		"TOTAL_CIRCULATION_TIME" = #{totalCirculationTime},
+		"RELEASE_GAS_DATE" = #{releaseGasDate},
+		"RELEASE_GAS_TYPE" = #{releaseGasType},
+		"RELEASE_GAS_TIME" = #{releaseGasTime},
+		"DRAFF_DEAL" = #{draffDeal,jdbcType=VARCHAR},
+		"DRUG_PACKAGE_DEAL" = #{drugPackageDeal,jdbcType=VARCHAR},
+		"EFFECT_CHECK" = #{effectCheck,jdbcType=VARCHAR},
+		"STORE_MAN" = #{storeMan},
+		"STORE_KEEPER" = #{storeKeeper},
+		"FUMIGATE_OPERATOR" = #{fumigateOperator},
+		"FUMIGATE_COMMANDER" = #{fumigateCommander},
+		"UNIT_CHARGE_MAN" = #{unitChargeMan},
+		"SUPERVISOR" = #{supervisor},
+		"STORE_CHARGE_MAN" = #{storeChargeMan},
+		"REMARK" = #{remark,jdbcType=VARCHAR},
+		"REPORT_TIME" = #{reportTime},
+
+		"TOTAL_SUPPLY_DOSAGE"= #{totalSupplyDosage,jdbcType=VARCHAR},
+		"TOTAL_CIRCULATION_STARTTIME"= #{totalCirculationStarttime,jdbcType=VARCHAR},
+		"TOTAL_CIRCULATION_ENDTIME"= #{totalCirculationEndtime,jdbcType=VARCHAR}
+		WHERE ID = #{id}
+	</update>
+	
+	
+	<select id="getById" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.store.StorageFumigateDao.StorageFumigateResultMap">
+		SELECT <include refid="columns_mains" /> FROM <include refid="table_main" /> sf left join T_STORAGE_WAREHOUSE t ON sf.WAREHOUSE_ID = t.ID
+		WHERE sf.ID = #{_parameter}
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.store.StorageFumigateDao.StorageFumigateResultMap">
+		<if test="pageIndex!=null">
+		select * from ( select row_.*, rownum rownum_ from (
+		</if>
+
+		SELECT A.ID,
+		A.SERIAL,
+		w.WAREHOUSE_SHORT AS WAREHOUSE,
+		A.WAREHOUSE_ID,
+		A.WEATHER,
+		A.TEMPERATURE,
+		A."HUMIDITY",
+		A."STOREHOUSE",
+		A."STOREHOUSE_TYPE",
+		A."STOREHOUSE_STRUCTURE",
+		A."STOREHOUSE_VOLUME",
+		A."STACK",
+		A."GAS",
+		A."SEALING",
+		A."STORE_DATE",
+		A."GRAIN_VOLUME",
+		A."SPACE_VOLUME",
+		A."GRAIN_HEIGHT",
+		A."IS_FUMIGATE_LAST_YEAR",
+		A."GRAIN_TYPE",
+		A."REAL_QUANTITY",
+		A."IMPURITY",
+		A."STORAGE_TEMPERATURE",
+		A."STORAGE_HUMIDITY",
+		A."DEW",
+		A."MAX_GRAIN_TEMPERATURE",
+		A."MIN_GRAIN_TEMPERATURE",
+		A."AVERAGE_GRAIN_TEMPERATURE",
+		A."MAX_PEST_DENSITY",
+		A."AMONG",
+		A."DISCOVERY_SITE",
+		A."DISCOVERY_DATE",
+		A."DRUG_NAME",
+		A."PERSON_NUMBER",
+		A."DRUG_METHOD",
+		A."FUMIGATE_TYPE",
+		A."UNIT_DRUG_SPACE",
+		A."UNIT_DRUG_GRAIN",
+		A."TOTAL_DRUG_SPACE",
+		A."TOTAL_DRUG_GRAIN",
+		A."APPLY_DRUG_TIME",
+		A."FIRST_SUPPLY_DATE",
+		A."FIRST_SUPPLY_QUANTITY",
+		A."FIRST_SUPPLY_OPERATE_TIME",
+		A."SUPPLY_TYPE",
+		A."IS_MULTI_SUPPLY",
+		A."TOTAL_SUPPLY_COUNT",
+		A."TOTAL_SUPPLY_QUANTITY",
+		A."CIRCULATION_TYPE",
+		A."TOTAL_CIRCULATION_TIME",
+		A."RELEASE_GAS_DATE",
+		A."RELEASE_GAS_TYPE",
+		A."RELEASE_GAS_TIME",
+		A."DRAFF_DEAL",
+		A."DRUG_PACKAGE_DEAL",
+		A."EFFECT_CHECK",
+		A."STORE_MAN",
+		A."STORE_KEEPER",
+		A."FUMIGATE_OPERATOR",
+		A."FUMIGATE_COMMANDER",
+		A."UNIT_CHARGE_MAN",
+		A."SUPERVISOR",
+		A."STORE_CHARGE_MAN",
+		A."REMARK",
+		A."REPORT_TIME",
+		A."TOTAL_SUPPLY_DOSAGE",
+		A."TOTAL_CIRCULATION_STARTTIME",
+		A."TOTAL_CIRCULATION_ENDTIME",
+		A.CREATORID  FROM <include refid="table_main" /> a
+		left join T_STORAGE_WAREHOUSE w on a.WAREHOUSE_ID = w.id
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND w.id like '%${warehouse}%'
+			</if>
+			<if test="storehouse!=null and storehouse!=''">
+				AND STOREHOUSE like '%${storehouse}%'
+			</if>
+			<if test="fumigateOperator!=null and fumigateOperator!=''">
+				AND FUMIGATE_OPERATOR = '${fumigateOperator}'
+			</if>
+			<if test="grainType!=null and grainType!=''">
+				AND GRAIN_TYPE like '%${grainType}%'
+			</if>
+			<if test="fumigateType !=null and fumigateType !=''">
+				AND FUMIGATE_TYPE like '%${fumigateType}%'
+			</if>
+			<if test="circulationType !=null and circulationType !=''">
+				AND CIRCULATION_TYPE like '%${circulationType}%'
+			</if>
+			<if test="reportTime !=null and reportTime !=''">
+				AND TO_CHAR(REPORT_TIME,'YYYY-MM-DD') like '%${reportTime}%'
+			</if>
+			<if test="ids!=null and ids!=''">
+				AND a.ID IN (<foreach collection="ids" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+		<if test="sortField!=null and sortField!=''">
+			ORDER BY ${sortField} ${sortType}
+		</if>
+		<if test="sortField==null or sortField==''">
+			ORDER BY REPORT_TIME DESC
+		</if>
+
+		<if test="pageIndex!=null">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<select id="count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*) FROM <include refid="table_main" /> a LEFT JOIN  T_STORAGE_WAREHOUSE w on a.WAREHOUSE_ID = w.id
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND w.id like '%${warehouse}%'
+			</if>
+			<if test="storehouse!=null and storehouse!=''">
+				AND STOREHOUSE like '%${storehouse}%'
+			</if>
+			<if test="fumigateOperator!=null and fumigateOperator!=''">
+				AND FUMIGATE_OPERATOR = '${fumigateOperator}'
+			</if>
+			<if test="grainType!=null and grainType!=''">
+				AND GRAIN_TYPE like '%${grainType}%'
+			</if>
+			<if test="fumigateType !=null and fumigateType !=''">
+				AND FUMIGATE_TYPE like '%${fumigateType}%'
+			</if>
+			<if test="circulationType !=null and circulationType !=''">
+				AND CIRCULATION_TYPE like '%${circulationType}%'
+			</if>
+			<if test="reportTime !=null and reportTime !=''">
+				AND TO_CHAR(REPORT_TIME,'YYYY-MM-DD') like '%${reportTime}%'
+			</if>
+			<if test="ids!=null and ids!=''">
+				AND ID IN (<foreach collection="ids" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_main" /> WHERE ID=#{_parameter}
+	</delete>
+	
+	<select id="getSerials" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT SERIAL FROM <include refid="table_main" /> a LEFT JOIN T_STORAGE_WAREHOUSE w on a.WAREHOUSE_ID = w.id
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND w.WAREHOUSE_SHORT like '%${warehouse}%'
+			</if>
+			<if test="storehouse!=null and storehouse!=''">
+				AND STOREHOUSE like '%${storehouse}%'
+			</if>
+		</where>
+	</select>
+</mapper>

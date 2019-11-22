@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualityResultItemMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualityResultItem" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="RESULT_ID" property="resultId" jdbcType="VARCHAR" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="GRADE" property="grade" jdbcType="VARCHAR" />
+    <result column="STANDARD" property="standard" jdbcType="VARCHAR" />
+    <result column="RESULT" property="result" jdbcType="VARCHAR" />
+    <result column="D_REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="REPETITION" property="repetition" jdbcType="VARCHAR" />
+    <result column="COUNT" property="count" jdbcType="VARCHAR" />
+    <result column="ONE" property="one" jdbcType="VARCHAR" />
+    <result column="TWO" property="two" jdbcType="VARCHAR" />
+    <result column="SUM" property="sum" jdbcType="VARCHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="DECIMAL" />
+
+  </resultMap>
+  <select id="countNum" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_RESULT_ITEM WHERE RESULT_ID='${id}'
+	</select>
+  <!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM (select ITEM_NAME ,
+		MAX(case when RESULT_ID='${one}' then STANDARD end) as ONE,
+		MAX(case when RESULT_ID='${two}' then STANDARD end) as TWO
+		from T_QUALITY_RESULT_ITEM where RESULT_ID in ('${one}','${two}') group by ITEM_NAME order by ITEM_NAME DESC)
+		
+		
+	</select>
+	<select id="countItemName" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_RESULT_ITEM  where   result_id='${resultId}' and item_name='${itemName}'
+		
+		
+	</select>
+	<!-- 对比时用到 -->
+  <select id="listCon" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		${start} 
+		select ITEM_NAME,ONE,TWO,rtrim(to_char(one-two,'FM99999990.999999999'), '.') SUM from
+		(select ITEM_NAME ,
+		MAX(case when RESULT_ID='${one}' then RESULT end) as ONE,
+		MAX(case when RESULT_ID='${two}' then RESULT end) as TWO
+		from T_QUALITY_RESULT_ITEM where RESULT_ID in ('${one}','${two}') group by ITEM_NAME order by ITEM_NAME desc) 
+		where  trim(translate(one,'0123456789.',' ')) is NULL and trim(translate(two,'0123456789.',' ')) is NULL
+		union all
+		select ITEM_NAME,ONE,TWO,'' SUM from
+		(select ITEM_NAME ,
+		MAX(case when RESULT_ID='${one}' then RESULT end) as ONE,
+		MAX(case when RESULT_ID='${two}' then RESULT end) as TWO
+		from T_QUALITY_RESULT_ITEM where RESULT_ID in ('${one}','${two}') group by ITEM_NAME order by ITEM_NAME desc) 
+		where trim(translate(one,'0123456789.',' ')) is not NULL and trim(translate(two,'0123456789.',' ')) is not NULL
+		${end}
+	</select>
+  <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		/*select * from T_QUALITY_RESULT_ITEM WHERE RESULT_ID='${id}' order by ITEM_NAME, COUNT DESC*/
+		select * from T_QUALITY_RESULT_ITEM WHERE RESULT_ID='${id}' ORDER BY ORDER_NO ASC
+  </select>
+  <delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_QUALITY_RESULT_ITEM WHERE RESULT_ID='${id}'
+	</delete>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.QualityResultItem" >
+    insert into T_QUALITY_RESULT_ITEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="resultId != null" >
+        RESULT_ID,
+      </if>
+      <if test="itemName != null" >
+        ITEM_NAME,
+      </if>
+      <if test="grade != null" >
+        GRADE,
+      </if>
+      <if test="standard != null" >
+        STANDARD,
+      </if>
+      <if test="result != null" >
+        RESULT,
+      </if>
+      <if test="result != null" >
+        REMARK,
+      </if>
+      <if test="count != null" >
+        COUNT,
+      </if>
+    <if test="orderNo != null" >
+        ORDER_NO,
+    </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="resultId != null" >
+        #{resultId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null" >
+        #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+       <if test="result != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=VARCHAR},
+      </if>
+        <if test="orderNo != null" >
+            #{orderNo,jdbcType=DECIMAL},
+        </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.dhc.fastersoft.entity.QualityResultItem">
+	update T_QUALITY_RESULT_ITEM set 
+	result ='${result}'  ,
+	remark ='${remark}' ,
+	repetition='${repetition}'
+    where   result_id='${resultId}' and item_name='${itemName}'
+    
+    
+    
+   <!--  update T_QUALITY_RESULT_ITEM set 
+	result = (select DISTINCT result from T_QUALITY_RESULT_ITEM where result_id='${resultId}' and item_name='${itemName}' and result is not null) ,
+	remark = (select DISTINCT remark from T_QUALITY_RESULT_ITEM where result_id='${resultId}' and item_name='${itemName}' and result is not null) 
+    where   result_id='${resultId}' and item_name='${itemName}' -->
+	</update>
+	
+	<select id="queryByResultId" parameterType="java.util.List" resultMap="BaseResultMap">
+		SELECT * FROM T_QUALITY_RESULT_ITEM WHERE RESULT_ID IN
+		<foreach collection="list" item="ids" open="(" close=")" separator=",">
+			#{ids}
+		</foreach>
+	</select>
+</mapper>

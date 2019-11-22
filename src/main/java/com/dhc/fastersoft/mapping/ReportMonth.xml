@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.report.ReportMonthDao">
+    <resultMap id="ReportMonthResultMap" type="com.dhc.fastersoft.entity.report.ReportMonth">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="REPORT_MONTH" property="reportMonth" jdbcType="VARCHAR"/>
+        <result column="REPORT_WAREHOUSE" property="reportWarehouse" jdbcType="VARCHAR"/>
+        <result column="REPORT_WAREHOUSE_ID" property="reportWarehouseId" jdbcType="VARCHAR"/>
+        <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR"/>
+        <result column="REPORT_STATUS" property="reportStatus" jdbcType="VARCHAR"/>
+        <result column="CREATOR" property="creator" jdbcType="NVARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="REMARK" property="remark" jdbcType="NVARCHAR"/>
+        <result column="GATHER_ID" property="gatherId" jdbcType="VARCHAR"/>
+        <result column="MANAGER" property="manager" jdbcType="VARCHAR"/>
+        <result column="RESERVE_PROPERTY" property="reserveProperty" jdbcType="VARCHAR"/>
+        <result column="COMMENTS" property="comments" jdbcType="VARCHAR"/>
+        <result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="VARCHAR"/>
+        <result column="ENTERPRISE_SHORT_NAME" property="enterpriseShortName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="columns">
+      ID, REPORT_MONTH, REPORT_WAREHOUSE,REPORT_WAREHOUSE_ID,
+      REPORT_NAME, REPORT_STATUS, CREATOR,
+      CREATE_DATE, REMARK,MANAGER, RESERVE_PROPERTY,COMMENTS
+  </sql>
+
+    <sql id="tablename"> T_REPORT_MONTH </sql>
+
+    <insert id="add" parameterType="com.dhc.fastersoft.entity.report.ReportMonth">
+        insert into
+        <include refid="tablename"/>
+        (<include refid="columns"/>)
+        values (#{id}, #{reportMonth,jdbcType=VARCHAR},
+        #{reportWarehouse,jdbcType=VARCHAR},#{reportWarehouseId,jdbcType=VARCHAR},
+        #{reportName,jdbcType=VARCHAR}, #{reportStatus,jdbcType=VARCHAR}, #{creator,jdbcType=NVARCHAR},
+        sysdate, #{remark,jdbcType=NVARCHAR}, #{manager,jdbcType=NVARCHAR}, #{reserveProperty,jdbcType=NVARCHAR},
+        #{comments,jdbcType=NVARCHAR})
+    </insert>
+
+    <delete id="deleteByMonthHouse" parameterType="HashMap">
+        DELETE from
+        <include refid="tablename"/>
+        WHERE
+        REPORT_MONTH=#{reportMonth} AND REPORT_WAREHOUSE = #{reportWarehouse} AND REPORT_NAME = #{reportName}
+    </delete>
+
+    <update id="updateStatus" parameterType="HashMap">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        REPORT_STATUS = #{status}
+        WHERE ID = #{id}
+    </update>
+
+    <update id="updateStatusByMonthAndName" parameterType="HashMap">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        REPORT_STATUS = #{status}
+        WHERE REPORT_NAME = '${reportName}' AND REPORT_MONTH = '${reportMonth}'
+    </update>
+
+
+    <select id="getReportMonthById" parameterType="String" resultMap="ReportMonthResultMap">
+        select
+        <include refid="columns"/>
+        from
+        <include refid="tablename"/>
+        WHERE ID=#{id}
+    </select>
+
+    <select id="getReport" parameterType="com.dhc.fastersoft.entity.report.ReportMonth"
+            resultMap="ReportMonthResultMap">
+        select
+        <include refid="columns"/>
+        from T_REPORT_MONTH
+        <where>
+            <if test="reportMonth != null and reportMonth != ''">
+                AND REPORT_MONTH = #{reportMonth}
+            </if>
+            <if test="reportWarehouse != null and reportWarehouse != ''">
+                AND REPORT_WAREHOUSE = #{reportWarehouse}
+            </if>
+            <if test="reportWarehouseId != null and reportWarehouseId != ''">
+                AND REPORT_WAREHOUSE_ID = #{reportWarehouseId}
+            </if>
+            <choose>
+                <when test="reportStatus == 'YS'">
+                    AND REPORT_STATUS in ('审核通过','上报待审','上报通过','汇总待审','汇总通过')
+                </when>
+                <when test="reportStatus == 'DHZ'">
+                    AND REPORT_STATUS in ('上报待审','上报通过','汇总驳回')
+                </when>
+                <when test="reportStatus != null and reportStatus !=''">
+                    AND REPORT_STATUS = #{reportStatus}
+                </when>
+            </choose>
+            <if test="reportName != null and reportName != ''">
+                AND REPORT_NAME = #{reportName}
+            </if>
+        </where>
+    </select>
+
+    <select id="listReport" parameterType="com.dhc.fastersoft.entity.report.ReportMonth"
+            resultMap="ReportMonthResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tablename"/>
+        <where>
+            <if test="reportMonth != null and reportMonth != ''">
+                AND REPORT_MONTH = #{reportMonth}
+            </if>
+            <if test="reportName != null and reportName != ''">
+                AND REPORT_NAME = #{reportName}
+            </if>
+            <choose>
+                <when test="reportStatus == 'SBDSTGBH'">
+                    AND (REPORT_STATUS = '上报待审' or REPORT_STATUS = '上报通过' OR REPORT_STATUS = '汇总驳回')
+                </when>
+                <when test="reportStatus != null and reportStatus !=''">
+                    AND REPORT_STATUS = #{reportStatus}
+                </when>
+            </choose>
+            <if test="gatherId != null and gatherId != ''">
+                AND GATHER_ID = #{gatherId}
+            </if>
+        </where>
+        ORDER BY REPORT_WAREHOUSE
+    </select>
+
+    <update id="appSumBack" parameterType="HashMap">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        REPORT_STATUS = '${@com.dhc.fastersoft.entity.enumdata.ReportStatusEnum@SBTG.getValue()}'
+        WHERE REPORT_MONTH = #{reportMonth} AND REPORT_NAME = #{reportName} AND (REPORT_STATUS='上报通过' or
+        REPORT_STATUS='汇总待审' OR REPORT_WAREHOUSE='浙江省储备粮管理有限公司')
+    </update>
+
+    <update id="updateGatherId" parameterType="com.dhc.fastersoft.entity.report.ReportMonth">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        GATHER_ID = #{id},REPORT_STATUS='汇总待审' where ID IN (${reportIds})
+    </update>
+
+    <update id="clearGatherId" parameterType="String">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        GATHER_ID = null where GATHER_ID = #{id}
+    </update>
+
+    <update id="update" parameterType="com.dhc.fastersoft.entity.report.ReportMonth">
+        update
+        <include refid="tablename"/>
+        <set>
+            <if test="reportStatus != null">
+                REPORT_STATUS = #{reportStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="manager != null and manager != ''">
+                MANAGER = #{manager,jdbcType=VARCHAR},
+            </if>
+            <if test="reserveProperty != null and reserveProperty != ''">
+                RESERVE_PROPERTY = #{reserveProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                CREATOR = #{creator,jdbcType=NVARCHAR},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getUserInfoByAccount" parameterType="String" resultType="com.dhc.fastersoft.entity.system.SysUser">
+    SELECT u.NAME,w.warehouse_name COMPANY FROM t_sys_user u,t_storage_warehouse w WHERE u.origin_code=w.warehouse_code AND u.account=#{account}
+  </select>
+
+    <select id="fillTableQuery" parameterType="Map" resultMap="ReportMonthResultMap">
+        SELECT * FROM (
+        SELECT A.*, ROWNUM RN FROM (
+          SELECT * FROM (
+            SELECT * FROM
+        (select * from (
+
+        SELECT sw.order_no,sw.id REPORT_WAREHOUSE_ID,SW.WAREHOUSE_SHORT REPORT_WAREHOUSE,
+        SW.ENTERPRISE_NAME,E.ID ENTERPRISE_ID, E.SHORT_NAME ENTERPRISE_SHORT_NAME,
+        nvl(rm.REPORT_STATUS,'未做') REPORT_STATUS,rm.ID ID,rm.REPORT_MONTH,rm.REPORT_NAME
+        FROM T_STORAGE_WAREHOUSE sw
+        INNER JOIN T_STORE_ENTERPRISE E ON sw.ENTERPRISE_ID=E.ID
+        LEFT JOIN T_REPORT_MONTH rm ON sw.id = rm.REPORT_WAREHOUSE_ID
+        <if test="entity.reportName != null || entity.reportName != ''">
+            AND rm.REPORT_NAME = #{entity.reportName}
+        </if>
+        <if test="entity.reportMonth != null || entity.reportMonth != ''">
+            AND rm.REPORT_MONTH = #{entity.reportMonth}
+        </if>
+        WHERE sw.ISHOST = 'Y' AND e.isstop='N'
+
+        UNION ALL
+
+        SELECT sw.order_no,sw.ID REPORT_WAREHOUSE_ID,SW.WAREHOUSE_SHORT REPORT_WAREHOUSE,
+        SW.ENTERPRISE_NAME,E.ID ENTERPRISE_ID, E.SHORT_NAME ENTERPRISE_SHORT_NAME,
+        nvl(rm.REPORT_STATUS,'未做') REPORT_STATUS,rm.ID ID,rm.REPORT_MONTH,rm.REPORT_NAME
+        FROM T_REPORT_MONTH rm
+        LEFT JOIN T_STORAGE_WAREHOUSE sw ON sw.ID = rm.REPORT_WAREHOUSE_ID
+        INNER JOIN T_STORE_ENTERPRISE E ON sw.ENTERPRISE_ID = E.ID
+        WHERE sw.ISHOST = 'Y' AND e.isstop='Y'
+        <if test="entity.reportName != null || entity.reportName != ''">
+            AND rm.REPORT_NAME = #{entity.reportName}
+        </if>
+        <if test="entity.reportMonth != null || entity.reportMonth != ''">
+            AND rm.REPORT_MONTH = #{entity.reportMonth}
+        </if>
+
+        ) WHERE 1=1
+
+            AND REPORT_STATUS = '上报待审'
+
+        ORDER BY order_no ASC,REPORT_WAREHOUSE_ID)t1
+            UNION ALL
+            SELECT * FROM
+        (select * from (
+
+        SELECT sw.order_no,sw.id REPORT_WAREHOUSE_ID,SW.WAREHOUSE_SHORT REPORT_WAREHOUSE,
+        SW.ENTERPRISE_NAME,E.ID ENTERPRISE_ID, E.SHORT_NAME ENTERPRISE_SHORT_NAME,
+        nvl(rm.REPORT_STATUS,'未做') REPORT_STATUS,rm.ID ID,rm.REPORT_MONTH,rm.REPORT_NAME
+        FROM T_STORAGE_WAREHOUSE sw
+        INNER JOIN T_STORE_ENTERPRISE E ON sw.ENTERPRISE_ID=E.ID
+        LEFT JOIN T_REPORT_MONTH rm ON sw.id = rm.REPORT_WAREHOUSE_ID
+        <if test="entity.reportName != null || entity.reportName != ''">
+            AND rm.REPORT_NAME = #{entity.reportName}
+        </if>
+        <if test="entity.reportMonth != null || entity.reportMonth != ''">
+            AND rm.REPORT_MONTH = #{entity.reportMonth}
+        </if>
+        WHERE sw.ISHOST = 'Y' AND e.isstop='N'
+
+        UNION ALL
+
+        SELECT sw.order_no,sw.ID REPORT_WAREHOUSE_ID,SW.WAREHOUSE_SHORT REPORT_WAREHOUSE,
+        SW.ENTERPRISE_NAME,E.ID ENTERPRISE_ID, E.SHORT_NAME ENTERPRISE_SHORT_NAME,
+        nvl(rm.REPORT_STATUS,'未做') REPORT_STATUS,rm.ID ID,rm.REPORT_MONTH,rm.REPORT_NAME
+        FROM T_REPORT_MONTH rm
+        LEFT JOIN T_STORAGE_WAREHOUSE sw ON sw.ID = rm.REPORT_WAREHOUSE_ID
+        INNER JOIN T_STORE_ENTERPRISE E ON sw.ENTERPRISE_ID = E.ID
+        WHERE sw.ISHOST = 'Y' AND e.isstop='Y'
+        <if test="entity.reportName != null || entity.reportName != ''">
+            AND rm.REPORT_NAME = #{entity.reportName}
+        </if>
+        <if test="entity.reportMonth != null || entity.reportMonth != ''">
+            AND rm.REPORT_MONTH = #{entity.reportMonth}
+        </if>
+
+        ) WHERE 1=1
+
+        AND REPORT_STATUS != '上报待审'
+
+        ORDER BY order_no ASC,REPORT_WAREHOUSE_ID)t2
+          )
+        WHERE 1=1
+        <if test="entity.reportStatus != null and entity.reportStatus != '' and entity.reportStatus != '全部'">
+            AND REPORT_STATUS = #{entity.reportStatus}
+        </if>
+
+        ) A
+        WHERE ROWNUM &lt;= #{pageIndex} * #{pageSize}
+        )
+        WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+    </select>
+
+    <select id="kudianPageQuery" parameterType="java.util.HashMap"
+            resultType="com.dhc.fastersoft.entity.StorageWarehouse">
+        ${start}
+        SELECT * FROM (
+        SELECT sw.order_no,sw.id,SW.WAREHOUSE_SHORT warehouseShort,sw.warehouse_Name warehouseName,SW.ENTERPRISE_NAME
+        enterpriseName
+        FROM T_STORAGE_WAREHOUSE sw
+        WHERE sw.WAREHOUSE_TYPE='储备库'
+
+        UNION ALL
+
+        SELECT sw.order_no,sw.id,e.short_name warehouseShort,sw.warehouse_Name warehouseName,SW.ENTERPRISE_NAME
+        enterpriseName FROM T_STORAGE_WAREHOUSE sw LEFT JOIN T_STORE_ENTERPRISE e ON
+        sw.ENTERPRISE_NAME=e.ENTERPRISE_NAME
+        WHERE
+        sw.ISHOST = 'Y'
+        )
+        <where>
+            <if test="warehouseName!=null and warehouseName!=''">
+                warehouseName like '%${warehouseName}%'
+            </if>
+            <if test="warehouseShort!=null and warehouseShort!=''">
+                and warehouseShort LIKE '%${warehouseShort}%'
+            </if>
+            <if test="enterpriseName!=null and enterpriseName!=''">
+                and enterpriseName LIKE '%${enterpriseName}%'
+            </if>
+        </where>
+        ORDER BY order_no ASC,id
+        ${end}
+    </select>
+
+    <select id="kudianPageCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT count(0) FROM (
+        SELECT * FROM (
+        SELECT sw.order_no,sw.id,e.short_name warehouseShort,sw.warehouse_Name warehouseName,SW.ENTERPRISE_NAME
+        enterpriseName FROM T_STORAGE_WAREHOUSE sw LEFT JOIN T_STORE_ENTERPRISE e ON
+        sw.ENTERPRISE_NAME=e.ENTERPRISE_NAME
+
+        WHERE
+        sw.ISHOST = 'Y'
+
+        UNION ALL
+        SELECT sw.order_no,sw.id,SW.WAREHOUSE_SHORT warehouseShort,sw.warehouse_Name warehouseName,SW.ENTERPRISE_NAME
+        enterpriseName
+        FROM T_STORAGE_WAREHOUSE sw
+
+        WHERE sw.WAREHOUSE_TYPE='储备库'
+        )
+        <where>
+            <if test="warehouseName!=null and warehouseName!=''">
+                warehouseName like '%${warehouseName}%'
+            </if>
+            <if test="warehouseShort!=null and warehouseShort!=''">
+                and warehouseShort LIKE '%${warehouseShort}%'
+            </if>
+            <if test="enterpriseName!=null and enterpriseName!=''">
+                and enterpriseName LIKE '%${enterpriseName}%'
+            </if>
+            <if test="shortName!=null and shortName!=''">
+                and shortName LIKE '%${shortName}%'
+            </if>
+        </where>
+        )
+    </select>
+
+    <select id="queryReportMonth" parameterType="Map" resultMap="ReportMonthResultMap">
+        SELECT * FROM (
+        SELECT A.*, ROWNUM RN FROM (
+
+        SELECT T_REPORT_MONTH.* FROM T_REPORT_MONTH left join T_STORAGE_WAREHOUSE house on
+        T_REPORT_MONTH.REPORT_WAREHOUSE_ID = house.id
+        <where>
+            <if test="entity.reportName != null and entity.reportName != ''">
+                AND REPORT_NAME = #{entity.reportName,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.reportMonth != null and entity.reportMonth != ''">
+                AND REPORT_MONTH = #{entity.reportMonth,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.reportWarehouseId != null and entity.reportWarehouseId != ''">
+                AND REPORT_WAREHOUSE_ID = #{entity.reportWarehouseId,jdbcType=VARCHAR}
+            </if>
+            AND house.WAREHOUSE_TYPE != '储备库'
+        </where>
+        ) A
+        WHERE ROWNUM &lt;= #{pageIndex,jdbcType=NUMERIC}*#{pageSize,jdbcType=NUMERIC}
+        )
+        WHERE RN > (#{pageIndex,jdbcType=NUMERIC} - 1) * #{pageSize,jdbcType=NUMERIC}
+    </select>
+
+
+    <select id="fillTableQueryCount" parameterType="Map" resultType="Integer">
+
+
+        select COUNT(*) from (
+        <!--SELECT sw.order_no,sw.id REPORT_WAREHOUSE_ID,SW.WAREHOUSE_SHORT REPORT_WAREHOUSE,-->
+        <!--SW.ENTERPRISE_NAME,E.ID ENTERPRISE_ID, E.SHORT_NAME ENTERPRISE_SHORT_NAME,-->
+        <!--nvl(rm.REPORT_STATUS,'未做') REPORT_STATUS,rm.REPORT_MONTH,rm.REPORT_NAME-->
+        <!--FROM T_STORAGE_WAREHOUSE sw-->
+        <!--INNER JOIN T_STORE_ENTERPRISE E ON SW.ENTERPRISE_ID = E.ID-->
+        <!--LEFT JOIN T_REPORT_MONTH rm ON sw.id = rm.REPORT_WAREHOUSE_ID-->
+        <!--<if test="entity.reportName != null and entity.reportName != ''">-->
+        <!--AND rm.REPORT_NAME = #{entity.reportName}-->
+        <!--</if>-->
+        <!--<if test="entity.reportMonth != null and entity.reportMonth != ''">-->
+        <!--AND rm.REPORT_MONTH = #{entity.reportMonth}-->
+        <!--</if>-->
+        <!--WHERE sw.WAREHOUSE_TYPE='储备库'-->
+
+        <!--UNION ALL-->
+
+        SELECT sw.order_no,sw.id REPORT_WAREHOUSE_ID,SW.WAREHOUSE_SHORT REPORT_WAREHOUSE,
+        SW.ENTERPRISE_NAME,E.ID ENTERPRISE_ID, E.SHORT_NAME ENTERPRISE_SHORT_NAME,
+        nvl(rm.REPORT_STATUS,'未做') REPORT_STATUS,rm.REPORT_MONTH,rm.REPORT_NAME
+        FROM T_STORAGE_WAREHOUSE sw
+        INNER JOIN T_STORE_ENTERPRISE E ON sw.ENTERPRISE_ID=E.ID
+        LEFT JOIN T_REPORT_MONTH rm ON sw.id = rm.REPORT_WAREHOUSE_ID
+        <if test="entity.reportName != null || entity.reportName != ''">
+            AND rm.REPORT_NAME = #{entity.reportName}
+        </if>
+        <if test="entity.reportMonth != null || entity.reportMonth != ''">
+            AND rm.REPORT_MONTH = #{entity.reportMonth}
+        </if>
+        WHERE sw.ISHOST = 'Y' AND e.isstop='N'
+
+        UNION ALL
+
+        SELECT sw.order_no,sw.ID REPORT_WAREHOUSE_ID,SW.WAREHOUSE_SHORT REPORT_WAREHOUSE,
+        SW.ENTERPRISE_NAME,E.ID ENTERPRISE_ID, E.SHORT_NAME ENTERPRISE_SHORT_NAME,
+        nvl(rm.REPORT_STATUS,'未做') REPORT_STATUS,rm.REPORT_MONTH,rm.REPORT_NAME
+        FROM T_REPORT_MONTH rm
+        LEFT JOIN T_STORAGE_WAREHOUSE sw ON sw.ID = rm.REPORT_WAREHOUSE_ID
+        INNER JOIN T_STORE_ENTERPRISE E ON sw.ENTERPRISE_ID = E.ID
+        WHERE sw.ISHOST = 'Y' AND e.isstop='Y'
+        <if test="entity.reportName != null || entity.reportName != ''">
+            AND rm.REPORT_NAME = #{entity.reportName}
+        </if>
+        <if test="entity.reportMonth != null || entity.reportMonth != ''">
+            AND rm.REPORT_MONTH = #{entity.reportMonth}
+        </if>
+        ) WHERE 1=1
+        <if test="entity.reportStatus != null and entity.reportStatus != '' and entity.reportStatus != '全部'">
+            AND REPORT_STATUS = #{entity.reportStatus}
+        </if>
+        ORDER BY order_no ASC,REPORT_WAREHOUSE_ID
+
+    </select>
+
+    <select id="queryReportMonthCount" parameterType="Map" resultType="Integer">
+        SELECT count(*) FROM T_REPORT_MONTH
+        left join T_STORAGE_WAREHOUSE house ON T_REPORT_MONTH.REPORT_WAREHOUSE_ID = house.id
+        <where>
+            <if test="entity.reportName != null and entity.reportName != ''">
+                AND REPORT_NAME = #{entity.reportName,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.reportMonth != null and entity.reportMonth != ''">
+                AND REPORT_MONTH = #{entity.reportMonth,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.reportWarehouseId != null and entity.reportWarehouseId != ''">
+                AND REPORT_WAREHOUSE_ID = #{entity.reportWarehouseId,jdbcType=VARCHAR}
+            </if>
+            AND house.WAREHOUSE_TYPE != '储备库'
+            <!-- <choose>
+                 <when test="reportMonth != null || reportMonth != ''">
+                     AND REPORT_MONTH = #{entity.reportMonth}
+                 </when>
+                 <otherwise>
+                     AND REPORT_MONTH = ''
+                 </otherwise>
+             </choose>-->
+        </where>
+    </select>
+    <update id="changeStatus" parameterType="String">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        REPORT_STATUS = '上报通过'
+        WHERE ID in  (<foreach collection="ids" separator="," item="item">#{item}</foreach>)
+    </update>
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.report.ReportSplyDao" >
+  <resultMap id="ReportSplyResultMap" type="com.dhc.fastersoft.entity.report.ReportSply" >
+    <result column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="REPORT_MONTH" property="reportMonth" jdbcType="VARCHAR" />
+    <result column="REPORT_WAREHOUSE" property="reportWarehouse" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="GRAIN_TYPE" property="grainType" jdbcType="OTHER" />
+    <result column="PRE_STOCK" property="preStock" jdbcType="DECIMAL" />
+    <result column="TOTAL_INCOME_SUBTOTAL" property="totalIncomeSubtotal" jdbcType="DECIMAL" />
+    <result column="PRODUCTOR_IN_SUBTOTAL" property="productorInSubtotal" jdbcType="DECIMAL" />
+    <result column="PRODUCTOR_IN_SW" property="productorInSw" jdbcType="DECIMAL" />
+    <result column="PRODUCTOR_IN_SN" property="productorInSn" jdbcType="DECIMAL" />
+    <result column="ENTERPRISE_IN_SUBTOTAL" property="enterpriseInSubtotal" jdbcType="DECIMAL" />
+    <result column="ENTERPRISE_IN_SW" property="enterpriseInSw" jdbcType="DECIMAL" />
+    <result column="ENTERPRISE_IN_SNXW" property="enterpriseInSnxw" jdbcType="DECIMAL" />
+    <result column="ENTERPRISE_IN_XN" property="enterpriseInXn" jdbcType="DECIMAL" />
+    <result column="ENTERPRISE_IN_GY" property="enterpriseInGy" jdbcType="DECIMAL" />
+    <result column="IMPORTED_IN" property="importedIn" jdbcType="DECIMAL" />
+    <result column="RESERVE_IN" property="reserveIn" jdbcType="DECIMAL" />
+    <result column="RECOVERY_GOODS" property="recoveryGoods" jdbcType="DECIMAL" />
+    <result column="MAKE_BLEND_OIL" property="makeBlendOil" jdbcType="DECIMAL" />
+    <result column="OTHER_INCOME" property="otherIncome" jdbcType="DECIMAL" />
+    <result column="OTHER_EXPEND_SUBTOTAL" property="otherExpendSubtotal" jdbcType="DECIMAL" />
+    <result column="SALE_SUBTOTAL" property="saleSubtotal" jdbcType="DECIMAL" />
+    <result column="SALE_SW" property="saleSw" jdbcType="DECIMAL" />
+    <result column="SALE_SNXW" property="saleSnxw" jdbcType="DECIMAL" />
+    <result column="SALE_XN" property="saleXn" jdbcType="DECIMAL" />
+    <result column="SALE_GY" property="saleGy" jdbcType="DECIMAL" />
+    <result column="EXPORT_OUT" property="exportOut" jdbcType="DECIMAL" />
+    <result column="TRANSFER_RESERVE_OIL" property="transferReserveOil" jdbcType="DECIMAL" />
+    <result column="PAY_FOR_MATERIALS" property="payForMaterials" jdbcType="DECIMAL" />
+    <result column="CONFIGURE_BLEND_OIL" property="configureBlendOil" jdbcType="DECIMAL" />
+    <result column="CONVERTED_SUBTOTAL" property="convertedSubtotal" jdbcType="DECIMAL" />
+    <result column="FEED_GRAIN_OIL" property="feedGrainOil" jdbcType="DECIMAL" />
+    <result column="INDUSTRIAL_SUBTOTAL" property="industrialSubtotal" jdbcType="DECIMAL" />
+    <result column="STARCH_GRAIN_OIL" property="starchGrainOil" jdbcType="DECIMAL" />
+    <result column="ALCOHOL_GRAIN_OIL" property="alcoholGrainOil" jdbcType="DECIMAL" />
+    <result column="FOOD_GRAIN_OIL" property="foodGrainOil" jdbcType="DECIMAL" />
+    <result column="WINE_FOOD" property="wineFood" jdbcType="DECIMAL" />
+    <result column="OTHER_INDUSTRIAL" property="otherIndustrial" jdbcType="DECIMAL" />
+    <result column="OTHER_EXPEND" property="otherExpend" jdbcType="DECIMAL" />
+    <result column="INVENTORY_SUBTOTAL" property="inventorySubtotal" jdbcType="DECIMAL" />
+    <result column="INVENTORY_SW_STORE" property="inventorySwStore" jdbcType="DECIMAL" />
+    <result column="ORDERNUM" property="ordernum" jdbcType="DECIMAL" />
+    <result column="CSS_CLASS" property="cssClass" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="columns">
+    REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+      REPORT_NAME, GRAIN_TYPE, PRE_STOCK,
+      TOTAL_INCOME_SUBTOTAL, PRODUCTOR_IN_SUBTOTAL,
+      PRODUCTOR_IN_SW, PRODUCTOR_IN_SN, ENTERPRISE_IN_SUBTOTAL,
+      ENTERPRISE_IN_SW, ENTERPRISE_IN_SNXW, ENTERPRISE_IN_XN,
+      ENTERPRISE_IN_GY, IMPORTED_IN, RESERVE_IN,
+      RECOVERY_GOODS, MAKE_BLEND_OIL, OTHER_INCOME,
+      OTHER_EXPEND_SUBTOTAL, SALE_SUBTOTAL, SALE_SW,
+      SALE_SNXW, SALE_XN, SALE_GY,
+      EXPORT_OUT, TRANSFER_RESERVE_OIL, PAY_FOR_MATERIALS,
+      CONFIGURE_BLEND_OIL, CONVERTED_SUBTOTAL, FEED_GRAIN_OIL,
+      INDUSTRIAL_SUBTOTAL, STARCH_GRAIN_OIL, ALCOHOL_GRAIN_OIL,
+      FOOD_GRAIN_OIL, WINE_FOOD, OTHER_INDUSTRIAL,
+      OTHER_EXPEND, INVENTORY_SUBTOTAL, INVENTORY_SW_STORE,ORDERNUM,CSS_CLASS
+  </sql>
+
+  <sql id="tablename"> T_REPORT_MONTH_SPLY </sql>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.report.ReportSply" >
+    insert into <include refid="tablename"/> (<include refid="columns"/>)
+    values (#{reportId,jdbcType=VARCHAR}, #{reportMonth,jdbcType=VARCHAR}, #{reportWarehouse,jdbcType=VARCHAR}, 
+      #{reportName,jdbcType=VARCHAR}, #{grainType,jdbcType=OTHER}, #{preStock,jdbcType=DECIMAL}, 
+      #{totalIncomeSubtotal,jdbcType=DECIMAL}, #{productorInSubtotal,jdbcType=DECIMAL}, 
+      #{productorInSw,jdbcType=DECIMAL}, #{productorInSn,jdbcType=DECIMAL}, #{enterpriseInSubtotal,jdbcType=DECIMAL}, 
+      #{enterpriseInSw,jdbcType=DECIMAL}, #{enterpriseInSnxw,jdbcType=DECIMAL}, #{enterpriseInXn,jdbcType=DECIMAL}, 
+      #{enterpriseInGy,jdbcType=DECIMAL}, #{importedIn,jdbcType=DECIMAL}, #{reserveIn,jdbcType=DECIMAL}, 
+      #{recoveryGoods,jdbcType=DECIMAL}, #{makeBlendOil,jdbcType=DECIMAL}, #{otherIncome,jdbcType=DECIMAL}, 
+      #{otherExpendSubtotal,jdbcType=DECIMAL}, #{saleSubtotal,jdbcType=DECIMAL}, #{saleSw,jdbcType=DECIMAL}, 
+      #{saleSnxw,jdbcType=DECIMAL}, #{saleXn,jdbcType=DECIMAL}, #{saleGy,jdbcType=DECIMAL}, 
+      #{exportOut,jdbcType=DECIMAL}, #{transferReserveOil,jdbcType=DECIMAL}, #{payForMaterials,jdbcType=DECIMAL}, 
+      #{configureBlendOil,jdbcType=DECIMAL}, #{convertedSubtotal,jdbcType=DECIMAL}, #{feedGrainOil,jdbcType=DECIMAL}, 
+      #{industrialSubtotal,jdbcType=DECIMAL}, #{starchGrainOil,jdbcType=DECIMAL}, #{alcoholGrainOil,jdbcType=DECIMAL}, 
+      #{foodGrainOil,jdbcType=DECIMAL}, #{wineFood,jdbcType=DECIMAL}, #{otherIndustrial,jdbcType=DECIMAL}, 
+      #{otherExpend,jdbcType=DECIMAL}, #{inventorySubtotal,jdbcType=DECIMAL}, #{inventorySwStore,jdbcType=DECIMAL},
+      #{ordernum,jdbcType=DECIMAL},#{cssClass,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <delete id="deleteByMonthHouse" parameterType="HashMap">
+    DELETE FROM <include refid="tablename"/> WHERE
+    REPORT_MONTH=#{reportMonth} AND REPORT_WAREHOUSE = #{reportWarehouse}
+  </delete>
+
+  <select id="listSplyByReportId" parameterType="String" resultMap="ReportSplyResultMap">
+    SELECT <include refid="columns"/> FROM <include refid="tablename"/>
+    WHERE REPORT_ID = #{reportId} ORDER BY ORDERNUM
+  </select>
+
+  <select id="listSplyByMonthHouse" parameterType="HashMap" resultMap="ReportSplyResultMap">
+    SELECT <include refid="columns"/> FROM <include refid="tablename"/>
+    WHERE REPORT_ID=
+    (SELECT ID from T_REPORT_MONTH WHERE REPORT_MONTH=#{reportMonth} and REPORT_WAREHOUSE_ID=#{reportWarehouseId} and REPORT_NAME='商品粮油收支月报表')
+    ORDER BY ORDERNUM
+  </select>
+
+  <delete id="deleteByReportId" parameterType="String">
+    DELETE FROM <include refid="tablename"/> WHERE
+    REPORT_ID=#{reportId}
+  </delete>
+
+  <insert id="summary" parameterType="com.dhc.fastersoft.entity.report.ReportMonth" >
+    INSERT INTO <include refid="tablename"/> (REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+    REPORT_NAME, GRAIN_TYPE,CSS_CLASS,ORDERNUM, PRE_STOCK,TOTAL_INCOME_SUBTOTAL, PRODUCTOR_IN_SUBTOTAL,PRODUCTOR_IN_SW,
+    PRODUCTOR_IN_SN, ENTERPRISE_IN_SUBTOTAL,ENTERPRISE_IN_SW, ENTERPRISE_IN_SNXW, ENTERPRISE_IN_XN,
+    ENTERPRISE_IN_GY, IMPORTED_IN, RESERVE_IN,RECOVERY_GOODS, MAKE_BLEND_OIL, OTHER_INCOME,OTHER_EXPEND_SUBTOTAL,
+    SALE_SUBTOTAL, SALE_SW,SALE_SNXW, SALE_XN, SALE_GY,EXPORT_OUT, TRANSFER_RESERVE_OIL, PAY_FOR_MATERIALS,
+    CONFIGURE_BLEND_OIL, CONVERTED_SUBTOTAL, FEED_GRAIN_OIL,INDUSTRIAL_SUBTOTAL, STARCH_GRAIN_OIL, ALCOHOL_GRAIN_OIL,
+    FOOD_GRAIN_OIL, WINE_FOOD, OTHER_INDUSTRIAL,OTHER_EXPEND, INVENTORY_SUBTOTAL, INVENTORY_SW_STORE)
+    SELECT #{id},#{reportMonth},#{reportWarehouse},#{reportName},GRAIN_TYPE,CSS_CLASS,ORDERNUM,SUM(nvl(PRE_STOCK,0)),SUM(nvl(TOTAL_INCOME_SUBTOTAL,0)),SUM(nvl( PRODUCTOR_IN_SUBTOTAL,0)),SUM(nvl(PRODUCTOR_IN_SW,0)),SUM(nvl(PRODUCTOR_IN_SN,0)),SUM(nvl(ENTERPRISE_IN_SUBTOTAL,0)),SUM(nvl(ENTERPRISE_IN_SW,0)),SUM(nvl(ENTERPRISE_IN_SNXW,0)),SUM(nvl(ENTERPRISE_IN_XN,0)),SUM(nvl(ENTERPRISE_IN_GY,0)),SUM(nvl(IMPORTED_IN,0)),SUM(nvl(RESERVE_IN,0)),SUM(nvl(RECOVERY_GOODS,0)),SUM(nvl(MAKE_BLEND_OIL,0)),SUM(nvl(OTHER_INCOME,0)),SUM(nvl(OTHER_EXPEND_SUBTOTAL,0)),SUM(nvl(SALE_SUBTOTAL,0)),SUM(nvl(SALE_SW,0)),SUM(nvl(SALE_SNXW,0)),SUM(nvl(SALE_XN,0)),SUM(nvl(SALE_GY,0)),SUM(nvl(EXPORT_OUT,0)),SUM(nvl(TRANSFER_RESERVE_OIL,0)),SUM(nvl(PAY_FOR_MATERIALS,0)),SUM(nvl(CONFIGURE_BLEND_OIL,0)),SUM(nvl(CONVERTED_SUBTOTAL,0)),SUM(nvl(FEED_GRAIN_OIL,0)),SUM(nvl(INDUSTRIAL_SUBTOTAL,0)),SUM(nvl(STARCH_GRAIN_OIL,0)),SUM(nvl(ALCOHOL_GRAIN_OIL,0)),SUM(nvl(FOOD_GRAIN_OIL,0)),SUM(nvl(WINE_FOOD,0)),SUM(nvl(OTHER_INDUSTRIAL,0)),SUM(nvl(OTHER_EXPEND,0)),SUM(nvl(INVENTORY_SUBTOTAL,0)),SUM(nvl(INVENTORY_SW_STORE,0))
+    FROM <include refid="tablename"/>
+    WHERE REPORT_ID IN (${reportIds}) GROUP BY GRAIN_TYPE,CSS_CLASS,ORDERNUM
+  </insert>
+
+  <select id="listSumSply" parameterType="String" resultMap="ReportSplyResultMap">
+    SELECT GRAIN_TYPE,ORDERNUM,CSS_CLASS,SUM(nvl(PRE_STOCK,0)) PRE_STOCK,SUM(nvl(TOTAL_INCOME_SUBTOTAL,0)) TOTAL_INCOME_SUBTOTAL,SUM(nvl( PRODUCTOR_IN_SUBTOTAL,0)) PRODUCTOR_IN_SUBTOTAL,SUM(nvl(PRODUCTOR_IN_SW,0)) PRODUCTOR_IN_SW,SUM(nvl(PRODUCTOR_IN_SN,0)) PRODUCTOR_IN_SN,SUM(nvl(ENTERPRISE_IN_SUBTOTAL,0)) ENTERPRISE_IN_SUBTOTAL,SUM(nvl(ENTERPRISE_IN_SW,0)) ENTERPRISE_IN_SW,SUM(nvl(ENTERPRISE_IN_SNXW,0)) ENTERPRISE_IN_SNXW,SUM(nvl(ENTERPRISE_IN_XN,0)) ENTERPRISE_IN_XN,SUM(nvl(ENTERPRISE_IN_GY,0)) ENTERPRISE_IN_GY,SUM(nvl(IMPORTED_IN,0)) IMPORTED_IN,SUM(nvl(RESERVE_IN,0)) RESERVE_IN,SUM(nvl(RECOVERY_GOODS,0)) RECOVERY_GOODS,SUM(nvl(MAKE_BLEND_OIL,0)) MAKE_BLEND_OIL,SUM(nvl(OTHER_INCOME,0)) OTHER_INCOME,SUM(nvl(OTHER_EXPEND_SUBTOTAL,0)) OTHER_EXPEND_SUBTOTAL,SUM(nvl(SALE_SUBTOTAL,0)) SALE_SUBTOTAL,SUM(nvl(SALE_SW,0)) SALE_SW,SUM(nvl(SALE_SNXW,0)) SALE_SNXW,SUM(nvl(SALE_XN,0)) SALE_XN,SUM(nvl(SALE_GY,0)) SALE_GY,SUM(nvl(EXPORT_OUT,0)) EXPORT_OUT,SUM(nvl(TRANSFER_RESERVE_OIL,0)) TRANSFER_RESERVE_OIL,SUM(nvl(PAY_FOR_MATERIALS,0)) PAY_FOR_MATERIALS,SUM(nvl(CONFIGURE_BLEND_OIL,0)) CONFIGURE_BLEND_OIL,SUM(nvl(CONVERTED_SUBTOTAL,0)) CONVERTED_SUBTOTAL,SUM(nvl(FEED_GRAIN_OIL,0)) FEED_GRAIN_OIL,SUM(nvl(INDUSTRIAL_SUBTOTAL,0)) INDUSTRIAL_SUBTOTAL,SUM(nvl(STARCH_GRAIN_OIL,0)) STARCH_GRAIN_OIL,SUM(nvl(ALCOHOL_GRAIN_OIL,0)) ALCOHOL_GRAIN_OIL,SUM(nvl(FOOD_GRAIN_OIL,0)) FOOD_GRAIN_OIL,SUM(nvl(WINE_FOOD,0)) WINE_FOOD,SUM(nvl(OTHER_INDUSTRIAL,0)) OTHER_INDUSTRIAL,SUM(nvl(OTHER_EXPEND,0)) OTHER_EXPEND,SUM(nvl(INVENTORY_SUBTOTAL,0)) INVENTORY_SUBTOTAL,SUM(nvl(INVENTORY_SW_STORE,0)) INVENTORY_SW_STORE
+    FROM <include refid="tablename"/>
+    WHERE report_id IN (SELECT ID FROM t_report_month WHERE gather_id=#{gatherId})
+    GROUP BY GRAIN_TYPE,GRAIN_TYPE,ORDERNUM,CSS_CLASS
+    ORDER BY ORDERNUM
+  </select>
+</mapper>

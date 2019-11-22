@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.report.ReportCblyDao" >
+  <resultMap id="ReportCblyResultMap" type="com.dhc.fastersoft.entity.report.ReportCbly" >
+    <result column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="REPORT_MONTH" property="reportMonth" jdbcType="VARCHAR" />
+    <result column="REPORT_WAREHOUSE" property="reportWarehouse" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="GRAIN_TYPE" property="grainType" jdbcType="NVARCHAR" />
+    <result column="PRE_STOCK" property="preStock" jdbcType="DECIMAL" />
+    <result column="PRODUCTOR_IN" property="productorIn" jdbcType="DECIMAL" />
+    <result column="ENTERPRISE_IN" property="enterpriseIn" jdbcType="DECIMAL" />
+    <result column="CHANGE_IN" property="changeIn" jdbcType="DECIMAL" />
+    <result column="IMPORTED_IN" property="importedIn" jdbcType="DECIMAL" />
+    <result column="PROVINCE_IN" property="provinceIn" jdbcType="DECIMAL" />
+    <result column="RECOVERY_IN" property="recoveryIn" jdbcType="DECIMAL" />
+    <result column="OTHER_PROVINCE_OUT" property="otherProvinceOut" jdbcType="DECIMAL" />
+    <result column="CHANGE_OUT" property="changeOut" jdbcType="DECIMAL" />
+    <result column="EXPORT_OUT" property="exportOut" jdbcType="DECIMAL" />
+    <result column="PROVINCE_OUT" property="provinceOut" jdbcType="DECIMAL" />
+    <result column="MATERIAL_OUT" property="materialOut" jdbcType="DECIMAL" />
+    <result column="YEAR_6_STOCK" property="year6Stock" jdbcType="DECIMAL" />
+    <result column="YEAR_5_STOCK" property="year5Stock" jdbcType="DECIMAL" />
+    <result column="YEAR_4_STOCK" property="year4Stock" jdbcType="DECIMAL" />
+    <result column="YEAR_3_STOCK" property="year3Stock" jdbcType="DECIMAL" />
+    <result column="YEAR_2_STOCK" property="year2Stock" jdbcType="DECIMAL" />
+    <result column="YEAR_1_STOCK" property="year1Stock" jdbcType="DECIMAL" />
+    <result column="YEAR_0_STOCK" property="year0Stock" jdbcType="DECIMAL" />
+    <result column="SMALL_PACKAGE_STOCK" property="smallPackageStock" jdbcType="DECIMAL" />
+    <result column="OTHER_PROVINCE_STOCK" property="otherProvinceStock" jdbcType="DECIMAL" />
+    <result column="DYNAMICS_STOCK" property="dynamicsStock" jdbcType="DECIMAL" />
+    <result column="TOTAL_INCOME_SUBTOTAL" property="totalIncomeSubtotal" jdbcType="DECIMAL" />
+    <result column="PRODUCTOR_IN_SUBTOTAL" property="productorInSubtotal" jdbcType="DECIMAL" />
+    <result column="ENTERPRISE_IN_SUBTOTAL" property="enterpriseInSubtotal" jdbcType="DECIMAL" />
+    <result column="CHANGE_IN_SUBTOTAL" property="changeInSubtotal" jdbcType="DECIMAL" />
+    <result column="OTHER_INCOME_SUBTOTAL" property="otherIncomeSubtotal" jdbcType="DECIMAL" />
+    <result column="TOTAL_EXPEND_SUBTOTAL" property="totalExpendSubtotal" jdbcType="DECIMAL" />
+    <result column="OTHER_PROVINCE_OUT_SUBTOTAL" property="otherProvinceOutSubtotal" jdbcType="DECIMAL" />
+    <result column="CHANGE_OUT_SUBTOTAL" property="changeOutSubtotal" jdbcType="DECIMAL" />
+    <result column="OTHER_EXPEND_SUBTOTAL" property="otherExpendSubtotal" jdbcType="DECIMAL" />
+    <result column="INVENTORY_SUBTOTAL" property="inventorySubtotal" jdbcType="DECIMAL" />
+    <result column="YEAR_SUBTOTAL" property="yearSubtotal" jdbcType="DECIMAL" />
+    <result column="ORDERNUM" property="ordernum" jdbcType="DECIMAL" />
+    <result column="CSS_CLASS" property="cssClass" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="columns">
+    REPORT_ID, REPORT_MONTH, GRAIN_TYPE,
+    PRE_STOCK, PRODUCTOR_IN, ENTERPRISE_IN,
+    CHANGE_IN, IMPORTED_IN, PROVINCE_IN,
+    RECOVERY_IN, OTHER_PROVINCE_OUT, CHANGE_OUT,
+    EXPORT_OUT, PROVINCE_OUT, MATERIAL_OUT,YEAR_6_STOCK,
+    YEAR_5_STOCK, YEAR_4_STOCK, YEAR_3_STOCK,
+    YEAR_2_STOCK, YEAR_1_STOCK, YEAR_0_STOCK,
+    SMALL_PACKAGE_STOCK, OTHER_PROVINCE_STOCK,
+    DYNAMICS_STOCK,REPORT_WAREHOUSE,REPORT_NAME,
+    TOTAL_INCOME_SUBTOTAL,PRODUCTOR_IN_SUBTOTAL,
+    ENTERPRISE_IN_SUBTOTAL,CHANGE_IN_SUBTOTAL,
+    OTHER_INCOME_SUBTOTAL,TOTAL_EXPEND_SUBTOTAL,
+    OTHER_PROVINCE_OUT_SUBTOTAL,CHANGE_OUT_SUBTOTAL,
+    OTHER_EXPEND_SUBTOTAL,INVENTORY_SUBTOTAL,YEAR_SUBTOTAL,
+    ORDERNUM,CSS_CLASS
+  </sql>
+
+  <sql id="tablename"> T_REPORT_MONTH_CBLY </sql>
+
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.report.ReportMonth" >
+    INSERT INTO <include refid="tablename"/> (<include refid="columns"/>)
+    VALUES (#{reportId}, #{reportMonth,jdbcType=VARCHAR}, #{grainType,jdbcType=NVARCHAR},
+    #{preStock,jdbcType=DECIMAL}, #{productorIn,jdbcType=DECIMAL}, #{enterpriseIn,jdbcType=DECIMAL},
+    #{changeIn,jdbcType=DECIMAL}, #{importedIn,jdbcType=DECIMAL}, #{provinceIn,jdbcType=DECIMAL},
+    #{recoveryIn,jdbcType=DECIMAL}, #{otherProvinceOut,jdbcType=DECIMAL}, #{changeOut,jdbcType=DECIMAL},
+    #{exportOut,jdbcType=DECIMAL}, #{provinceOut,jdbcType=DECIMAL}, #{materialOut,jdbcType=DECIMAL}, #{year6Stock,jdbcType=DECIMAL},
+    #{year5Stock,jdbcType=DECIMAL}, #{year4Stock,jdbcType=DECIMAL}, #{year3Stock,jdbcType=DECIMAL},
+    #{year2Stock,jdbcType=DECIMAL}, #{year1Stock,jdbcType=DECIMAL}, #{year0Stock,jdbcType=DECIMAL},
+    #{smallPackageStock,jdbcType=DECIMAL}, #{otherProvinceStock,jdbcType=DECIMAL},
+    #{dynamicsStock,jdbcType=DECIMAL},#{reportWarehouse,jdbcType=VARCHAR},#{reportName,jdbcType=VARCHAR},
+    #{totalIncomeSubtotal,jdbcType=DECIMAL},#{productorInSubtotal,jdbcType=DECIMAL},#{enterpriseInSubtotal,jdbcType=DECIMAL},
+    #{changeInSubtotal,jdbcType=DECIMAL},#{otherIncomeSubtotal,jdbcType=DECIMAL},#{totalExpendSubtotal,jdbcType=DECIMAL},
+    #{otherProvinceOutSubtotal,jdbcType=DECIMAL},#{changeOutSubtotal,jdbcType=DECIMAL},#{otherExpendSubtotal,jdbcType=DECIMAL},
+    #{inventorySubtotal,jdbcType=DECIMAL},#{yearSubtotal,jdbcType=DECIMAL},#{ordernum,jdbcType=DECIMAL},#{cssClass,jdbcType=VARCHAR})
+  </insert>
+
+  <delete id="deleteByMonthHouse" parameterType="HashMap">
+    DELETE FROM <include refid="tablename"/> WHERE
+    REPORT_MONTH=#{reportMonth} AND REPORT_WAREHOUSE = #{reportWarehouse}
+  </delete>
+
+  <select id="listCblyByReportId" parameterType="String" resultMap="ReportCblyResultMap">
+    SELECT <include refid="columns"/> FROM <include refid="tablename"/>
+    WHERE REPORT_ID = #{reportId} ORDER BY ORDERNUM
+  </select>
+
+  <select id="listCblyByMonthHouse" parameterType="HashMap" resultMap="ReportCblyResultMap">
+    SELECT <include refid="columns"/> FROM <include refid="tablename"/>
+    WHERE REPORT_ID=
+    (SELECT ID from T_REPORT_MONTH WHERE REPORT_MONTH=#{reportMonth} and REPORT_WAREHOUSE_ID=#{reportWarehouseId} and REPORT_NAME='储备粮油收支月报表')
+    ORDER BY ORDERNUM
+  </select>
+
+  <insert id="summary" parameterType="com.dhc.fastersoft.entity.report.ReportMonth" >
+    INSERT INTO <include refid="tablename"/> (REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE, REPORT_NAME,GRAIN_TYPE,ORDERNUM,CSS_CLASS,
+    PRE_STOCK, PRODUCTOR_IN, ENTERPRISE_IN,CHANGE_IN, IMPORTED_IN, PROVINCE_IN,RECOVERY_IN, OTHER_PROVINCE_OUT, CHANGE_OUT,
+    EXPORT_OUT, PROVINCE_OUT, MATERIAL_OUT, YEAR_6_STOCK, YEAR_5_STOCK, YEAR_4_STOCK, YEAR_3_STOCK,YEAR_2_STOCK, YEAR_1_STOCK, YEAR_0_STOCK,
+    SMALL_PACKAGE_STOCK, OTHER_PROVINCE_STOCK,DYNAMICS_STOCK,TOTAL_INCOME_SUBTOTAL,PRODUCTOR_IN_SUBTOTAL,ENTERPRISE_IN_SUBTOTAL,
+    CHANGE_IN_SUBTOTAL,OTHER_INCOME_SUBTOTAL,TOTAL_EXPEND_SUBTOTAL,OTHER_PROVINCE_OUT_SUBTOTAL,CHANGE_OUT_SUBTOTAL,
+    OTHER_EXPEND_SUBTOTAL,INVENTORY_SUBTOTAL,YEAR_SUBTOTAL)
+    SELECT #{id},#{reportMonth},#{reportWarehouse},#{reportName},GRAIN_TYPE,ORDERNUM,CSS_CLASS,SUM(nvl(PRE_STOCK,0)),SUM(nvl(PRODUCTOR_IN,0)),SUM(nvl(ENTERPRISE_IN,0)),SUM(nvl(CHANGE_IN,0)),SUM(nvl(IMPORTED_IN,0)),SUM(nvl(PROVINCE_IN,0)),SUM(nvl(RECOVERY_IN,0)),SUM(nvl(OTHER_PROVINCE_OUT,0)),SUM(nvl(CHANGE_OUT,0)),SUM(nvl(EXPORT_OUT,0)),SUM(nvl(PROVINCE_OUT,0)),SUM(nvl(MATERIAL_OUT,0)),SUM(nvl(YEAR_6_STOCK,0)),SUM(nvl(YEAR_5_STOCK,0)),SUM(nvl(YEAR_4_STOCK,0)),SUM(nvl(YEAR_3_STOCK,0)),SUM(nvl(YEAR_2_STOCK,0)),SUM(nvl(YEAR_1_STOCK,0)),SUM(nvl(YEAR_0_STOCK,0)),SUM(nvl(SMALL_PACKAGE_STOCK,0)),SUM(nvl(OTHER_PROVINCE_STOCK,0)),SUM(nvl(DYNAMICS_STOCK,0)),SUM(nvl(TOTAL_INCOME_SUBTOTAL,0)),SUM(nvl(PRODUCTOR_IN_SUBTOTAL,0)),SUM(nvl(ENTERPRISE_IN_SUBTOTAL,0)),SUM(nvl(CHANGE_IN_SUBTOTAL,0)),SUM(nvl(OTHER_INCOME_SUBTOTAL,0)),SUM(nvl(TOTAL_EXPEND_SUBTOTAL,0)),SUM(nvl(OTHER_PROVINCE_OUT_SUBTOTAL,0)),SUM(nvl(CHANGE_OUT_SUBTOTAL,0)),SUM(nvl(OTHER_EXPEND_SUBTOTAL,0)),SUM(nvl(INVENTORY_SUBTOTAL,0)),SUM(nvl(YEAR_SUBTOTAL,0))
+    FROM <include refid="tablename"/>
+    WHERE REPORT_ID IN (${reportIds}) GROUP BY GRAIN_TYPE,GRAIN_TYPE,ORDERNUM,CSS_CLASS
+  </insert>
+
+  <delete id="deleteByReportId" parameterType="String">
+    DELETE FROM <include refid="tablename"/> WHERE
+    REPORT_ID=#{reportId}
+  </delete>
+
+  <select id="listSumCbly" parameterType="String" resultMap="ReportCblyResultMap">
+    SELECT GRAIN_TYPE,ORDERNUM,CSS_CLASS,SUM(PRE_STOCK) PRE_STOCK,SUM(PRODUCTOR_IN) PRODUCTOR_IN,SUM(ENTERPRISE_IN) ENTERPRISE_IN,
+    SUM(CHANGE_IN) CHANGE_IN,SUM(IMPORTED_IN) IMPORTED_IN,SUM(PROVINCE_IN) PROVINCE_IN,
+    SUM(RECOVERY_IN) RECOVERY_IN,SUM(OTHER_PROVINCE_OUT) OTHER_PROVINCE_OUT,SUM(CHANGE_OUT) CHANGE_OUT,SUM(EXPORT_OUT) EXPORT_OUT,
+    SUM(PROVINCE_OUT) PROVINCE_OUT,SUM(MATERIAL_OUT) MATERIAL_OUT,SUM(YEAR_6_STOCK) YEAR_6_STOCK,SUM(YEAR_5_STOCK) YEAR_5_STOCK,
+    SUM(YEAR_4_STOCK) YEAR_4_STOCK,SUM(YEAR_3_STOCK) YEAR_3_STOCK,SUM(YEAR_2_STOCK) YEAR_2_STOCK,SUM(YEAR_1_STOCK) YEAR_1_STOCK,
+    SUM(YEAR_0_STOCK) YEAR_0_STOCK,SUM(SMALL_PACKAGE_STOCK) SMALL_PACKAGE_STOCK,SUM(OTHER_PROVINCE_STOCK) OTHER_PROVINCE_STOCK,
+    SUM(DYNAMICS_STOCK) DYNAMICS_STOCK,SUM(TOTAL_INCOME_SUBTOTAL) TOTAL_INCOME_SUBTOTAL,SUM(PRODUCTOR_IN_SUBTOTAL) PRODUCTOR_IN_SUBTOTAL,
+    SUM(ENTERPRISE_IN_SUBTOTAL) ENTERPRISE_IN_SUBTOTAL,SUM(CHANGE_IN_SUBTOTAL) CHANGE_IN_SUBTOTAL,SUM(OTHER_INCOME_SUBTOTAL) OTHER_INCOME_SUBTOTAL,
+    SUM(TOTAL_EXPEND_SUBTOTAL) TOTAL_EXPEND_SUBTOTAL,SUM(OTHER_PROVINCE_OUT_SUBTOTAL) OTHER_PROVINCE_OUT_SUBTOTAL,SUM(CHANGE_OUT_SUBTOTAL) CHANGE_OUT_SUBTOTAL,
+    SUM(OTHER_EXPEND_SUBTOTAL) OTHER_EXPEND_SUBTOTAL,SUM(INVENTORY_SUBTOTAL) INVENTORY_SUBTOTAL,SUM(YEAR_SUBTOTAL) YEAR_SUBTOTAL
+    FROM <include refid="tablename"/>
+    WHERE report_id IN (SELECT ID FROM t_report_month WHERE gather_id=#{gatherId})
+    GROUP BY GRAIN_TYPE,GRAIN_TYPE,ORDERNUM,CSS_CLASS
+    ORDER BY ORDERNUM
+  </select>
+</mapper>

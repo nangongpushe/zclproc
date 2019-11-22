@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotatePlanmainDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotatePlanmain" id="rotatePlanResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="colletor" column="COLLETOR" jdbcType="NVARCHAR" />
+		<result property="department" column="DEPARTMENT" jdbcType="NVARCHAR" />
+		<result property="colletorDate" column="COLLETOR_DATE" jdbcType="TIMESTAMP" />
+		<result property="modifier" column="MODIFIER" jdbcType="TIMESTAMP" />
+		<result property="modifyDate" column="MODIFY_DATE" jdbcType="TIMESTAMP" />
+		<result property="planName" column="PLAN_NAME" jdbcType="NVARCHAR" />
+		<result property="planType" column="PLAN_TYPE" jdbcType="NVARCHAR" />
+		<result property="documentNumber" column="DOCUMENT_NUMBER" jdbcType="NVARCHAR" />
+		<result property="year" column="YEAR" jdbcType="VARCHAR" />
+		<result property="attachment" column="ATTACHMENT" jdbcType="NVARCHAR" />
+		<result property="state" column="STATE" jdbcType="VARCHAR" />
+		<result property="completeDate" column="COMPLETE_DATE" jdbcType="TIMESTAMP" />
+		<result property="description" column="DESCRIPTION" jdbcType="NVARCHAR" />
+		<result property="stockIn"      column="STOCK_IN"    jdbcType="INTEGER" />
+		<result property="stockOut"      column="STOCK_OUT"    jdbcType="INTEGER" />
+		<collection property="planmainDetail" resultMap="com.dhc.fastersoft.dao.RotatePlanmainDetailDao.rotatePlanmainDetailResultMap"></collection>
+	</resultMap>
+
+	<sql id="columns">
+		ID,COLLETOR,DEPARTMENT,COLLETOR_DATE,MODIFIER,MODIFY_DATE,
+		PLAN_NAME,PLAN_TYPE,DOCUMENT_NUMBER,YEAR,ATTACHMENT,
+		STATE,COMPLETE_DATE,DESCRIPTION,ROUND(NVL(STOCK_IN,0),3) AS STOCK_IN,ROUND(NVL(STOCK_OUT,0),3) AS STOCK_OUT
+	</sql>
+
+	<sql id="incolumns">
+		ID,COLLETOR,DEPARTMENT,COLLETOR_DATE,MODIFIER,MODIFY_DATE,
+		PLAN_NAME,PLAN_TYPE,DOCUMENT_NUMBER,YEAR,ATTACHMENT,
+		STATE,COMPLETE_DATE,DESCRIPTION,STOCK_IN,STOCK_OUT
+	</sql>
+	
+	<sql id="s_columns">
+		ID,COLLETOR,DEPARTMENT,COLLETOR_DATE,MODIFIER,MODIFY_DATE,
+		PLAN_NAME,PLAN_TYPE,DOCUMENT_NUMBER,YEAR,ATTACHMENT,
+		STATE,COMPLETE_DATE,DESCRIPTION,ROUND(NVL(STOCK_IN,0),3) AS STOCK_IN,ROUND(NVL(STOCK_OUT,0),3) AS STOCK_OUT
+	</sql>
+	
+	<sql id="detailColumns">
+		ID,ROTATE_TYPE,FOOD_TYPE,YIELD_TIME
+		,ORIGN,ROUND(NVL(ROTATE_NUMBER,0),3) AS ROTATE_NUMBER
+		,PLAN_ID,QUALITY_ID,ROUND(NVL(DETAIL_NUMBER,0),3) AS DETAIL_NUMBER
+		,ROUND(NVL(DEAL_DETAIL_NUMBER,0),3) AS DEAL_DETAIL_NUMBER
+	</sql>
+
+	<sql id="indetailColumns">
+		ID,ROTATE_TYPE,FOOD_TYPE,YIELD_TIME
+		,ORIGN,ROTATE_NUMBER
+		,PLAN_ID,QUALITY_ID,DETAIL_NUMBER
+	</sql>
+
+	<sql id="tableName"> T_ROTATE_PLAN_MAIN </sql>
+	
+	<sql id="detailTableName"> T_ROTATE_PLAN_MAIN_DETAIL </sql>
+	<!-- 根据计划id删除计划 -->
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM <include refid="tableName"/>
+		<where>
+			ID = '${_parameter}'
+		</where>
+	</delete>
+
+	<!-- 根据计划id删除计划明细 -->
+	<delete id="removeDetail" parameterType="java.lang.String">
+		DELETE FROM <include refid="detailTableName" />
+		<where>
+			PLAN_ID = '${_parameter}'
+		</where>
+	</delete>
+	<!-- 查询单个计划 -->
+	<select id="getPlan" parameterType="java.lang.String"
+		resultMap="rotatePlanResultMap">
+		SELECT <include refid="s_columns"/>
+		 FROM <include refid="tableName"/>
+		<where>
+			ID = #{_parameter,jdbcType = VARCHAR}
+		</where>
+	</select>
+	
+	
+	<!-- 根据搜索条件查询计划列表 -->
+	<select id="list" parameterType="java.util.HashMap" resultMap="rotatePlanResultMap">
+		<if test="pageIndex!=null and pageIndex!=''">
+			select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		 SELECT
+		<include refid="s_columns" />
+		from
+		<include refid="tableName" />
+		<where>
+			<if test="year!=null and year!=''">
+				AND YEAR LIKE '%${year}%'
+			</if>
+			<if test="planName!=null and planName!=''">
+				AND PLAN_NAME LIKE '%${planName}%'
+			</if>
+			<if test="state!=null and state!=''">
+				AND STATE LIKE '%${state}%'
+			</if>
+			<if test="documentNumber!=null and documentNumber!=''">
+				AND DOCUMENT_NUMBER LIKE '%${documentNumber}%'
+			</if>
+			<if test="colletor!=null and colletor!=''">
+				AND COLLETOR LIKE '%${colletor}%'
+			</if>
+			<if test="colletorDate!=null and colletorDate!=''">
+				AND TO_CHAR(COLLETOR_DATE,'YYYY-MM-DD') = '${colletorDate}'
+			</if>
+			<if test="completeDate!=null and completeDate!=''">
+				AND TO_CHAR(COMPLETE_DATE,'YYYY-MM-DD') = '${completeDate}'
+			</if>
+			<!--<if test="baseNames!=null">
+				AND ID IN (SELECT PLAN_ID FROM T_ROTATE_PLAN_DETAIL
+						 WHERE LIBRARY_NAME IN(<foreach collection="baseNames" separator="," item="item">#{item}</foreach>))
+			</if>-->
+		</where>
+		ORDER BY COLLETOR_DATE DESC,YEAR DESC
+		<if test="pageIndex!=null and pageIndex!='' and pageSize!=null and pageSize!=''">
+		) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+		where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<!-- 根据计划id查询计划明细列表 -->
+	<select id="listPlanDetail" parameterType="java.lang.String"
+		resultMap="com.dhc.fastersoft.dao.RotatePlanmainDetailDao.rotatePlanmainDetailResultMap">
+		SELECT
+		<include refid="detailColumns" />
+		FROM T_ROTATE_PLAN_MAIN_DETAIL
+		<where>
+			Plan_ID = #{_parameter,jdbcType = VARCHAR}
+		</where>
+	</select>
+	
+		<!-- 根据计划id查询计划明细列表 -->
+	<select id="listDetailByCondition" parameterType="java.util.HashMap"
+		resultMap="com.dhc.fastersoft.dao.RotatePlanmainDetailDao.rotatePlanmainDetailResultMap">
+		select * from (
+			SELECT
+			<include refid="detailColumns"/>,ROWNUM RN
+			FROM <include refid="detailTableName"/>
+			<where>
+				<if test="planId!=null and planId!=''">
+				AND Plan_ID = #{planId}
+				</if>
+				<if test='excludeInIds!=null and excludeInIds!="" '>
+					AND ID NOT IN
+					<foreach item="item" index="index" collection="excludeInIds.split(',')"  open="(" separator="," close=")">
+						'${item}'
+					</foreach>
+				</if>
+				<if test="rotateType!=null and rotateType!=''">
+				AND ROTATE_TYPE = #{rotateType}
+				</if>
+                <if test="pageIndex!=null and pageIndex!='' and pageSize != null and pageSize != ''">
+                    AND ROWNUM &lt; ${pageIndex} * ${pageSize} + 1
+                </if>
+			</where>
+		)
+            <if test="pageIndex!=null and pageIndex!='' and pageSize != null and pageSize != ''">
+			  where RN &gt; (${pageIndex} - 1) * ${pageSize}
+            </if>
+	</select>
+
+	<!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+	SELECT count(0)
+	FROM <include refid="tableName"/>
+	<where>
+		<if test="year!=null and year!=''">
+			AND YEAR LIKE '%${year}%'
+		</if>
+		<if test="planName!=null and planName!=''">
+			AND PLAN_NAME LIKE '%${planName}%'
+		</if>
+		<if test="state!=null and state!=''">
+			AND STATE LIKE '%${state}%'
+		</if>
+		<if test="documentNumber!=null and documentNumber!=''">
+			AND DOCUMENT_NUMBER LIKE '%${documentNumber}%'
+		</if>
+		<if test="colletor!=null and colletor!=''">
+			AND COLLETOR LIKE '%${colletor}%'
+		</if>
+		<if test="colletorDate!=null and colletorDate!=''">
+			AND TO_CHAR(COLLETOR_DATE,'YYYY-MM-DD') = '${colletorDate}'
+		</if>
+		<!--<if test="baseNames!=null">
+            AND ID IN (SELECT PLAN_ID FROM T_ROTATE_PLAN_MAIN_DETAIL
+                     WHERE LIBRARY_NAME IN(<foreach collection="baseNames" separator="," item="item">#{item}</foreach>))
+        </if>-->
+	</where>
+</select>
+	
+	<!-- 添加计划 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.RotatePlan">
+		begin
+		INSERT INTO <include refid="tableName"/> (<include refid="incolumns"/>)
+		VALUES
+		(#{id},#{colletor,jdbcType=NVARCHAR},#{department,jdbcType=NVARCHAR},#{colletorDate},#{modifier,jdbcType=NVARCHAR},#{modifyDate,jdbcType=TIMESTAMP},
+		#{planName,jdbcType=NVARCHAR},#{planType,jdbcType=NVARCHAR},#{documentNumber,jdbcType=NVARCHAR},#{year,jdbcType=NVARCHAR},#{attachment,jdbcType=NVARCHAR},
+		#{state,jdbcType=NVARCHAR},#{completeDate,jdbcType=TIMESTAMP},#{description,jdbcType=NVARCHAR},#{stockIn,jdbcType=NUMERIC},#{stockOut,jdbcType=NUMERIC});
+
+		<foreach collection="planmainDetail" item="item" separator=";">
+			INSERT INTO
+			<include refid="detailTableName" /> (<include refid="indetailColumns"/>)
+			VALUES
+			(#{item.id},#{item.rotateType,jdbcType=NVARCHAR},#{item.foodType,jdbcType=NVARCHAR},
+			#{item.yieldTime,jdbcType=NVARCHAR},#{item.orign,jdbcType=NVARCHAR},
+			#{item.rotateNumber,jdbcType=DECIMAL},#{id},#{item.qualityId,jdbcType=NVARCHAR},
+			#{item.detailNumber,jdbcType=INTEGER})
+		</foreach>
+		;end;
+	</insert>
+
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotatePlanmain">
+		begin
+		UPDATE
+		<include refid="tableName" />
+		SET
+		PLAN_NAME=#{planName},
+		PLAN_TYPE=#{planType},
+		MODIFY_DATE = #{modifyDate},MODIFIER = #{modifier,jdbcType=NVARCHAR},
+		DOCUMENT_NUMBER=#{documentNumber,jdbcType=NVARCHAR},
+		YEAR=#{year},
+		ATTACHMENT =#{attachment,jdbcType=NVARCHAR},
+		DESCRIPTION =#{description,jdbcType=NVARCHAR},
+		STOCK_IN=#{stockIn},
+		STOCK_OUT=#{stockOut}
+		<where>
+			ID = #{id};
+		</where>
+		
+		DELETE FROM <include refid="detailTableName" /> 
+		<where>
+			PLAN_ID = #{id};
+		</where>
+		
+		<foreach collection="planmainDetail" item="item" separator=";">
+			INSERT INTO
+			<include refid="detailTableName" /> (
+			ID,ROTATE_TYPE,FOOD_TYPE,YIELD_TIME
+			,ORIGN,ROTATE_NUMBER
+			,PLAN_ID,QUALITY_ID,DETAIL_NUMBER)
+			VALUES
+			(#{item.id},#{item.rotateType,jdbcType=NVARCHAR},#{item.foodType,jdbcType=NVARCHAR},#{item.yieldTime,jdbcType=NVARCHAR},
+			#{item.orign,jdbcType=NVARCHAR},
+			#{item.rotateNumber,jdbcType=DECIMAL},#{id},
+			#{item.qualityId,jdbcType=NVARCHAR},#{item.detailNumber,jdbcType=INTEGER})
+		</foreach>
+		;end;
+
+	</update>
+	
+	<update id="updateState" parameterType="java.util.HashMap">
+		UPDATE <include refid="tableName"/>
+		SET
+			STATE = #{state},
+			COMPLETE_DATE = #{completeDate}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+
+	<update id="updateAttachment" parameterType="com.dhc.fastersoft.entity.RotatePlanmain">
+		update <include refid="tableName" />
+		SET
+		ATTACHMENT = #{attachment}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	
+	<select id="checkPrimary" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(PLAN_NAME) FROM <include refid="tableName"/>
+		<where>
+			AND PLAN_NAME = '${_parameter}'
+		</where>
+	</select>
+
+	<select id="detailcount" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0)
+		FROM <include refid="detailTableName"/>
+		<where>
+			PLAN_ID = #{planId}
+			<if test="rotateType!=null and rotateType!=''">
+				AND ROTATE_TYPE = #{rotateType}
+			</if>
+			<if test='excludeInIds!=null and excludeInIds!="" '>
+				AND ID NOT IN
+				<foreach item="item" index="index" collection="excludeInIds.split(',')"  open="(" separator="," close=")">
+					'${item}'
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<!-- 审核通过且计划轮换数量大于已轮换数量总条数 -->
+	<select id="tablecount" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0)
+		from(
+		select P.*
+		FROM<include refid="tableName"/>
+		P,
+		(select PLAN_ID,ROUND(nvl(sum(T.Detail_Number),0),3) Detail_Number
+		from T_ROTATE_PLAN_MAIN_DETAIL T
+		where t.rotate_type = '轮入'
+		group by plan_id) K
+		<where>
+			P.stock_in > K.Detail_Number
+			and P.id = K.plan_id
+			and P.State = '审核通过'
+			<if test="year!=null and year!=''">
+				AND YEAR LIKE '%${year}%'
+			</if>
+			<if test="planName!=null and planName!=''">
+				AND PLAN_NAME LIKE '%${planName}%'
+			</if>
+			<if test="colletor!=null and colletor!=''">
+				AND COLLETOR LIKE '%${colletor}%'
+			</if>
+		</where>
+		union
+		select P.*
+		FROM
+		<include refid="tableName"/>
+		P,
+		(select PLAN_ID, ROUND(nvl(sum(T.Detail_Number),0),3) Detail_Number
+		from T_ROTATE_PLAN_MAIN_DETAIL T
+		where t.rotate_type = '轮出'
+		group by plan_id) K
+		<where>
+			p.stock_out > K.Detail_Number
+			and P.id = K.plan_id
+			and P.State = '审核通过'
+			<if test="year!=null and year!=''">
+				AND YEAR LIKE '%${year}%'
+			</if>
+			<if test="planName!=null and planName!=''">
+				AND PLAN_NAME LIKE '%${planName}%'
+			</if>
+			<if test="colletor!=null and colletor!=''">
+				AND COLLETOR LIKE '%${colletor}%'
+			</if>
+		</where>
+		)
+	</select>
+
+	<!-- 审核通过且计划轮换数量大于已轮换数量的记录 -->
+	<select id="tablelist" parameterType="java.util.HashMap" resultMap="rotatePlanResultMap">
+		<if test="pageIndex!=null and pageIndex!=''">
+			select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		select
+		<include refid="s_columns" /> from
+		(
+		select
+		P.*
+		FROM<include refid="tableName"/>
+		P,
+		(select PLAN_ID, ROUND(nvl(sum(T.Detail_Number),0),3) Detail_Number
+		from T_ROTATE_PLAN_MAIN_DETAIL T
+		where t.rotate_type = '轮入'
+		group by plan_id) K
+		<where>
+			P.stock_in > K.Detail_Number
+			and P.id = K.plan_id
+			and P.State = '审核通过'
+			<if test="year!=null and year!=''">
+				AND YEAR LIKE '%${year}%'
+			</if>
+			<if test="planName!=null and planName!=''">
+				AND PLAN_NAME LIKE '%${planName}%'
+			</if>
+			<if test="colletor!=null and colletor!=''">
+				AND COLLETOR LIKE '%${colletor}%'
+			</if>
+		</where>
+		union
+		select
+		P.*
+		FROM
+		<include refid="tableName"/>
+		P,
+		(select PLAN_ID, ROUND(nvl(sum(T.Detail_Number),0),3) Detail_Number
+		from T_ROTATE_PLAN_MAIN_DETAIL T
+		where t.rotate_type = '轮出'
+		group by plan_id) K
+		<where>
+			p.stock_out > K.Detail_Number
+			and P.id = K.plan_id
+			and P.State = '审核通过'
+			<if test="year!=null and year!=''">
+				AND YEAR LIKE '%${year}%'
+			</if>
+			<if test="planName!=null and planName!=''">
+				AND PLAN_NAME LIKE '%${planName}%'
+			</if>
+			<if test="colletor!=null and colletor!=''">
+				AND COLLETOR LIKE '%${colletor}%'
+			</if>
+		</where>
+		)
+		ORDER BY COLLETOR_DATE DESC,YEAR DESC
+		<if test="pageIndex!=null and pageIndex!='' and pageSize!=null and pageSize!=''">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+
+	<select id="listAll" parameterType="com.dhc.fastersoft.entity.RotatePlanmain" resultMap="rotatePlanResultMap">
+		SELECT
+		<include refid="columns" />
+		from
+		<include refid="tableName"/>
+		<where>
+			<if test="state!=null and state!=''">
+				AND STATE = #{state}
+			</if>
+		</where>
+		order by YEAR DESC
+	</select>
+
+</mapper>

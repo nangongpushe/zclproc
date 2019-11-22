@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.DurablesDao">
+  
+  <resultMap id="DurablesResultMap" type="com.dhc.fastersoft.entity.Durables">
+    <result column="ID"   		property="id"   jdbcType="NVARCHAR"/>
+    <result column="ENCODE"   	property="encode"  jdbcType="NVARCHAR"/>
+    <result column="TYPE"   	property="type"   jdbcType="NVARCHAR"/>
+    <result column="COMMODITY"   property="commodity"   jdbcType="NVARCHAR"/>
+    <result column="MODEL"   	property="model"   jdbcType="NVARCHAR"/>
+    <result column="UNIT"   	property="unit" jdbcType="NVARCHAR"/>
+    <result column="STATUS"   	property="status" jdbcType="NVARCHAR"/>
+    <result column="AMOUNT"  	property="amount" jdbcType="INTEGER"/>
+    <result column="MANUFACTURER"   property="manufacturer" jdbcType="NVARCHAR"/>
+    <result column="SERIAL_NUMBER"   property="serialNumber" jdbcType="NVARCHAR"/>
+    <result column="SUPPLIER"   property="supplier" jdbcType="NVARCHAR"/>
+    <result column="OPTIONS"   	property="options" jdbcType="NVARCHAR"/>
+    <result column="GROUP_ID"   property="groupId" jdbcType="NVARCHAR"/>
+    <result column="STORAGE_DATE"  property="storageDate"  jdbcType="TIMESTAMP"/>
+    <result column="STOREHOUSE"   property="storehouse" jdbcType="NVARCHAR"/>
+    <result column="WAREHOUSE_ID"   property="warehouseId" jdbcType="NVARCHAR"/>
+    <result column="STORAGE_PLACE"   property="storagePlace" jdbcType="NVARCHAR"/>
+    <result column="NEED_CARD"   	property="needCard" jdbcType="NVARCHAR"/>
+    <result column="PURCHASE_DATE"  property="purchaseDate"  jdbcType="TIMESTAMP"/>
+    <result column="POWER"   	property="power" jdbcType="NVARCHAR"/>
+    <result column="YIELD"   	property="yield" jdbcType="NVARCHAR"/>
+    <result column="OVERALL_DIMENSION"   property="overallDimension" jdbcType="NVARCHAR"/>
+    <result column="MAJOR_FUNCTION"   	property="majorFunction" jdbcType="NVARCHAR"/>
+    <result column="CUSTODIAN"   		property="custodian" jdbcType="NVARCHAR"/>
+    <result column="GUARDIAN"   		property="guardian" jdbcType="NVARCHAR"/>
+    <result column="OPERATOR"   		property="operator" jdbcType="NVARCHAR"/>
+    <result column="STORAGE_REQUIRE"   	property="storageRequire" jdbcType="NVARCHAR"/>
+    <result column="CREATOR"   			property="creator" jdbcType="NVARCHAR"/>
+    <result column="CREATE_DATE" 		property="createDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK"   			property="remark" jdbcType="NVARCHAR"/>
+  </resultMap>
+  <select id="pageQuery" parameterType="java.util.HashMap" resultMap="DurablesResultMap">
+  
+		${start} 
+		SELECT
+	  tmd.ID id, tmd.ENCODE encode, tmd.TYPE type, tmd.COMMODITY commodity,  tmd.MODEL model, tmd.UNIT unit, tmd.STATUS status, tmd.AMOUNT amount, tmd.MANUFACTURER manufacturer,
+	  tmd.SERIAL_NUMBER serialNumber, tmd.SUPPLIER supplier, tmd.OPTIONS options, tmd.GROUP_ID groupId, TO_CHAR(tmd.STORAGE_DATE,'YYYY-MM-DD') storageDate,
+	  house.WAREHOUSE_SHORT AS STOREHOUSE, tmd.STORAGE_PLACE storagePlace, tmd.NEED_CARD needCard, TO_CHAR(tmd.PURCHASE_DATE,'YYYY-MM-DD')  purchaseDate, tmd.POWER power,
+	  tmd.YIELD yield, tmd.OVERALL_DIMENSION overallDimension, tmd.MAJOR_FUNCTION majorFunction,tmd.CUSTODIAN custodian, tmd.GUARDIAN guardian, tmd.OPERATOR operator,
+	  tmd.STORAGE_REQUIRE storageRequire, tmd.CREATOR creator, TO_CHAR(tmd.CREATE_DATE,'YYYY-MM-DD') createDate, tmd.REMARK remark
+		 FROM T_MATERIAL_DURABLES tmd 	left join T_STORAGE_WAREHOUSE house ON tmd.WAREHOUSE_ID = house.ID
+		 WHERE 1=1
+
+		  <if test="commodity!=null and commodity!=''">
+			 and  tmd.COMMODITY  LIKE '%${commodity}%'
+		</if>
+		<if test="type!=null and type!=''">
+			 and  tmd.TYPE  = '${type}'
+		</if>
+		<if test="encode!=null and encode!=''">
+			 and  tmd.ENCODE  LIKE '%${encode}%'
+		</if>
+	  <if test="storehouse!=null and storehouse!=''">
+		  and  tmd.STOREHOUSE  = '${storehouse}'
+	  </if>
+	  <if test="warehouseId!=null and warehouseId!=''">
+		  and  tmd.WAREHOUSE_ID ='${warehouseId}'
+	  </if>
+		
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(tmd.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(tmd.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(tmd.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD')
+		</if>		
+		order by tmd.CREATE_DATE DESC
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_MATERIAL_DURABLES  tmd 	left join T_STORAGE_WAREHOUSE house ON tmd.WAREHOUSE_ID = house.ID
+		WHERE 1=1		 
+		  <if test="commodity!=null and commodity!=''">
+			 and  tmd.COMMODITY  LIKE '%${commodity}%'
+		</if>
+		<if test="type!=null and type!=''">
+			 and  tmd.TYPE  = '${type}'
+		</if>
+		<if test="encode!=null and encode!=''">
+			and  tmd.ENCODE  LIKE '%${encode}%'
+		</if>
+		<if test="storehouse!=null and storehouse!=''">
+			and  tmd.STOREHOUSE  = '${storehouse}'
+		</if>
+		<if test="warehouseId!=null and warehouseId!=''">
+			and  tmd.WAREHOUSE_ID ='${warehouseId}'
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(tmd.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(tmd.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(tmd.STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD')
+		</if>	
+		
+	</select>
+	
+	<select id="getDurablesById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.Durables">
+		SELECT 
+			tmd.ID id, tmd.ENCODE encode, tmd.TYPE type, tmd.COMMODITY commodity,  tmd.MODEL model, tmd.UNIT unit, tmd.STATUS status, tmd.AMOUNT amount, tmd.MANUFACTURER manufacturer,
+			tmd.SERIAL_NUMBER serialNumber, tmd.SUPPLIER supplier, tmd.OPTIONS options, tmd.GROUP_ID groupId, TO_CHAR(tmd.STORAGE_DATE,'YYYY-MM-DD') storageDate,
+			house.WAREHOUSE_SHORT AS STOREHOUSE,tmd.WAREHOUSE_ID warehouseId, tmd.STORAGE_PLACE storagePlace, tmd.NEED_CARD needCard, TO_CHAR(tmd.PURCHASE_DATE,'YYYY-MM-DD')  purchaseDate, tmd.POWER power,
+			tmd.YIELD yield, tmd.OVERALL_DIMENSION overallDimension, tmd.MAJOR_FUNCTION majorFunction,tmd.CUSTODIAN custodian, tmd.GUARDIAN guardian, tmd.OPERATOR operator,
+			tmd.STORAGE_REQUIRE storageRequire, tmd.CREATOR creator, TO_CHAR(tmd.CREATE_DATE,'YYYY-MM-DD') createDate, tmd.REMARK remark
+		 from T_MATERIAL_DURABLES tmd 	left join T_STORAGE_WAREHOUSE house ON tmd.WAREHOUSE_ID = house.ID
+		where tmd.ID=#{id,jdbcType=NVARCHAR}
+		
+	</select>
+	
+	<select id="getEncodeCount" parameterType="java.lang.String" resultType="int">
+		SELECT COUNT(0) FROM T_MATERIAL_DURABLES 
+		WHERE 1=1	
+		and ENCODE=#{encode,jdbcType=NVARCHAR}
+		  
+		
+	</select>
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.Durables" >
+ 
+       insert into T_MATERIAL_DURABLES (ID, ENCODE, TYPE, COMMODITY, 
+      MODEL, UNIT, STATUS, AMOUNT, 
+      MANUFACTURER, SERIAL_NUMBER, SUPPLIER, 
+      OPTIONS, GROUP_ID, STORAGE_DATE, 
+      STOREHOUSE,WAREHOUSE_ID, STORAGE_PLACE, NEED_CARD,
+      PURCHASE_DATE, POWER, YIELD, 
+      OVERALL_DIMENSION, MAJOR_FUNCTION, CUSTODIAN, 
+      GUARDIAN, OPERATOR, STORAGE_REQUIRE, 
+      CREATOR, CREATE_DATE, REMARK
+      )
+    values (#{id,jdbcType=NVARCHAR}, #{encode,jdbcType=NVARCHAR}, #{type,jdbcType=NVARCHAR}, #{commodity,jdbcType=NVARCHAR}, 
+      #{model,jdbcType=NVARCHAR}, #{unit,jdbcType=NVARCHAR}, #{status,jdbcType=NVARCHAR}, #{amount,jdbcType=INTEGER}, 
+      #{manufacturer,jdbcType=NVARCHAR}, #{serialNumber,jdbcType=NVARCHAR}, #{supplier,jdbcType=NVARCHAR}, 
+      #{options,jdbcType=NVARCHAR}, #{groupId,jdbcType=NVARCHAR}, to_date(#{storageDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'),
+      #{storehouse,jdbcType=NVARCHAR},#{warehouseId,jdbcType=NVARCHAR}, #{storagePlace,jdbcType=NVARCHAR}, #{needCard,jdbcType=NVARCHAR},
+      to_date(#{purchaseDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'), #{power,jdbcType=NVARCHAR}, #{yield,jdbcType=NVARCHAR}, 
+      #{overallDimension,jdbcType=NVARCHAR}, #{majorFunction,jdbcType=NVARCHAR}, #{custodian,jdbcType=NVARCHAR}, 
+      #{guardian,jdbcType=NVARCHAR}, #{operator,jdbcType=NVARCHAR}, #{storageRequire,jdbcType=NVARCHAR}, 
+      #{creator,jdbcType=NVARCHAR},sysdate, #{remark,jdbcType=NVARCHAR}
+      )
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.Durables">
+				
+	update T_MATERIAL_DURABLES
+  	  set 
+      ENCODE = #{encode,jdbcType=NVARCHAR},
+      TYPE = #{type,jdbcType=NVARCHAR},
+      COMMODITY = #{commodity,jdbcType=NVARCHAR},
+      MODEL = #{model,jdbcType=NVARCHAR},
+      UNIT = #{unit,jdbcType=NVARCHAR},
+      STATUS = #{status,jdbcType=NVARCHAR},
+      AMOUNT = #{amount,jdbcType=INTEGER},
+      MANUFACTURER = #{manufacturer,jdbcType=NVARCHAR},
+      SERIAL_NUMBER = #{serialNumber,jdbcType=NVARCHAR},
+      SUPPLIER = #{supplier,jdbcType=NVARCHAR},
+      OPTIONS = #{options,jdbcType=NVARCHAR},
+      STORAGE_DATE =  to_date(#{storageDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'),
+      STOREHOUSE = #{storehouse,jdbcType=NVARCHAR},
+	  WAREHOUSE_ID = #{warehouseId,jdbcType=NVARCHAR},
+      STORAGE_PLACE = #{storagePlace,jdbcType=NVARCHAR},
+      NEED_CARD = #{needCard,jdbcType=NVARCHAR},
+      PURCHASE_DATE = to_date(#{purchaseDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'),
+      POWER = #{power,jdbcType=NVARCHAR},
+      YIELD = #{yield,jdbcType=NVARCHAR},
+      OVERALL_DIMENSION = #{overallDimension,jdbcType=NVARCHAR},
+      MAJOR_FUNCTION = #{majorFunction,jdbcType=NVARCHAR},
+      CUSTODIAN = #{custodian,jdbcType=NVARCHAR},
+      GUARDIAN = #{guardian,jdbcType=NVARCHAR},
+      OPERATOR = #{operator,jdbcType=NVARCHAR},
+      STORAGE_REQUIRE = #{storageRequire,jdbcType=NVARCHAR},
+      CREATOR = #{creator,jdbcType=NVARCHAR},
+      REMARK = #{remark,jdbcType=NVARCHAR},
+    	CREATE_DATE=sysdate
+		<if test="groupId!=null and groupId!=''">
+			,GROUP_ID=#{groupId,jdbcType=NVARCHAR}
+		</if>
+	
+		WHERE ID='${id}'
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_MATERIAL_DURABLES
+		WHERE  ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+  
+    <select id="listDurables" parameterType="java.util.HashMap" resultMap="DurablesResultMap">
+  
+		SELECT 
+			ID id, ENCODE encode, TYPE type, COMMODITY commodity,  MODEL model, UNIT unit, STATUS status, AMOUNT amount, MANUFACTURER manufacturer,
+			SERIAL_NUMBER serialNumber, SUPPLIER supplier, OPTIONS options, GROUP_ID groupId, TO_CHAR(STORAGE_DATE,'YYYY-MM-DD') storageDate, 
+			STOREHOUSE storehouse, STORAGE_PLACE storagePlace, NEED_CARD needCard, TO_CHAR(PURCHASE_DATE,'YYYY-MM-DD')  purchaseDate, POWER power,
+			YIELD yield, OVERALL_DIMENSION overallDimension, MAJOR_FUNCTION majorFunction,CUSTODIAN custodian, GUARDIAN guardian, OPERATOR operator,
+			STORAGE_REQUIRE storageRequire, CREATOR creator, TO_CHAR(CREATE_DATE,'YYYY-MM-DD') createDate, REMARK remark
+		 FROM T_MATERIAL_DURABLES 	
+		 WHERE 1=1
+
+		 <if test="commodity!=null and commodity!=''">
+			 and  COMMODITY  LIKE '%${commodity}%'
+		</if>
+		<if test="type!=null and type!=''">
+			 and  TYPE  = '${type}'
+		</if>
+		<if test="encode!=null and encode!=''">
+			 and  ENCODE  = '${encode}'
+		</if>		
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(STORAGE_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		 <if test="storehouse!=null and storehouse!=''">
+			 and  STOREHOUSE  LIKE '%${storehouse}%'
+		</if>	
+		order by CREATE_DATE DESC
+
+	</select>
+  
+  
+</mapper>

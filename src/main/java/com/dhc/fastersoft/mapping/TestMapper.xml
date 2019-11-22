@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.TestDao">
+	<resultMap type="com.dhc.fastersoft.entity.Test" id="testResultMap">
+		<result property="id" column="V_ID" javaType="String" jdbcType="VARCHAR" />
+		<result property="name" column="V_NAME" javaType="String"
+			jdbcType="VARCHAR" />
+		<result property="age" column="N_AGE" javaType="int" jdbcType="INTEGER" />
+		<result property="note" column="V_NOTE" javaType="String"
+			jdbcType="VARCHAR" />
+		<result property="act" column="D_ACT" javaType="Date" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="pageQuery" parameterType="java.util.HashMap"
+		resultMap="testResultMap">
+		${start} SELECT V_ID,V_NAME,N_AGE,V_NOTE,D_ACT from T_TEST
+		<where>
+			<if test="name!=null and name!=''">
+				V_NAME LIKE '%${name}%'
+			</if>
+			<if test="username!=null and username!=''">
+				AND V_USERNAME LIKE '%${username}%'
+			</if>
+			<if test="wayid!=null and wayid!=''">
+				AND U.V_WAYID LIKE '%${wayid}%'
+			</if>
+		</where>
+		ORDER BY V_ID
+		${end}
+	</select>
+	<select id="query" parameterType="java.util.HashMap" resultMap="testResultMap">
+		SELECT V_ID,V_NAME,N_AGE,V_NOTE,D_ACT from T_TEST
+		<where>
+			<if test="name!=null and name!=''">
+				V_NAME LIKE '%${name}%'
+			</if>
+			<if test="username!=null and username!=''">
+				AND V_USERNAME LIKE '%${username}%'
+			</if>
+			<if test="wayid!=null and wayid!=''">
+				AND U.V_WAYID LIKE '%${wayid}%'
+			</if>
+		</where>
+		ORDER BY V_ID
+	</select>
+	<select id="getRecordCount" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_TEST
+		<where>
+			<if test="name!=null and name!=''">
+				V_NAME LIKE '%${name}%'
+			</if>
+			<if test="wayid!=null and wayid!=''">
+				AND V_WAYID LIKE '%${wayid}%'
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="com.dhc.fastersoft.entity.Test">
+		INSERT INTO T_TEST
+		(V_ID,V_NAME,N_AGE,V_NOTE,D_ACT)
+		VALUES
+		(#{id,jdbcType=VARCHAR},#{name},#{age},#{note},sysdate)
+	</insert>
+	<update id="update" parameterType="com.dhc.fastersoft.entity.Test">
+		UPDATE T_TEST SET
+		V_NAME
+		=${name},
+		N_AGE='${age}',
+		V_NOTE=${note}
+		WHERE V_ID='${id}'
+	</update>
+	<delete id="delete" parameterType="String">
+		DELETE from T_TEST WHERE
+		V_ID=#{id}
+	</delete>
+	<select id="getTestById" parameterType="String" resultMap="testResultMap">
+		select * from T_TEST WHERE V_ID=#{id}
+	</select>
+</mapper>

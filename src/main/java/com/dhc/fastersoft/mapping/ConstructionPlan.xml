@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.ConstructionPlanDao">
+	<resultMap id="constructionPlanResultMap" type="com.dhc.fastersoft.entity.ConstructionPlan">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+		<result column="HANDLE_TIME" property="handleTime" jdbcType="VARCHAR" />
+		<result column="YEAR" property="year" jdbcType="DATE" />
+		<result column="PROJECT_UNIT" property="projectUnit" jdbcType="VARCHAR" />
+		<result column="INVESTMENT_SUBTOTAL" property="investmentSubtotal" jdbcType="DOUBLE" />
+		<result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="INVESTMENT_TOTAL" property="investmentTotal" jdbcType="DOUBLE" />
+		<result column="LAST_EXPEND_SUBTOTAL" property="lastExpendSubtotal" jdbcType="DOUBLE" />
+		<result column="LAST_EXPEND_TOTAL" property="lastExpendTotal" jdbcType="DOUBLE" />
+		<result column="LAST_INVESTMENT_SUBTOTAL" property="lastInvestmentSubtotal" jdbcType="DOUBLE" />
+		<result column="LAST_INVESTMENT_TOTAL" property="lastInvestmentTotal" jdbcType="DOUBLE" />
+		<result column="CURRENT_EXPEND_SUBTOTAL" property="currentExpendSubtotal" jdbcType="DOUBLE" />
+		<result column="CURRENT_EXPEND_TOTAL" property="currentExpendTotal" jdbcType="DOUBLE" />
+		<result column="CURRENT_INVESTMENT_SUBTOTAL" property="currentInvestmentSubtotal" jdbcType="DOUBLE" />
+		<result column="CURRENT_INVESTMENT_TOTAL" property="currentInvestmentTotal" jdbcType="DOUBLE" />
+		<result column="FROM_TARGET" property="fromTarget" jdbcType="VARCHAR" />
+		<result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR"/>
+		<collection property="planDetail" ofType="com.dhc.fastersoft.entity.ConstructionPlanDetail">
+			<id column="CID" property="id" jdbcType="VARCHAR"/>
+			<result column="PLAN_ID" property="planId" jdbcType="VARCHAR"/>
+			<result column="SERIAL" property="serial" jdbcType="INTEGER"/>
+			<result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR"/>
+			<result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+			<result column="CONSTRUCTION_CONTENT" property="constructionContent" jdbcType="VARCHAR"/>
+			<result column="CONSTRUCTION_START" property="constructionStart" jdbcType="VARCHAR"/>
+			<result column="CONSTRUCTION_END" property="constructionEnd" jdbcType="VARCHAR"/>
+			<result column="CONSTRUCTION_NATURE" property="constructionNature" jdbcType="VARCHAR"/>
+			<result column="INVESTMENT" property="investment" jdbcType="DOUBLE"/>
+			<result column="FUNDS_PROVID" property="fundsProvid" jdbcType="VARCHAR"/>
+			<result column="LAST_EXPEND" property="lastExpend" jdbcType="DOUBLE"/>
+			<result column="LAST_INVESTMENT" property="lastInvestment" jdbcType="DOUBLE"/>
+			<result column="CURRENT_EXPEND" property="currentExpend" jdbcType="DOUBLE"/>
+			<result column="CURRENT_INVESTMENT" property="currentInvestment" jdbcType="DOUBLE"/>
+			<result column="CURRENT_PROGRESS" property="currentProgress" jdbcType="VARCHAR"/>
+			<result column="CREMARK" property="remark" jdbcType="VARCHAR"/>
+		</collection>
+	</resultMap>
+	
+	<sql id="columns">
+		ID,OPERATOR,DEPARTMENT,HANDLE_TIME,YEAR,PROJECT_UNIT,INVESTMENT_SUBTOTAL,
+		DATA_TYPE,CREATOR,CREATE_DATE,REMARK,INVESTMENT_TOTAL,LAST_EXPEND_SUBTOTAL,
+		LAST_INVESTMENT_SUBTOTAL,LAST_INVESTMENT_TOTAL,CURRENT_EXPEND_SUBTOTAL,CURRENT_EXPEND_TOTAL,
+		CURRENT_INVESTMENT_SUBTOTAL,CURRENT_INVESTMENT_TOTAL,FROM_TARGET,WAREHOUSE_ID
+	</sql>
+
+	<sql id="columnss">
+		tp.ID,tp.OPERATOR,tp.DEPARTMENT,tp.HANDLE_TIME,tp.YEAR,house.WAREHOUSE_SHORT AS PROJECT_UNIT,tp.INVESTMENT_SUBTOTAL,
+		tp.DATA_TYPE,tp.CREATOR,tp.CREATE_DATE,tp.REMARK,tp.INVESTMENT_TOTAL,tp.LAST_EXPEND_SUBTOTAL,
+		tp.LAST_INVESTMENT_SUBTOTAL,tp.LAST_INVESTMENT_TOTAL,tp.CURRENT_EXPEND_SUBTOTAL,tp.CURRENT_EXPEND_TOTAL,
+		tp.CURRENT_INVESTMENT_SUBTOTAL,tp.CURRENT_INVESTMENT_TOTAL,tp.FROM_TARGET,tp.WAREHOUSE_ID
+	</sql>
+	<sql id="columns-detail">
+		ID,PLAN_ID,SERIAL,PROJECT_NAME,PROJECT_ID,CONSTRUCTION_CONTENT,
+		CONSTRUCTION_START,CONSTRUCTION_END,CONSTRUCTION_NATURE,
+		INVESTMENT,FUNDS_PROVID,LAST_EXPEND,LAST_INVESTMENT,CURRENT_EXPEND,
+		CURRENT_INVESTMENT,CURRENT_PROGRESS,REMARK
+	</sql>
+	
+	<sql id="columns-select">
+		m.ID,m.OPERATOR,m.DEPARTMENT,m.HANDLE_TIME,m.YEAR,house.WAREHOUSE_SHORT AS PROJECT_UNIT,m.INVESTMENT_SUBTOTAL,
+		m.DATA_TYPE,m.CREATOR,m.CREATE_DATE,m.REMARK,m.INVESTMENT_TOTAL,m.LAST_EXPEND_SUBTOTAL,
+		m.LAST_INVESTMENT_SUBTOTAL,m.LAST_INVESTMENT_TOTAL,m.CURRENT_EXPEND_SUBTOTAL,m.CURRENT_EXPEND_TOTAL,
+		m.CURRENT_INVESTMENT_SUBTOTAL,m.CURRENT_INVESTMENT_TOTAL,m.FROM_TARGET,m.WAREHOUSE_ID
+	</sql>
+
+    <sql id="columns-detail-select">
+        c.ID CID,c.PLAN_ID,c.SERIAL,c.PROJECT_NAME,c.PROJECT_ID,c.CONSTRUCTION_CONTENT,
+        c.CONSTRUCTION_START,c.CONSTRUCTION_END,c.CONSTRUCTION_NATURE,
+        c.INVESTMENT,c.FUNDS_PROVID,c.LAST_EXPEND,c.LAST_INVESTMENT,c.CURRENT_EXPEND,
+        c.CURRENT_INVESTMENT,c.CURRENT_PROGRESS,c.REMARK CREMARK
+    </sql>
+	
+	<insert id="AddConstructionPlan" parameterType="com.dhc.fastersoft.entity.ConstructionPlan">
+		begin
+		INSERT INTO T_CONSTRUCTION_PLAN(<include refid="columns"/>)
+		VALUES(
+			#{id},#{operator},#{department},#{handleTime},#{year},#{projectUnit},#{investmentSubtotal},
+			#{dataType,jdbcType=VARCHAR},#{creator},#{createDate},#{remark,jdbcType=VARCHAR},#{investmentTotal},#{lastExpendSubtotal},
+			#{lastInvestmentSubtotal},#{lastInvestmentTotal},#{currentExpendSubtotal},#{currentExpendTotal},
+			#{currentInvestmentSubtotal},#{currentInvestmentTotal},#{fromTarget,jdbcType=VARCHAR},#{warehouseId,jdbcType=VARCHAR}
+		);
+		<foreach collection="planDetail" item="plan" separator=";">
+			INSERT INTO T_CONSTRUCTION_PLAN_DETAIL(<include refid="columns-detail"/>)
+			VALUES(
+				#{plan.id},#{id},#{plan.serial},#{plan.projectName},#{plan.projectId},#{plan.constructionContent},
+				#{plan.constructionStart},#{plan.constructionEnd},#{plan.constructionNature},
+				#{plan.investment},#{plan.fundsProvid},#{plan.lastExpend},#{plan.lastInvestment},#{plan.currentExpend},
+				#{plan.currentInvestment},#{plan.currentProgress},#{plan.remark}
+			)
+		</foreach>
+		;end;
+	</insert>
+
+	<select id="ListLimitPlan" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="constructionPlanResultMap">
+		SELECT * FROM (
+			SELECT A.*, ROWNUM RN
+			FROM (SELECT
+				<include refid="columnss" />
+				FROM
+				T_CONSTRUCTION_PLAN  tp  left join T_STORAGE_WAREHOUSE house ON tp.WAREHOUSE_ID = house.WAREHOUSE_CODE
+				ORDER BY CREATE_DATE DESC
+			) A left join T_STORAGE_WAREHOUSE house ON A.WAREHOUSE_ID = house.WAREHOUSE_CODE
+			<where>
+				<if test="entity.year != null and entity.year != ''">
+					AND A.YEAR = #{entity.year}
+				</if>
+				<if test="entity.projectUnit != null and entity.projectUnit != ''">
+					AND house.WAREHOUSE_SHORT LIKE concat(concat('%',#{entity.projectUnit}),'%')
+				</if>
+				<if test="entity.warehouseId != null">
+					AND A.WAREHOUSE_ID LIKE concat(concat('%',#{entity.warehouseId}),'%')
+				</if>
+				<if test="entity.operator != null and entity.operator != ''">
+					AND A.OPERATOR LIKE concat(concat('%',#{entity.operator}),'%')
+				</if>
+				<if test="entity.handleTime != null and entity.handleTime != ''">
+					AND A.HANDLE_TIME = #{entity.handleTime}
+				</if>
+				<if test="entity.investmentSubtotal != 0">
+					AND A.INVESTMENT_SUBTOTAL ${otherPram.symbol} #{entity.investmentSubtotal}
+				</if>
+				<if test="otherPram != null and otherPram.onlyCompany">
+					AND A.FROM_TARGET IS NULL
+				</if>
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			</where>
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(tp.ID) FROM T_CONSTRUCTION_PLAN  tp  left join T_STORAGE_WAREHOUSE house ON tp.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		<where>
+			<if test="entity.year != null and entity.year != ''">
+				AND tp.YEAR = #{entity.year}
+			</if>
+			<if test="entity.projectUnit != null">
+				AND house.WAREHOUSE_SHORT LIKE concat(concat('%',#{entity.projectUnit}),'%')
+			</if>
+			<if test="entity.warehouseId != null">
+				AND tp.WAREHOUSE_ID LIKE concat(concat('%',#{entity.warehouseId}),'%')
+			</if>
+			<if test="entity.operator != null">
+				AND tp.OPERATOR LIKE concat(concat('%',#{entity.operator}),'%')
+			</if>
+			<if test="entity.handleTime != null and entity.handleTime != ''">
+				AND tp.HANDLE_TIME = #{entity.handleTime}
+			</if>
+			<if test="entity.investmentSubtotal != 0">
+				AND tp.INVESTMENT_SUBTOTAL ${otherPram.symbol} #{entity.investmentSubtotal}
+			</if>
+			<if test="otherPram != null and otherPram.onlyCompany">
+				AND tp.FROM_TARGET IS NULL
+			</if>
+		</where>
+	</select>
+
+	<select id="GetConstructionPlan" parameterType="java.lang.String" resultMap="constructionPlanResultMap">
+		SELECT <include refid="columns-select"/>,<include refid="columns-detail-select"/> FROM T_CONSTRUCTION_PLAN m
+		LEFT JOIN T_CONSTRUCTION_PLAN_DETAIL c ON m.ID = c.PLAN_ID  left join T_STORAGE_WAREHOUSE house ON m.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		WHERE m.ID = #{_parameter}
+	</select>
+
+	<update id="UpdateConstructionPlan" parameterType="com.dhc.fastersoft.entity.ConstructionPlan">
+		begin
+		UPDATE T_CONSTRUCTION_PLAN SET
+		YEAR = #{year},PROJECT_UNIT = #{projectUnit},INVESTMENT_SUBTOTAL = #{investmentSubtotal},
+		REMARK = #{remark,jdbcType=VARCHAR},LAST_EXPEND_SUBTOTAL = #{lastExpendSubtotal},
+		LAST_INVESTMENT_SUBTOTAL = #{lastInvestmentSubtotal},CURRENT_EXPEND_SUBTOTAL = #{currentExpendSubtotal},
+		CURRENT_INVESTMENT_SUBTOTAL = #{currentInvestmentSubtotal},WAREHOUSE_ID=#{warehouseId,jdbcType=VARCHAR} WHERE ID = #{id};
+		
+		DELETE FROM T_CONSTRUCTION_PLAN_DETAIL WHERE PLAN_ID = #{id};
+		
+		<foreach collection="planDetail" item="plan">
+			INSERT INTO T_CONSTRUCTION_PLAN_DETAIL(<include refid="columns-detail"/>)
+			VALUES(
+				#{plan.id},#{id},#{plan.serial},#{plan.projectName},#{plan.projectId},#{plan.constructionContent},
+				#{plan.constructionStart},#{plan.constructionEnd},#{plan.constructionNature},
+				#{plan.investment},#{plan.fundsProvid},#{plan.lastExpend},#{plan.lastInvestment},#{plan.currentExpend},
+				#{plan.currentInvestment},#{plan.currentProgress},#{plan.remark}
+			);
+		</foreach>
+		end;
+	</update>
+	
+	<select id="listGroupByYear" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="constructionPlanResultMap">
+		SELECT * FROM (
+			SELECT A.*, ROWNUM ID
+			FROM (
+				SELECT 
+				YEAR,SUM(INVESTMENT_SUBTOTAL) INVESTMENT_TOTAL,
+				SUM(LAST_INVESTMENT_SUBTOTAL) LAST_INVESTMENT_TOTAL,
+				SUM(CURRENT_INVESTMENT_SUBTOTAL) CURRENT_INVESTMENT_TOTAL 
+				FROM T_CONSTRUCTION_PLAN
+				<where>
+					AND FROM_TARGET 
+					<choose>
+						<when test="entity.fromTarget == null">IS NULL</when>
+						<otherwise> = #{entity.fromTarget}</otherwise>
+					</choose>
+				</where>
+				GROUP BY YEAR ) A
+		<where>
+			<if test="entity.year != null and entity.year != ''">
+				AND YEAR = #{entity.year}
+			</if>
+			And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+		</where>
+		)
+		WHERE ID > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetCountGroupByYear" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (SELECT YEAR FROM T_CONSTRUCTION_PLAN
+		<where>
+			<if test="entity.year != null and entity.year != ''">
+				AND YEAR = #{entity.year}
+			</if>
+			AND FROM_TARGET 
+			<choose>
+				<when test="entity.fromTarget == null">IS NULL</when>
+				<otherwise> = #{entity.fromTarget}</otherwise>
+			</choose>
+		</where>
+		GROUP BY YEAR
+		)
+	</select>
+	
+	<select id="ListPlanByIdArray" parameterType="java.util.List" resultMap="constructionPlanResultMap">
+		SELECT <include refid="columns-select"/>,<include refid="columns-detail-select"/> FROM T_CONSTRUCTION_PLAN m
+		LEFT JOIN T_CONSTRUCTION_PLAN_DETAIL c ON m.ID = c.PLAN_ID left join T_STORAGE_WAREHOUSE house ON m.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		WHERE m.ID in (
+		<foreach collection="list" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+		ORDER BY c.SERIAL
+	</select>
+</mapper>

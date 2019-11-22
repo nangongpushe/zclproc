@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateSchemeDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateScheme" id="schemeResultMap">
+		<id column="ID" property="id" jdbcType="NVARCHAR" />
+		<result column="SCHEME_NAME" property="schemeName" jdbcType="NVARCHAR" />
+		<result column="SCHEME_TYPE" property="schemeType" jdbcType="NVARCHAR" />
+		<result column="ROTATE_TYPE" property="rotateType" jdbcType="NVARCHAR" />
+		<result column="ORIGIN_ID" property="originId" jdbcType="NVARCHAR" />
+		<result column="YEAR" property="year" jdbcType="NVARCHAR" />
+		<result column="DEPARTMENT" property="department" jdbcType="NVARCHAR" />
+		<result column="CREATER" property="creater" jdbcType="NVARCHAR" />
+		<result column="CREATETIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFIER" property="modifier" jdbcType="NVARCHAR" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="ANNEX" property="annex" jdbcType="NVARCHAR" />
+		<result column="STATE" property="state" jdbcType="NVARCHAR" />
+		<result column="COMPLETE_DATE" property="completeDate" jdbcType="TIMESTAMP" />
+		<result column="DESCRIPTION" property="description" jdbcType="NVARCHAR" />
+		<result column="ORIGIN_TYPE" property="originType" jdbcType="INTEGER" />
+		<result column="EXECUTE_STATE" property="executeState" jdbcType="NVARCHAR" />
+		<result column="PLAN_MAIN_ID" property="planMainId" jdbcType="NVARCHAR" />
+		<result column="IS_END" property="isEnd" jdbcType="VARCHAR" />
+		<collection property="schemeDetail" resultMap="com.dhc.fastersoft.dao.RotateSchemeDetailDao.schemedetailResultMap" />
+	</resultMap>
+	<resultMap id="schemeDetailResultMap" type="com.dhc.fastersoft.entity.RotateSchemeDetail">
+		<id column="D_ID" property="dId" jdbcType="NVARCHAR"/>
+		<result column="SCHEME_BATCH" property="schemeBatch" jdbcType="NVARCHAR"/>
+		<result column="D_SCHEME_TYPE" property="schemeType" jdbcType="NVARCHAR"/>
+		<result column="D_ROTATE_TYPE" property="rotateType" jdbcType="NVARCHAR"/>
+		<result column="BIDDING_TIME" property="biddingTime" jdbcType="INTEGER"/>
+		<result column="START_TIME" property="startTime" jdbcType="NVARCHAR"/>
+		<result column="END_TIME" property="endTime" jdbcType="NVARCHAR"/>
+		<result column="EXPECTED_CYCLE" property="expectedCycle" jdbcType="NVARCHAR"/>
+		<result column="LIBRARY_ID" property="libraryId" jdbcType="TIMESTAMP"/>
+		<result column="BRAN_NUMBER" property="branNumber" jdbcType="NVARCHAR"/>
+		<result column="YIELD_TIME" property="yieldTime" jdbcType="NVARCHAR"/>
+		<result column="FOOD_TYPE" property="foodType" jdbcType="NVARCHAR"/>
+		<result column="REAL_CONTAINER" property="realContainer" jdbcType="NVARCHAR"/>
+		<result column="REAL_STORAGE" property="realStorage" jdbcType="NVARCHAR"/>
+		<result column="ROTATE_NUMBER" property="rotateNumber" jdbcType="DOUBLE"/>
+		<result column="OGIRIN" property="ogirin" jdbcType="INTEGER"/>
+		<result column="PLAN_LEVEL" property="planLevel" jdbcType="INTEGER"/>
+		<result column="REAL_ROTATE_NUMBER" property="realRotateNumber" jdbcType="INTEGER"/>
+		<result column="SCHEME_ID" property="schemeId" jdbcType="NVARCHAR"/>
+		<result column="PLAN_DETAIL_ID" property="planDetailId" jdbcType="NVARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="NVARCHAR"/>
+		<result column="QUALITY_DETAIL" property="qualityDetail" jdbcType="NVARCHAR"/>
+		<result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR"/>
+		<result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR"/>
+		<result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="VARCHAR"/>
+		<result column="STORE_TYPE" property="storeType" jdbcType="VARCHAR"/>
+		<result column="PLAN_MAIN_DETAIL_ID" property="planMainDetailId" jdbcType="VARCHAR"/>
+		<result column="DEAL_DETAIL_NUMBER" property="dealDetailNumber" jdbcType="DECIMAL"/>
+		<result column="OVERDUE_TIME" property="overdueTime" jdbcType="DECIMAL"/>
+
+		<result column="SCHEME_NAME" property="schemeName" jdbcType="NVARCHAR" />
+		<result column="YEAR" property="year" jdbcType="NVARCHAR" />
+		<result column="ORIGIN_ID" property="originId" jdbcType="NVARCHAR" />
+		<result column="COMPLETE_DATE" property="completeDate" jdbcType="TIMESTAMP" />
+		<result column="EXECUTE_STATE" property="executeState" jdbcType="NVARCHAR" />
+		<result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="NVARCHAR" />
+
+	</resultMap>
+
+
+	<resultMap id="commitAndUndealResultMap" type="com.dhc.fastersoft.entity.CommitAndUndeal">
+		<result column="E" property="commitBidNum" jdbcType="DECIMAL"/>
+		<result column="G" property="dealNum" jdbcType="DECIMAL"/>
+		<result column="rotate_number" property="rotateNum" jdbcType="DECIMAL"/>
+		<result column="is_end" property="isEnd" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="columns">
+		ID,SCHEME_NAME,SCHEME_TYPE,ROTATE_TYPE,ORIGIN_ID,YEAR,DEPARTMENT,CREATER,
+		CREATETIME,MODIFIER,MODIFY_TIME,ANNEX,STATE,COMPLETE_DATE,DESCRIPTION,ORIGIN_TYPE,EXECUTE_STATE
+		,PLAN_MAIN_ID,IS_END
+	</sql>
+	<sql id="columns1">
+		s.SCHEME_NAME,s.YEAR,plan.PLAN_NAME AS ORIGIN_ID,detail.SCHEME_TYPE AS D_SCHEME_TYPE,detail.ROTATE_TYPE AS D_ROTATE_TYPE,s.COMPLETE_DATE,s.EXECUTE_STATE,detail.SCHEME_BATCH,
+		detail.BIDDING_TIME,detail.START_TIME,detail.END_TIME,e.ENTERPRISE_NAME,detail.LIBRARY_ID,detail.BRAN_NUMBER,
+		detail.FOOD_TYPE,detail.YIELD_TIME,detail.OGIRIN,detail.ROTATE_NUMBER,detail.STORE_TYPE,detail.QUALITY_DETAIL,s.OVERDUE_TIME
+	</sql>
+
+	<sql id="detail-columns">
+		D_ID,SCHEME_BATCH,SCHEME_TYPE,ROTATE_TYPE,BIDDING_TIME,START_TIME,
+		END_TIME,EXPECTED_CYCLE,LIBRARY_ID,BRAN_NUMBER,YIELD_TIME,
+		FOOD_TYPE,REAL_CONTAINER,REAL_STORAGE,ROTATE_NUMBER,OGIRIN,
+		PLAN_LEVEL,REAL_ROTATE_NUMBER,SCHEME_ID,PLAN_DETAIL_ID,QUALITY_DETAIL,WAREHOUSE_ID,ENTERPRISE_ID
+		,STORE_TYPE
+	</sql>
+	
+	<sql id="columns-select">
+		s.ID,s.SCHEME_NAME,s.SCHEME_TYPE,s.ROTATE_TYPE,s.ORIGIN_ID,s.YEAR,s.DEPARTMENT,(select name from T_SYS_USER where id = s.CREATER) CREATER,
+		s.CREATETIME,s.MODIFIER,s.MODIFY_TIME,s.ANNEX,s.STATE,s.COMPLETE_DATE,s.DESCRIPTION,s.ORIGIN_TYPE,s.EXECUTE_STATE,s.PLAN_MAIN_ID,s.IS_END
+	</sql>
+	
+	<sql id="detail-select">
+		detail.D_ID,detail.SCHEME_BATCH,detail.SCHEME_TYPE AS D_SCHEME_TYPE,detail.ROTATE_TYPE AS D_ROTATE_TYPE,detail.BIDDING_TIME,detail.START_TIME,
+		detail.END_TIME,detail.EXPECTED_CYCLE,detail.LIBRARY_ID,detail.BRAN_NUMBER,detail.YIELD_TIME,
+		detail.FOOD_TYPE,detail.REAL_CONTAINER,detail.REAL_STORAGE,detail.ROTATE_NUMBER,detail.OGIRIN,
+		detail.PLAN_LEVEL,detail.REAL_ROTATE_NUMBER,detail.SCHEME_ID,detail.PLAN_DETAIL_ID,detail.STATUS,detail.QUALITY_DETAIL,detail.WAREHOUSE_ID
+	</sql>
+
+	<sql id="detail-select1">
+		detail.D_ID,detail.SCHEME_BATCH,detail.SCHEME_TYPE AS D_SCHEME_TYPE,detail.ROTATE_TYPE AS D_ROTATE_TYPE,detail.BIDDING_TIME,detail.START_TIME,
+		detail.END_TIME,detail.EXPECTED_CYCLE,house.WAREHOUSE_SHORT AS LIBRARY_ID,detail.BRAN_NUMBER,detail.YIELD_TIME,
+		detail.FOOD_TYPE,detail.REAL_CONTAINER,detail.REAL_STORAGE,detail.ROTATE_NUMBER,detail.OGIRIN,
+		detail.PLAN_LEVEL,detail.REAL_ROTATE_NUMBER,detail.SCHEME_ID,detail.PLAN_DETAIL_ID,detail.STATUS,detail.QUALITY_DETAIL,detail.WAREHOUSE_ID
+		,detail.STORE_TYPE
+	</sql>
+
+	<sql id="tablename"> T_ROTATE_SCHEME </sql>
+
+	<insert id="CreateScheme" parameterType="com.dhc.fastersoft.entity.RotateScheme">
+		begin
+		INSERT INTO
+		<include refid="tablename" />
+		(
+		<include refid="columns" />
+		)
+		VALUES(
+		#{id},#{schemeName,jdbcType=NVARCHAR},#{schemeType,jdbcType=NVARCHAR},#{rotateType,jdbcType=NVARCHAR},#{originId,jdbcType=NVARCHAR},#{year},#{department,jdbcType=NVARCHAR},#{creater,jdbcType=NVARCHAR},
+		#{createTime},#{modifier,jdbcType=NVARCHAR},#{modifyTime,jdbcType=TIMESTAMP},#{annex,jdbcType=NVARCHAR},#{state},#{completeDate,jdbcType=TIMESTAMP},#{description,jdbcType=NVARCHAR},
+		#{originType},#{executeState,jdbcType=NVARCHAR},#{planMainId,jdbcType=NVARCHAR},#{isEnd,jdbcType=VARCHAR}
+		);
+
+		<foreach collection="schemeDetail" item="detail">
+			INSERT INTO T_ROTATE_SCHEME_DETAIL (
+			<include refid="detail-columns" />
+			)
+			VALUES (
+			#{detail.dId},#{detail.schemeBatch,jdbcType=NVARCHAR},#{detail.schemeType,jdbcType=NVARCHAR},
+			#{detail.rotateType,jdbcType=NVARCHAR},#{detail.biddingTime,jdbcType=NVARCHAR},#{detail.startTime,jdbcType=NVARCHAR},
+			#{detail.endTime,jdbcType=NVARCHAR},#{detail.expectedCycle,jdbcType=NVARCHAR},#{detail.libraryId,jdbcType=TIMESTAMP},#{detail.branNumber,jdbcType=NVARCHAR},
+			#{detail.yieldTime,jdbcType=NVARCHAR},#{detail.foodType,jdbcType=NVARCHAR},#{detail.realContainer,jdbcType=NVARCHAR},#{detail.realStorage,jdbcType=NVARCHAR},
+			#{detail.rotateNumber,jdbcType=DOUBLE},#{detail.ogirin,jdbcType=NVARCHAR},
+			#{detail.planLevel,jdbcType=INTEGER},#{detail.realRotateNumber,jdbcType=INTEGER},#{id},#{detail.planDetailId,jdbcType=NVARCHAR},
+			#{detail.qualityDetail,jdbcType=NVARCHAR},#{detail.warehouseId,jdbcType=VARCHAR},#{detail.enterpriseId,jdbcType=NVARCHAR}
+			,#{detail.storeType,jdbcType=NVARCHAR}
+			);
+		</foreach>
+		end;
+	</insert>
+
+	<update id="UpdateScheme" parameterType="com.dhc.fastersoft.entity.RotateScheme">
+		begin
+		UPDATE
+		<include refid="tablename" />
+		SET
+		SCHEME_NAME = #{schemeName,jdbcType=NVARCHAR},SCHEME_TYPE = #{schemeType,jdbcType=NVARCHAR},ROTATE_TYPE = #{rotateType,jdbcType=NVARCHAR},
+		ORIGIN_ID = #{originId,jdbcType=NVARCHAR},YEAR = #{year,jdbcType=NVARCHAR},DEPARTMENT = #{department,jdbcType=NVARCHAR},MODIFIER = #{modifier,jdbcType=NVARCHAR},
+		MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},ANNEX = #{annex,jdbcType=NVARCHAR},STATE = #{state,jdbcType=NVARCHAR},
+		COMPLETE_DATE = #{completeDate,jdbcType=TIMESTAMP},DESCRIPTION = #{description,jdbcType=NVARCHAR},
+		ORIGIN_TYPE = #{originType,jdbcType=NVARCHAR},EXECUTE_STATE=#{executeState,jdbcType=NVARCHAR}
+		,PLAN_MAIN_ID=#{planMainId,jdbcType=NVARCHAR},IS_END = #{isEnd,jdbcType=VARCHAR}
+		WHERE "ID" = #{id};
+
+		DELETE FROM T_ROTATE_SCHEME_DETAIL WHERE SCHEME_ID = #{id};
+
+		<foreach collection="schemeDetail" item="detail">
+			INSERT INTO T_ROTATE_SCHEME_DETAIL (
+			<include refid="detail-columns" />
+			)
+			VALUES (
+			#{detail.dId},#{detail.schemeBatch,jdbcType=NVARCHAR},#{detail.schemeType,jdbcType=NVARCHAR},
+			#{detail.rotateType,jdbcType=NVARCHAR},#{detail.biddingTime,jdbcType=NVARCHAR},#{detail.startTime,jdbcType=NVARCHAR},
+			#{detail.endTime,jdbcType=NVARCHAR},#{detail.expectedCycle,jdbcType=NVARCHAR},#{detail.libraryId,jdbcType=TIMESTAMP},#{detail.branNumber,jdbcType=NVARCHAR},
+			#{detail.yieldTime,jdbcType=NVARCHAR},#{detail.foodType,jdbcType=NVARCHAR},#{detail.realContainer,jdbcType=NVARCHAR},#{detail.realStorage,jdbcType=NVARCHAR},
+			#{detail.rotateNumber,jdbcType=DOUBLE},#{detail.ogirin,jdbcType=NVARCHAR},
+			#{detail.planLevel,jdbcType=INTEGER},#{detail.realRotateNumber,jdbcType=INTEGER},#{id},#{detail.planDetailId,jdbcType=NVARCHAR},
+			#{detail.qualityDetail,jdbcType=NVARCHAR},#{detail.warehouseId,jdbcType=VARCHAR},#{detail.enterpriseId,jdbcType=VARCHAR}
+			,#{detail.storeType,jdbcType=NVARCHAR}
+			);
+		</foreach>
+		end;
+	</update>
+	
+	<update id="updateState" parameterType="java.util.HashMap">
+		UPDATE
+		<include refid="tablename" />
+		SET
+		EXECUTE_STATE = #{state}
+		WHERE "ID" = #{id}
+	</update>
+	
+	<update id="updateStateOfDetail" parameterType="java.util.HashMap">
+		UPDATE
+		T_ROTATE_SCHEME_DETAIL
+		SET
+		STATUS = #{status}
+		WHERE D_ID = #{dId}
+	</update>
+
+	<select id="LisLimitScheme" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="schemeResultMap">
+		SELECT * FROM (
+		SELECT A.*, ROWNUM RN
+		FROM (SELECT
+		<include refid="columns-select" />,p.PLAN_NAME
+		FROM T_ROTATE_SCHEME s LEFT JOIN T_ROTATE_PLAN_MAIN p
+		ON p.ID = s.PLAN_MAIN_ID
+		ORDER BY s.CREATETIME DESC
+		) A
+		<where>
+			<if test="entity.originId != null and entity.originId != ''">
+				AND PLAN_NAME LIKE concat(concat('%',#{entity.originId}),'%')
+			</if>
+			<if test="entity.year != null and entity.year != ''">
+				AND YEAR = #{entity.year}
+			</if>
+			<if test="entity.schemeName != null and entity.schemeName != ''">
+				AND SCHEME_NAME LIKE concat(concat('%',#{entity.schemeName}),'%')
+			</if>
+			<if test="entity.schemeType != null and entity.schemeType != ''">
+				AND SCHEME_TYPE = #{entity.schemeType}
+			</if>
+			<if test="entity.rotateType != null and entity.rotateType != ''">
+				AND ROTATE_TYPE = #{entity.rotateType}
+			</if>
+			<if test="entity.state != null and entity.state != ''">
+				AND STATE = #{entity.state}
+			</if>
+			<if test="entity.originType != 0">
+				AND ORIGIN_TYPE = #{entity.originType}
+			</if>
+			<if test="entity.executeState != null and entity.executeState != ''">
+				AND EXECUTE_STATE = #{entity.executeState}
+			</if>
+			AND ROWNUM &lt;= #{pageIndex} * #{pageSize}
+		</where>
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+
+	<select id="GetTotcalCount" parameterType="com.dhc.fastersoft.utils.PageUtil"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM T_ROTATE_SCHEME s LEFT JOIN T_ROTATE_PLAN_MAIN p ON p.ID = s.PLAN_MAIN_ID
+		<where>
+			<if test="entity.originId != null and entity.originId != ''">
+				AND p.PLAN_NAME LIKE concat(concat('%',#{entity.originId}),'%')
+			</if>
+			<if test="entity.year != null and entity.year != ''">
+				AND s.YEAR = #{entity.year}
+			</if>
+			<if test="entity.schemeName != null and entity.schemeName != ''">
+				AND s.SCHEME_NAME LIKE concat(concat('%',#{entity.schemeName}),'%')
+			</if>
+			<if test="entity.schemeType != null and entity.schemeType != ''">
+				AND s.SCHEME_TYPE = #{entity.schemeType}
+			</if>
+			<if test="entity.rotateType != null and entity.rotateType != ''">
+				AND s.ROTATE_TYPE = #{entity.rotateType}
+			</if>
+			<if test="entity.state != null and entity.state != ''">
+				AND s.STATE = #{entity.state}
+			</if>
+			<if test="entity.originType != 0">
+				AND s.ORIGIN_TYPE = #{entity.originType}
+			</if>
+			<if test="entity.executeState != null and entity.executeState != ''">
+				AND s.EXECUTE_STATE = #{entity.executeState}
+			</if>
+		</where>
+	</select>
+
+	<select id="GetSchemeInfo" parameterType="java.lang.String" resultMap="schemeResultMap">
+		SELECT
+			<include refid="columns-select"/>,
+			<include refid="detail-select1"/>, nvl(E.ENTERPRISE_NAME,(select ENTERPRISE_NAME FROM T_STORE_ENTERPRISE where id = house.ENTERPRISE_ID)) as ENTERPRISE_NAME, detail.ENTERPRISE_ID
+		FROM <include refid="tablename" /> s
+		LEFT JOIN T_ROTATE_SCHEME_DETAIL detail 
+		ON s.ID = detail.SCHEME_ID
+		LEFT JOIN T_STORAGE_WAREHOUSE house
+		ON house.ID = detail.WAREHOUSE_ID
+		LEFT JOIN T_STORE_ENTERPRISE E
+		ON E.ID = detail.ENTERPRISE_Id
+		WHERE
+		s.ID = #{_parameter} or s.SCHEME_NAME = #{_parameter}
+		order by detail.scheme_batch, detail.FOOD_TYPE,detail.yield_time ASC
+	</select>
+	
+	<select id="ListChildScheme" parameterType="java.lang.String" resultMap="schemeResultMap">
+		SELECT scheme.*, <include refid="detail-select"/> FROM <include refid="tablename" /> scheme 
+		LEFT JOIN T_ROTATE_SCHEME_DETAIL detail 
+		ON scheme.ID = detail.SCHEME_ID
+		WHERE scheme.ORIGIN_ID = #{_parameter} AND ORIGIN_TYPE = 2
+	</select>
+	
+	<select id="listScheme" parameterType="java.util.HashMap" resultMap="schemeResultMap">
+		SELECT <include refid="columns"/> FROM <include refid="tablename" />
+		<where>
+			<if test="schemeType!=null and schemeType!=''">
+				AND SCHEME_TYPE LIKE '%${schemeType}%'
+			</if>
+			<if test="rotateType!=null and rotateType!=''">
+				AND ROTATE_TYPE LIKE '%${rotateType}%'
+			</if>
+			<if test="year!=null and year!=''">
+				AND YEAR = '${year}'
+			</if>
+		</where>
+	</select>
+
+	<select id="listDetail" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateSchemeDetailDao.schemedetailResultMap">
+		<if test="pageIndex!=null">
+		SELECT * FROM (
+		SELECT A.*, ROWNUM RN
+		FROM (
+		</if>
+		SELECT
+		D_ID,SCHEME_BATCH,SCHEME_TYPE,ROTATE_TYPE,BIDDING_TIME,START_TIME,
+		END_TIME,EXPECTED_CYCLE,house.WAREHOUSE_SHORT AS LIBRARY_ID,BRAN_NUMBER,YIELD_TIME,
+		FOOD_TYPE,REAL_CONTAINER,REAL_STORAGE,ROTATE_NUMBER,OGIRIN,
+		PLAN_LEVEL,REAL_ROTATE_NUMBER,SCHEME_ID,PLAN_DETAIL_ID,QUALITY_DETAIL,WAREHOUSE_ID,e.ENTERPRISE_NAME,T_ROTATE_SCHEME_DETAIL.ENTERPRISE_ID,STORE_TYPE
+		FROM T_ROTATE_SCHEME_DETAIL
+		left join T_STORAGE_WAREHOUSE house ON T_ROTATE_SCHEME_DETAIL.WAREHOUSE_ID = house.id
+		left join T_STORE_ENTERPRISE e ON e.id = T_ROTATE_SCHEME_DETAIL.ENTERPRISE_ID
+		<if test="(pageIndex!=null and pageIndex!='') and (pageSize!=null and pageSize!='')">
+		) A
+		</if>
+		<where>
+			<if test="schemeBatch != null and schemeBatch!=''">
+				AND SCHEME_BATCH LIKE '%${schemeBatch}%'
+			</if>
+			<if test="schemeType != null and schemeType!=''">
+				AND SCHEME_TYPE LIKE '%${schemeType}%'
+			</if>
+			<if test="rotateType != null and rotateType!=''">
+				AND ROTATE_TYPE LIKE '%${rotateType}%'
+			</if>
+			<if test="foodType != null and foodType!=''">
+				And FOOD_TYPE = #{foodType}
+			</if>
+			<if test="schemeId!=null and schemeId!=''">
+				And SCHEME_ID = #{schemeId}
+			</if>
+			<if test="mainSchemeName!=null and mainSchemeName!=''">
+				And SCHEME_ID IN (SELECT ID FROM T_ROTATE_SCHEME WHERE SCHEME_NAME LIKE '%${mainSchemeName}%' AND SCHEME_TYPE!='年度轮换方案')
+			</if>
+			<if test="enterprise != null">
+				AND ENTERPRISE_NAME = #{enterprise}
+			</if>
+			<if test="libraryId !=null and libraryId !=''">
+				And LIBRARY_ID = #{libraryId}
+			</if>
+			<if test="branNumber!=null and branNumber !=''">
+				And BRAN_NUMBER = #{branNumber}
+			</if>
+			<if test= 'warehouseType =="代储库" and warehouseType !=null'>
+				And LIBRARY_ID IN (SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE = #{warehouseType})
+			</if>
+			<if test= 'warehouseType =="储备库" and warehouseType !=null'>
+				And LIBRARY_ID IN (SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE = #{warehouseType})
+			</if>
+			<if test="yieldTime!=null and yieldTime!=''">
+				And YIELD_TIME = #{yieldTime}
+			</if>
+			<if test="ogirin!=null and ogirin!=''">
+				And OGIRIN = #{ogirin}
+			</if>
+			<if test="mainSchemeState!=null and mainSchemeState!=''">
+				And SCHEME_ID IN (SELECT ID FROM T_ROTATE_SCHEME WHERE STATE LIKE '%${mainSchemeState}%' AND SCHEME_TYPE!='年度轮换方案')
+			</if>
+			<if test="isEnd!=null and isEnd!=''">
+				And SCHEME_ID IN (SELECT ID FROM T_ROTATE_SCHEME WHERE SCHEME_TYPE!='年度轮换方案' AND (IS_END != '1' OR IS_END is null))
+			</if>
+			
+			<if test="(pageIndex!=null and pageIndex!='') and (pageSize!=null and pageSize!='')">
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			</if>
+			
+			<if test="quantity!=null and quantity!=''">
+				And ROTATE_NUMBER <![CDATA[>=]]> #{quantity}
+			</if>
+			
+		</where>
+		<if test="(pageIndex!=null and pageIndex!='') and (pageSize!=null and pageSize!='')">
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+		</if>
+	</select>
+
+	<select id="getSchemeDetailByCondition" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateSchemeDetailDao.schemedetailResultMap">
+
+		SELECT
+		D_ID,SCHEME_BATCH,SCHEME_TYPE,ROTATE_TYPE,BIDDING_TIME,START_TIME,
+		END_TIME,EXPECTED_CYCLE,house.WAREHOUSE_SHORT AS LIBRARY_ID,BRAN_NUMBER,YIELD_TIME,
+		FOOD_TYPE,REAL_CONTAINER,REAL_STORAGE,ROTATE_NUMBER,OGIRIN,
+		PLAN_LEVEL,REAL_ROTATE_NUMBER,SCHEME_ID,PLAN_DETAIL_ID,QUALITY_DETAIL,WAREHOUSE_ID,e.ENTERPRISE_NAME,T_ROTATE_SCHEME_DETAIL.ENTERPRISE_ID,STORE_TYPE
+		FROM T_ROTATE_SCHEME_DETAIL
+		left join T_STORAGE_WAREHOUSE house ON T_ROTATE_SCHEME_DETAIL.WAREHOUSE_ID = house.id
+		left join T_STORE_ENTERPRISE e ON e.id = T_ROTATE_SCHEME_DETAIL.ENTERPRISE_ID
+		<where>
+			<if test="schemeBatch != null and schemeBatch!=''">
+				AND SCHEME_BATCH LIKE '%${schemeBatch}%'
+			</if>
+			<if test="schemeType != null and schemeType!=''">
+				AND SCHEME_TYPE LIKE '%${schemeType}%'
+			</if>
+			<if test="rotateType != null and rotateType!=''">
+				AND ROTATE_TYPE LIKE '%${rotateType}%'
+			</if>
+			<if test="foodType != null and foodType!=''">
+				And FOOD_TYPE = #{foodType}
+			</if>
+			<if test="schemeId!=null and schemeId!=''">
+				And SCHEME_ID = #{schemeId}
+			</if>
+			<if test="mainSchemeName!=null and mainSchemeName!=''">
+				And SCHEME_ID IN (SELECT ID FROM T_ROTATE_SCHEME WHERE SCHEME_NAME LIKE '%${mainSchemeName}%' AND SCHEME_TYPE!='年度轮换方案')
+			</if>
+			<if test="enterprise != null">
+				AND E.ENTERPRISE_NAME = #{enterprise}
+			</if>
+			<if test="libraryId !=null and libraryId !=''">
+				And LIBRARY_ID = #{libraryId}
+			</if>
+			<if test="branNumber!=null and branNumber !=''">
+				And BRAN_NUMBER = #{branNumber}
+			</if>
+			<if test= 'warehouseType =="代储库" and warehouseType !=null'>
+				And LIBRARY_ID IN (SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE = #{warehouseType})
+			</if>
+			<if test= 'warehouseType =="储备库" and warehouseType !=null'>
+				And LIBRARY_ID IN (SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE = #{warehouseType})
+			</if>
+			<if test="yieldTime!=null and yieldTime!=''">
+				And YIELD_TIME = #{yieldTime}
+			</if>
+			<if test="ogirin!=null and ogirin!=''">
+				And OGIRIN = #{ogirin}
+			</if>
+			<if test="mainSchemeState!=null and mainSchemeState!=''">
+				And SCHEME_ID IN (SELECT ID FROM T_ROTATE_SCHEME WHERE STATE LIKE '%${mainSchemeState}%' AND SCHEME_TYPE!='年度轮换方案')
+			</if>
+
+			<if test="(pageIndex!=null and pageIndex!='') and (pageSize!=null and pageSize!='')">
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			</if>
+
+			<if test="quantity!=null and quantity!=''">
+				And ROTATE_NUMBER <![CDATA[>=]]> #{quantity}
+			</if>
+
+		</where>
+
+	</select>
+	
+	<select id="countDetail" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM
+		T_ROTATE_SCHEME_DETAIL
+		left join T_STORAGE_WAREHOUSE house ON T_ROTATE_SCHEME_DETAIL.WAREHOUSE_ID = house.id
+		left join T_STORE_ENTERPRISE e ON e.id = T_ROTATE_SCHEME_DETAIL.ENTERPRISE_ID
+		<where>
+			<if test="schemeBatch != null">
+				AND SCHEME_BATCH LIKE '%${schemeBatch}%'
+			</if>
+			<if test="enterprise != null">
+				AND e.ENTERPRISE_NAME = #{enterprise}
+			</if>
+			<if test="schemeType != null">
+				AND SCHEME_TYPE LIKE '%${schemeType}%'
+			</if>
+			<if test="rotateType != null">
+				AND ROTATE_TYPE LIKE '%${rotateType}%'
+			</if>
+			<if test="foodType != null and foodType!=''">
+				And FOOD_TYPE = #{foodType}
+			</if>
+			<if test="schemeId!=null and schemeId!=''">
+				And SCHEME_ID = '${schemeId}'
+			</if>
+			
+			<if test="libraryId !=null and libraryId != ''">
+				And house.WAREHOUSE_SHORT = #{libraryId}
+			</if>
+			<if test="branNumber!=null and branNumber != ''">
+				And BRAN_NUMBER = #{branNumber}
+			</if>
+			<if test= 'warehouseType =="代储库" and warehouseType !=null'>
+				And LIBRARY_ID IN (SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE = #{warehouseType})
+			</if>
+			<if test= 'warehouseType =="储备库" and warehouseType !=null'>
+				And LIBRARY_ID IN (SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE WAREHOUSE_TYPE = #{warehouseType})
+			</if>
+			<if test="yieldTime!=null and yieldTime!=''">
+				And YIELD_TIME = #{yieldTime}
+			</if>
+			<if test="ogirin!=null and ogirin!=''">
+				And OGIRIN = #{ogirin}
+			</if>
+
+			<if test="mainSchemeState!=null and mainSchemeState!=''">
+				And SCHEME_ID IN (SELECT ID FROM T_ROTATE_SCHEME WHERE STATE LIKE '%${mainSchemeState}%' AND SCHEME_TYPE!='年度轮换方案')
+			</if>
+			<if test="isEnd!=null and isEnd!=''">
+				And SCHEME_ID IN (SELECT ID FROM T_ROTATE_SCHEME WHERE SCHEME_TYPE!='年度轮换方案' AND (IS_END != '1' OR IS_END is null))
+			</if>
+			<if test="quantity!=null and quantity!=''">
+				And ROTATE_NUMBER <![CDATA[>=]]> #{quantity}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getSchemeIdByDetailId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT SCHEME_ID FROM T_ROTATE_SCHEME_DETAIL
+		<where>
+			D_ID = #{_parameter}
+		</where>
+	</select>
+	
+	<select id="getDetailBatchById" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT SCHEME_BATCH FROM T_ROTATE_SCHEME_DETAIL
+		<where>
+			D_ID = #{_parameter}
+		</where>
+	</select>
+	
+	<delete id="DeleteData" parameterType="java.util.Map">
+		begin
+		<if test="childTable != null">
+			DELETE FROM ${childTable} WHERE ${forignKey} = #{mainId};
+		</if>
+		DELETE FROM ${tableName} WHERE ID = #{mainId};
+		end;
+	</delete>
+	
+	<select id="getSchemeName" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT SCHEME_NAME FROM T_ROTATE_SCHEME WHERE ID = #{_id}
+	</select>
+	
+	<select id="ListSchemeByBase" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="schemeResultMap">
+		SELECT * FROM (
+		SELECT A.*, ROWNUM RN
+		FROM (SELECT
+		<include refid="columns-select" />,PLAN_NAME
+		FROM
+		<include refid="tablename" /> s LEFT JOIN T_ROTATE_PLAN_MAIN p
+		ON p.ID = s.PLAN_MAIN_ID
+		WHERE s.ID IN (
+		<foreach collection="otherPram.schemeIds" item="_id" separator=",">
+			#{_id}
+		</foreach>
+		)
+		ORDER BY s.CREATETIME DESC
+		) A
+		<where>
+			<if test="entity.originId != null and entity.originId != ''">
+				AND (PLAN_NAME LIKE concat(concat('%',#{entity.originId}),'%')
+				OR
+				PLAN_MAIN_ID LIKE concat(concat('%',#{entity.originId}),'%'))
+			</if>
+			<if test="entity.year != null and entity.year != ''">
+				AND YEAR LIKE concat(concat('%',#{entity.year}),'%')
+			</if>
+			<if test="entity.schemeName != null and entity.schemeName != ''">
+				AND SCHEME_NAME LIKE concat(concat('%',#{entity.schemeName}),'%')
+			</if>
+			<if test="entity.schemeType != null and entity.schemeType != ''">
+				AND SCHEME_TYPE LIKE concat(concat('%',#{entity.schemeType}),'%')
+			</if>
+			<if test="entity.rotateType != null and entity.rotateType != ''">
+				AND ROTATE_TYPE LIKE concat(concat('%',#{entity.rotateType}),'%')
+			</if>
+			<if test="entity.state != null and entity.state != ''">
+				AND STATE LIKE concat(concat('%',#{entity.state}),'%')
+			</if>
+			<if test="entity.originType != 0">
+				AND ORIGIN_TYPE = #{entity.originType}
+			</if>
+			<if test="entity.executeState != null and entity.executeState != ''">
+				AND EXECUTE_STATE LIKE concat(concat('%',#{entity.executeState}),'%')
+			</if>
+			And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+		</where>
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetCountByBase" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(s.ID) FROM
+		<include refid="tablename" /> s LEFT JOIN T_ROTATE_PLAN_MAIN p ON p.ID = s.PLAN_MAIN_ID
+		<where>
+			s.ID IN (
+			<foreach collection="otherPram.schemeIds" item="_id" separator=",">
+				#{_id}
+			</foreach>
+			)
+			<if test="entity.originId != null and entity.originId != ''">
+				AND (p.PLAN_NAME LIKE concat(concat('%',#{entity.originId}),'%')
+				OR
+				s.PLAN_MAIN_ID LIKE concat(concat('%',#{entity.originId}),'%'))
+			</if>
+			<if test="entity.year != null">
+				AND s.YEAR LIKE concat(concat('%',#{entity.year}),'%')
+			</if>
+			<if test="entity.schemeName != null">
+				AND s.SCHEME_NAME LIKE concat(concat('%',#{entity.schemeName}),'%')
+			</if>
+			<if test="entity.schemeType != null">
+				AND s.SCHEME_TYPE LIKE concat(concat('%',#{entity.schemeType}),'%')
+			</if>
+			<if test="entity.rotateType != null">
+				AND s.ROTATE_TYPE LIKE concat(concat('%',#{entity.rotateType}),'%')
+			</if>
+			<if test="entity.state != null">
+				AND s.STATE LIKE concat(concat('%',#{entity.state}),'%')
+			</if>
+			<if test="entity.originType != 0">
+				AND s.ORIGIN_TYPE = #{entity.originType}
+			</if>
+			<if test="entity.executeState != null">
+				AND s.EXECUTE_STATE LIKE concat(concat('%',#{entity.executeState}),'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="PlanTotalCount" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+		SELECT nvl(SUM(nvl(ROTATE_NUMBER,0)),0)
+		FROM T_ROTATE_SCHEME_DETAIL 
+		INNER JOIN T_ROTATE_SCHEME ON T_ROTATE_SCHEME_DETAIL.SCHEME_ID = T_ROTATE_SCHEME.ID
+		WHERE PLAN_DETAIL_ID = #{_parameter} AND STATE = '已完成'
+		AND T_ROTATE_SCHEME.SCHEME_TYPE != '年度轮换方案'
+	</select>
+
+	<select id="unDealTotalCountByPlanDetailId" parameterType="java.lang.String" resultMap="commitAndUndealResultMap">
+			select
+	(SELECT nvl(sum(nvl(total,0)),0) from
+	(
+	SELECT DISTINCT h.id,h.scheme_id, h.total from
+	(
+	SELECT d.id,d.scheme_id,d.total from
+	(SELECT id,bid_id,scheme_id,bid_serial,to_number(quantity) total from T_ROTATE_BID_PURCHASE UNION SELECT id,bid_id,scheme_id,bid_serial,total from T_ROTATE_BID_SALE)
+	 d INNER JOIN T_ROTATE_INVITE a on d.bid_id = a.bid_id and a.is_gather='1'
+	)h
+	) k where k.scheme_id= t2.d_id
+	)e
+ 	,(SELECT nvl(sum(nvl(to_number(quantity),0)),0) from T_ROTATE_CONCLUTE_DETAIL c where c.scheme_id = t2.d_id) g
+	,nvl(t2.rotate_number,0) rotate_number,
+	t3.is_end
+from
+	T_ROTATE_PLAN_DETAIL t1
+	INNER JOIN T_ROTATE_SCHEME_DETAIL t2
+	ON T1.id = T2.PLAN_DETAIL_ID
+	INNER JOIN T_ROTATE_SCHEME t3
+	ON t2.scheme_id=t3.id
+	where t3.scheme_type in ('出库','入库','出入库')
+	and t2.PLAN_DETAIL_ID = #{_parameter}
+</select>
+	
+	<select id="ListSchemeIDBase" parameterType="java.util.List" resultType="java.lang.String">
+		SELECT SCHEME_ID FROM T_ROTATE_SCHEME_DETAIL
+		WHERE WAREHOUSE_ID IN (
+		<foreach collection="list" item="base" separator=",">
+			#{base}
+		</foreach>
+		)
+	</select>
+
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0)
+		FROM <include refid="tablename"/>
+		<where>
+
+			<if test="planId!=null and planId!=''">
+				AND ORIGIN_ID = #{planId}
+			</if>
+		</where>
+	</select>
+
+	<select id="count1" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0)
+		FROM T_ROTATE_SCHEME_DETAIL detail LEFT JOIN  T_ROTATE_SCHEME s
+		ON s.ID = detail.SCHEME_ID
+		LEFT JOIN T_STORE_ENTERPRISE e ON e.id = detail.ENTERPRISE_ID
+		LEFT JOIN T_ROTATE_PLAN_MAIN plan ON plan.id = s.PLAN_MAIN_ID
+		<where>
+			<if test="schemeName!=null and schemeName!=''">
+				AND s.SCHEME_NAME like concat(concat('%',#{schemeName}),'%')
+			</if>
+			<if test="year!=null and year!=''">
+				AND s.YEAR like concat(concat('%',#{year}),'%')
+			</if>
+			<if test="originId!=null and originId!=''">
+				AND s.ORIGIN_ID like concat(concat('%',#{originId}),'%')
+			</if>
+			<if test="schemeType!=null and schemeType!=''">
+				AND detail.SCHEME_TYPE like concat(concat('%',#{schemeType}),'%')
+			</if>
+			<if test="rotateType!=null and rotateType!=''">
+				AND detail.ROTATE_TYPE like concat(concat('%',#{rotateType}),'%')
+			</if>
+			<if test="completeDate!=null and completeDate!=''">
+				AND to_char(s.COMPLETE_DATE,'yyyy-mm-dd')  = #{completeDate}
+			</if>
+			<if test="executeState!=null and executeState!=''">
+				AND s.EXECUTE_STATE like concat(concat('%',#{executeState}),'%')
+			</if>
+			<if test="enterpriseName!=null and enterpriseName!=''">
+				AND e.ENTERPRISE_NAME like concat(concat('%',#{enterpriseName}),'%')
+			</if>
+			<if test="libraryId!=null and libraryId!=''">
+				AND detail.LIBRARY_ID like concat(concat('%',#{libraryId}),'%')
+			</if>
+			<if test="branNumber!=null and branNumber!=''">
+				AND detail.BRAN_NUMBER like concat(concat('%',#{branNumber}),'%')
+			</if>
+			<if test="foodType!=null and foodType!=''">
+				AND detail.FOOD_TYPE like concat(concat('%',#{foodType}),'%')
+			</if>
+			<if test="yieldTime!=null and yieldTime!=''">
+				AND detail.YIELD_TIME like concat(concat('%',#{yieldTime}),'%')
+			</if>
+			<if test="ogirin!=null and ogirin!=''">
+				AND detail.OGIRIN like concat(concat('%',#{ogirin}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="listRotateScheme" parameterType="java.util.HashMap" resultMap="schemeDetailResultMap">
+		${start}
+		SELECT <include refid="columns1"/>
+		FROM T_ROTATE_SCHEME_DETAIL detail LEFT JOIN  T_ROTATE_SCHEME s
+		ON s.ID = detail.SCHEME_ID
+		LEFT JOIN T_STORE_ENTERPRISE e ON e.id = detail.ENTERPRISE_ID
+		LEFT JOIN T_ROTATE_PLAN_MAIN plan ON plan.id = s.PLAN_MAIN_ID
+		<where>
+			<if test="schemeName!=null and schemeName!=''">
+				AND s.SCHEME_NAME like concat(concat('%',#{schemeName}),'%')
+			</if>
+			<if test="year!=null and year!=''">
+				AND s.YEAR like concat(concat('%',#{year}),'%')
+			</if>
+			<if test="originId!=null and originId!=''">
+				AND s.ORIGIN_ID like concat(concat('%',#{originId}),'%')
+			</if>
+			<if test="schemeType!=null and schemeType!=''">
+				AND detail.SCHEME_TYPE like concat(concat('%',#{schemeType}),'%')
+			</if>
+			<if test="rotateType!=null and rotateType!=''">
+				AND detail.ROTATE_TYPE like concat(concat('%',#{rotateType}),'%')
+			</if>
+			<if test="completeDate!=null and completeDate!=''">
+				AND to_char(s.COMPLETE_DATE,'yyyy-mm-dd')  = #{completeDate}
+			</if>
+			<if test="executeState!=null and executeState!=''">
+				AND s.EXECUTE_STATE like concat(concat('%',#{executeState}),'%')
+			</if>
+			<if test="enterpriseName!=null and enterpriseName!=''">
+				AND e.ENTERPRISE_NAME like concat(concat('%',#{enterpriseName}),'%')
+			</if>
+			<if test="libraryId!=null and libraryId!=''">
+				AND detail.LIBRARY_ID like concat(concat('%',#{libraryId}),'%')
+			</if>
+			<if test="branNumber!=null and branNumber!=''">
+				AND detail.BRAN_NUMBER like concat(concat('%',#{branNumber}),'%')
+			</if>
+			<if test="foodType!=null and foodType!=''">
+				AND detail.FOOD_TYPE like concat(concat('%',#{foodType}),'%')
+			</if>
+			<if test="yieldTime!=null and yieldTime!=''">
+				AND detail.YIELD_TIME like concat(concat('%',#{yieldTime}),'%')
+			</if>
+			<if test="ogirin!=null and ogirin!=''">
+				AND detail.OGIRIN like concat(concat('%',#{ogirin}),'%')
+			</if>
+		</where>
+		${end}
+	</select>
+
+	<select id="getSchemeDetailByDetailId" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.RotateSchemeDetailDao.schemedetailResultMap">
+		SELECT * FROM T_ROTATE_SCHEME_DETAIL
+		<where>
+			D_ID = #{_parameter}
+		</where>
+	</select>
+
+	<select id="getMainPlanDetailBySchemeId" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateSchemeDetailDao.schemedetailResultMap">
+		select t1.D_ID,T3.ID AS PLAN_MAIN_DETAIL_ID,nvl(T3.DEAL_DETAIL_NUMBER,0) DEAL_DETAIL_NUMBER
+		 from T_ROTATE_SCHEME_DETAIL t1
+		LEFT JOIN
+		T_ROTATE_PLAN_DETAIL t2
+		on T1.PLAN_DETAIL_ID = T2.id
+		LEFT JOIN
+		T_ROTATE_PLAN_MAIN_DETAIL t3
+		on t2.plan_main_detail_id = t3.id
+		where T1.D_ID = #{schemeDetailId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getPlanDetailBySchemeId" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateSchemeDetailDao.schemedetailResultMap">
+		select t1.D_ID,T2.ID AS PLAN_DETAIL_ID,nvl(T2.DEAL_DETAIL_NUMBER,0) DEAL_DETAIL_NUMBER
+		from T_ROTATE_SCHEME_DETAIL t1
+		LEFT JOIN
+		T_ROTATE_PLAN_DETAIL t2
+		on T1.PLAN_DETAIL_ID = T2.id
+		where T1.D_ID = #{schemeDetailId,jdbcType=VARCHAR}
+	</select>
+</mapper> 

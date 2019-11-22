@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoreExamineDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.store.StoreExamine" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="EXAMINE_SERIAL" property="examineSerial" jdbcType="VARCHAR" />
+    <result column="EXAMINE_NAME" property="examineName" jdbcType="VARCHAR" />
+    <result column="STOREHOUSE" property="storehouse" jdbcType="VARCHAR" />
+    <result column="MANAGER" property="manager" jdbcType="VARCHAR" />
+    <result column="EXAMINE_TYPE" property="examineType" jdbcType="VARCHAR" />
+    <result column="EXAMINE_TIME" property="examineTime" jdbcType="TIMESTAMP" />
+    <result column="EXAMINE_TEMPLET" property="examineTemplet" jdbcType="VARCHAR" />
+    <result column="TEMPLET_NAME" property="templetName" jdbcType="VARCHAR" />
+    <result column="POINTS" property="points" jdbcType="INTEGER" />
+    <result column="INSPECTORS" property="inspectors" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
+     <result column="CREATORID" property="creatorId" jdbcType="NVARCHAR" />
+      <result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR" />
+       <result column="ENTERPRISE_MANAGER" property="enterpriseManager" jdbcType="VARCHAR" />
+      <result column="TYPE" property="type" jdbcType="VARCHAR" />
+       <result column="EXAMINE_TEMPLET_TYPE" property="examineTempletType" jdbcType="VARCHAR" />
+	  <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR" />
+
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    E.ID id , E.EXAMINE_SERIAL examineSerial, E.EXAMINE_NAME examineName, t.WAREHOUSE_SHORT storehouse, E.MANAGER manager, E.EXAMINE_TYPE examineType,
+    to_char(E.EXAMINE_TIME,'yyyy-mm-dd') examineTime, 
+    E.EXAMINE_TEMPLET examineTemplet, E.TEMPLET_NAME templetName, E.POINTS points, E.INSPECTORS inspectors, E.GROUP_ID groupId,E.CREATORID creatorId,
+    E.ENTERPRISE_NAME enterpriseName,E.ENTERPRISE_MANAGER enterpriseManager,E.TYPE type,E.EXAMINE_TEMPLET_TYPE examineTempletType,E.WAREHOUSE_ID warehouseId
+  </sql>
+  
+  <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+			<include refid="Base_Column_List" />
+			, sys.name  creator
+		  from  T_STORE_EXAMINE E  left join
+		  T_SYS_USER sys ON E.CREATORID=sys.ID  left join T_STORAGE_WAREHOUSE t on E.WAREHOUSE_ID = t.ID
+		  WHERE 1=1
+
+		<if test="warehouseId!=null and warehouseId!=''">
+			 and  E.WAREHOUSE_ID  = '${warehouseId}'
+		</if>
+	  <if test="storehouse!=null and storehouse!=''">
+		  and  t.WAREHOUSE_SHORT  = '${storehouse}'
+	  </if>
+		<if test="storehouse1!=null and storehouse1!=''">
+			 and  T.WAREHOUSE_TYPE != '储备库'
+		</if>
+	  <if test="shortName!=null and shortName!=''">
+		  and  E.STOREHOUSE  IN (SELECT warehouse_short FROM (
+		  SELECT DISTINCT w.warehouse_name,w.warehouse_short,w.enterprise_name
+		  FROM t_store_supervise_item i,t_storage_warehouse w WHERE
+		  to_char(SYSDATE,'yyyymmdd') BETWEEN to_char(i.supervise_start,'yyyymmdd') AND to_char(i.supervise_end,'yyyymmdd')
+		  AND i.ENTERPRISE_ID=w.ENTERPRISE_ID AND i.warehouse_name = '${shortName}')
+		  )
+	  </if>
+		 <if test="creatorId!=null and creatorId!=''">
+			 and  E.CREATORID  = '${creatorId}'
+		</if>
+		<if test="type!=null and type!=''">
+			 and  E.TYPE  = '${type}'
+		</if>
+		 <if test="enterpriseName!=null and enterpriseName!=''">
+			 and  E.ENTERPRISE_NAME  = '${enterpriseName}'
+		</if>
+		
+		  <if test="examineType!=null and examineType!=''">
+			 and  E.EXAMINE_TYPE  = '${examineType}'
+		</if>
+		  <if test="examineTempletType!=null and examineTempletType!=''">
+			 and  E.EXAMINE_TEMPLET_TYPE  = '${examineTempletType}'
+		</if>
+
+		<if test="(pointsStart!=null and pointsStart!='') and (pointsEnd==null or pointsEnd=='')">
+				AND E.POINTS >= ${pointsStart}
+		</if>
+		<if test="(pointsStart==null or pointsStart=='') and (pointsEnd!=null and pointsEnd!='')">
+				AND E.POINTS <![CDATA[ <= ]]> ${pointsEnd}
+		</if>
+		<if test="(pointsStart!=null and pointsStart!='') and (pointsEnd!=null and pointsEnd!='')">
+				AND E.POINTS BETWEEN ${pointsStart} AND ${pointsEnd}
+		</if>
+		
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(E.EXAMINE_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(E.EXAMINE_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(E.EXAMINE_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>	
+		order by E.EXAMINE_SERIAL DESC
+		${end}
+	</select>
+	
+	   
+	
+		
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0)    
+		 FROM T_STORE_EXAMINE 	E  left join T_STORAGE_WAREHOUSE t on E.WAREHOUSE_ID = t.ID
+		 WHERE 1=1
+		<if test="warehouseId!=null and warehouseId!=''">
+			and  E.WAREHOUSE_ID  = '${warehouseId}'
+		</if>
+		<if test="storehouse!=null and storehouse!=''">
+			 and  t.WAREHOUSE_SHORT  = '${storehouse}'
+		</if>
+		<if test="storehouse1!=null and storehouse1!=''">
+			 and  T.WAREHOUSE_TYPE != '储备库'
+		</if>
+		 <if test="creatorId!=null and creatorId!=''">
+			 and  E.CREATORID  = '${creatorId}'
+		</if>
+		<if test="type!=null and type!=''">
+			 and  E.TYPE  = '${type}'
+		</if>
+		 <if test="enterpriseName!=null and enterpriseName!=''">
+			 and  E.ENTERPRISE_NAME  = '${enterpriseName}'
+		</if>
+		  <if test="examineType!=null and examineType!=''">
+			 and  E.EXAMINE_TYPE  = '${examineType}'
+		</if>
+		  <if test="examineTempletType!=null and examineTempletType!=''">
+			 and  E.EXAMINE_TEMPLET_TYPE  = '${examineTempletType}'
+		</if>
+		<if test="(pointsStart!=null and pointsStart!='') and (pointsEnd==null or pointsEnd=='')">
+				AND E.POINTS >= ${pointsStart}
+		</if>
+		<if test="(pointsStart==null or pointsStart=='') and (pointsEnd!=null and pointsEnd!='')">
+				AND E.POINTS <![CDATA[ <= ]]> ${pointsEnd}
+		</if>
+		<if test="(pointsStart!=null and pointsStart!='') and (pointsEnd!=null and pointsEnd!='')">
+				AND E.POINTS BETWEEN ${pointsStart} AND ${pointsEnd}
+		</if>
+		
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(E.EXAMINE_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(E.EXAMINE_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(E.EXAMINE_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>	
+		
+		
+		
+	</select>
+	
+	<select id="getStoreExamineById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.store.StoreExamine">
+		SELECT 
+			<include refid="Base_Column_List" />
+		 from T_STORE_EXAMINE E	 left join T_STORAGE_WAREHOUSE t ON E.WAREHOUSE_ID = t.ID
+		where E.EXAMINE_SERIAL=#{id,jdbcType=NVARCHAR}
+
+	</select>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.store.StoreExamine" >
+	   insert into T_STORE_EXAMINE (ID, EXAMINE_SERIAL, EXAMINE_NAME, 
+      STOREHOUSE, MANAGER, EXAMINE_TYPE, 
+      EXAMINE_TIME, EXAMINE_TEMPLET, TEMPLET_NAME, 
+      POINTS, INSPECTORS, GROUP_ID,CREATORID,ENTERPRISE_NAME,
+      ENTERPRISE_MANAGER,TYPE,EXAMINE_TEMPLET_TYPE,WAREHOUSE_ID
+      )
+    values (#{id,jdbcType=VARCHAR}, #{examineSerial,jdbcType=VARCHAR}, #{examineName,jdbcType=VARCHAR}, 
+      #{storehouse,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{examineType,jdbcType=VARCHAR}, 
+      TO_DATE(#{examineTime,jdbcType=TIMESTAMP},'YYYY-MM-DD'), #{examineTemplet,jdbcType=VARCHAR}, #{templetName,jdbcType=VARCHAR}, 
+      #{points,jdbcType=INTEGER}, #{inspectors,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR},#{creatorId,jdbcType=VARCHAR}
+      ,#{enterpriseName,jdbcType=VARCHAR},#{enterpriseManager,jdbcType=VARCHAR} ,#{type,jdbcType=VARCHAR} ,
+      #{examineTempletType,jdbcType=VARCHAR} , #{warehouseId,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.store.StoreExamine">
+
+	  update T_STORE_EXAMINE
+    set
+      EXAMINE_SERIAL = #{examineSerial,jdbcType=VARCHAR},
+      EXAMINE_NAME = #{examineName,jdbcType=VARCHAR},
+      STOREHOUSE = #{storehouse,jdbcType=VARCHAR},
+      MANAGER = #{manager,jdbcType=VARCHAR},
+      EXAMINE_TYPE = #{examineType,jdbcType=VARCHAR},
+      EXAMINE_TIME = TO_DATE(#{examineTime,jdbcType=TIMESTAMP},'YYYY-MM-DD'),
+      EXAMINE_TEMPLET = #{examineTemplet,jdbcType=VARCHAR},
+      TEMPLET_NAME = #{templetName,jdbcType=VARCHAR},
+      POINTS = #{points,jdbcType=INTEGER},
+      INSPECTORS = #{inspectors,jdbcType=VARCHAR},
+	  <if test="groupId!=null">
+		  GROUP_ID = #{groupId,jdbcType=VARCHAR},
+	  </if>
+	  <if test="creatorId!=null and creatorId!=''">
+		  CREATORID=#{creatorId,jdbcType=VARCHAR},
+	  </if>
+
+      ENTERPRISE_NAME=#{enterpriseName,jdbcType=VARCHAR},
+      ENTERPRISE_MANAGER=#{enterpriseManager,jdbcType=VARCHAR} ,
+      TYPE= #{type,jdbcType=VARCHAR} ,
+      EXAMINE_TEMPLET_TYPE=#{examineTempletType,jdbcType=VARCHAR} ,
+	  WAREHOUSE_ID=#{warehouseId,jdbcType=VARCHAR}
+
+	  WHERE ID='${id}'
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORE_EXAMINE
+		WHERE  ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+	
+  
+</mapper>

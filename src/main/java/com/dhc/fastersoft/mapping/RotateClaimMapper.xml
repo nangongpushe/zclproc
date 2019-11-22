@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateClaimDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateClaim" id="rotateClaimResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="arriveId" column="ARRIVE_ID" jdbcType="VARCHAR" />
+		<result property="claimMan" column="CLAIM_MAN" jdbcType="VARCHAR" />
+		<result property="claimDate" column="CLAIM_DATE" jdbcType="TIMESTAMP" />
+		<result property="dealSerial" column="DEAL_SERIAL" jdbcType="VARCHAR" />
+		<result property="claimType" column="CLAIM_TYPE" jdbcType="VARCHAR" />
+		<result property="claimAmount" column="CLAIM_AMOUNT" jdbcType="VARCHAR" />
+		<result property="userId" column="USER_ID" jdbcType="VARCHAR" />
+		<result property="claimWeight" column="CLAIM_WEIGHT" jdbcType="DECIMAL" />
+		<result property="warehouseShort" column="DELIVERY_PLACE" jdbcType="VARCHAR" />
+		<result property="encode" column="STOREHOUSE" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="columns_main">
+		ID,ARRIVE_ID,CLAIM_MAN,CLAIM_DATE,DEAL_SERIAL,CLAIM_TYPE,
+		CLAIM_AMOUNT,USER_ID,CLAIM_WEIGHT
+	</sql>
+	
+	<sql id="s_columns_main">
+		T_rotate_claim.ID,ARRIVE_ID,(select name from t_sys_user where id = USER_ID) CLAIM_MAN,CLAIM_DATE,T_rotate_claim.DEAL_SERIAL,CLAIM_TYPE,
+		CLAIM_AMOUNT,USER_ID,CLAIM_WEIGHT
+	</sql>
+
+
+	<sql id="table_main"> T_ROTATE_CLAIM </sql>
+	
+	
+	<!-- 添加 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.RotateClaim">
+		INSERT INTO
+		<include refid="table_main" />
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(#{id,jdbcType=VARCHAR},#{arriveId,jdbcType=VARCHAR},#{claimMan,jdbcType=VARCHAR},
+		#{claimDate,jdbcType=TIMESTAMP},#{dealSerial,jdbcType=VARCHAR},
+		#{claimType,jdbcType=VARCHAR},#{claimAmount,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{claimWeight,jdbcType=DECIMAL})
+	</insert>
+	
+	<insert id="saveBatch" parameterType="java.util.List">
+		begin
+		<foreach collection="list" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_main" />
+			(
+			<include refid="columns_main" />
+			)
+			VALUES
+			(#{item.id},#{item.arriveId},#{item.claimMan},
+			#{item.claimDate},#{item.dealSerial},
+			#{item.claimType},#{item.claimAmount},#{item.userId})
+		</foreach>
+		;end;
+	</insert>
+	
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotateClaim">
+		UPDATE
+		<include refid="table_main" />
+		SET
+		CLAIM_TYPE = #{claimType},CLAIM_AMOUNT = #{claimAmount, jdbcType=DECIMAL}
+	</update>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_main" />
+		<where>
+			id = #{_parameter}
+		</where>
+	</delete>
+	
+	<select id="get" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateClaimDao.rotateClaimResultMap">
+		SELECT <include refid="s_columns_main" /> FROM <include refid="table_main" />
+		<where>
+			<if test="arriveId!=null and arriveId!=''">
+				AND ARRIVE_ID = #{arriveId}
+			</if>
+			<if test="claimMan!=null and claimMan!=''">
+				AND CLAIM_MAN = #{claimMan}
+			</if>
+			<if test="userId!=null and userId!=''">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="dealSerial!=null and dealSerial!=''">
+				AND DEAL_SERIAL = #{dealSerial}
+			</if>
+			<if test="claimDate!=null and claimDate!=''">
+				AND TO_CHAR(CLAIM_DATE,'YYYY-MM-DD') = #{claimDate}
+			</if>
+			 <if test="claimType!=null and claimType!=''">
+				AND CLAIM_TYPE = #{claimType}
+			</if>
+		</where>
+	</select>
+
+	<select id="list" parameterType="java.util.HashMap"
+		resultMap="com.dhc.fastersoft.dao.RotateClaimDao.rotateClaimResultMap">
+		<if test="pageIndex!=null">
+			select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT
+		<include refid="s_columns_main" />,DELIVERY_PLACE,STOREHOUSE
+		FROM
+		<include refid="table_main" /> LEFT JOIN T_Rotate_conclute_detail
+		on T_rotate_claim.deal_serial = T_Rotate_conclute_detail.deal_serial
+		<where>
+			<if test="arriveId!=null and arriveId!=''">
+				AND ARRIVE_ID = #{arriveId}
+			</if>
+			<if test="claimMan!=null and claimMan!=''">
+				AND CLAIM_MAN = #{claimMan}
+			</if>
+			<if test="userId!=null and userId!=''">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="dealSerial!=null and dealSerial!=''">
+				AND T_rotate_claim.DEAL_SERIAL = #{dealSerial}
+			</if>
+			<if test="claimDate!=null and claimDate!=''">
+				AND TO_CHAR(CLAIM_DATE,'YYYY-MM-DD HH24:MI') = #{claimDate}
+			</if>
+			<if test="claimType!=null and claimType!=''">
+				AND CLAIM_TYPE = #{claimType}
+			</if>
+		</where>
+		ORDER BY CLAIM_DATE DESC
+		<if test="pageIndex!=null">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0)
+		FROM
+		<include refid="table_main" />
+		<where>
+			<if test="arriveId!=null and arriveId!=''">
+				AND ARRIVE_ID = #{arriveId}
+			</if>
+			<if test="claimMan!=null and claimMan!=''">
+				AND CLAIM_MAN = #{claimMan}
+			</if>
+			<if test="userId!=null and userId!=''">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="dealSerial!=null and dealSerial!=''">
+				AND DEAL_SERIAL = #{dealSerial}
+			</if>
+			<if test="claimDate!=null and claimDate!=''">
+				AND TO_CHAR(CLAIM_DATE,'YYYY-MM-DD') = #{claimDate}
+			</if>
+			 <if test="claimType!=null and claimType!=''">
+				AND CLAIM_TYPE = #{claimType}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getTotalAmount" parameterType="java.util.HashMap" resultType="Double">
+		SELECT SUM(CLAIM_AMOUNT)
+		FROM
+		<include refid="table_main" />
+		<where>
+			<if test="arriveId!=null and arriveId!=''">
+				AND ARRIVE_ID = #{arriveId}
+			</if>
+			<if test="claimMan!=null and claimMan!=''">
+				AND CLAIM_MAN = #{claimMan}
+			</if>
+			<if test="userId!=null and userId!=''">
+				AND USER_ID = #{userId}
+			</if>
+			<if test="dealSerial!=null and dealSerial!=''">
+				AND DEAL_SERIAL = #{dealSerial}
+			</if>
+			<if test="claimDate!=null and claimDate!=''">
+				AND TO_CHAR(CLAIM_DATE,'YYYY-MM-DD') = #{claimDate}
+			</if>
+			 <if test="claimType!=null and claimType!=''">
+				AND CLAIM_TYPE = #{claimType}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

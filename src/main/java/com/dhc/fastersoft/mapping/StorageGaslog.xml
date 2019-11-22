@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.StorageGaslogDao">
+	<resultMap id="storageGasLogResultMap" type="com.dhc.fastersoft.entity.StorageGaslog">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="WAREHOUSE_NAME" property="warehouseName" jdbcType="VARCHAR" />
+		<result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR" />
+		<result column="STORAGEHOUSE" property="storagehouse" jdbcType="VARCHAR" />
+		<result column="DETECTION_TIME" property="detectionTime" jdbcType="VARCHAR"/>
+		<result column="DETECTION_OPERATION" property="detectionOperation" jdbcType="VARCHAR"/>
+		<result column="PHOSPHINE" property="phosphine" jdbcType="VARCHAR"/>
+		<result column="OXYGEN" property="oxygen" jdbcType="VARCHAR"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="DETECTION_HUMEN_ID" jdbcType="VARCHAR" property="detectionHumenId" />
+		<result column="TESTINGAVG" jdbcType="VARCHAR" property="testingavg" />
+		<association property="detectionHumen" column="DETECTION_HUMEN_ID"  select="com.dhc.fastersoft.dao.system.SysUserDao.getUserName"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID,WAREHOUSE_NAME,WAREHOUSE_ID,STORAGEHOUSE,DETECTION_TIME,DETECTION_OPERATION,
+		PHOSPHINE,OXYGEN,DETECTION_HUMEN,CREATE_TIME,DETECTION_HUMEN_ID,TESTINGAVG
+	</sql>
+
+	<insert id="AddStorageLog" parameterType="com.dhc.fastersoft.entity.StorageGaslog">
+		INSERT INTO T_STORAGE_GASLOG(<include refid="columns"/>)
+		VALUES(
+			#{id ,jdbcType=VARCHAR},#{warehouseName,jdbcType=VARCHAR},#{warehouseId,jdbcType=VARCHAR},#{storagehouse,jdbcType=VARCHAR},#{detectionTime, jdbcType=VARCHAR},#{detectionOperation,jdbcType=VARCHAR},
+			#{phosphine,jdbcType=VARCHAR},#{oxygen,jdbcType=VARCHAR},#{detectionHumen,jdbcType=VARCHAR},#{createTime, jdbcType=TIMESTAMP},#{detectionHumenId,jdbcType=VARCHAR},#{testingavg,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="ListLimitLog" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="storageGasLogResultMap">
+		SELECT * FROM (
+			SELECT A.*, ROWNUM RN
+			FROM (SELECT
+		b.ID,W.WAREHOUSE_SHORT AS WAREHOUSE_NAME,b.STORAGEHOUSE,b.DETECTION_TIME,b.DETECTION_OPERATION,b.
+		PHOSPHINE,b.OXYGEN,c.name DETECTION_HUMEN,b.CREATE_TIME,b.DETECTION_HUMEN_ID,b.WAREHOUSE_ID
+				FROM
+				T_STORAGE_GASLOG b LEFT JOIN t_sys_user c ON b.DETECTION_HUMEN_ID=c.id
+				LEFT JOIN T_STORAGE_WAREHOUSE W ON b.WAREHOUSE_ID = W.ID
+				ORDER BY b.CREATE_TIME DESC
+			) A
+			<where>
+				<if test="entity.warehouseName != null and entity.warehouseName!=''">
+					AND WAREHOUSE_NAME LIKE concat(concat('%',#{entity.warehouseName}),'%')
+				</if>
+				<if test="entity.warehouseId != null and entity.warehouseId != ''">
+					AND WAREHOUSE_ID = #{entity.warehouseId}
+				</if>
+				<if test="entity.storagehouse != null and entity.storagehouse!=''">
+					AND STORAGEHOUSE LIKE concat(concat('%',#{entity.storagehouse}),'%')
+				</if>
+				<if test="entity.detectionTime != null and entity.detectionTime!=''">
+					AND DETECTION_TIME LIKE concat(concat('%',#{entity.detectionTime}),'%')
+				</if>
+				<if test="entity.detectionHumen != null and entity.detectionHumen!=''">
+					AND DETECTION_HUMEN LIKE concat(concat('%',#{entity.detectionHumen}),'%')
+				</if>
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			</where>
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(b.ID) FROM T_STORAGE_GASLOG b LEFT JOIN t_sys_user c ON b.DETECTION_HUMEN_ID=c.id
+		LEFT JOIN T_STORAGE_WAREHOUSE W ON b.WAREHOUSE_ID = W.ID
+		<where>
+			<if test="entity.warehouseName != null and entity.warehouseName!=''">
+				AND W.WAREHOUSE_SHORT LIKE concat(concat('%',#{entity.warehouseName}),'%')
+			</if>
+			<if test="entity.warehouseId != null and entity.warehouseId != ''">
+				AND b.WAREHOUSE_ID = #{entity.warehouseId}
+			</if>
+			<if test="entity.storagehouse != null and entity.storagehouse!=''">
+				AND b.STORAGEHOUSE LIKE concat(concat('%',#{entity.storagehouse}),'%')
+			</if>
+			<if test="entity.detectionTime != null and entity.detectionTime!=''">
+				AND b.DETECTION_TIME LIKE concat(concat('%',#{entity.detectionTime}),'%')
+			</if>
+			<if test="entity.detectionHumen != null and entity.detectionHumen!=''">
+				AND c.name LIKE concat(concat('%',#{entity.detectionHumen}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="GetStorageGaslog" parameterType="java.lang.String" resultMap="storageGasLogResultMap">
+		SELECT A.ID,W.WAREHOUSE_SHORT AS WAREHOUSE_NAME,A.STORAGEHOUSE,A.DETECTION_TIME,A.WAREHOUSE_ID,A.DETECTION_OPERATION,
+		A.PHOSPHINE,A.OXYGEN,A.DETECTION_HUMEN,A.CREATE_TIME,A.DETECTION_HUMEN_ID,A.TESTINGAVG FROM T_STORAGE_GASLOG A
+		LEFT JOIN T_STORAGE_WAREHOUSE W ON A.WAREHOUSE_ID = W.ID
+		WHERE A.ID = #{_parameter}
+	</select>
+
+	<update id="UpdateStoragelog" parameterType="com.dhc.fastersoft.entity.StorageGaslog">
+		UPDATE T_STORAGE_GASLOG SET
+		WAREHOUSE_NAME = #{warehouseName,jdbcType=VARCHAR},WAREHOUSE_ID=#{warehouseId,jdbcType=VARCHAR},STORAGEHOUSE = #{storagehouse,jdbcType=VARCHAR},DETECTION_TIME = #{detectionTime,jdbcType=TIMESTAMP},
+		DETECTION_OPERATION = #{detectionOperation,jdbcType=VARCHAR},PHOSPHINE = #{phosphine,jdbcType=VARCHAR},OXYGEN = #{oxygen,jdbcType=VARCHAR},DETECTION_HUMEN = #{detectionHumen,jdbcType=VARCHAR},TESTINGAVG = #{testingavg,jdbcType=VARCHAR}
+		WHERE ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="DeleteStoragelog" parameterType="java.lang.String">
+		DELETE FROM T_STORAGE_GASLOG WHERE ID = #{_parameter}
+	</delete>
+	
+	<select id="GetStorageGaslogByIds" parameterType="java.util.List" resultMap="storageGasLogResultMap">
+		SELECT A.ID,W.WAREHOUSE_SHORT AS WAREHOUSE_NAME,A.STORAGEHOUSE,A.DETECTION_TIME,A.DETECTION_OPERATION,
+		A.PHOSPHINE,A.OXYGEN,A.DETECTION_HUMEN,A.CREATE_TIME,A.DETECTION_HUMEN_ID,A.TESTINGAVG FROM T_STORAGE_GASLOG A
+		LEFT JOIN T_STORAGE_WAREHOUSE W ON A.WAREHOUSE_ID = W.ID
+		WHERE A.ID IN (
+		<foreach collection="list" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</select>
+</mapper>

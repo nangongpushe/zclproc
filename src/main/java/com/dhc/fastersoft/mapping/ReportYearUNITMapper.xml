@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.ReportYearUNITMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.yearReport.ReportYearUNIT" >
+    <id column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="REPORT_YEAR" property="reportYear" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="UNIT_KEY" property="unitKey" jdbcType="VARCHAR" />
+    <result column="UNIT_VALUE" property="unitValue" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REPORT_ID, REPORT_YEAR, REPORT_NAME, UNIT_KEY, UNIT_VALUE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_REPORT_YEAR_UNIT
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_REPORT_YEAR_UNIT
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearUNIT" >
+    insert into T_REPORT_YEAR_UNIT (REPORT_ID, REPORT_YEAR, REPORT_NAME, 
+      UNIT_KEY, UNIT_VALUE)
+    values (#{reportId,jdbcType=VARCHAR}, #{reportYear,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR}, 
+      #{unitKey,jdbcType=VARCHAR}, #{unitValue,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearUNIT" >
+    insert into T_REPORT_YEAR_UNIT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        REPORT_ID,
+      </if>
+      <if test="reportYear != null" >
+        REPORT_YEAR,
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME,
+      </if>
+      <if test="unitKey != null" >
+        UNIT_KEY,
+      </if>
+      <if test="unitValue != null" >
+        UNIT_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        #{reportId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportYear != null" >
+        #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitKey != null" >
+        #{unitKey,jdbcType=VARCHAR},
+      </if>
+      <if test="unitValue != null" >
+        #{unitValue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearUNIT" >
+    update T_REPORT_YEAR_UNIT
+    <set >
+      <if test="reportYear != null" >
+        REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitKey != null" >
+        UNIT_KEY = #{unitKey,jdbcType=VARCHAR},
+      </if>
+      <if test="unitValue != null" >
+        UNIT_VALUE = #{unitValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearUNIT" >
+    update T_REPORT_YEAR_UNIT
+    set REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      UNIT_KEY = #{unitKey,jdbcType=VARCHAR},
+      UNIT_VALUE = #{unitValue,jdbcType=VARCHAR}
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </update>
+</mapper>

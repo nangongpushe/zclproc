@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StorageMachineAirDao">
+	<resultMap type="com.dhc.fastersoft.entity.store.StorageMachineAir" id="StorageMachineAirResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="warehouse" column="WAREHOUSE" jdbcType="VARCHAR" />
+		<result property="warehouseId" column="WAREHOUSE_ID" jdbcType="VARCHAR"/>
+		<result property="storehouse" column="STOREHOUSE" jdbcType="VARCHAR" />
+		<result property="grainType" column="GRAIN_TYPE" jdbcType="VARCHAR" />
+		<result property="realQuantity" column="REAL_QUANTITY" jdbcType="VARCHAR" />
+		<result property="airAim" column="AIR_AIM" jdbcType="VARCHAR" />
+		<result property="grainBulkHeight" column="GRAIN_BULK_HEIGHT" jdbcType="VARCHAR" />
+		<result property="grainBulkVolume" column="GRAIN_BULK_VOLUME" jdbcType="VARCHAR" />
+		<result property="fanVersion" column="FAN_VERSION" jdbcType="VARCHAR" />
+		<result property="fanPower" column="FAN_POWER" jdbcType="VARCHAR" />
+		<result property="fanQuantity" column="FAN_QUANTITY" jdbcType="VARCHAR" />
+		<result property="totalAirVolume" column="TOTAL_AIR_VOLUME" jdbcType="VARCHAR" />
+		<result property="airDuctType" column="AIR_DUCT_TYPE" jdbcType="VARCHAR" />
+		<result property="airNetLayout" column="AIR_NET_LAYOUT" jdbcType="VARCHAR" />
+		<result property="airDuctQuantity" column="AIR_DUCT_QUANTITY" jdbcType="VARCHAR" />
+		<result property="airDuctGap" column="AIR_DUCT_GAP" jdbcType="VARCHAR" />
+		<result property="averageAirVolume" column="AVERAGE_AIR_VOLUME" jdbcType="VARCHAR" />
+		<result property="airType" column="AIR_TYPE" jdbcType="VARCHAR" />
+		<result property="airPathRatio" column="AIR_PATH_RATIO" jdbcType="VARCHAR" />
+		<result property="airStartTime" column="AIR_START_TIME" jdbcType="TIMESTAMP" />
+		<result property="airEndTime" column="AIR_END_TIME" jdbcType="TIMESTAMP" />
+		<result property="maxAirTemperature" column="MAX_AIR_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="minAirTemperature" column="MIN_AIR_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="averageAirTemperature" column="AVERAGE_AIR_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="maxAirHumidity" column="MAX_AIR_HUMIDITY" jdbcType="VARCHAR" />
+		<result property="minAirHumidity" column="MIN_AIR_HUMIDITY" jdbcType="VARCHAR" />
+		<result property="averageAirHumidity" column="AVERAGE_AIR_HUMIDITY" jdbcType="VARCHAR" />
+		<result property="maxGrainTemperature" column="MAX_GRAIN_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="minGrainTemperature" column="MIN_GRAIN_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="averageGrainTemperature" column="AVERAGE_GRAIN_TEMPERATURE" jdbcType="VARCHAR" />
+		<result property="maxGrainDew" column="MAX_GRAIN_DEW" jdbcType="VARCHAR" />
+		<result property="minGrainDew" column="MIN_GRAIN_DEW" jdbcType="VARCHAR" />
+		<result property="averageGrainDew" column="AVERAGE_GRAIN_DEW" jdbcType="VARCHAR" />
+		<result property="totalPowerConsumption" column="TOTAL_POWER_CONSUMPTION" jdbcType="VARCHAR" />
+		<result property="averagePowerConsumption" column="AVERAGE_POWER_CONSUMPTION" jdbcType="VARCHAR" />
+		<result property="storeMan" column="STORE_MAN" jdbcType="VARCHAR" />
+		<result property="operator" column="OPERATOR" jdbcType="VARCHAR" />
+		<result property="chargeMan" column="CHARGE_MAN" jdbcType="VARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="reportTime" column="REPORT_TIME" jdbcType="TIMESTAMP" />
+		<result property="maxGrainTemperatureNew" column="MAX_GRAIN_TEMPERATURE_NEW" jdbcType="VARCHAR" />
+		<result property="minGrainTemperatureNew" column="MIN_GRAIN_TEMPERATURE_NEW" jdbcType="VARCHAR" />
+		<result property="averageGrainTemperatureNew" column="AVERAGE_GRAIN_TEMPERATURE_NEW" jdbcType="VARCHAR" />
+		<result property="maxGrainDewNew" column="MAX_GRAIN_DEW_NEW" jdbcType="VARCHAR" />
+		<result property="minGrainDewNew" column="MIN_GRAIN_DEW_NEW" jdbcType="VARCHAR" />
+		<result property="averageGrainDewNew" column="AVERAGE_GRAIN_DEW_NEW" jdbcType="VARCHAR" />
+		<result property="totalAirTime" column="TOTAL_AIR_TIME" jdbcType="VARCHAR" />
+		<result column="CREATORID" jdbcType="VARCHAR" property="creatorId" />
+		<association property="operator" column="creatorId"  select="com.dhc.fastersoft.dao.system.SysUserDao.getUserName"/>
+	</resultMap>
+
+	<sql id="columns_main">
+		ID,WAREHOUSE,WAREHOUSE_ID,STOREHOUSE,GRAIN_TYPE,REAL_QUANTITY,AIR_AIM,GRAIN_BULK_HEIGHT,GRAIN_BULK_VOLUME,FAN_VERSION,FAN_POWER,
+		FAN_QUANTITY,TOTAL_AIR_VOLUME,AIR_DUCT_TYPE,AIR_NET_LAYOUT,AIR_DUCT_QUANTITY,AIR_DUCT_GAP,AVERAGE_AIR_VOLUME,AIR_TYPE,AIR_PATH_RATIO,AIR_START_TIME,
+		AIR_END_TIME,MAX_AIR_TEMPERATURE,MIN_AIR_TEMPERATURE,AVERAGE_AIR_TEMPERATURE,MAX_AIR_HUMIDITY,MIN_AIR_HUMIDITY,AVERAGE_AIR_HUMIDITY,MAX_GRAIN_TEMPERATURE,MIN_GRAIN_TEMPERATURE,AVERAGE_GRAIN_TEMPERATURE,
+		MAX_GRAIN_DEW,MIN_GRAIN_DEW,AVERAGE_GRAIN_DEW,TOTAL_POWER_CONSUMPTION,AVERAGE_POWER_CONSUMPTION,STORE_MAN,OPERATOR,CHARGE_MAN,REMARK,REPORT_TIME,
+		MAX_GRAIN_TEMPERATURE_NEW,MIN_GRAIN_TEMPERATURE_NEW,AVERAGE_GRAIN_TEMPERATURE_NEW,MAX_GRAIN_DEW_NEW,MIN_GRAIN_DEW_NEW,AVERAGE_GRAIN_DEW_NEW,
+		TOTAL_AIR_TIME,CREATORID
+	</sql>
+
+	<sql id="columns_mains">
+		sm.ID,t.WAREHOUSE_SHORT AS WAREHOUSE,sm.WAREHOUSE_ID,sm.STOREHOUSE,sm.GRAIN_TYPE,sm.REAL_QUANTITY,sm.AIR_AIM,sm.GRAIN_BULK_HEIGHT,sm.GRAIN_BULK_VOLUME,sm.FAN_VERSION,sm.FAN_POWER,
+		sm.FAN_QUANTITY,sm.TOTAL_AIR_VOLUME,sm.AIR_DUCT_TYPE,sm.AIR_NET_LAYOUT,sm.AIR_DUCT_QUANTITY,sm.AIR_DUCT_GAP,sm.AVERAGE_AIR_VOLUME,sm.AIR_TYPE,sm.AIR_PATH_RATIO,sm.AIR_START_TIME,
+		sm.AIR_END_TIME,sm.MAX_AIR_TEMPERATURE,sm.MIN_AIR_TEMPERATURE,sm.AVERAGE_AIR_TEMPERATURE,sm.MAX_AIR_HUMIDITY,sm.MIN_AIR_HUMIDITY,sm.AVERAGE_AIR_HUMIDITY,sm.MAX_GRAIN_TEMPERATURE,sm.MIN_GRAIN_TEMPERATURE,sm.AVERAGE_GRAIN_TEMPERATURE,
+		sm.MAX_GRAIN_DEW,sm.MIN_GRAIN_DEW,sm.AVERAGE_GRAIN_DEW,sm.TOTAL_POWER_CONSUMPTION,sm.AVERAGE_POWER_CONSUMPTION,sm.STORE_MAN,sm.OPERATOR,sm.CHARGE_MAN,sm.REMARK,sm.REPORT_TIME,
+		sm.MAX_GRAIN_TEMPERATURE_NEW,sm.MIN_GRAIN_TEMPERATURE_NEW,sm.AVERAGE_GRAIN_TEMPERATURE_NEW,sm.MAX_GRAIN_DEW_NEW,sm.MIN_GRAIN_DEW_NEW,sm.AVERAGE_GRAIN_DEW_NEW,
+		sm.TOTAL_AIR_TIME,sm.CREATORID
+	</sql>
+	<sql id="table_main"> T_STORAGE_MACHINE_AIR </sql>
+	
+	
+	
+	<!-- 添加 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.store.StorageMachineAir">
+		INSERT INTO
+		<include refid="table_main" />
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(
+		#{id},#{warehouse},#{warehouseId},#{storehouse},#{grainType},#{realQuantity},
+		#{airAim},#{grainBulkHeight,jdbcType=VARCHAR},#{grainBulkVolume,jdbcType=VARCHAR},#{fanVersion,jdbcType=VARCHAR},#{fanPower,jdbcType=VARCHAR},
+		#{fanQuantity},#{totalAirVolume},#{airDuctType,jdbcType=VARCHAR},#{airNetLayout,jdbcType=VARCHAR},#{airDuctQuantity,jdbcType=VARCHAR},
+		#{airDuctGap,jdbcType=VARCHAR},#{averageAirVolume},#{airType},#{airPathRatio,jdbcType=VARCHAR},#{airStartTime},
+		#{airEndTime},#{maxAirTemperature},#{minAirTemperature},#{averageAirTemperature},#{maxAirHumidity},
+		#{minAirHumidity},#{averageAirHumidity},#{maxGrainTemperature},#{minGrainTemperature},#{averageGrainTemperature},
+		#{maxGrainDew},#{minGrainDew},#{averageGrainDew},#{totalPowerConsumption},#{averagePowerConsumption,jdbcType=VARCHAR},
+		#{storeMan},#{operator},#{chargeMan},#{remark,jdbcType=VARCHAR},#{reportTime},
+		#{maxGrainTemperatureNew},#{minGrainTemperatureNew},#{averageGrainTemperatureNew},
+		#{maxGrainDewNew},#{minGrainDewNew},#{averageGrainDewNew},#{totalAirTime},#{creatorId,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	
+	<update id="update" parameterType="com.dhc.fastersoft.entity.store.StorageMachineAir">
+		UPDATE
+		<include refid="table_main" />
+		SET
+		WAREHOUSE = #{warehouse},
+		WAREHOUSE_ID = #{warehouseId},
+		STOREHOUSE = #{storehouse},
+		GRAIN_TYPE = #{grainType},
+		REAL_QUANTITY = #{realQuantity},
+		AIR_AIM = #{airAim},
+		GRAIN_BULK_HEIGHT = #{grainBulkHeight,jdbcType=VARCHAR},
+		GRAIN_BULK_VOLUME = #{grainBulkVolume,jdbcType=VARCHAR},
+		FAN_VERSION = #{fanVersion,jdbcType=VARCHAR},
+		FAN_POWER = #{fanPower,jdbcType=VARCHAR},
+		FAN_QUANTITY = #{fanQuantity},
+		TOTAL_AIR_VOLUME = #{totalAirVolume},
+		AIR_DUCT_TYPE = #{airDuctType,jdbcType=VARCHAR},
+		AIR_NET_LAYOUT = #{airNetLayout,jdbcType=VARCHAR},
+		AIR_DUCT_QUANTITY = #{airDuctQuantity,jdbcType=VARCHAR},
+		AIR_DUCT_GAP = #{airDuctGap,jdbcType=VARCHAR},
+		AVERAGE_AIR_VOLUME = #{averageAirVolume},
+		AIR_TYPE = #{airType},
+		AIR_PATH_RATIO = #{airPathRatio,jdbcType=VARCHAR},
+		AIR_START_TIME = #{airStartTime},
+		AIR_END_TIME = #{airEndTime},
+		MAX_AIR_TEMPERATURE = #{maxAirTemperature},
+		MIN_AIR_TEMPERATURE = #{minAirTemperature},
+		AVERAGE_AIR_TEMPERATURE = #{averageAirTemperature},
+		MAX_AIR_HUMIDITY = #{maxAirHumidity},
+		MIN_AIR_HUMIDITY = #{minAirHumidity},
+		AVERAGE_AIR_HUMIDITY = #{averageAirHumidity},
+		MAX_GRAIN_TEMPERATURE = #{maxGrainTemperature},
+		MIN_GRAIN_TEMPERATURE = #{minGrainTemperature},
+		AVERAGE_GRAIN_TEMPERATURE = #{averageGrainTemperature},
+		MAX_GRAIN_DEW = #{maxGrainDew},
+		MIN_GRAIN_DEW = #{minGrainDew},
+		AVERAGE_GRAIN_DEW = #{averageGrainDew},
+		TOTAL_POWER_CONSUMPTION = #{totalPowerConsumption},
+		AVERAGE_POWER_CONSUMPTION = #{averagePowerConsumption,jdbcType=VARCHAR},
+		STORE_MAN = #{storeMan},
+		CHARGE_MAN = #{chargeMan},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		REPORT_TIME = #{reportTime},
+		MAX_GRAIN_TEMPERATURE_NEW = #{maxGrainTemperatureNew},
+		MIN_GRAIN_TEMPERATURE_NEW=#{minGrainTemperatureNew},
+		AVERAGE_GRAIN_TEMPERATURE_NEW=#{averageGrainTemperatureNew},
+		MAX_GRAIN_DEW_NEW=#{maxGrainDewNew},
+		MIN_GRAIN_DEW_NEW=#{minGrainDewNew},
+		AVERAGE_GRAIN_DEW_NEW=#{averageGrainDewNew},
+		TOTAL_AIR_TIME=#{totalAirTime}
+		WHERE ID = #{id}
+	</update>
+	
+	
+	<select id="getById" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.store.StorageMachineAirDao.StorageMachineAirResultMap">
+		SELECT <include refid="columns_mains" /> FROM <include refid="table_main" /> sm left join T_STORAGE_WAREHOUSE t ON sm.WAREHOUSE_ID = t.ID
+		WHERE sm.ID = #{_parameter}
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.store.StorageMachineAirDao.StorageMachineAirResultMap">
+		<if test="pageIndex!=null">
+		select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT a.ID,w.WAREHOUSE_SHORT as WAREHOUSE,a.WAREHOUSE_ID,a.STOREHOUSE,a.GRAIN_TYPE,a.REAL_QUANTITY,a.AIR_AIM,a.GRAIN_BULK_HEIGHT,a.GRAIN_BULK_VOLUME,a.FAN_VERSION,a.FAN_POWER,a.
+		FAN_QUANTITY,a.TOTAL_AIR_VOLUME,a.AIR_DUCT_TYPE,a.AIR_NET_LAYOUT,a.AIR_DUCT_QUANTITY,a.AIR_DUCT_GAP,a.AVERAGE_AIR_VOLUME,a.AIR_TYPE,a.AIR_PATH_RATIO,a.AIR_START_TIME,a.
+		AIR_END_TIME,a.MAX_AIR_TEMPERATURE,a.MIN_AIR_TEMPERATURE,a.AVERAGE_AIR_TEMPERATURE,a.MAX_AIR_HUMIDITY,a.MIN_AIR_HUMIDITY,a.AVERAGE_AIR_HUMIDITY,a.MAX_GRAIN_TEMPERATURE,a.MIN_GRAIN_TEMPERATURE,a.AVERAGE_GRAIN_TEMPERATURE,a.
+		MAX_GRAIN_DEW,a.MIN_GRAIN_DEW,a.AVERAGE_GRAIN_DEW,a.TOTAL_POWER_CONSUMPTION,a.AVERAGE_POWER_CONSUMPTION,a.STORE_MAN,a.CHARGE_MAN,a.REMARK,a.REPORT_TIME,a.
+		MAX_GRAIN_TEMPERATURE_NEW,a.MIN_GRAIN_TEMPERATURE_NEW,a.AVERAGE_GRAIN_TEMPERATURE_NEW,a.MAX_GRAIN_DEW_NEW,a.MIN_GRAIN_DEW_NEW,a.AVERAGE_GRAIN_DEW_NEW,a.
+		TOTAL_AIR_TIME,a.CREATORID FROM T_STORAGE_MACHINE_AIR a LEFT JOIN t_sys_user b ON a.CREATORID=b.id LEFT JOIN T_STORAGE_WAREHOUSE w ON a.WAREHOUSE_ID = w.id
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND w.id like '%${warehouse}%'
+			</if>
+			<if test="storehouse!=null and storehouse!=''">
+				AND a.STOREHOUSE like '%${storehouse}%'
+			</if>
+			<if test="airType!=null and airType!=''">
+				AND a.AIR_TYPE = '${airType}'
+			</if>
+			<if test="operator!=null and operator!=''">
+				AND b.name like '%${operator}%'
+			</if>
+			<if test="ids!=null and ids!=''">
+				AND a.ID IN (<foreach collection="ids" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+		<if test="sortField!=null and sortField!=''">
+			ORDER BY a.${sortField} a.${sortType}
+		</if>
+		<if test="sortField==null or sortField==''">
+			ORDER BY a.REPORT_TIME DESC,a.ID ASC
+		</if>
+
+		<if test="pageIndex!=null">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<select id="count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*) FROM T_STORAGE_MACHINE_AIR a LEFT JOIN t_sys_user b ON a.CREATORID=b.id LEFT JOIN T_STORAGE_WAREHOUSE w ON a.WAREHOUSE_ID = w.id
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND w.id like '%${warehouse}%'
+			</if>
+			<if test="storehouse!=null and storehouse!=''">
+				AND a.STOREHOUSE like '%${storehouse}%'
+			</if>
+			<if test="airType!=null and airType!=''">
+				AND a.AIR_TYPE = '${airType}'
+			</if>
+			<if test="operator!=null and operator!=''">
+				AND b.name like '%${operator}%'
+			</if>
+			<if test="ids!=null and ids!=''">
+				AND a.ID IN (<foreach collection="ids" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_main" /> WHERE ID=#{_parameter}
+	</delete>
+</mapper>

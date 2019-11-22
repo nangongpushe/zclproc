@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.StorageGaslogTempDao">
+    <resultMap id="tempResultMap" type="com.dhc.fastersoft.entity.StorageGaslogTemp">
+        <result	column="ID"	jdbcType="VARCHAR"	property="id"/>
+        <result	column="GASLOG_ID" jdbcType="VARCHAR"	property="p_id"/>
+        <result	column="PLACEID" jdbcType="VARCHAR"	property="placeId"/>
+        <result	column="TESTING" jdbcType="VARCHAR"	property="testing"/>
+
+    </resultMap>
+
+    <sql id="select_temp">
+        ID,GASLOG_ID,PLACEID,TESTING
+    </sql>
+
+    <sql id="Related">
+        T_STORAGE_GASLOG_D t INNER JOIN T_STORAGE_GASLOG ts
+    </sql>
+
+    <sql id="tablename">
+        T_STORAGE_GASLOG_D
+    </sql>
+
+    <select id="selectStorageGaslogTempByPid" resultMap="tempResultMap">
+        SELECT
+        <include refid="select_temp"/>
+        FROM
+        <!--<include refid="Related"/>-->
+        <include refid="tablename"/>
+        WHERE
+        GASLOG_ID=#{p_id}
+    </select>
+    <update id="update" parameterType="com.dhc.fastersoft.entity.StorageGaslogTemp">
+        update <include refid="tablename"/>
+        set
+        "PLACEID" = #{placeId},
+        "TESTING" = #{testing}
+        WHERE "GASLOG_ID" = #{p_id}
+    </update>
+
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.StorageGaslogTemp">
+        insert into <include refid="tablename"/> (<include refid="select_temp"/>)
+        values
+        (sequence_Temp.Nextval,#{p_id},#{placeId},#{testing} )
+    </insert>
+
+    <delete id="remove">
+        DELETE
+        FROM <include refid="tablename"></include>
+        <where>
+            GASLOG_ID=#{p_id}
+        </where>
+    </delete>
+
+
+</mapper>

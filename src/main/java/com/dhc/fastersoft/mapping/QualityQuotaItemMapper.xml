@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualityQuotaItemMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualityQuotaItem" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="QUOTA_ID" property="quotaId" jdbcType="VARCHAR" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="STANDARD" property="standard" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_QUOTA_ITEM WHERE QUOTA_ID='${id}'
+	</select>
+  <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from T_QUALITY_QUOTA_ITEM WHERE QUOTA_ID='${id}'
+  </select>
+  <delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_QUALITY_QUOTA_ITEM WHERE QUOTA_ID='${id}'
+	</delete>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.QualityQuotaItem" >
+    insert into T_QUALITY_QUOTA_ITEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="quotaId != null" >
+        QUOTA_ID,
+      </if>
+      <if test="itemName != null" >
+        ITEM_NAME,
+      </if>
+      <if test="standard != null" >
+        STANDARD,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="quotaId != null" >
+        #{quotaId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null" >
+        #{standard,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

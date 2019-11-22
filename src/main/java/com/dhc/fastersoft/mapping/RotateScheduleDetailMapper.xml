@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateScheduleDetailDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateScheduleDetail" id="rotateScheduleDetailResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR"/>
+		<result property="scheduleId" column="SCHEDULE_ID" jdbcType="NVARCHAR"/>
+		<result property="storehouse" column="STOREHOUSE" jdbcType="NVARCHAR"/>
+		<result property="grainType" column="GRAIN_TYPE" jdbcType="NVARCHAR"/>
+		<result property="deliveryUnit" column="DELIVERY_UNIT" jdbcType="NVARCHAR"/>
+		<result property="quantity" column="QUANTITY" jdbcType="INTEGER"/>
+		<result property="priorPeriod" column="PRIOR_PERIOD" jdbcType="DOUBLE"/>
+		<result property="currentPeriod" column="CURRENT_PERIOD" jdbcType="DOUBLE"/>
+		<result property="total" column="TOTAL" jdbcType="DOUBLE"/>
+		<result property="compleRate" column="COMPLE_RATE" jdbcType="DOUBLE"/>
+		<result property="modifier" column="MODIFIER" jdbcType="NVARCHAR"/>
+		<result property="modifyTime" column="MODIFY_TIME" jdbcType="NVARCHAR"/>
+		<result property="remark" column="REMARK" jdbcType="NVARCHAR"/>
+		<result property="reportTime" column="REPORT_TIME" jdbcType="TIMESTAMP"/>
+		<result property="dealSerial" column="DEAL_SERIAL" jdbcType="NVARCHAR"/>
+		<result property="schemeBatch" column="SCHEME_BATCH" jdbcType="NVARCHAR"/>
+		<result property="dealUnit" column="DEAL_UNIT" jdbcType="NVARCHAR"/>
+		<result property="deliveryStart" column="DELIVERY_START" jdbcType="NVARCHAR"/>
+		<result property="deliveryEnd" column="DELIVERY_END" jdbcType="NVARCHAR"/>
+		<result property="dealDate" column="DEAL_DATE" jdbcType="NVARCHAR"/>
+		<result property="bidSerial" column="BID_SERIAL" jdbcType="NVARCHAR"/>
+
+		<result property="reportUnit" column="REPORT_UNIT" jdbcType="NVARCHAR"/>
+	</resultMap>
+</mapper>

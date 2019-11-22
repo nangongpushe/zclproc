@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotatePlanmainDetailDao" >
+	<resultMap type="com.dhc.fastersoft.entity.RotatePlanmainDetail" id="rotatePlanmainDetailResultMap">
+		<result property="id"          column="ID"      jdbcType="NVARCHAR" />
+		<result property="rotateType"      column="ROTATE_TYPE"      jdbcType="NVARCHAR" />
+		<result property="foodType"      column="FOOD_TYPE"         jdbcType="NVARCHAR" />
+		<result property="yieldTime"      column="YIELD_TIME"       jdbcType="TIMESTAMP" />
+		<result property="orign"      column="ORIGN"    jdbcType="NVARCHAR" />
+		<result property="rotateNumber"      column="ROTATE_NUMBER"    jdbcType="INTEGER" />
+		<result property="planId"    column="PLAN_ID"    jdbcType="NVARCHAR" />
+		<result property="qualityId"    column="QUALITY_ID"    jdbcType="NVARCHAR" />
+		<result property="detailNumber"    column="DETAIL_NUMBER"    jdbcType="INTEGER" />
+
+		<result property="dealDetailNumber"    column="DEAL_DETAIL_NUMBER"    jdbcType="DECIMAL" />
+	</resultMap>
+
+	<sql id="tableName"> T_ROTATE_PLAN_MAIN_DETAIL </sql>
+	<sql id="detailColumns">
+		ID,ROTATE_TYPE,FOOD_TYPE,YIELD_TIME
+		,ORIGN,ROUND(NVL(ROTATE_NUMBER,0),3) AS ROTATE_NUMBER
+		,PLAN_ID,QUALITY_ID,ROUND(NVL(DETAIL_NUMBER,0),3) AS DETAIL_NUMBER
+	</sql>
+	<select id="findById" parameterType="java.lang.String" resultMap="rotatePlanmainDetailResultMap">
+		SELECT <include refid="detailColumns"/> FROM <include refid="tableName"/>
+		<where>
+			AND ID = '${_parameter}'
+		</where>
+	</select>
+	<update id="updatedetailNumberByid" parameterType="com.dhc.fastersoft.entity.RotatePlanmainDetail">
+		UPDATE
+		<include refid="tableName" />
+		SET
+		DETAIL_NUMBER = #{detailNumber}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	<update id="updateDealDetailNumberByid" parameterType="com.dhc.fastersoft.entity.RotatePlanmainDetail">
+		UPDATE
+		<include refid="tableName" />
+		SET
+		DEAL_DETAIL_NUMBER = #{dealDetailNumber}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+
+	<select id="findSumDetailNumberByPlanId" parameterType="java.lang.String" resultMap="rotatePlanmainDetailResultMap">
+		SELECT ROUND(NVL(DETAIL_NUMBER,0),3) AS ROTATE_NUMBER AS DETAIL_NUMBER ,
+		ROTATE_TYPE
+		FROM <include refid="tableName"/>
+		<where>
+			AND PLAN_ID = '${_parameter}'
+		</where>
+		GROUP BY PLAN_ID,ROTATE_TYPE
+	</select>
+	
+</mapper>

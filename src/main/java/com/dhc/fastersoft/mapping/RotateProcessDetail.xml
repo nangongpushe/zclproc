@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateProcessDetailDao">
+	<resultMap id="rotateProcessDetailResultMap" type="com.dhc.fastersoft.entity.RotateProcessDetail">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="PROCESS_ID" property="processId" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="ADVISE" property="advise" jdbcType="VARCHAR" />
+		<result column="AMOUNT" property="amount" jdbcType="DOUBLE" />
+	</resultMap>
+</mapper>

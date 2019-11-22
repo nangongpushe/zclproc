@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.SysDictDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.system.SysDict" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PARENTID" property="parentid" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="DECIMAL" />
+    <result column="LABEL" property="label" jdbcType="VARCHAR" />
+    <result column="VALUE" property="value" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="DEL_FLAG" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PARENTID, TYPE, SORT, LABEL, VALUE, REMARK, CREATE_BY, to_char(CREATE_DATE,'yyyy-MM-dd') CREATE_DATE, UPDATE_BY, 
+    UPDATE_DATE, DEL_FLAG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_DICT
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_SYS_DICT
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.system.SysDict" >
+    insert into T_SYS_DICT (ID, PARENTID, TYPE, 
+      SORT, LABEL, VALUE, 
+      REMARK, CREATE_BY, CREATE_DATE, 
+      UPDATE_BY, UPDATE_DATE, DEL_FLAG
+      )
+    values (#{id,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=DECIMAL}, #{label,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, sysdate, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.system.SysDict" >
+    insert into T_SYS_DICT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="parentid != null" >
+        PARENTID,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="sort != null" >
+        SORT,
+      </if>
+      <if test="label != null" >
+        LABEL,
+      </if>
+      <if test="value != null" >
+        VALUE,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        sysdate,
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.system.SysDict" >
+    update T_SYS_DICT
+    <set >
+      <if test="parentid != null" >
+        PARENTID = #{parentid,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="label != null" >
+        LABEL = #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        VALUE = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = sysdate,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        DEL_FLAG = #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.system.SysDict" >
+    update T_SYS_DICT
+    set PARENTID = #{parentid,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      SORT = #{sort,jdbcType=DECIMAL},
+      LABEL = #{label,jdbcType=VARCHAR},
+      VALUE = #{value,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+    <select id="selectAll"
+		resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		from T_SYS_DICT
+	</select>
+  
+  <select id="pageQuery" parameterType="java.util.HashMap"
+		resultMap="BaseResultMap">
+		${start} SELECT 
+		<include refid="Base_Column_List" />
+		from T_SYS_DICT
+		<where>
+			<if test="label!=null and label!=''">
+				LABEL LIKE '%${label}%'
+			</if>
+			<if test="type!=null and type!=''">
+				AND TYPE LIKE '%${type}%'
+			</if>
+		</where>
+		ORDER BY UPDATE_DATE DESC,rownum desc
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_SYS_DICT
+		<where>
+			<if test="label!=null and label!=''">
+				LABEL LIKE '%${label}%'
+			</if>
+			<if test="type!=null and type!=''">
+				AND TYPE LIKE '%${type}%'
+			</if>
+			
+		</where>
+	</select>
+	
+	 <select id="getSysDictByparentId" parameterType="java.lang.String" 
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from T_SYS_DICT
+		where PARENTID = #{parentId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getSysDictByType" parameterType="java.lang.String" 
+		resultType="com.dhc.fastersoft.entity.system.SysDict">
+		SELECT
+		<include refid="Base_Column_List" />
+		from T_SYS_DICT
+		where TYPE = #{type,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getSysDictListByType" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from T_SYS_DICT
+		where TYPE = #{type,jdbcType=VARCHAR}
+        order by sort
+	</select>
+	
+	<select id="getSysDictByLabel" parameterType="java.lang.String" 
+		resultType="com.dhc.fastersoft.entity.system.SysDict">
+		SELECT
+		<include refid="Base_Column_List" />
+		from T_SYS_DICT
+		where LABEL = #{label,jdbcType=VARCHAR}
+	</select>
+	
+	
+</mapper>

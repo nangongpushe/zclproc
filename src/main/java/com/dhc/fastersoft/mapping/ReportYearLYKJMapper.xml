@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.ReportYearLYKJMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.yearReport.ReportYearLYKJ" >
+    <id column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="REPORT_YEAR" property="reportYear" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="INDICATOR" property="indicator" jdbcType="VARCHAR" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+    <result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REPORT_ID, REPORT_YEAR, REPORT_NAME, INDICATOR, UNIT, UNIT_VALUE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_REPORT_YEAR_LYKJ
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_REPORT_YEAR_LYKJ
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearLYKJ" >
+    insert into T_REPORT_YEAR_LYKJ (REPORT_ID, REPORT_YEAR, REPORT_NAME, 
+      INDICATOR, UNIT, UNIT_VALUE
+      )
+    values (#{reportId,jdbcType=VARCHAR}, #{reportYear,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR}, 
+      #{indicator,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{unitValue,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearLYKJ" >
+    insert into T_REPORT_YEAR_LYKJ
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        REPORT_ID,
+      </if>
+      <if test="reportYear != null" >
+        REPORT_YEAR,
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME,
+      </if>
+      <if test="indicator != null" >
+        INDICATOR,
+      </if>
+      <if test="unit != null" >
+        UNIT,
+      </if>
+      <if test="unitValue != null" >
+        UNIT_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        #{reportId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportYear != null" >
+        #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="indicator != null" >
+        #{indicator,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="unitValue != null" >
+        #{unitValue,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearLYKJ" >
+    update T_REPORT_YEAR_LYKJ
+    <set >
+      <if test="reportYear != null" >
+        REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="indicator != null" >
+        INDICATOR = #{indicator,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        UNIT = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="unitValue != null" >
+        UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearLYKJ" >
+    update T_REPORT_YEAR_LYKJ
+    set REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      INDICATOR = #{indicator,jdbcType=VARCHAR},
+      UNIT = #{unit,jdbcType=VARCHAR},
+      UNIT_VALUE = #{unitValue,jdbcType=DECIMAL}
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </update>
+</mapper>

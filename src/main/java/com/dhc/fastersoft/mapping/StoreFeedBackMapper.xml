@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoreFeedBackDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.store.StoreFeedBack" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="EXAMINE_SERIAL" property="examineSerial" jdbcType="VARCHAR" />
+    <result column="FEEDBACK_SERIAL" property="feedbackSerial" jdbcType="VARCHAR" />
+    <result column="FEEDBACK_NAME" property="feedbackName" jdbcType="VARCHAR" />
+    <result column="STOREHOUSE" property="storehouse" jdbcType="VARCHAR" />
+    <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR" />
+    <result column="MANAGER" property="manager" jdbcType="VARCHAR" />
+    <result column="INSPECTORS" property="inspectors" jdbcType="VARCHAR" />
+    <result column="INSPECTOR_MANAGER" property="inspectorManager" jdbcType="VARCHAR" />
+     <result column="INSPECTOR_TYPE" property="inspectorType" jdbcType="VARCHAR" />
+    <result column="REPORT_DATE" property="reportDate" jdbcType="TIMESTAMP" />
+    
+    <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
+    <result column="CREATORID" property="creatorId" jdbcType="NVARCHAR" />
+      <result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR" />
+       <result column="ENTERPRISE_MANAGER" property="enterpriseManager" jdbcType="VARCHAR" />
+      <result column="TYPE" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+     ss.ID id, ss.EXAMINE_SERIAL examineSerial,  ss.FEEDBACK_SERIAL feedbackSerial,
+      ss.FEEDBACK_NAME feedbackName, house.WAREHOUSE_SHORT AS STOREHOUSE ,  ss.MANAGER manager,
+       ss.INSPECTORS inspectors,
+     ss.INSPECTOR_MANAGER inspectorManager,TO_CHAR( ss.REPORT_DATE,'YYYY-MM-DD')  reportDate,
+      ss.GROUP_ID groupId, ss.INSPECTOR_TYPE inspectorType, ss.CREATORID creatorId,
+      ss.ENTERPRISE_NAME enterpriseName, ss.ENTERPRISE_MANAGER enterpriseManager, ss.TYPE type,ss.WAREHOUSE_ID warehouseId
+  </sql>
+
+   <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+			<include refid="Base_Column_List" />
+	   , sys.name  creator
+	   from  T_STORE_FEEDBACK ss  left join
+	   T_SYS_USER sys ON ss.CREATORID=sys.ID  left join T_STORAGE_WAREHOUSE house ON ss.WAREHOUSE_ID = house.ID
+	   WHERE 1=1
+
+		
+	
+		 <if test="creatorId!=null and creatorId!=''">
+			 and  ss.CREATORID  = '${creatorId}'
+		</if>
+		<if test="inspectorType!=null and inspectorType!=''">
+			 and   ss.INSPECTOR_TYPE  = '${inspectorType}'
+		</if>
+		<if test="type!=null and type!=''">
+			 and   ss.TYPE  = '${type}'
+		</if>
+		 <if test="enterpriseName!=null and enterpriseName!=''">
+			 and   ss.ENTERPRISE_NAME  = '${enterpriseName}'
+		</if>
+		  <if test="storehouse!=null and storehouse!=''">
+			 and   house.WAREHOUSE_SHORT  = '${storehouse}'
+		</if>
+	   <if test="warehouseId!=null and warehouseId!=''">
+		   and   ss.WAREHOUSE_ID  = '${warehouseId}'
+	   </if>
+	   <if test="shortName!=null and shortName!=''">
+		   and  ss.STOREHOUSE  IN (SELECT warehouse_short FROM (
+		   SELECT DISTINCT w.warehouse_name,w.warehouse_short,w.enterprise_name
+		   FROM t_store_supervise_item i,t_storage_warehouse w WHERE
+		   to_char(SYSDATE,'yyyymmdd') BETWEEN to_char(i.supervise_start,'yyyymmdd') AND to_char(i.supervise_end,'yyyymmdd')
+		   AND i.ENTERPRISE_ID=w.ENTERPRISE_ID AND i.warehouse_name = '${shortName}')
+		   )
+	   </if>
+		  <if test="examineSerial!=null and examineSerial!=''">
+			 and   ss.EXAMINE_SERIAL LIKE '%${examineSerial}%'
+		</if>
+
+		<if test="feedbackName!=null and feedbackName!=''">
+			 and   ss.FEEDBACK_NAME  LIKE '%${feedbackName}%'
+		</if>
+		<if test="feedbackSerial!=null and feedbackSerial!=''">
+			 and   ss.FEEDBACK_SERIAL  LIKE '%${feedbackSerial}%'
+		</if>
+		<if test="manager!=null and manager!=''">
+			 and   ss.MANAGER LIKE CONCAT(CONCAT('%',#{manager}),'%')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char( ss.REPORT_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char( ss.REPORT_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char( ss.REPORT_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD')
+		</if>	
+		order by  ss.REPORT_DATE DESC
+		${end}
+	</select>
+	
+	   
+	
+		
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_STORE_FEEDBACK ss  left join T_STORAGE_WAREHOUSE house ON ss.WAREHOUSE_ID = house.ID
+		WHERE 1=1		
+		<if test="creatorId!=null and creatorId!=''">
+			 and  ss.CREATORID  = '${creatorId}'
+		</if>
+		<if test="inspectorType!=null and inspectorType!=''">
+			 and  ss.INSPECTOR_TYPE  = '${inspectorType}'
+		</if> 
+		 <if test="type!=null and type!=''">
+			 and  ss.TYPE  = '${type}'
+		</if>
+		 <if test="enterpriseName!=null and enterpriseName!=''">
+			 and  ss.ENTERPRISE_NAME  = '${enterpriseName}'
+		</if>
+		  <if test="storehouse!=null and storehouse!=''">
+			 and  house.WAREHOUSE_SHORT  = '${storehouse}'
+		</if>
+		<if test="warehouseId!=null and warehouseId!=''">
+			and   ss.WAREHOUSE_ID  = '${warehouseId}'
+		</if>
+		 <if test="examineSerial!=null and examineSerial!=''">
+			 and  ss.EXAMINE_SERIAL  like '%${examineSerial}%'
+		</if>
+
+		<if test="feedbackName!=null and feedbackName!=''">
+			 and  ss.FEEDBACK_NAME  LIKE '%${feedbackName}%'
+		</if>
+		<if test="feedbackSerial!=null and feedbackSerial!=''">
+			 and  ss.FEEDBACK_SERIAL  LIKE '%${feedbackSerial}%'
+		</if>
+		<if test="manager!=null and manager!=''">
+			 and  ss.MANAGER  LIKE CONCAT(CONCAT('%', #{manager}),'%')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(ss.REPORT_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(ss.REPORT_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(ss.REPORT_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD')
+		</if>	
+		
+	</select>
+	
+	<select id="getStoreFeedBackById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.store.StoreFeedBack">
+		SELECT 
+			<include refid="Base_Column_List" />
+		 from T_STORE_FEEDBACK	ss  left join T_STORAGE_WAREHOUSE house ON ss.WAREHOUSE_ID = house.ID
+		where ss.ID=#{id,jdbcType=NVARCHAR}
+		
+	</select>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.store.StoreFeedBack" >
+	  insert into T_STORE_FEEDBACK (ID, FEEDBACK_SERIAL, FEEDBACK_NAME, 
+	      STOREHOUSE, MANAGER, INSPECTORS, 
+	      INSPECTOR_MANAGER, REPORT_DATE, GROUP_ID,INSPECTOR_TYPE ,CREATORID,ENTERPRISE_NAME,ENTERPRISE_MANAGER,TYPE
+	      ,EXAMINE_SERIAL,WAREHOUSE_ID
+	      )
+	    values (#{id,jdbcType=VARCHAR}, #{feedbackSerial,jdbcType=VARCHAR}, #{feedbackName,jdbcType=VARCHAR}, 
+	      #{storehouse,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{inspectors,jdbcType=VARCHAR}, 
+	      #{inspectorManager,jdbcType=VARCHAR}, TO_DATE(#{reportDate,jdbcType=TIMESTAMP},'YYYY-MM-DD') , #{groupId,jdbcType=VARCHAR}
+	      , #{inspectorType,jdbcType=VARCHAR},#{creatorId,jdbcType=VARCHAR},#{enterpriseName,jdbcType=VARCHAR},
+	      #{enterpriseManager,jdbcType=VARCHAR} ,#{type,jdbcType=VARCHAR},#{examineSerial,jdbcType=VARCHAR},#{warehouseId,jdbcType=VARCHAR}
+	      )
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.store.StoreFeedBack">
+				
+	 update T_STORE_FEEDBACK
+    set 
+      FEEDBACK_SERIAL = #{feedbackSerial,jdbcType=VARCHAR},
+      FEEDBACK_NAME = #{feedbackName,jdbcType=VARCHAR},
+      STOREHOUSE = #{storehouse,jdbcType=VARCHAR},
+	  WAREHOUSE_ID = #{warehouseId,jdbcType=VARCHAR},
+      MANAGER = #{manager,jdbcType=VARCHAR},
+      INSPECTORS = #{inspectors,jdbcType=VARCHAR},
+      INSPECTOR_MANAGER = #{inspectorManager,jdbcType=VARCHAR},
+      REPORT_DATE =  TO_DATE(#{reportDate,jdbcType=TIMESTAMP},'YYYY-MM-DD') ,
+	  <if test="groupId!=null">GROUP_ID = #{groupId,jdbcType=VARCHAR},</if>
+
+      INSPECTOR_TYPE = #{inspectorType,jdbcType=VARCHAR},
+	  <if test="creatorId!=null and creatorId!=''">CREATORID=#{creatorId,jdbcType=VARCHAR},</if>
+
+      ENTERPRISE_NAME=#{enterpriseName,jdbcType=VARCHAR},
+      ENTERPRISE_MANAGER=#{enterpriseManager,jdbcType=VARCHAR} ,
+      TYPE= #{type,jdbcType=VARCHAR} ,
+      EXAMINE_SERIAL=#{examineSerial,jdbcType=VARCHAR}  
+	
+		WHERE ID='${id}'
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORE_FEEDBACK
+		WHERE  ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+ 
+</mapper>

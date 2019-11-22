@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.FreightDefDao" >
+    <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.FreightDef" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="SHIP_TYPE" property="shipType" jdbcType="VARCHAR" />
+        <result column="PACKAGE_TYPE" property="packageType" jdbcType="VARCHAR" />
+        <result column="TRANSPORT_PRICE" property="transportPrice" jdbcType="DECIMAL" />
+        <result column="PREBOARD_RATE" property="preBoardRate" jdbcType="DECIMAL" />
+        <result column="INSTORE_RATE" property="instoreRate" jdbcType="DECIMAL" />
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+        <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID, SHIP_TYPE, PACKAGE_TYPE,TRANSPORT_PRICE,PREBOARD_RATE, INSTORE_RATE, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from T_FREIGHT_DEF
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from T_FREIGHT_DEF
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.dhc.fastersoft.entity.FreightDef" >
+        insert into T_FREIGHT_DEF (ID, SHIP_TYPE, PACKAGE_TYPE,
+        TRANSPORT_PRICE, PREBOARD_RATE, INSTORE_RATE,
+        CREATE_BY, CREATE_DATE, UPDATE_BY,UPDATE_DATE
+        )
+        values (#{id,jdbcType=VARCHAR}, #{shipType,jdbcType=VARCHAR}, #{packageType,jdbcType=VARCHAR},
+        #{transportPrice,jdbcType=DECIMAL}, #{preBoardRate,jdbcType=DECIMAL}, #{instoreRate,jdbcType=DECIMAL},
+        #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+        #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <select id="getRecordCount" parameterType="java.util.HashMap"
+            resultType="Integer">
+        SELECT count(0) FROM T_FREIGHT_DEF
+        <where>
+            <if test="shipType!=null and shipType!=''">
+                SHIP_TYPE LIKE '%${shipType}%'
+            </if>
+            <if test="packageType!=null and packageType!=''">
+                AND PACKAGE_TYPE LIKE '%${packageType}%'
+            </if>
+
+        </where>
+    </select>
+
+    <select id="pageQuery" parameterType="java.util.HashMap"
+            resultMap="BaseResultMap">
+        ${start} SELECT
+        <include refid="Base_Column_List" />
+        from T_FREIGHT_DEF
+        <where>
+            <if test="shipType!=null and shipType!=''">
+                SHIP_TYPE LIKE '%${shipType}%'
+            </if>
+            <if test="packageType!=null and packageType!=''">
+                AND PACKAGE_TYPE LIKE '%${packageType}%'
+            </if>
+        </where>
+        ORDER BY UPDATE_DATE DESC
+        ${end}
+    </select>
+
+    <select id="selectByShipType" parameterType="java.lang.String"
+            resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        from T_FREIGHT_DEF
+        where SHIP_TYPE = #{shipType,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByType" parameterType="java.util.HashMap"
+            resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        from T_FREIGHT_DEF
+        <where>
+            <if test="shipType!=null and shipType!=''">
+                SHIP_TYPE LIKE '%${shipType}%'
+            </if>
+            <if test="packageType!=null and packageType!=''">
+                AND PACKAGE_TYPE LIKE '%${packageType}%'
+            </if>
+        </where>
+    </select>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.FreightDef" >
+        update T_FREIGHT_DEF
+        set SHIP_TYPE = #{shipType,jdbcType=VARCHAR},
+        PACKAGE_TYPE = #{packageType,jdbcType=VARCHAR},
+        TRANSPORT_PRICE = #{transportPrice,jdbcType=DECIMAL},
+        PREBOARD_RATE = #{preBoardRate,jdbcType=DECIMAL},
+        INSTORE_RATE = #{instoreRate,jdbcType=DECIMAL},
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

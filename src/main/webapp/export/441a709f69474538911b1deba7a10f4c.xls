@@ -1,0 +1,82 @@
+
+
+
+
+
+<HTML>
+<head>
+<meta http-equiv="Content-Type"
+		content="application/ms-excel; charset=utf-8"/>
+	<style>
+		#content td,th{
+		text-align:center;
+		}
+		.title{
+		font-size:42px;
+		text-align:center;
+		}
+	</style>
+</head>
+	<BODY class="body_MarginLR10px" style="margin-right:0px;">	
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" sheetName="4">
+
+		</table>
+	</BODY>
+
+	<BODY class="body_MarginLR10px" style="margin-right:0px;">
+		<TABLE width="100%" align="center" sheetName="5">
+			<tr>
+				<td>
+					<TABLE width="100%" align="center" sheetName="1">
+						<tr><td colspan="17" class="title">地方储备粮油库存实物台账月报表</td></tr>
+						<tr></tr>
+						<tr><td colspan="8">填报单位：浙江中穗省级粮食储备库</td><td style='mso-number-format:"\@"' colspan="5">储备性质：省级储备</td><td colspan="3" style='mso-number-format:"\@"'>2020-03</td><td colspan="2">单位：吨</td></tr>
+					</TABLE>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<TABLE id="box01" cellSpacing="1" cellPadding="1" border="1" width="100%" align="center" class="table_border01" sheetName="2">
+						<tr>
+							<td class="td_white" colspan="17">
+								<TABLE id="box01" cellSpacing="1" cellPadding="1" border="1" width="100%" align="center" class="table_border01">
+									<thead>
+										<tr>
+											<th rowspan="2" class="td_first text-center" style="width: 200px;height: 56px !important;background-color: #e7f3f7;">储存库点名称</th>
+											<th rowspan="2" class="td_first text-center" style="min-width: 147px;height: 56px !important;background-color: #e7f3f7;">仓号<br>(货位)</th>
+											<th rowspan="2" class="text-center">品种</th><th rowspan="2" class="text-center">数量</th><th rowspan="2" class="text-center">产地</th><th rowspan="2" class="text-center">收获年份</th><th colspan="9" class="text-center">入库质量情况</th><th colspan="3" class="text-center">储存品质情况</th>
+										</tr>
+										<tr >
+											<th class="text-center">出糙(%)</th><th class="text-center">容重(g/l)</th><th class="text-center">杂质(%)</th><th class="text-center">水分(%)</th><th class="text-center">黄粒米(%)</th><th class="text-center">不完善粒(%)</th><th class="text-center">小麦湿面筋(%)</th><th class="text-center">酸价(KOH)(mg/g)</th><th class="text-center">过氧化值(mmol/kg)</th><th class="text-center">宜存数量</th><th class="text-center">轻度不宜存数量</th><th class="text-center">重度不宜存数量</th>
+										</tr>
+									</thead>
+									<tbody>
+										
+											<tr class="text-center active">
+												<td>中穗库</td>
+												<td>47</td>
+												<td>粳稻谷</td><td>1601</td><td>绍兴</td><td>2017</td><td>79.0</td>
+												<td></td><td>1.0</td><td>12.4</td><td>0.1</td><td></td>
+												<td></td><td></td><td></td><td>1601</td><td></td>
+												<td></td>
+											</tr>
+										
+									</tbody>
+
+								</TABLE>
+							</td>
+						</tr>
+					</TABLE>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<TABLE width="100%" align="center" sheetName="3">
+						<tr><td colspan="9">统计负责人：cc</td><td colspan="6">填表人：叶盈盈</td><td>填报日期：2019年03月11日</td></tr>
+					</TABLE>
+				</td>
+			</tr>
+		</TABLE>
+	</BODY>
+</HTML>
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateFreightAPRVGatherDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateFreightAPRVGather" id="rotateFreightAPRVGatherResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="grainType" column="GRAIN_TYPE" jdbcType="NVARCHAR" />
+		<result property="status" column="STATUS" jdbcType="NVARCHAR" />
+		<result property="gatherMan" column="GATHER_MAN" jdbcType="NVARCHAR" />
+		<result property="gatherTime" column="GATHER_TIME" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+</mapper>

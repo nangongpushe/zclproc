@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                         http://www.springframework.org/schema/beans/spring-beans-4.1.xsd    
+                         http://www.springframework.org/schema/context    
+                         http://www.springframework.org/schema/context/spring-context-4.1.xsd    
+                         http://www.springframework.org/schema/mvc    
+                         http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd     
+                         http://www.springframework.org/schema/task 
+      					 http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+    <!-- 自动扫面注解包 -->
+    <context:annotation-config/>
+
+    <!-- 开启组件扫描 -->
+    <mvc:annotation-driven/>
+
+    <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+    <!-- 开启controller注解支持 -->
+    <!-- use-default-filters="false" 只扫描指定的注解 -->
+    <context:component-scan base-package="com.dhc.fastersoft.controller"
+                            use-default-filters="false">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 配置避免IE执行AJAX返回JSON时出现下载文件 -->
+    <bean id="mappingJacksonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+                <value>application/x-www-form-urlencoded;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="defaultJsonView"
+          class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+
+    <!-- i18n国际化开始 -->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <!-- 国际化信息所在的文件名 -->
+        <property name="basename" value="i18n/messages"/>
+        <!-- 如果在国际化资源文件中找不到对应代码的信息，就用这个代码作为名称 -->
+        <property name="useCodeAsDefaultMessage" value="true"/>
+    </bean>
+
+    <!-- Bean解析器,级别高于默认解析器,寻找bean对象进行二次处理 -->
+    <bean id="beanNameViewResolver"
+          class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0">
+    </bean>
+
+    <mvc:interceptors>
+        <!-- 国际化操作拦截器 如果采用基于（请求/Session/Cookie）则必需配置 -->
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+    </mvc:interceptors>
+
+    <!-- <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"
+        /> -->
+
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="cookieName" value="language"/>
+        <property name="cookieMaxAge" value="3600"/>
+        <property name="defaultLocale" value="zh_TW"/>
+    </bean>
+    <!-- i18n国际化结束 -->
+
+    <!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="utf-8"/>
+        <!-- 文件大小最大值 -->
+        <property name="maxUploadSize" value="10485760000"/>
+        <!-- 内存中的最大值 -->
+        <property name="maxInMemorySize" value="40960"/>
+    </bean>
+
+    <!--配置异常对象处理器  该类要实现HandlerExceptionResolver接口  -->
+    <bean class="com.dhc.fastersoft.exception.WebExceptionResolver"></bean>
+    <!-- 配置登录拦截器 -->
+    <mvc:interceptors>
+        <!-- 直接定义在mvc:interceptors根下面的表示是拦截所有的请求 -->
+        <!-- 登录拦截器 -->
+        <bean class="com.dhc.fastersoft.common.LoginInterceptor">
+            <property name="uncheckUrls">
+                <list>
+                    <value>/cbservice/index.shtml</value>
+                    <value>/cbservice/logout.shtml</value>
+                    <value>/cbservice/relogin.shtml</value>
+                    <value>/sign/submitLogin.shtml</value>
+                </list>
+            </property>
+        </bean>
+    </mvc:interceptors>
+</beans>

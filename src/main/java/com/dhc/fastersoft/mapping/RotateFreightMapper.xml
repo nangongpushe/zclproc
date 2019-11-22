@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateFreightDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateFreight" id="rotateFreightResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="freightName" column="FREIGHT_NAME" jdbcType="NVARCHAR" />
+		<result property="inviteUnit" column="INVITE_UNIT" jdbcType="NVARCHAR" />
+		<result property="inviteTime" column="INVITE_TIME" jdbcType="TIMESTAMP" />
+        <result property="inviteEndTime" column="INVITE_END_TIME" jdbcType="TIMESTAMP" />
+		<result property="groupId" column="GROUP_ID" jdbcType="NVARCHAR" />
+		<result property="status" column="STATUS" jdbcType="NVARCHAR" />
+		<result property="operator" column="OPERATOR" jdbcType="NVARCHAR" />
+		<result property="operatorTime" column="OPERATOR_TIME" jdbcType="TIMESTAMP" />
+		<result property="reporterId" column="REPORTER_ID" jdbcType="NVARCHAR" />
+		<collection property="freightDetails" resultMap="com.dhc.fastersoft.dao.RotateFreightDetailDao.rotateFreightDetailResultMap"></collection>
+		
+	</resultMap>
+
+	<sql id="columns_main">
+		ID,FREIGHT_NAME,INVITE_UNIT,INVITE_TIME,GROUP_ID,STATUS,
+		OPERATOR,OPERATOR_TIME,REPORTER_ID,INVITE_END_TIME
+	</sql>
+
+	<sql id="columns_detail">
+		ID,TENDERS,DEAL_SERIAL,SHIP_TYPE,DELIVERY_ADDRESS,
+		RECEIVE_ADDRESS,DISTANCE,PLAN_NUMBER,GROUP_ID,CLIENT_NAME,CLIENT_ID,
+		PRICE,REMARK,FREIGHT_ID,INVITE_TYPE
+	</sql>
+
+	<sql id="table_main"> T_ROTATE_FREIGHT </sql>
+
+	<sql id="table_detail"> T_ROTATE_FREIGHT_PURCHASE </sql>
+	
+	
+	<!-- 添加招标结果 -->
+	<insert id="saveFreight" parameterType="com.dhc.fastersoft.entity.RotateFreight">
+		begin
+		INSERT INTO
+		<include refid="table_main" />
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(#{id},#{freightName},#{inviteUnit,jdbcType=NVARCHAR},#{inviteTime,jdbcType=TIMESTAMP},
+		#{groupId,jdbcType=NVARCHAR},#{status},
+		#{operator},#{operatorTime},#{reporterId},#{inviteEndTime});
+
+
+		<foreach collection="freightDetails" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_detail" />
+			(
+			<include refid="columns_detail" />
+			)
+			VALUES
+			(#{item.id},
+			#{item.tenders,jdbcType=NVARCHAR},
+			#{item.dealSerial,jdbcType=NVARCHAR},
+			#{item.shipType,jdbcType=NVARCHAR},
+			#{item.deliveryAddress,jdbcType=NVARCHAR},
+			#{item.receiveAddress,jdbcType=NVARCHAR},
+			#{item.distance,jdbcType=INTEGER},
+			#{item.planNumber,jdbcType=INTEGER},
+			#{item.groupId,jdbcType=NVARCHAR},
+			#{item.clientName,jdbcType=NVARCHAR},
+			#{item.clientId,jdbcType=NVARCHAR},
+			#{item.price,jdbcType=NVARCHAR},
+			#{item.remark,jdbcType=NVARCHAR},
+			#{id},
+			#{item.inviteType,jdbcType=NVARCHAR})
+		</foreach>
+		;end;
+	</insert>
+	
+	<update id="updateFreight" parameterType="com.dhc.fastersoft.entity.RotateFreight">
+		begin
+		UPDATE
+		<include refid="table_main" />
+		SET
+		FREIGHT_NAME = #{freightName},INVITE_UNIT = #{inviteUnit},
+		INVITE_TIME =#{inviteTime},
+		GROUP_ID=#{groupId,jdbcType=NVARCHAR},
+		STATUS =#{status},INVITE_END_TIME =#{inviteEndTime}
+		<where>
+			ID = #{id}
+		</where>
+		<if test="freightDetails!=null">
+			;DELETE FROM <include refid="table_detail" />
+			<where>
+				FREIGHT_ID = #{id};
+			</where>
+		<foreach collection="freightDetails" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_detail" />
+			(
+			<include refid="columns_detail" />
+			)
+			VALUES
+			(#{item.id},
+			#{item.tenders,jdbcType=NVARCHAR},
+			#{item.dealSerial,jdbcType=NVARCHAR},
+			#{item.shipType,jdbcType=NVARCHAR},
+			#{item.deliveryAddress,jdbcType=NVARCHAR},
+			#{item.receiveAddress,jdbcType=NVARCHAR},
+			#{item.distance,jdbcType=INTEGER},
+			#{item.planNumber,jdbcType=INTEGER},
+			#{item.groupId,jdbcType=NVARCHAR},
+			#{item.clientName,jdbcType=NVARCHAR},
+			#{item.clientId,jdbcType=NVARCHAR},
+			#{item.price,jdbcType=NVARCHAR},
+			#{item.remark,jdbcType=NVARCHAR},
+			#{id},
+			#{item.inviteType,jdbcType=NVARCHAR})
+		</foreach>
+		</if>
+		;end;
+	</update>
+	
+	<!-- 查询单个 -->
+	<select id="getById" parameterType="java.lang.String"
+		resultMap="rotateFreightResultMap">
+		SELECT <include refid="columns_main"/>
+		 FROM <include refid="table_main"/>
+		<where>
+			ID = #{_parameter}
+		</where>
+	</select>
+	
+	<!-- 查询-->
+	<select id="list" parameterType="java.util.HashMap" resultMap="rotateFreightResultMap">
+		select * from ( select row_.*, rownum rownum_ from (
+		SELECT
+		<include refid="columns_main" />
+		from
+		<include refid="table_main" />
+		<where>
+			<if test="freightName!=null and freightName!=''">
+				AND FREIGHT_NAME LIKE '%${freightName}%'
+			</if>
+			<if test="inviteUnit!=null and inviteUnit!=''">
+				AND INVITE_UNIT LIKE '%${inviteUnit}%'
+			</if>
+			<if test="inviteTime!=null and inviteTime!=''">
+				AND TO_CHAR(INVITE_TIME,'YYYY-MM-DD') = '${inviteTime}'
+
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS LIKE '%${status}%'
+			</if>
+			<if test="operator!=null and operator!=''">
+				AND OPERATOR LIKE '%${operator}%'
+			</if>
+		</where>
+		ORDER BY INVITE_TIME DESC
+		) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+		where rownum_ > (#{pageIndex}-1) * #{pageSize}
+	</select>
+	
+	<!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT COUNT(0)
+		from
+		<include refid="table_main" />
+		<where>
+			<if test="freightName!=null and freightName!=''">
+				AND FREIGHT_NAME LIKE '%${freightName}%'
+			</if>
+			<if test="inviteUnit!=null and inviteUnit!=''">
+				AND INVITE_UNIT LIKE '%${inviteUnit}%'
+			</if>
+			<if test="inviteTime!=null and inviteTime!=''">
+				AND TO_CHAR(INVITE_TIME,'YYYY-MM-DD') = '${inviteTime}'
+
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS LIKE '%${status}%'
+			</if>
+			<if test="operator!=null and operator!=''">
+				AND OPERATOR LIKE '%${operator}%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询明细 -->
+	<select id="listDetail" parameterType="java.util.HashMap"
+		resultMap="com.dhc.fastersoft.dao.RotateFreightDetailDao.rotateFreightDetailResultMap">
+		SELECT
+		<include refid="columns_detail" />
+		FROM
+		<include refid="table_detail" />
+		<where>
+			<if test="freightId!=null and freightId!=''">
+				AND FREIGHT_ID = #{freightId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 更新状态 -->
+	<update id="updateStatus" parameterType="java.util.HashMap">
+		UPDATE 	<include refid="table_main" />
+		SET
+			STATUS = #{status}
+		<where>
+			<if test="id!=null and id!=''">
+				AND ID = #{id}
+			</if>		
+		</where>
+	</update>
+	
+	<update id="updateClientNameAndPrice" parameterType="java.util.List">
+		begin
+			<foreach collection="list" item="item" open=" " separator=";" close=" ">
+				UPDATE <include refid="table_detail" />
+				<set>
+					<if test="item.clientName != null and item.clientName != ''">
+						CLIENT_NAME = #{item.clientName},
+					</if>
+					<if test="item.price != null and item.price != ''">
+						PRICE = #{item.price},
+					</if>
+					<if test="item.clientId != null and item.clientId != ''">
+						CLIENT_ID = #{item.clientId}
+					</if>
+				</set>
+				WHERE ID = #{item.id}
+			</foreach>
+
+		;end;
+	</update>
+</mapper>

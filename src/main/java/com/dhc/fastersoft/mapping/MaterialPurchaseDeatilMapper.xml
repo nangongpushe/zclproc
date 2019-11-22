@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.MaterialPurchaseDeatilDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.MaterialPurchaseDeatil" >
+    <result column="ID" 			property="id" 			jdbcType="VARCHAR" />
+    <result column="PURCHASE_ID" 	property="purchaseId" 	jdbcType="VARCHAR" />
+    <result column="MATERIAL_NAME" 	property="materialName" jdbcType="VARCHAR" />
+    <result column="MODEL" 			property="model" 		jdbcType="VARCHAR" />
+    <result column="QUANTITY" 		property="quantity" 	jdbcType="VARCHAR" />
+    <result column="UNIT_PRICE" 	property="unitPrice" 	jdbcType="VARCHAR" />
+    <result column="ESTIMATED_UNIT_PRICE" property="estimatedUnitPrice" jdbcType="VARCHAR" />
+    <result column="REMARK" 		property="remark" 		jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+			ID id, PURCHASE_ID purchaseId, MATERIAL_NAME materialName, MODEL model, QUANTITY quantity, UNIT_PRICE unitPrice, 
+      		ESTIMATED_UNIT_PRICE estimatedUnitPrice, REMARK remark
+		 	FROM T_MATERIAL_PURCHASE_DETAIL 	
+		 WHERE 1=1
+		order by ID DESC
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_MATERIAL_PURCHASE_DETAIL  
+		WHERE 1=1		 
+	</select>
+	
+	<select id="getMaterialPurchaseDeatilById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT 
+			ID id, PURCHASE_ID purchaseId, MATERIAL_NAME materialName, MODEL model, QUANTITY quantity, UNIT_PRICE unitPrice, 
+      		ESTIMATED_UNIT_PRICE estimatedUnitPrice, REMARK remark	
+			FROM T_MATERIAL_PURCHASE_DETAIL 
+		where PURCHASE_ID=#{purchaseId,jdbcType=VARCHAR}
+		
+	</select>
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.MaterialPurchaseDeatil" >
+ 	insert into T_MATERIAL_PURCHASE_DETAIL (ID, PURCHASE_ID, MATERIAL_NAME, 
+      MODEL, QUANTITY, UNIT_PRICE, 
+      ESTIMATED_UNIT_PRICE, REMARK)
+    values (#{id,jdbcType=VARCHAR}, #{purchaseId,jdbcType=VARCHAR}, #{materialName,jdbcType=VARCHAR}, 
+      #{model,jdbcType=VARCHAR}, #{quantity,jdbcType=VARCHAR}, #{unitPrice,jdbcType=VARCHAR}, 
+      #{estimatedUnitPrice,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+      
+      
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.MaterialPurchaseDeatil">
+	update T_MATERIAL_PURCHASE_DETAIL
+    set 
+      PURCHASE_ID = #{record.purchaseId,jdbcType=VARCHAR},
+      MATERIAL_NAME = #{record.materialName,jdbcType=VARCHAR},
+      MODEL = #{record.model,jdbcType=VARCHAR},
+      QUANTITY = #{record.quantity,jdbcType=VARCHAR},
+      UNIT_PRICE = #{record.unitPrice,jdbcType=VARCHAR},
+      ESTIMATED_UNIT_PRICE = #{record.estimatedUnitPrice,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR}
+      WHERE ID='${id}'				
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_MATERIAL_PURCHASE_DETAIL
+		WHERE  PURCHASE_ID=#{purchaseId,jdbcType=VARCHAR}
+	</delete>
+	
+  
+</mapper>

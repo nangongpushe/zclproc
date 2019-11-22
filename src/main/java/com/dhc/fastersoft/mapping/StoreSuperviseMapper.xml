@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.StoreSuperviseDao">
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.StoreSupervise">
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="SUPERVISE_SERIAL" jdbcType="VARCHAR" property="superviseSerial" />
+    <result column="SUPERVISE_YEAR" jdbcType="VARCHAR" property="superviseYear" />
+    <result column="SUPERVISE_NAME" jdbcType="VARCHAR" property="superviseName" />
+    <result column="GROUP_ID" jdbcType="VARCHAR" property="groupId" />
+    <result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+	  <result column="CREATORID" jdbcType="VARCHAR" property="creatorId" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+    <collection property="detail" resultMap="com.dhc.fastersoft.dao.StoreSuperviseItemDao.itemResultMap"></collection>
+  </resultMap>
+  
+  <sql id="tablename">T_STORE_SUPERVISE</sql>
+  <sql id="detailTablename">T_STORE_SUPERVISE_ITEM</sql>
+  
+  <sql id="columns">
+  	ID, SUPERVISE_SERIAL, SUPERVISE_YEAR, 
+    SUPERVISE_NAME, GROUP_ID, CREATOR, 
+    CREATE_DEPT, CREATE_DATE,CREATORID
+  </sql>
+  
+  <sql id="detailColumns">
+  	ID, SUPERVISE_ID, WAREHOUSE_CODE, WAREHOUSE_ID,
+	WAREHOUSE_NAME, ENTERPRISE_ID, ENTERPRISE_SERIAL, 
+	ENTERPRISE_NAME, ORGANIZATION_CODE, DIVISION, 
+	PERSON_INCHARGE, TELEPHONE, SUPERVISE_START, 
+	SUPERVISE_END,SOCIAL_CREDIT_CODE
+  </sql>
+  
+  <insert id="save" parameterType="com.dhc.fastersoft.entity.StoreSupervise">
+    begin 
+    insert into <include refid="tablename"></include>
+    ( 
+    <include refid="columns"></include> 
+    )
+    values 
+    (#{id,jdbcType=VARCHAR}, #{superviseSerial,jdbcType=VARCHAR}, #{superviseYear,jdbcType=VARCHAR}, 
+     #{superviseName,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+     #{createDept,jdbcType=VARCHAR}, SYSDATE, #{creatorId,jdbcType=VARCHAR});
+     
+     <foreach collection="detail" item="item">
+		insert into 
+		<include refid="detailTablename"></include>
+		( 
+		<include refid="detailColumns"/> 
+		)
+		VALUES
+		(#{item.id,jdbcType=VARCHAR}, #{item.superviseId,jdbcType=VARCHAR}, #{item.warehouseCode,jdbcType=VARCHAR}, #{item.warehouseId,jdbcType=VARCHAR},
+      	 #{item.warehouseName,jdbcType=VARCHAR}, #{item.enterpriseId,jdbcType=VARCHAR}, #{item.enterpriseSerial,jdbcType=VARCHAR}, 
+         #{item.enterpriseName,jdbcType=VARCHAR}, #{item.organizationCode,jdbcType=VARCHAR}, #{item.division,jdbcType=VARCHAR}, 
+         #{item.personIncharge,jdbcType=VARCHAR}, #{item.telephone,jdbcType=VARCHAR}, #{item.superviseStart,jdbcType=TIMESTAMP}, 
+         #{item.superviseEnd,jdbcType=TIMESTAMP}, #{item.socialCreditCode,jdbcType=TIMESTAMP});
+	</foreach>
+	end;
+  </insert>
+  
+  <select id="getPrimId" resultType="java.lang.String">
+    SELECT SEQ_STORE_SUPERVISE.NEXTVAL FROM DUAL
+  </select>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.StoreSupervise">
+    begin 
+    UPDATE <include refid="tablename"></include> 
+    SET supervise_Serial = #{superviseSerial,jdbcType=VARCHAR}, supervise_Year = #{superviseYear,jdbcType=VARCHAR}, 
+    supervise_Name = #{superviseName,jdbcType=VARCHAR}, group_Id = #{groupId,jdbcType=VARCHAR},creator = #{creator,jdbcType=VARCHAR}, 
+    create_Dept = #{createDept,jdbcType=VARCHAR},creatorId = #{creatorId,jdbcType=VARCHAR}
+    where ID = #{id};
+    
+    DELETE FROM <include refid="detailTablename"></include> WHERE supervise_Id = #{id};
+    
+    <foreach collection="detail" item="item">
+		insert into 
+		<include refid="detailTablename"></include>
+		( 
+		<include refid="detailColumns"/> 
+		)
+		VALUES
+		(#{item.id,jdbcType=VARCHAR}, #{item.superviseId,jdbcType=VARCHAR}, #{item.warehouseCode,jdbcType=VARCHAR}, #{item.warehouseId,jdbcType=VARCHAR},
+      	 #{item.warehouseName,jdbcType=VARCHAR}, #{item.enterpriseId,jdbcType=VARCHAR}, #{item.enterpriseSerial,jdbcType=VARCHAR}, 
+         #{item.enterpriseName,jdbcType=VARCHAR}, #{item.organizationCode,jdbcType=VARCHAR}, #{item.division,jdbcType=VARCHAR}, 
+         #{item.personIncharge,jdbcType=VARCHAR}, #{item.telephone,jdbcType=VARCHAR}, #{item.superviseStart,jdbcType=TIMESTAMP}, 
+         #{item.superviseEnd,jdbcType=TIMESTAMP}, #{item.socialCreditCode,jdbcType=TIMESTAMP});
+	</foreach>
+   end; 
+  </update>
+  
+  <select id="count" parameterType="java.util.HashMap" resultType="_int">
+  	select count(id) 
+  	from <include refid="tablename"></include>
+  	<where>
+  	  <if test="superviseSerial != null and superviseSerial != ''">
+  	    and supervise_Serial LIKE '%${superviseSerial}%'
+  	  </if>
+  	  <if test="superviseYear != null and superviseYear != ''">
+  	    and supervise_Year LIKE '%${superviseYear}%'
+  	  </if>
+  	  <if test="createDate != null and createDate != ''">
+  	    and TO_CHAR(create_Date,'YYYY"-"MM"-"DD') LIKE '%${createDate}%'
+  	  </if>
+  	</where>
+  </select>
+  	<!-- 检查计划年份 -->
+  <select id="countCheck" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_STORE_SUPERVISE
+		<where>
+			1=1
+			  <if test="superviseYear != null" >
+	             AND SUPERVISE_YEAR = '${superviseYear}'
+		      </if>
+		      
+		</where>
+	</select>
+  <select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  	${start}
+  	select <include refid="columns"></include>
+  	from <include refid="tablename"></include>
+  	<where>
+  	  <if test="superviseSerial != null and superviseSerial != ''">
+  	    and supervise_Serial LIKE '%${superviseSerial}%'
+  	  </if>
+  	  <if test="superviseYear != null and superviseYear != ''">
+  	    and supervise_Year LIKE '%${superviseYear}%'
+  	  </if>
+  	  <if test="createDate != null and createDate != ''">
+  	    and TO_CHAR(create_Date,'YYYY"-"MM"-"DD') LIKE '%${createDate}%'
+  	  </if>
+  	</where>
+  	ORDER BY CREATE_DATE DESC
+    ${end}
+  </select>
+  
+  <delete id="remove" parameterType="java.lang.String">
+  	BEGIN
+    DELETE FROM <include refid="tablename"></include> WHERE ID = #{id};
+    DELETE FROM <include refid="detailTablename"></include> WHERE supervise_Id = #{id};
+  	END;
+  </delete>
+  
+  <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select <include refid="columns"></include>
+  	from <include refid="tablename"></include>
+  	<where>
+  	  ID = #{id}
+  	</where>
+  </select>
+  
+  <select id="getCurrSerial" resultType="java.lang.String">
+  	SELECT 'JG'||TO_CHAR(SYSDATE,'YYYYMMDD')||LPAD(TO_CHAR(SEQ_SUPERVISE_SERIAL.NEXTVAL),4,'0') FROM DUAL
+  </select>
+
+
+	<select id="getMaxSuperiviseYear"  resultMap="BaseResultMap">
+		SELECT * FROM (
+		SELECT <include refid="columns"></include>
+		FROM <include refid="tablename"></include>
+		ORDER BY SUPERVISE_YEAR desc
+		) t WHERE rownum = 1
+
+	</select>
+  
+</mapper>

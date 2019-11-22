@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dhc.fastersoft.dao.store.StorageStarUnitDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.store.StorageStarUnit" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="WAREHOUSE" property="warehouse" jdbcType="VARCHAR" />
+    <result column="POSTAL_ADDRESS" property="postalAddress" jdbcType="VARCHAR" />
+    <result column="DIRECTOR" property="director" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="ZIP" property="zip" jdbcType="VARCHAR" />
+    <result column="TELPHONE" property="telphone" jdbcType="VARCHAR" />
+    <result column="FAX" property="fax" jdbcType="VARCHAR" />
+    <result column="ENTIRE_STAFF" property="entireStaff" jdbcType="DECIMAL" />
+    <result column="NVQ" property="nvq" jdbcType="DECIMAL" />
+    <result column="JUNIOR_COLLEGE" property="juniorCollege" jdbcType="DECIMAL" />
+    <result column="MEDIUM_GRADE" property="mediumGrade" jdbcType="DECIMAL" />
+    <result column="KEEPER" property="keeper" jdbcType="DECIMAL" />
+    <result column="MONITOR" property="monitor" jdbcType="DECIMAL" />
+    <result column="MECHANIC" property="mechanic" jdbcType="DECIMAL" />
+    <result column="CONTROL_OPERATOR" property="controlOperator" jdbcType="DECIMAL" />
+    <result column="ELECTRICIAN" property="electrician" jdbcType="DECIMAL" />
+    <result column="SAFETY" property="safety" jdbcType="DECIMAL" />
+    <result column="OLD_LEVEL" property="oldLevel" jdbcType="VARCHAR" />
+    <result column="APPLY_LEVEL" property="applyLevel" jdbcType="VARCHAR" />
+    <result column="ENTERPRISE" property="enterprise" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATORID" property="creatorId" jdbcType="NVARCHAR" />
+    <result column="STOREHOUSE" property="storeHouse" jdbcType="NVARCHAR" />
+     <result column="TYPE" property="type" jdbcType="VARCHAR" />
+	  <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+ 	 ss.ID id, t.WAREHOUSE_SHORT warehouse, ss.POSTAL_ADDRESS postalAddress, ss.DIRECTOR director, ss.EMAIL email, ss.ZIP zip, ss.TELPHONE telphone, ss.FAX fax, ss.ENTIRE_STAFF entireStaff,
+    ss.NVQ nvq, ss.JUNIOR_COLLEGE juniorCollege , ss.MEDIUM_GRADE mediumGrade, ss.KEEPER keeper, ss.MONITOR monitor, ss.MECHANIC mechanic, ss.CONTROL_OPERATOR controlOperator,
+     ss.ELECTRICIAN electrician, ss.SAFETY safety, ss.OLD_LEVEL oldLevel, ss.APPLY_LEVEL applyLevel, ss.ENTERPRISE enterprise, ss.GROUP_ID groupId,
+      TO_CHAR(ss.CREATE_DATE,'YYYY-MM-DD') createDate, ss.REMARK remark,ss.CREATORID creatorId,ss.STOREHOUSE storeHouse,ss.TYPE type,ss.WAREHOUSE_ID warehouseId
+   
+  </sql>
+  
+   <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+			<include refid="Base_Column_List" />
+	   , sys.name  creator
+	   from  T_STORAGE_STAR_UNIT ss  left join
+	   T_SYS_USER sys ON ss.CREATORID=sys.ID  left join T_STORAGE_WAREHOUSE t on ss.WAREHOUSE_ID = t.ID
+	   WHERE 1=1
+
+		
+		  <if test="type!=null and type!=''">
+			 and  ss.TYPE  = '${type}'
+		</if>
+		 <if test="creatorId!=null and creatorId!=''">
+			 and  ss.CREATORID  = '${creatorId}'
+		</if>
+		 <if test="storehouse!=null and storehouse!=''">
+			 and  t.WAREHOUSE_SHORT  = '${storehouse}'
+		</if> 
+		  <if test="oldLevel!=null and oldLevel!=''">
+			 and  ss.OLD_LEVEL  LIKE '%${oldLevel}%'
+		</if>
+		<if test="postalAddress!=null and postalAddress!=''">
+			 and  ss.POSTAL_ADDRESS  LIKE '%${postalAddress}%'
+		</if>
+		<if test="warehouse!=null and warehouse!=''">
+			 and  t.WAREHOUSE_SHORT  LIKE '%${warehouse}%'
+		</if>
+	   <if test="warehouseId!=null and warehouseId!=''">
+		   and  ss.WAREHOUSE_ID  = '${warehouseId}'
+	   </if>
+		order by ss.CREATE_DATE DESC
+		${end}
+	</select>
+	
+	   <select id="exportxls" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		
+		SELECT 
+			<include refid="Base_Column_List" />
+		   , sys.name  creator
+		   from  T_STORAGE_STAR_UNIT ss  left join
+		   T_SYS_USER sys ON ss.CREATORID=sys.ID  left join T_STORAGE_WAREHOUSE t on ss.WAREHOUSE_ID = t.ID
+		   WHERE 1=1
+			
+		  <if test="type!=null and type!=''">
+			 and  ss.TYPE  = '${type}'
+		</if>
+		 <if test="creatorId!=null and creatorId!=''">
+			 and  ss.CREATORID  = '${creatorId}'
+		</if>
+		 <if test="storehouse!=null and storehouse!=''">
+			 and  t.WAREHOUSE_SHORT  = '${storehouse}'
+		</if> 
+		  <if test="oldLevel!=null and oldLevel!=''">
+			 and  ss.OLD_LEVEL  LIKE '%${oldLevel}%'
+		</if>
+		<if test="postalAddress!=null and postalAddress!=''">
+			 and  ss.POSTAL_ADDRESS  LIKE '%${postalAddress}%'
+		</if>
+		<if test="warehouse!=null and warehouse!=''">
+			 and  t.WAREHOUSE_SHORT  LIKE '%${warehouse}%'
+		</if>
+		   <if test="warehouseId!=null and warehouseId!=''">
+			   and  ss.WAREHOUSE_ID  = '${warehouseId}'
+		   </if>
+		order by ss.CREATE_DATE DESC
+		
+	</select>
+	
+		
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(0)
+		from  T_STORAGE_STAR_UNIT ss  left join
+		T_SYS_USER sys ON ss.CREATORID=sys.ID  left join T_STORAGE_WAREHOUSE t on ss.WAREHOUSE_ID = t.ID
+		WHERE 1=1
+
+
+		<if test="type!=null and type!=''">
+			and  ss.TYPE  = '${type}'
+		</if>
+		<if test="creatorId!=null and creatorId!=''">
+			and  ss.CREATORID  = '${creatorId}'
+		</if>
+		<if test="storehouse!=null and storehouse!=''">
+			and  t.WAREHOUSE_SHORT  = '${storehouse}'
+		</if>
+		<if test="oldLevel!=null and oldLevel!=''">
+			and  ss.OLD_LEVEL  LIKE '%${oldLevel}%'
+		</if>
+		<if test="postalAddress!=null and postalAddress!=''">
+			and  ss.POSTAL_ADDRESS  LIKE '%${postalAddress}%'
+		</if>
+		<if test="warehouse!=null and warehouse!=''">
+			and  t.WAREHOUSE_SHORT  LIKE '%${warehouse}%'
+		</if>
+		<if test="warehouseId!=null and warehouseId!=''">
+			and  ss.WAREHOUSE_ID  = '${warehouseId}'
+		</if>
+		order by ss.CREATE_DATE DESC
+		
+	</select>
+	
+	<select id="getStorageStarUnitById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.store.StorageStarUnit">
+		SELECT 
+			<include refid="Base_Column_List" />
+		, sys.name  creator
+		from  T_STORAGE_STAR_UNIT ss  left join
+		T_SYS_USER sys ON ss.CREATORID=sys.ID left join T_STORAGE_WAREHOUSE t ON ss.WAREHOUSE_ID = t.ID
+
+		where ss.ID=#{id,jdbcType=NVARCHAR}
+		
+	</select>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.store.StorageStarUnit" >
+ 		insert into T_STORAGE_STAR_UNIT (ID, WAREHOUSE, POSTAL_ADDRESS, 
+      DIRECTOR, EMAIL, ZIP, 
+      TELPHONE, FAX, ENTIRE_STAFF, 
+      NVQ, JUNIOR_COLLEGE, MEDIUM_GRADE, 
+      KEEPER, MONITOR, MECHANIC, 
+      CONTROL_OPERATOR, ELECTRICIAN, SAFETY, 
+      OLD_LEVEL, APPLY_LEVEL, ENTERPRISE, 
+      GROUP_ID, CREATOR, CREATE_DATE, 
+      REMARK,CREATORID ,STOREHOUSE ,TYPE,WAREHOUSE_ID)
+    values (#{id,jdbcType=VARCHAR}, #{warehouse,jdbcType=VARCHAR}, #{postalAddress,jdbcType=VARCHAR}, 
+      #{director,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{zip,jdbcType=VARCHAR}, 
+      #{telphone,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR}, #{entireStaff,jdbcType=DECIMAL}, 
+      #{nvq,jdbcType=DECIMAL}, #{juniorCollege,jdbcType=DECIMAL}, #{mediumGrade,jdbcType=DECIMAL}, 
+      #{keeper,jdbcType=DECIMAL}, #{monitor,jdbcType=DECIMAL}, #{mechanic,jdbcType=DECIMAL}, 
+      #{controlOperator,jdbcType=DECIMAL}, #{electrician,jdbcType=DECIMAL}, #{safety,jdbcType=DECIMAL}, 
+      #{oldLevel,jdbcType=VARCHAR}, #{applyLevel,jdbcType=VARCHAR}, #{enterprise,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, sysdate, 
+      #{remark,jdbcType=VARCHAR},#{creatorId,jdbcType=VARCHAR},
+      #{storeHouse,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{warehouseId,jdbcType=VARCHAR})
+      
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.store.StorageStarUnit">
+				
+	 update T_STORAGE_STAR_UNIT
+    set 
+      WAREHOUSE = #{warehouse,jdbcType=VARCHAR},
+      POSTAL_ADDRESS = #{postalAddress,jdbcType=VARCHAR},
+      DIRECTOR = #{director,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      ZIP = #{zip,jdbcType=VARCHAR},
+      TELPHONE = #{telphone,jdbcType=VARCHAR},
+      FAX = #{fax,jdbcType=VARCHAR},
+      ENTIRE_STAFF = #{entireStaff,jdbcType=DECIMAL},
+      NVQ = #{nvq,jdbcType=DECIMAL},
+      JUNIOR_COLLEGE = #{juniorCollege,jdbcType=DECIMAL},
+      MEDIUM_GRADE = #{mediumGrade,jdbcType=DECIMAL},
+      KEEPER = #{keeper,jdbcType=DECIMAL},
+      MONITOR = #{monitor,jdbcType=DECIMAL},
+      MECHANIC = #{mechanic,jdbcType=DECIMAL},
+      CONTROL_OPERATOR = #{controlOperator,jdbcType=DECIMAL},
+      ELECTRICIAN = #{electrician,jdbcType=DECIMAL},
+      SAFETY = #{safety,jdbcType=DECIMAL},
+      OLD_LEVEL = #{oldLevel,jdbcType=VARCHAR},
+      APPLY_LEVEL = #{applyLevel,jdbcType=VARCHAR},
+      ENTERPRISE = #{enterprise,jdbcType=VARCHAR},
+      GROUP_ID = #{groupId,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_DATE = sysdate,
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATORID=#{creatorId,jdbcType=VARCHAR},
+      STOREHOUSE=#{storeHouse,jdbcType=VARCHAR},
+        WAREHOUSE_ID=#{warehouseId,jdbcType=VARCHAR},
+
+      TYPE=#{type,jdbcType=VARCHAR}
+	
+		WHERE ID='${id}'
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORAGE_STAR_UNIT
+		WHERE  ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+	
+	
+</mapper>

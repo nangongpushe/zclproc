@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoragePhosphinePointDao">
+	<resultMap type="com.dhc.fastersoft.entity.store.StoragePhosphinePoint" id="StoragePhosphinePointResultMap">
+		<result property="phosphineId" column="PHOSPHINE_ID" jdbcType="VARCHAR" />
+		<result property="point" column="POINT" jdbcType="VARCHAR" />		
+		<result property="value" column="VALUE" jdbcType="VARCHAR" />		
+	</resultMap>
+</mapper>

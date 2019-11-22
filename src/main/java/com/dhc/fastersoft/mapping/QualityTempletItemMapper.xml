@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualityTempletItemMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualityTempletItem" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TEMPLET_ID" property="templetId" jdbcType="VARCHAR" />
+    <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+    <result column="GRADE" property="grade" jdbcType="VARCHAR" />
+    <result column="STANDARD" property="standard" jdbcType="VARCHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.QualityTempletItem" >
+    insert into T_QUALITY_TEMPLET_ITEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="templetId != null" >
+        TEMPLET_ID,
+      </if>
+      <if test="itemName != null" >
+        ITEM_NAME,
+      </if>
+      <if test="grade != null" >
+        GRADE,
+      </if>
+      <if test="standard != null" >
+        STANDARD,
+      </if>
+      <if test="orderNo != null" >
+         ORDER_NO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="templetId != null" >
+        #{templetId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null" >
+        #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from T_QUALITY_TEMPLET_ITEM WHERE TEMPLET_ID='${id}' ORDER BY ORDER_NO
+  </select>
+  <delete id="delete" parameterType="java.lang.String" >
+		DELETE from T_QUALITY_TEMPLET_ITEM WHERE TEMPLET_ID='${id}'
+	</delete>
+  <select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_QUALITY_TEMPLET_ITEM WHERE TEMPLET_ID='${id}'
+	</select>
+	
+	<insert id="addByList" parameterType="java.util.List">
+		begin
+		<foreach collection="list" item="data">
+			INSERT into T_QUALITY_TEMPLET_ITEM(
+				ID,TEMPLET_ID,ITEM_NAME,GRADE,STANDARD,ORDER_NO
+			)
+			VALUES(
+				#{data.id,jdbcType=VARCHAR},
+		        #{data.templetId,jdbcType=VARCHAR},
+		        #{data.itemName,jdbcType=VARCHAR},
+		        #{data.grade,jdbcType=VARCHAR},
+		        #{data.standard,jdbcType=VARCHAR},
+                #{data.orderNo,jdbcType=DECIMAL}
+			);
+		</foreach>
+		end;
+	</insert>
+</mapper>

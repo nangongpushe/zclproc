@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateArriveDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateArrive" id="rotateArriveResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="reportDate" column="REPORT_DATE" jdbcType="TIMESTAMP" />
+		<result property="reportDept" column="REPORT_DEPT" jdbcType="VARCHAR" />
+		<result property="reporter" column="REPORTER" jdbcType="VARCHAR" />
+		<result property="payer" column="PAYER" jdbcType="VARCHAR" />
+		<result property="payUnit" column="PAY_UNIT" jdbcType="VARCHAR" />
+		<result property="arriveDate" column="ARRIVE_DATE" jdbcType="TIMESTAMP" />
+		<result property="approvalDate" column="APPROVAL_DATE" jdbcType="TIMESTAMP" />
+		<result property="arriveAmount" column="ARRIVE_AMOUNT" jdbcType="DOUBLE" />	
+		<result property="balance" column="BALANCE" jdbcType="DOUBLE" />
+		<result property="status" column="STATUS" jdbcType="VARCHAR" />
+		<result property="groupId" column="GROUP_ID" jdbcType="VARCHAR" />
+		<result property="modifier" column="MODIFIER" jdbcType="VARCHAR" />
+		<result property="modifyDate" column="MODIFY_DATE" jdbcType="TIMESTAMP" />
+		<result property="claimStatus" column="CLAIM_STATUS" jdbcType="VARCHAR" />
+		<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+		<result property="reporterId" column="REPORTER_ID" jdbcType="VARCHAR" />
+		<result property="payUnitId" column="PAY_UNIT_ID" jdbcType="VARCHAR"/>
+		<result property="claimDate" column="CLAIM_DATE" jdbcType="TIMESTAMP"/>
+		<result property="returnDate" column="RETURN_DATE" jdbcType="TIMESTAMP"/>
+        <result property="dealCount" column="DEAL_COUNT" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<sql id="columns_main">
+		ID,REPORT_DATE,REPORT_DEPT,REPORTER,PAYER,PAY_UNIT,
+		ARRIVE_DATE,ARRIVE_AMOUNT,BALANCE,STATUS,GROUP_ID,
+		MODIFIER,MODIFY_DATE,CLAIM_STATUS,REMARK,REPORTER_ID,PAY_UNIT_ID
+	</sql>
+	
+	<sql id="s_columns_main">
+		ID,REPORT_DATE,REPORT_DEPT,(select name from t_sys_user where id = REPORTER_ID) REPORTER,PAYER,PAY_UNIT,
+		ARRIVE_DATE,ARRIVE_AMOUNT,BALANCE,STATUS,GROUP_ID,
+		MODIFIER,MODIFY_DATE,CLAIM_STATUS,REMARK,REPORTER_ID,PAY_UNIT_ID
+	</sql>
+
+	<sql id="s_columns_main1">
+		ta.ID,ta.REPORT_DATE,ta.REPORT_DEPT,(select name from t_sys_user where id = REPORTER_ID) REPORTER,ta.PAYER,ti.CLIENT_NAME AS PAY_UNIT,
+		ta.ARRIVE_DATE,ta.ARRIVE_AMOUNT,ta.BALANCE,ta.STATUS,ta.GROUP_ID,
+		ta.MODIFIER,ta.MODIFY_DATE,ta.CLAIM_STATUS,ta.REMARK,ta.REPORTER_ID,ta.PAY_UNIT_ID
+	</sql>
+
+	<sql id="table_main"> T_ROTATE_ARRIVE </sql>
+	
+	<sql id="columns_audit">
+		ARRIVE_ID,AUDITOR_ID,ADVICE,REASON,AUDIT_DATE,AUDITOR_NAME,AUDIT_STEP,AUDITCOMPLETE_DATE
+	</sql>
+
+
+	<sql id="table_audit"> T_ROTATE_ARRIVE_AUDIT</sql>
+	
+	<sql id="columns_department">
+		ARRIVE_ID,DEPARTMENT
+	</sql>
+
+
+	<sql id="table_department"> T_ROTATE_ARRIVE_DEPARTMENT</sql>
+	
+	
+	<!-- 添加 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.RotateArrive">
+		INSERT INTO
+		<include refid="table_main" />
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(#{id},#{reportDate},#{reportDept,jdbcType=VARCHAR},
+		#{reporter},#{payer},
+		#{payUnit,jdbcType=VARCHAR},#{arriveDate},
+		#{arriveAmount},#{balance},
+		#{status},#{groupId},
+		#{modifier,jdbcType=VARCHAR},
+		#{modifyDate,jdbcType=TIMESTAMP},
+		#{claimStatus},
+		#{remark,jdbcType=VARCHAR},
+		#{reporterId,jdbcType=VARCHAR},
+		#{payUnitId,javaType=String,jdbcType=VARCHAR})
+
+	</insert>
+	
+	<!-- update-->
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotateArrive">
+		UPDATE
+		<include refid="table_main" />
+		SET
+		PAYER = #{payer,jdbcType=VARCHAR},
+		PAY_UNIT = #{payUnit,jdbcType=VARCHAR},
+		PAY_UNIT_ID = #{payUnitId,jdbcType=VARCHAR},
+		ARRIVE_DATE =#{arriveDate},
+		ARRIVE_AMOUNT=#{arriveAmount},
+		BALANCE =#{balance},
+		MODIFIER=#{modifier, jdbcType=VARCHAR},
+		MODIFY_DATE=#{modifyDate, jdbcType=TIMESTAMP},
+		REMARK=#{remark,jdbcType=NVARCHAR},
+		GROUP_ID=#{groupId,jdbcType=NVARCHAR},
+		STATUS = #{status}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	
+	<update id="updateStatus" parameterType="com.dhc.fastersoft.entity.RotateArrive">
+		UPDATE
+		<include refid="table_main" />
+		<set>
+			STATUS = #{status},
+			<if test="returnDate != null and returnDate != ''">
+				RETURN_DATE = #{returnDate}
+			</if>
+		</set>
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	
+	<update id="updateClaimStatus" parameterType="java.util.HashMap">
+		UPDATE
+		<include refid="table_main" />
+		SET CLAIM_STATUS = #{claimStatus}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0)
+		FROM
+		<include refid="table_main" />
+		LEFT JOIN T_CLIENT_INFO tci on T_ROTATE_ARRIVE.PAY_UNIT_ID = tci.id
+		<where>
+			<if test="status!=null and status!=''">
+				AND STATUS LIKE '%${status}%'
+			</if>
+			<if test="claimStatus!=null and claimStatus!=''">
+					AND CLAIM_STATUS LIKE '%${claimStatus}%'
+			</if>
+			<if test="beginArriveDate!=null and beginArriveDate!=''">
+				AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') &gt;= '${beginArriveDate}'
+			</if>
+			<if test="endArriveDate!=null and endArriveDate!=''">
+				AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') &lt;= '${endArriveDate}'
+			</if>
+			<if test="payUnit!=null and payUnit!=''">
+				AND tci.CLIENT_NAME like CONCAT(CONCAT('%',#{payUnit}),'%')
+			</if>
+			<if test="payer != null and payer != '' ">
+				AND PAYER LIKE CONCAT(CONCAT('%',#{payer}),'%')
+			</if>
+			<if test="minArriveAmount!=null and minArriveAmount!=''">
+				AND ARRIVE_AMOUNT &gt;= #{minArriveAmount}
+			</if>
+			<if test="maxArriveAmount!=null and maxArriveAmount!=''">
+				AND ARRIVE_AMOUNT &lt;= #{maxArriveAmount}
+			</if>
+			<if test="minBalance!=null and minBalance!=''">
+				AND BALANCE &gt;= #{minBalance}
+			</if>
+			<if test="maxBalance!=null and maxBalance!=''">
+				AND BALANCE &lt;= #{maxBalance}
+			</if>
+			<if test="arriveDate != null and arriveDate != ''">
+				AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') = #{arriveDate,jdbcType=VARCHAR}
+			</if>
+			<if test="approvalDate != null and approvalDate != ''">
+				AND TO_CHAR(APPROVAL_DATE,'YYYY-MM-DD HH24:MI') = #{approvalDate,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="rotateArriveResultMap">		
+		<if test="pageIndex!=null">
+			select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT * FROM(
+			 SELECT <include refid="s_columns_main1"/>,T_ROTATE_ARRIVE_AUDIT.AUDITCOMPLETE_DATE as APPROVAL_DATE,
+			  (select max(CLAIM_DATE) from T_ROTATE_CLAIM where ta.ID = T_ROTATE_CLAIM.ARRIVE_ID) as CLAIM_DATE,ta.RETURN_DATE,
+              (SELECT count(0) FROM T_ROTATE_CLAIM WHERE ARRIVE_ID = ta.ID ) as DEAL_COUNT
+        FROM
+			<include refid="table_main" /> ta
+				LEFT JOIN T_CLIENT_INFO ti ON ta.PAY_UNIT_ID = ti.ID
+				LEFT JOIN T_ROTATE_ARRIVE_AUDIT on ta.ID = T_ROTATE_ARRIVE_AUDIT.ARRIVE_ID
+		<where>
+			ta.STATUS='已退回'
+			<if test="status!=null and status!=''and status !='已退回'">
+				AND STATUS LIKE '%${status}%'
+			</if>
+			<if test="claimStatus!=null and claimStatus!=''">
+				AND CLAIM_STATUS LIKE '%${claimStatus}%'
+			</if>
+			<if test="beginArriveDate!=null and beginArriveDate!=''">
+				AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') &gt;= '${beginArriveDate}'
+			</if>
+			<if test="endArriveDate!=null and endArriveDate!=''">
+				AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') &lt;= '${endArriveDate}'
+			</if>
+			<if test="payUnit!=null and payUnit!=''">
+				AND ti.CLIENT_NAME like CONCAT(CONCAT('%',#{payUnit}),'%')
+			</if>
+			<if test="payer != null and payer != ''">
+				AND PAYER LIKE CONCAT(CONCAT('%',#{payer}),'%')
+			</if>
+			<if test="minArriveAmount!=null and minArriveAmount!=''">
+				AND ARRIVE_AMOUNT &gt;= #{minArriveAmount}
+			</if>
+			<if test="maxArriveAmount!=null and maxArriveAmount!=''">
+				AND ARRIVE_AMOUNT &lt;= #{maxArriveAmount}
+			</if>
+			<if test="minBalance!=null and minBalance!=''">
+				AND BALANCE &gt;= #{minBalance}
+			</if>
+			<if test="maxBalance!=null and maxBalance!=''">
+				AND BALANCE &lt;= #{maxBalance}
+			</if>
+
+			<if test="arriveDate != null and arriveDate != ''">
+				AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') = #{arriveDate,jdbcType=VARCHAR}
+			</if>
+			<if test="approvalDate != null and approvalDate != ''">
+				AND TO_CHAR(APPROVAL_DATE,'YYYY-MM-DD HH24:MI') = #{approvalDate,jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY RETURN_DATE DESC
+		)
+		union all
+		SELECT * FROM (
+		SELECT<include refid="s_columns_main1"/>,T_ROTATE_ARRIVE_AUDIT.AUDITCOMPLETE_DATE as APPROVAL_DATE,
+		(select max(CLAIM_DATE) from T_ROTATE_CLAIM where ta.ID = T_ROTATE_CLAIM.ARRIVE_ID) as CLAIM_DATE,ta.RETURN_DATE,
+        (SELECT count(0) FROM T_ROTATE_CLAIM WHERE ARRIVE_ID = ta.ID ) as DEAL_COUNT
+        FROM
+		<include refid="table_main"/>ta
+			LEFT JOIN T_CLIENT_INFO ti ON ta.PAY_UNIT_ID = ti.ID
+			LEFT JOIN T_ROTATE_ARRIVE_AUDIT on ta.ID = T_ROTATE_ARRIVE_AUDIT.ARRIVE_ID
+			<where>
+				ta.STATUS!='已退回'
+				<if test="status!=null and status!=''and status !='已退回'">
+					AND STATUS LIKE '%${status}%'
+				</if>
+				<if test="claimStatus!=null and claimStatus!=''">
+					AND CLAIM_STATUS LIKE '%${claimStatus}%'
+				</if>
+				<if test="beginArriveDate!=null and beginArriveDate!=''">
+					AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') &gt;= '${beginArriveDate}'
+				</if>
+				<if test="endArriveDate!=null and endArriveDate!=''">
+					AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') &lt;= '${endArriveDate}'
+				</if>
+				<if test="payUnit!=null and payUnit!=''">
+					AND ti.CLIENT_NAME like CONCAT(CONCAT('%',#{payUnit}),'%')
+				</if>
+				<if test="payer != null and payer != ''">
+					AND PAYER LIKE CONCAT(CONCAT('%',#{payer}),'%')
+				</if>
+				<if test="minArriveAmount!=null and minArriveAmount!=''">
+					AND ARRIVE_AMOUNT &gt;= #{minArriveAmount}
+				</if>
+				<if test="maxArriveAmount!=null and maxArriveAmount!=''">
+					AND ARRIVE_AMOUNT &lt;= #{maxArriveAmount}
+				</if>
+				<if test="minBalance!=null and minBalance!=''">
+					AND BALANCE &gt;= #{minBalance}
+				</if>
+				<if test="maxBalance!=null and maxBalance!=''">
+					AND BALANCE &lt;= #{maxBalance}
+				</if>
+				<if test="arriveDate != null and arriveDate != ''">
+					AND TO_CHAR(ARRIVE_DATE,'YYYY-MM-DD') = #{arriveDate,jdbcType=VARCHAR}
+				</if>
+				<if test="approvalDate != null and approvalDate != ''">
+					AND TO_CHAR(APPROVAL_DATE,'YYYY-MM-DD HH24:MI') = #{approvalDate,jdbcType=VARCHAR}
+				</if>
+			</where>
+			ORDER BY REPORT_DATE DESC
+			)
+			<if test="pageIndex!=null">
+				) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+				where rownum_ > (#{pageIndex}-1) * #{pageSize}
+			</if>
+	</select>
+
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_main" />
+		<where>
+			ID = #{_parameter}
+		</where>
+	</delete>
+	
+	<select id="get" parameterType="java.lang.String" resultMap="rotateArriveResultMap">
+		SELECT <include refid="s_columns_main1" />
+		FROM <include refid="table_main" /> ta
+		LEFT JOIN T_CLIENT_INFO ti ON ta.PAY_UNIT_ID = ti.ID
+		<where>
+			ta.ID=#{_parameter}
+		</where>
+	</select>
+	
+	<update id="updateBalance" parameterType="java.util.HashMap">
+		UPDATE <include refid="table_main" />
+		SET
+		BALANCE = #{balance} 
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	
+	<insert id="saveAudit" parameterType="com.dhc.fastersoft.entity.RotateArriveAudit">
+		INSERT INTO
+		<include refid="table_audit" />
+		(
+		<include refid="columns_audit" />
+		)
+		VALUES
+		(#{arriveId,jdbcType=VARCHAR},#{auditorId,jdbcType=VARCHAR},#{advice,jdbcType=VARCHAR},
+		#{reason,jdbcType=NVARCHAR},#{auditDate,jdbcType=TIMESTAMP},#{auditorName,jdbcType=VARCHAR},#{auditStep,jdbcType=INTEGER},#{auditCompleteDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<update id="updateAudit" parameterType="com.dhc.fastersoft.entity.RotateArriveAudit">
+		UPDATE <include refid="table_audit" />
+		SET
+		AUDITOR_ID = #{auditorId},
+		ADVICE = #{advice},
+		REASON = #{reason,,jdbcType=NVARCHAR},
+		AUDIT_DATE = #{auditDate},
+		AUDITOR_NAME = #{auditorName}
+		<where>
+			AND ARRIVE_ID = #{arriveId}
+		</where>
+	</update>
+	
+	<select id="listAudit" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateArriveAuditDao.rotateArriveAuditResultMap">
+		SELECT <include refid="columns_audit" /> FROM <include refid="table_audit" />
+		<where>
+			AND ARRIVE_ID = #{arriveId}
+		</where>
+		ORDER BY AUDIT_DATE DESC
+	</select>
+	
+	<select id="isExistAudit" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(0) FROM <include refid="table_audit" />
+		<where>
+			<if test="arriveId!=null and arriveId!=''">
+				AND ARRIVE_ID = #{arriveId}
+			</if>
+			<if test="auditorId!=null and auditorId!=''">
+				AND AUDITOR_ID = #{auditorId}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="removeAudit" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_audit" />
+		WHERE ARRIVE_ID = #{_parameter}
+	</delete>
+	
+	<select id="getAudit" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateArriveAuditDao.rotateArriveAuditResultMap">
+		SELECT <include refid="columns_audit" /> FROM
+		(
+			SELECT <include refid="table_audit" />.*,ROWNUM rn FROM <include refid="table_audit" />
+			<where>
+				<if test="arriveId!=null and arriveId!=''">
+					AND ARRIVE_ID = #{arriveId}
+				</if>
+				<if test="auditorId!=null and auditorId!=''">
+					AND AUDITOR_ID = #{auditorId}
+				</if>
+				<if test="auditStep!=null and auditStep!=''">
+					AND AUDIT_STEP = #{auditStep}
+				</if>
+			</where>
+			ORDER BY AUDIT_DATE DESC
+		) WHERE rn = 1
+	</select>
+	
+	<insert id="saveDepartment" parameterType="java.util.List">
+		begin
+		<foreach collection="list" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_department" />
+			(
+			<include refid="columns_department" />
+			)
+			VALUES
+			(#{arriveId},#{department})
+		</foreach>
+		;end;
+	</insert>
+	
+	<delete id="removeDepartment" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_department" />
+		WHERE ARRIVE_ID = #{_parameter}
+	</delete>
+	
+	<select id="listDepartment" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateArriveDepartmentDao.rotateArriveDepartmentResultMap">
+		SELECT <include refid="columns_department" /> FROM <include refid="table_department" />
+		<where>
+			AND ARRIVE_ID = #{arriveId}
+		</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.ConstructionBalanceDao">
+	<resultMap id="constructionBalanceResultMap" type="com.dhc.fastersoft.entity.ConstructionBalance">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="PROJECT_SERIAL" property="projectSerial" jdbcType="VARCHAR" />
+		<result column="PROJECT_UNIT" property="projectUnit" jdbcType="VARCHAR" />
+		<result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="REPORT_TIME" property="reportTime" jdbcType="VARCHAR" />
+		<result column="REPORT_UNIT" property="reportUnit" jdbcType="VARCHAR" />
+		<result column="REPORT_DEPT" property="reportDept" jdbcType="VARCHAR" />
+		<result column="CONTRACTOR" property="contractor" jdbcType="VARCHAR" />
+		<result column="CONTRACTOR_NUM" property="contractorNum" jdbcType="INTEGER"/>
+		<result column="CONTROL_NUM" property="controlNum" jdbcType="INTEGER"/>
+		<result column="PRELIMINARY_OPINION" property="preliminaryOpinion" jdbcType="VARCHAR"/>
+		<result column="IMAGE_GROUP_ID" property="imageGroupId" jdbcType="VARCHAR"/>
+		<result column="FILE_GROUP_ID" property="fileGroupId" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="VARCHAR"/>
+		<result column="ADUIT_NUM" property="auditNum" jdbcType="DOUBLE"/>
+		<result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR"/>
+		<result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+		<association property="parentProject" javaType="com.dhc.fastersoft.entity.ConstructionProject">
+			<id column="PARENT_ID" property="id" jdbcType="VARCHAR" />
+			<result column="P_REFERENCE_NO" property="referenceNo" jdbcType="VARCHAR" />
+			<result column="P_PROJECT_SERIAL" property="projectSerial" jdbcType="VARCHAR" />
+			<result column="P_PROJECT_UNIT" property="projectUnit" jdbcType="VARCHAR" />
+			<result column="P_PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+			<result column="P_PROJECT_YEAR" property="projectYear" jdbcType="VARCHAR" />
+			<result column="P_PROJECT_TIME" property="projectTime" jdbcType="VARCHAR" />
+			<result column="P_PLANNED_INVESTMENT" property="plannedInvestment" jdbcType="DOUBLE" />
+			<result column="P_CONSTRUCTION_TYPE" property="constructionType" jdbcType="VARCHAR" />
+			<result column="P_CONSTRUCTION_AREA" property="constructionArea" jdbcType="INTEGER" />
+			<result column="P_PROJECT_STATUS" property="projectStatus" jdbcType="VARCHAR" />
+			<result column="P_STORAGE_CAPACITY" property="storageCapacity" jdbcType="VARCHAR" />
+			<result column="P_PLANNED_START_TIME" property="plannedStartTime" jdbcType="VARCHAR" />
+			<result column="P_PLANNED_FINISH_TIME" property="plannedFinishTime" jdbcType="VARCHAR" />
+			<result column="P_IMAGE_GROUP_ID" property="imageGroupId" jdbcType="VARCHAR" />
+			<result column="P_FILE_GROUP_ID" property="fileGroupId" jdbcType="VARCHAR" />
+			<result column="P_ACTUAL_INVESTMENT" property="actualInvestment" jdbcType="DOUBLE" />
+			<result column="P_ACTUAL_START_TIME" property="actualStartTime" jdbcType="VARCHAR" />
+			<result column="P_ACTUAL_FINISH_TIME" property="actualFinishTime" jdbcType="VARCHAR" />
+			<result column="P_RECONNAISSANCE" property="reconnaissance" jdbcType="VARCHAR" />
+			<result column="P_DESIGN_UNIT" property="designUnit" jdbcType="VARCHAR" />
+			<result column="P_BUILD_UNIT" property="buildUnit" jdbcType="VARCHAR" />
+			<result column="P_CONTROL_UNIT" property="controlUnit" jdbcType="VARCHAR" />
+			<result column="P_CONTACTOR" property="contactor" jdbcType="VARCHAR" />
+			<result column="P_CONTACT_WAY" property="contactWay" jdbcType="VARCHAR" />
+			<result column="P_DATA_GROUP_ID" property="dataGroupId" jdbcType="VARCHAR" />
+			<result column="P_REMARK" property="remark" jdbcType="VARCHAR" />
+			<result column="P_OTHER_FILE_GROUP_ID" property="otherFileGroupId" jdbcType="VARCHAR"/>
+			<result column="P_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+			<result column="P_CAPACITY" property="capacity" jdbcType="VARCHAR"/>
+		</association>
+	</resultMap>
+	
+	<sql id="columns">
+		ID,PROJECT_SERIAL,PROJECT_UNIT,PROJECT_NAME,OPERATOR,REPORT_TIME,REPORT_UNIT,
+		REPORT_DEPT,CONTRACTOR,CONTRACTOR_NUM,CONTROL_NUM,PRELIMINARY_OPINION,
+		IMAGE_GROUP_ID,FILE_GROUP_ID,STATUS,ADUIT_NUM,WAREHOUSE_ID,PROJECT_ID
+	</sql>
+	<sql id="columnss">
+		p.ID,p.PROJECT_SERIAL,p.PROJECT_UNIT,tcp.PROJECT_NAME AS PROJECT_NAME,p.OPERATOR,p.REPORT_TIME,house.WAREHOUSE_SHORT AS REPORT_UNIT,
+		p.REPORT_DEPT,p.CONTRACTOR,p.CONTRACTOR_NUM,p.CONTROL_NUM,p.PRELIMINARY_OPINION,
+		p.IMAGE_GROUP_ID,p.FILE_GROUP_ID,p.STATUS,ADUIT_NUM,p.WAREHOUSE_ID,p.PROJECT_ID
+	</sql>
+	<sql id="columns-select">
+		m.ID,m.PROJECT_SERIAL,m.PROJECT_UNIT,tcp.PROJECT_NAME AS PROJECT_NAME,m.OPERATOR,m.REPORT_TIME,house.WAREHOUSE_SHORT AS REPORT_UNIT,
+		m.REPORT_DEPT,m.CONTRACTOR,CONTRACTOR_NUM,CONTROL_NUM,PRELIMINARY_OPINION,
+		m.IMAGE_GROUP_ID,m.FILE_GROUP_ID,STATUS,M.WAREHOUSE_ID,M.PROJECT_ID
+	</sql>
+
+	<insert id="AddConstructionBalance" parameterType="com.dhc.fastersoft.entity.ConstructionBalance">
+		INSERT INTO T_CONSTRUCTION_BALANCE(<include refid="columns"/>)
+		VALUES(
+		#{id,jdbcType=VARCHAR},#{projectSerial,jdbcType=VARCHAR},#{projectUnit,jdbcType=VARCHAR},#{projectName,jdbcType=VARCHAR},#{operator,jdbcType=VARCHAR},#{reportTime,jdbcType=VARCHAR},#{reportUnit,jdbcType=VARCHAR},
+		#{reportDept,jdbcType=VARCHAR},#{contractor,jdbcType=VARCHAR},#{contractorNum,jdbcType=INTEGER},#{controlNum,jdbcType=INTEGER},#{preliminaryOpinion,jdbcType=VARCHAR},
+		#{imageGroupId,jdbcType=VARCHAR},#{fileGroupId,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{auditNum,jdbcType=DOUBLE},#{warehouseId,jdbcType=VARCHAR},#{projectId,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="ListLimitBalance" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="constructionBalanceResultMap">
+		SELECT * FROM (
+			SELECT A.*,p.PROJECT_NAME as P_PROJECT_NAME,p.PROJECT_SERIAL as P_PROJECT_SERIAL,ROWNUM RN
+			FROM (SELECT
+				<include refid="columns-select"/> ,
+				tcp.PARENT_ID
+				FROM
+				T_CONSTRUCTION_BALANCE m
+				INNER JOIN T_CONSTRUCTION_PROJECT tcp
+				ON tcp.ID = m.PROJECT_ID
+				left join T_STORAGE_WAREHOUSE house ON m.WAREHOUSE_ID = house.WAREHOUSE_CODE
+				AND tcp.project_serial = m.project_serial
+				<where>
+					<if test="otherPram != null and otherPram.plannedInvestment">
+						AND tcp.PLANNED_INVESTMENT ${otherPram.symbol} #{otherPram.plannedInvestment}
+					</if>
+				</where>
+				ORDER BY m.REPORT_TIME DESC
+			) A left join T_CONSTRUCTION_PROJECT p
+				on A.PARENT_ID = p.id
+			  left join T_STORAGE_WAREHOUSE house ON A.WAREHOUSE_ID = house.WAREHOUSE_CODE
+			<where>
+				<if test="entity.projectName != null and entity.projectName !=''">
+					AND A.PROJECT_NAME LIKE concat(concat('%',#{entity.projectName}),'%')
+				</if>
+				<if test="entity.projectId != null and entity.projectId != ''">
+					AND A.PROJECT_ID LIKE concat(concat('%',#{entity.projectId}),'%')
+				</if>
+				<if test="entity.reportUnit != null and entity.reportUnit != ''">
+					AND A.REPORT_UNIT LIKE concat(concat('%',#{entity.reportUnit}),'%')
+				</if>
+				<if test="entity.warehouseId != null and entity.warehouseId != ''">
+					AND A.WAREHOUSE_ID LIKE concat(concat('%',#{entity.warehouseId}),'%')
+				</if>
+				<if test="entity.contractor != null and entity.contractor != ''">
+					AND A.CONTRACTOR LIKE concat(concat('%',#{entity.contractor}),'%')
+				</if>
+				<if test="entity.reportTime != null and entity.reportTime != ''">
+					AND A.REPORT_TIME = #{entity.reportTime}
+				</if>
+				<if test="entity.status != null and entity.status != ''">
+					AND A.STATUS LIKE concat(concat('%',#{entity.status}),'%')
+				</if>
+				<if test="entity.parentProject!=null and entity.parentProject.projectSerial != null and entity.parentProject.projectSerial != ''">
+					AND p.PROJECT_SERIAL like concat(concat('%',#{entity.parentProject.projectSerial}),'%')
+				</if>
+				<if test="entity.parentProject!=null and entity.parentProject.projectName != null and entity.parentProject.projectName != ''">
+					AND p.PROJECT_NAME like concat(concat('%',#{entity.parentProject.projectName}),'%')
+				</if>
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+				<if test="entity.parentProject != null and (entity.parentProject.projectSerial !=null and entity.parentProject.projectSerial != '' or entity.parentProject.projectName != null and entity.parentProject.projectName != '')">
+					and A.PARENT_ID IS NOT NULL order by A.PARENT_ID
+				</if>
+			</where>
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+
+		SELECT  COUNT(A.ID)
+		FROM (SELECT
+		<include refid="columns-select"/> ,
+		tcp.PARENT_ID
+		FROM
+		T_CONSTRUCTION_BALANCE m
+		INNER JOIN T_CONSTRUCTION_PROJECT tcp
+		ON tcp.ID = m.PROJECT_ID
+		left join T_STORAGE_WAREHOUSE house ON m.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		AND tcp.project_serial = m.project_serial
+		<where>
+			<if test="otherPram != null and otherPram.plannedInvestment">
+				AND tcp.PLANNED_INVESTMENT ${otherPram.symbol} #{otherPram.plannedInvestment}
+			</if>
+		</where>
+		ORDER BY m.REPORT_TIME DESC
+		) A left join T_CONSTRUCTION_PROJECT p
+		on A.PARENT_ID = p.id
+		left join T_STORAGE_WAREHOUSE house ON A.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		<where>
+			<if test="entity.projectName != null and entity.projectName !=''">
+				AND A.PROJECT_NAME LIKE concat(concat('%',#{entity.projectName}),'%')
+			</if>
+			<if test="entity.projectId != null and entity.projectId != ''">
+				AND A.PROJECT_ID LIKE concat(concat('%',#{entity.projectId}),'%')
+			</if>
+			<if test="entity.reportUnit != null and entity.reportUnit != ''">
+				AND A.REPORT_UNIT LIKE concat(concat('%',#{entity.reportUnit}),'%')
+			</if>
+			<if test="entity.warehouseId != null and entity.warehouseId != ''">
+				AND A.WAREHOUSE_ID LIKE concat(concat('%',#{entity.warehouseId}),'%')
+			</if>
+			<if test="entity.contractor != null and entity.contractor != ''">
+				AND A.CONTRACTOR LIKE concat(concat('%',#{entity.contractor}),'%')
+			</if>
+			<if test="entity.reportTime != null and entity.reportTime != ''">
+				AND A.REPORT_TIME = #{entity.reportTime}
+			</if>
+			<if test="entity.status != null and entity.status != ''">
+				AND A.STATUS LIKE concat(concat('%',#{entity.status}),'%')
+			</if>
+			<if test="entity.parentProject!=null and entity.parentProject.projectSerial != null and entity.parentProject.projectSerial != ''">
+				AND p.PROJECT_SERIAL like concat(concat('%',#{entity.parentProject.projectSerial}),'%')
+			</if>
+			<if test="entity.parentProject!=null and entity.parentProject.projectName != null and entity.parentProject.projectName != ''">
+				AND p.PROJECT_NAME like concat(concat('%',#{entity.parentProject.projectName}),'%')
+			</if>
+			And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			<if test="entity.parentProject != null and (entity.parentProject.projectSerial !=null and entity.parentProject.projectSerial != '' or entity.parentProject.projectName != null and entity.parentProject.projectName != '')">
+				and A.PARENT_ID IS NOT NULL order by A.PARENT_ID
+			</if>
+		</where>
+	</select>
+
+	<select id="GetConstructionBalance" parameterType="java.lang.String" resultMap="constructionBalanceResultMap">
+		SELECT <include refid="columnss"/> FROM T_CONSTRUCTION_BALANCE p  left join T_STORAGE_WAREHOUSE house ON p.WAREHOUSE_ID = house.WAREHOUSE_CODE
+		left join  T_CONSTRUCTION_PROJECT tcp on p.PROJECT_ID = tcp.ID
+		WHERE p.ID = #{_parameter}
+	</select>
+
+	<update id="UpdateConstructionBalance" parameterType="com.dhc.fastersoft.entity.ConstructionBalance">
+		UPDATE T_CONSTRUCTION_BALANCE SET
+		PROJECT_NAME = #{projectName,jdbcType=VARCHAR},PROJECT_SERIAL = #{projectSerial,jdbcType=VARCHAR},
+		PROJECT_UNIT = #{projectUnit,jdbcType=VARCHAR},CONTRACTOR = #{contractor,jdbcType=VARCHAR},
+		CONTRACTOR_NUM = #{contractorNum,jdbcType=INTEGER},CONTROL_NUM = #{controlNum,jdbcType=INTEGER},
+		PRELIMINARY_OPINION = #{preliminaryOpinion,jdbcType=VARCHAR},IMAGE_GROUP_ID = #{imageGroupId,jdbcType=VARCHAR},
+		FILE_GROUP_ID = #{fileGroupId,jdbcType=VARCHAR},STATUS = #{status,jdbcType=VARCHAR},ADUIT_NUM=#{auditNum,jdbcType=DOUBLE},
+		WAREHOUSE_ID=#{warehouseId,jdbcType=VARCHAR},
+		PROJECT_ID=#{projectId,jdbcType=VARCHAR}
+		WHERE ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

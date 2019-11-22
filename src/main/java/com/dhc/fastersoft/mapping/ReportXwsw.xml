@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.report.ReportXwswDao" >
+  <resultMap id="ReportXwswResultMap" type="com.dhc.fastersoft.entity.report.ReportXwsw" >
+    <result column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="REPORT_MONTH" property="reportMonth" jdbcType="VARCHAR" />
+    <result column="REPORT_WAREHOUSE" property="reportWarehouse" jdbcType="VARCHAR" />
+    <result column="GRAIN_TYPE" property="grainType" jdbcType="NVARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="SUBTOTAL" property="subtotal" jdbcType="DECIMAL" />
+    <result column="BEIJING" property="beijing" jdbcType="DECIMAL" />
+    <result column="TIANJIN" property="tianjin" jdbcType="DECIMAL" />
+    <result column="HEBEI" property="hebei" jdbcType="DECIMAL" />
+    <result column="SHANXI" property="shanxi" jdbcType="DECIMAL" />
+    <result column="NEIMENGGU" property="neimenggu" jdbcType="DECIMAL" />
+    <result column="LIAONING" property="liaoning" jdbcType="DECIMAL" />
+    <result column="JINLI" property="jinli" jdbcType="DECIMAL" />
+    <result column="HEILONGJIAN" property="heilongjian" jdbcType="DECIMAL" />
+    <result column="SHANGHAI" property="shanghai" jdbcType="DECIMAL" />
+    <result column="JIANGSU" property="jiangsu" jdbcType="DECIMAL" />
+    <result column="ZHEJIANG" property="zhejiang" jdbcType="DECIMAL" />
+    <result column="ANHUI" property="anhui" jdbcType="DECIMAL" />
+    <result column="FUJIAN" property="fujian" jdbcType="DECIMAL" />
+    <result column="JIANGXI" property="jiangxi" jdbcType="DECIMAL" />
+    <result column="SHANDONG" property="shandong" jdbcType="DECIMAL" />
+    <result column="HENAN" property="henan" jdbcType="DECIMAL" />
+    <result column="HUBEI" property="hubei" jdbcType="DECIMAL" />
+    <result column="HUNAN" property="hunan" jdbcType="DECIMAL" />
+    <result column="GUANGDONG" property="guangdong" jdbcType="DECIMAL" />
+    <result column="GUANGXI" property="guangxi" jdbcType="DECIMAL" />
+    <result column="HAINAN" property="hainan" jdbcType="DECIMAL" />
+    <result column="CHONGQING" property="chongqing" jdbcType="DECIMAL" />
+    <result column="SICHUAN" property="sichuan" jdbcType="DECIMAL" />
+    <result column="GUIZHOU" property="guizhou" jdbcType="DECIMAL" />
+    <result column="YUNNAN" property="yunnan" jdbcType="DECIMAL" />
+    <result column="XIZANG" property="xizang" jdbcType="DECIMAL" />
+    <result column="SHAN_XI" property="shanXi" jdbcType="DECIMAL" />
+    <result column="GANSU" property="gansu" jdbcType="DECIMAL" />
+    <result column="QINGHAI" property="qinghai" jdbcType="DECIMAL" />
+    <result column="NINGXIA" property="ningxia" jdbcType="DECIMAL" />
+    <result column="XINJIANG" property="xinjiang" jdbcType="DECIMAL" />
+    <result column="ORDERNUM" property="ordernum" jdbcType="DECIMAL" />
+    <result column="CSS_CLASS" property="cssClass" jdbcType="VARCHAR" />
+    <result column="support" property="support" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <resultMap id="ReportXwswResultVOMap" type="com.dhc.fastersoft.vo.ReportXwswResultVO" >
+       <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+       <result column="CITY" property="city" jdbcType="VARCHAR" />
+       <result column="SUM_TOTAL" property="total" jdbcType="VARCHAR" />
+   </resultMap>
+
+  <sql id="columns">
+    REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+      REPORT_NAME, SUBTOTAL, BEIJING,
+      TIANJIN, HEBEI, SHANXI,
+      NEIMENGGU, LIAONING, JINLI,
+      HEILONGJIAN, SHANGHAI, JIANGSU,ZHEJIANG,
+      ANHUI, FUJIAN, JIANGXI,
+      SHANDONG, HENAN, HUBEI,
+      HUNAN, GUANGDONG, GUANGXI,
+      HAINAN, CHONGQING, SICHUAN,
+      GUIZHOU, YUNNAN, XIZANG,
+      SHAN_XI, GANSU, QINGHAI,
+      NINGXIA, XINJIANG,GRAIN_TYPE,ORDERNUM,CSS_CLASS
+  </sql>
+
+  <sql id="tablename"> T_REPORT_MONTH_XWSW </sql>
+
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.report.ReportXwsw" >
+    insert into <include refid="tablename"/> ( <include refid="columns"/> )
+    values (#{reportId,jdbcType=VARCHAR}, #{reportMonth,jdbcType=VARCHAR}, #{reportWarehouse,jdbcType=VARCHAR}, 
+      #{reportName,jdbcType=VARCHAR}, #{subtotal,jdbcType=DECIMAL}, #{beijing,jdbcType=DECIMAL}, 
+      #{tianjin,jdbcType=DECIMAL}, #{hebei,jdbcType=DECIMAL}, #{shanxi,jdbcType=DECIMAL}, 
+      #{neimenggu,jdbcType=DECIMAL}, #{liaoning,jdbcType=DECIMAL}, #{jinli,jdbcType=DECIMAL}, 
+      #{heilongjian,jdbcType=DECIMAL}, #{shanghai,jdbcType=DECIMAL}, #{jiangsu,jdbcType=DECIMAL}, #{zhejiang,jdbcType=DECIMAL},
+      #{anhui,jdbcType=DECIMAL}, #{fujian,jdbcType=DECIMAL}, #{jiangxi,jdbcType=DECIMAL},
+      #{shandong,jdbcType=DECIMAL}, #{henan,jdbcType=DECIMAL}, #{hubei,jdbcType=DECIMAL}, 
+      #{hunan,jdbcType=DECIMAL}, #{guangdong,jdbcType=DECIMAL}, #{guangxi,jdbcType=DECIMAL}, 
+      #{hainan,jdbcType=DECIMAL}, #{chongqing,jdbcType=DECIMAL}, #{sichuan,jdbcType=DECIMAL}, 
+      #{guizhou,jdbcType=DECIMAL}, #{yunnan,jdbcType=DECIMAL}, #{xizang,jdbcType=DECIMAL}, 
+      #{shanXi,jdbcType=DECIMAL}, #{gansu,jdbcType=DECIMAL}, #{qinghai,jdbcType=DECIMAL}, 
+      #{ningxia,jdbcType=DECIMAL}, #{xinjiang,jdbcType=DECIMAL}, #{grainType,jdbcType=NVARCHAR},
+      #{ordernum,jdbcType=DECIMAL},#{cssClass,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="listXwswByMonthHouse" parameterType="HashMap" resultMap="ReportXwswResultMap">
+      SELECT <include refid="columns"/> FROM <include refid="tablename"/>
+      WHERE REPORT_ID=
+      (SELECT ID from T_REPORT_MONTH WHERE REPORT_MONTH=#{reportMonth} and REPORT_WAREHOUSE_ID=#{reportWarehouseId} and REPORT_NAME=#{reportName})
+      ORDER BY ORDERNUM
+  </select>
+
+  <delete id="deleteByMonthHouse" parameterType="HashMap">
+    DELETE FROM <include refid="tablename"/> WHERE
+    REPORT_MONTH=#{reportMonth} AND REPORT_WAREHOUSE = #{reportWarehouse} AND REPORT_NAME = #{reportName}
+  </delete>
+
+  <select id="listXwswByReportId" parameterType="String" resultMap="ReportXwswResultMap">
+    SELECT <include refid="columns"/> FROM <include refid="tablename"/>
+    WHERE REPORT_ID = #{reportId} ORDER BY ORDERNUM
+  </select>
+
+  <delete id="deleteByReportId" parameterType="String">
+    DELETE FROM <include refid="tablename"/> WHERE
+    REPORT_ID=#{reportId}
+  </delete>
+
+  <insert id="summary" parameterType="com.dhc.fastersoft.entity.report.ReportMonth" >
+    INSERT INTO <include refid="tablename"/> (REPORT_ID, REPORT_MONTH, REPORT_WAREHOUSE,
+    REPORT_NAME, GRAIN_TYPE,ORDERNUM,CSS_CLASS, SUBTOTAL, BEIJING,
+    TIANJIN, HEBEI, SHANXI,
+    NEIMENGGU, LIAONING, JINLI,
+    HEILONGJIAN, SHANGHAI, JIANGSU,
+    ANHUI, ZHEJIANG, FUJIAN, JIANGXI,
+    SHANDONG, HENAN, HUBEI,
+    HUNAN, GUANGDONG, GUANGXI,
+    HAINAN, CHONGQING, SICHUAN,
+    GUIZHOU, YUNNAN, XIZANG,
+    SHAN_XI, GANSU, QINGHAI,
+    NINGXIA, XINJIANG)
+    SELECT #{id},#{reportMonth},#{reportWarehouse},#{reportName},GRAIN_TYPE,ORDERNUM,CSS_CLASS,SUM(nvl(SUBTOTAL,0)),SUM(nvl(BEIJING,0)),SUM(nvl(TIANJIN,0)),SUM(nvl(HEBEI,0)),SUM(nvl(SHANXI,0)),SUM(nvl(NEIMENGGU,0)),SUM(nvl(LIAONING,0)),SUM(nvl(JINLI,0)),SUM(nvl(HEILONGJIAN,0)),SUM(nvl(SHANGHAI,0)),SUM(nvl(JIANGSU,0)),SUM(nvl(ZHEJIANG,0)),SUM(nvl(ANHUI,0)),SUM(nvl(FUJIAN,0)),SUM(nvl(JIANGXI,0)),SUM(nvl(SHANDONG,0)),SUM(nvl(HENAN,0)),SUM(nvl(HUBEI,0)),SUM(nvl(HUNAN,0)),SUM(nvl(GUANGDONG,0)),SUM(nvl(GUANGXI,0)),SUM(nvl(HAINAN,0)),SUM(nvl(CHONGQING,0)),SUM(nvl(SICHUAN,0)),SUM(nvl(GUIZHOU,0)),SUM(nvl(YUNNAN,0)),SUM(nvl(XIZANG,0)),SUM(nvl(SHAN_XI,0)),SUM(nvl(GANSU,0)),SUM(nvl(QINGHAI,0)),SUM(nvl(NINGXIA,0)),SUM(nvl(XINJIANG,0))
+    FROM <include refid="tablename"/>
+    WHERE REPORT_ID IN (${reportIds}) GROUP BY GRAIN_TYPE,ORDERNUM,CSS_CLASS
+  </insert>
+
+  <select id="getDataByProvince" parameterType="java.util.HashMap" resultMap="ReportXwswResultVOMap">
+      
+   select report_name, city, sum_total from (select t.report_name
+   	,nvl(sum(t.beijing),0) BEIJING
+   	,nvl(sum(t.TIANJIN),0) TIANJIN
+    ,nvl(sum(t.HEBEI),0) HEBEI
+    ,nvl(sum(t.SHANXI),0) SHANXI
+    ,nvl(sum(t.NEIMENGGU),0) NEIMENGGU
+    ,nvl(sum(t.LIAONING),0) LIAONING
+    ,nvl(sum(t.JINLI),0) JINLI
+    ,nvl(sum(t.HEILONGJIAN),0) HEILONGJIAN
+    ,nvl(sum(t.SHANGHAI),0) SHANGHAI
+    ,nvl(sum(t.JIANGSU),0) JIANGSU
+    ,nvl(sum(t.ANHUI),0) ANHUI
+    ,nvl(sum(t.FUJIAN),0) FUJIAN
+    ,nvl(sum(t.JIANGXI),0) JIANGXI
+    ,nvl(sum(t.SHANDONG),0) SHANDONG
+    ,nvl(sum(t.HENAN),0) HENAN
+    ,nvl(sum(t.HUBEI),0) HUBEI
+    ,nvl(sum(t.HUNAN),0) HUNAN
+    ,nvl(sum(t.GUANGDONG),0) GUANGDONG
+    ,nvl(sum(t.GUANGXI),0) GUANGXI
+    ,nvl(sum(t.HAINAN),0) HAINAN
+    ,nvl(sum(t.CHONGQING),0) CHONGQING
+    ,nvl(sum(t.SICHUAN),0) SICHUAN
+    ,nvl(sum(t.GUIZHOU),0) GUIZHOU
+    ,nvl(sum(t.YUNNAN),0) YUNNAN
+    ,nvl(sum(t.XIZANG),0) XIZANG
+    ,nvl(sum(t.SHAN_XI),0) SHAN_XI
+    ,nvl(sum(t.GANSU),0) GANSU
+    ,nvl(sum(t.QINGHAI),0) QINGHAI
+    ,nvl(sum(t.NINGXIA),0) NINGXIA
+    ,nvl(sum(t.XINJIANG),0) XINJIANG
+    ,nvl(sum(t.ZHEJIANG),0) ZHEJIANG
+     	from t_report_month_xwsw t where
+     	GRAIN_TYPE='折合原粮合计'
+     	AND report_id in (SELECT c.id FROM t_report_month c,t_report_month p WHERE p.report_name in('销往省外','省外购进') AND p.report_status='汇总通过'
+     	AND p.report_month <![CDATA[ >= ]]> #{startTime} and p.report_month <![CDATA[ <= ]]> #{endTime} AND c.gather_id=p.id)
+    group by t.report_name ) a unpivot (
+    	sum_total for city in (
+    		BEIJING,TIANJIN, HEBEI, SHANXI, NEIMENGGU, LIAONING, JINLI, HEILONGJIAN, SHANGHAI, JIANGSU, ANHUI, FUJIAN, JIANGXI, SHANDONG, HENAN, HUBEI, HUNAN, GUANGDONG, GUANGXI, HAINAN, CHONGQING, SICHUAN, GUIZHOU, YUNNAN, XIZANG, SHAN_XI, GANSU, QINGHAI, NINGXIA, XINJIANG, ZHEJIANG) )
+    order by report_name,sum_total desc
+  </select>
+
+  <select id="getDataByYear" parameterType="java.util.HashMap" resultMap="ReportXwswResultMap">
+  	select * from(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{startTime}, 'yyyy-MM'), (ROWNUM - 1) * 12),
+              'yyyy') as support
+  	FROM DUAL
+	CONNECT BY ROWNUM <![CDATA[ <= ]]>
+           months_between(to_date(#{endTime}, 'yyyy-MM'),
+                          to_date(#{startTime}, 'yyyy-MM')) / 12 + 1 ) a left join
+   (select substr(T.report_month,0,4) report_month,t.report_name,sum(t.beijing) BEIJING,
+    	sum(t.TIANJIN) TIANJIN,sum(t.HEBEI) HEBEI,sum(t.SHANXI) SHANXI,sum(t.NEIMENGGU) NEIMENGGU,
+   		sum(t.LIAONING) LIAONING,sum(t.JINLI) JINLI,sum(t.HEILONGJIAN) HEILONGJIAN,sum(t.SHANGHAI) SHANGHAI,
+    	sum(t.JIANGSU) JIANGSU,sum(t.ANHUI) ANHUI,sum(t.FUJIAN) FUJIAN,sum(t.JIANGXI) JIANGXI,
+		sum(t.SHANDONG) SHANDONG,sum(t.HENAN) HENAN,sum(t.HUBEI) HUBEI,sum(t.HUNAN) HUNAN,
+		sum(t.GUANGDONG) GUANGDONG,sum(t.GUANGXI) GUANGXI,sum(t.HAINAN) HAINAN,sum(t.CHONGQING) CHONGQING,
+		sum(t.SICHUAN) SICHUAN,sum(t.GUIZHOU) GUIZHOU,sum(t.YUNNAN) YUNNAN,sum(t.XIZANG) XIZANG,
+		sum(t.SHAN_XI) SHAN_XI,sum(t.GANSU) GANSU,sum(t.QINGHAI) QINGHAI,sum(t.NINGXIA) NINGXIA,
+		sum(t.XINJIANG) XINJIANG,sum(t.ZHEJIANG) ZHEJIANG
+		from t_report_month_xwsw t where
+		GRAIN_TYPE='折合原粮合计'
+     	AND report_id in (SELECT c.id FROM t_report_month c,t_report_month p WHERE p.report_name in('销往省外','省外购进') AND p.report_status='汇总通过'
+		AND p.report_month <![CDATA[ >= ]]> #{startTime} and p.report_month <![CDATA[ <= ]]> #{endTime} AND c.gather_id=p.id)
+		group by t.report_name,substr(T.report_month,0,4) ) swtz on a.support = swtz.report_month order by support asc
+  </select>
+
+    <select id="getDataByMonth" parameterType="java.util.HashMap" resultMap="ReportXwswResultMap">
+  	select * from(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{startTime}, 'yyyy-MM'), ROWNUM - 1),
+               'yyyy-MM') as support
+  	FROM DUAL
+	CONNECT BY ROWNUM <![CDATA[ <= ]]>
+           months_between(to_date(#{endTime}, 'yyyy-MM'),
+                          to_date(#{startTime}, 'yyyy-MM')) + 1  ) a left join
+   (select t.report_month,t.report_name,sum(t.beijing) BEIJING,
+    	sum(t.TIANJIN) TIANJIN,sum(t.HEBEI) HEBEI,sum(t.SHANXI) SHANXI,sum(t.NEIMENGGU) NEIMENGGU,
+   		sum(t.LIAONING) LIAONING,sum(t.JINLI) JINLI,sum(t.HEILONGJIAN) HEILONGJIAN,sum(t.SHANGHAI) SHANGHAI,
+    	sum(t.JIANGSU) JIANGSU,sum(t.ANHUI) ANHUI,sum(t.FUJIAN) FUJIAN,sum(t.JIANGXI) JIANGXI,
+		sum(t.SHANDONG) SHANDONG,sum(t.HENAN) HENAN,sum(t.HUBEI) HUBEI,sum(t.HUNAN) HUNAN,
+		sum(t.GUANGDONG) GUANGDONG,sum(t.GUANGXI) GUANGXI,sum(t.HAINAN) HAINAN,sum(t.CHONGQING) CHONGQING,
+		sum(t.SICHUAN) SICHUAN,sum(t.GUIZHOU) GUIZHOU,sum(t.YUNNAN) YUNNAN,sum(t.XIZANG) XIZANG,
+		sum(t.SHAN_XI) SHAN_XI,sum(t.GANSU) GANSU,sum(t.QINGHAI) QINGHAI,sum(t.NINGXIA) NINGXIA,
+		sum(t.XINJIANG) XINJIANG,sum(t.ZHEJIANG) ZHEJIANG
+		from t_report_month_xwsw t where
+		GRAIN_TYPE='折合原粮合计'
+		AND report_id in (SELECT c.id FROM t_report_month c,t_report_month p WHERE p.report_name in('销往省外','省外购进') AND p.report_status='汇总通过'
+		AND p.report_month <![CDATA[ >= ]]> #{startTime} and p.report_month <![CDATA[ <= ]]> #{endTime} AND c.gather_id=p.id)
+		group by t.report_name,t.report_month ) swtz on a.support = swtz.report_month order by support asc
+  </select>
+
+    <select id="listSumXwsw" parameterType="String" resultMap="ReportXwswResultMap">
+        SELECT GRAIN_TYPE,ORDERNUM,CSS_CLASS,SUM(nvl(SUBTOTAL,0)) SUBTOTAL,SUM(nvl(BEIJING,0)) BEIJING,SUM(nvl(TIANJIN,0)) TIANJIN,SUM(nvl(HEBEI,0)) HEBEI,SUM(nvl(SHANXI,0)) SHANXI,SUM(nvl(NEIMENGGU,0)) NEIMENGGU,SUM(nvl(LIAONING,0)) LIAONING,SUM(nvl(JINLI,0)) JINLI,SUM(nvl(HEILONGJIAN,0)) HEILONGJIAN,SUM(nvl(SHANGHAI,0)) SHANGHAI,SUM(nvl(JIANGSU,0)) JIANGSU,SUM(nvl(ZHEJIANG,0)) ZHEJIANG,SUM(nvl(ANHUI,0)) ANHUI,SUM(nvl(FUJIAN,0)) FUJIAN,SUM(nvl(JIANGXI,0)) JIANGXI,SUM(nvl(SHANDONG,0)) SHANDONG,SUM(nvl(HENAN,0)) HENAN,SUM(nvl(HUBEI,0)) HUBEI,SUM(nvl(HUNAN,0)) HUNAN,SUM(nvl(GUANGDONG,0)) GUANGDONG,SUM(nvl(GUANGXI,0)) GUANGXI,SUM(nvl(HAINAN,0)) HAINAN,SUM(nvl(CHONGQING,0)) CHONGQING,SUM(nvl(SICHUAN,0)) SICHUAN,SUM(nvl(GUIZHOU,0)) GUIZHOU,SUM(nvl(YUNNAN,0)) YUNNAN,SUM(nvl(XIZANG,0)) XIZANG,SUM(nvl(SHAN_XI,0)) SHAN_XI,SUM(nvl(GANSU,0)) GANSU,SUM(nvl(QINGHAI,0)) QINGHAI,SUM(nvl(NINGXIA,0)) NINGXIA,SUM(nvl(XINJIANG,0)) XINJIANG
+        FROM <include refid="tablename"/>
+        WHERE report_id IN (SELECT ID FROM t_report_month WHERE gather_id=#{gatherId})
+        GROUP BY GRAIN_TYPE,GRAIN_TYPE,ORDERNUM,CSS_CLASS
+        ORDER BY ORDERNUM
+    </select>
+</mapper>

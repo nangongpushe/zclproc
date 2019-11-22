@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.system.SysLogDao">
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.system.SysLog">
+    <id column="LOG_ID" jdbcType="VARCHAR" property="logId" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="ACCOUNT" jdbcType="VARCHAR" property="account" />
+    <result column="CLIENT_IP" jdbcType="VARCHAR" property="clientIp" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="RESULT" jdbcType="VARCHAR" property="result" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="PARAMETER" jdbcType="VARCHAR" property="parameter" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="PERMISSIONS" jdbcType="VARCHAR" property="permissions" />
+    
+  </resultMap>
+  <sql id="Base_Column_List">
+    LOG_ID, USER_ID, CLIENT_IP, URL, RESULT, DESCRIPTION, PARAMETER, to_char(CREATE_TIME,'yyyy-MM-dd hh24:mi:ss') CREATE_TIME, PERMISSIONS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_LOG
+    where LOG_ID = #{logId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from T_SYS_LOG
+    where LOG_ID = #{logId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.system.SysLog">
+    insert into T_SYS_LOG (LOG_ID, USER_ID, CLIENT_IP, 
+      URL, RESULT, DESCRIPTION, 
+      PARAMETER, CREATE_TIME, PERMISSIONS
+      )
+    values (#{logId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{clientIp,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{parameter,jdbcType=VARCHAR}, sysdate, #{permissions,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.system.SysLog">
+    insert into T_SYS_LOG
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="logId != null">
+        LOG_ID,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="clientIp != null">
+        CLIENT_IP,
+      </if>
+      <if test="url != null">
+        URL,
+      </if>
+      <if test="result != null">
+        RESULT,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+      <if test="parameter != null">
+        PARAMETER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="permissions != null">
+        PERMISSIONS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="logId != null">
+        #{logId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="clientIp != null">
+        #{clientIp,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parameter != null">
+        #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        sysdate,
+      </if>
+      <if test="permissions != null">
+        #{permissions,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.system.SysLog">
+    update T_SYS_LOG
+    <set>
+      <if test="userId != null">
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="clientIp != null">
+        CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+        RESULT = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parameter != null">
+        PARAMETER = #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = sysdate,
+      </if>
+      <if test="permissions != null">
+        PERMISSIONS = #{permissions,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where LOG_ID = #{logId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.system.SysLog">
+    update T_SYS_LOG
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      RESULT = #{result,jdbcType=VARCHAR},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      PARAMETER = #{parameter,jdbcType=VARCHAR},
+      CREATE_TIME = sysdates,
+      PERMISSIONS = #{permissions,jdbcType=VARCHAR}
+    where LOG_ID = #{logId,jdbcType=VARCHAR}
+  </update>
+  
+ <select id="pageQuery" parameterType="java.util.HashMap"
+		resultMap="BaseResultMap">
+		${start} SELECT 
+		 t.LOG_ID, t.USER_ID, t.CLIENT_IP, t.URL, t.RESULT, t.DESCRIPTION, t.PARAMETER, to_char(t.CREATE_TIME,'yyyy-MM-dd hh24:mi:ss') CREATE_TIME, t.PERMISSIONS,u.name as USER_NAME,u.account as ACCOUNT
+		from T_SYS_LOG t,T_SYS_USER u
+		<where>
+			<if test="clientIp!=null and clientIp!=''">
+				t.CLIENT_IP LIKE '%${clientIp}%'
+			</if>
+			<if test="userName!=null and userName!=''">
+				and u.name LIKE '%${userName}%'
+			</if>
+            <if test="description!=null and description!=''">
+                and DESCRIPTION LIKE '%${description}%'
+            </if>
+			<if test="startTime!=null and startTime!=''">
+				and t.CREATE_TIME <![CDATA[ > ]]> to_date(#{startTime},'yyyy-mm-dd hh24:mi:ss')
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				and t.CREATE_TIME <![CDATA[ < ]]> to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss')
+			</if>
+			AND t.user_id = u.id
+		</where>
+		ORDER BY t.CREATE_TIME DESC,LOG_ID ASC
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_SYS_LOG t,T_SYS_USER u
+		<where>
+			<if test="clientIp!=null and clientIp!=''">
+				CLIENT_IP LIKE '%${clientIp}%'
+			</if>
+			<if test="userName!=null and userName!=''">
+				and u.name LIKE '%${userName}%'
+			</if>
+			<if test="description!=null and description!=''">
+				and DESCRIPTION LIKE '%${description}%'
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				and t.CREATE_TIME <![CDATA[ > ]]> to_date(#{startTime},'yyyy-mm-dd hh24:mi:ss')
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				and t.CREATE_TIME <![CDATA[ < ]]> to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss')
+			</if>
+			AND t.user_id = u.id
+		</where>
+	</select>
+</mapper>

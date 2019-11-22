@@ -1,0 +1,1920 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateConcluteDao">
+    <resultMap type="com.dhc.fastersoft.entity.RotateConclute" id="rotateConcluteResultMap">
+        <result property="id" column="ID" jdbcType="NVARCHAR"/>
+        <result property="dealSerial" column="DEAL_SERIAL" jdbcType="NVARCHAR"/>
+        <result property="grainType" column="GRAIN_TYPE" jdbcType="NVARCHAR"/>
+        <result property="inviteType" column="INVITE_TYPE" jdbcType="NVARCHAR"/>
+        <result property="dealDate" column="DEAL_DATE" jdbcType="DATE"/>
+        <result property="unit" column="UNIT" jdbcType="NVARCHAR"/>
+        <result property="gatherUnit" column="GATHER_UNIT" jdbcType="NVARCHAR"/>
+        <result property="gather" column="GATHER" jdbcType="NVARCHAR"/>
+        <result property="gatherDate" column="GATHER_DATE" jdbcType="DATE"/>
+        <result property="remark" column="REMARK" jdbcType="NVARCHAR"/>
+        <result property="totalQuantity" column="TOTAL_QUANTITY" jdbcType="VARCHAR"/>
+        <result property="dealPriceTotal" column="DEAL_PRICE_TOTAL" jdbcType="DOUBLE"/>
+        <result property="dealAmountTotal" column="DEAL_AMOUNT_TOTAL" jdbcType="DOUBLE"/>
+        <result property="status" column="STATUS" jdbcType="NVARCHAR"/>
+        <result property="parameter" column="DEAL_ID" jdbcType="NVARCHAR"/>
+        <result property="deliveryId" column="DELIVERY_ID" jdbcType="NVARCHAR"/>
+        <result property="receiveId" column="RECEIVE_ID" jdbcType="NVARCHAR"/>
+        <result property="quantity" column="QUANTITY" jdbcType="NVARCHAR"/>
+        <result property="storehouse" column="STOREHOUSE" jdbcType="NVARCHAR"/>
+        <result property="warehoueYear" column="WAREHOUE_YEAR" jdbcType="NVARCHAR"/>
+        <result property="receivePlace" column="RECEIVE_PLACE" jdbcType="NVARCHAR"/>
+        <collection property="detailList"
+                    resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap"></collection>
+
+    </resultMap>
+
+    <sql id="columns_main">
+		ID,DEAL_SERIAL,GRAIN_TYPE,INVITE_TYPE,DEAL_DATE,UNIT,
+		GATHER_UNIT,GATHER,GATHER_DATE,REMARK,TOTAL_QUANTITY,
+		DEAL_PRICE_TOTAL,DEAL_AMOUNT_TOTAL,STATUS,INVITE_ID
+	</sql>
+
+    <sql id="s_columns_main">
+		ID,DEAL_SERIAL,GRAIN_TYPE,INVITE_TYPE,DEAL_DATE,UNIT,
+		GATHER_UNIT,(select name from t_sys_user where id = GATHER) GATHER,
+		GATHER_DATE,REMARK,TOTAL_QUANTITY,DEAL_PRICE_TOTAL,DEAL_AMOUNT_TOTAL,STATUS,INVITE_ID
+	</sql>
+
+    <sql id="columns_detail">
+		T_ROTATE_CONCLUTE_DETAIL.ID,DEAL_ID,SCHEME_ID,BID_SERIAL,DELIVERY_PLACE,
+		RECEIVE_PLACE,STOREHOUSE,T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE,QUANTITY,
+		PRODUCE_AREA,PRODUCE_YEAR,WAREHOUE_YEAR,STORAGE_TYPE,DEAL_PRICE,
+		DEAL_AMOUNT,TAKE_END,DELIVERY_START,DELIVERY_ID,RECEIVE_ID,
+		DELIVERY_END,DEAL_UNIT,T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL,
+		T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE,LOANPAYMENTENDDATE,WAREHOUSE_ID,INVITE_DETAIL_ID,ENTERPRISE_ID
+	</sql>
+
+    <sql id="columns_detail10">
+		td.ID,td.DEAL_ID,td.SCHEME_ID,td.BID_SERIAL,td.DELIVERY_PLACE,
+		house.WAREHOUSE_SHORT AS RECEIVE_PLACE,td.STOREHOUSE,td.GRAIN_TYPE,td.QUANTITY,
+		td.PRODUCE_AREA,td.PRODUCE_YEAR,td.WAREHOUE_YEAR,td.STORAGE_TYPE,td.DEAL_PRICE,
+		td.DEAL_AMOUNT,td.TAKE_END,td.DELIVERY_START,td.DELIVERY_ID,td.RECEIVE_ID,
+		td.DELIVERY_END, DEAL_UNIT,td.DEAL_SERIAL,
+		td.DEAL_DATE,td.LOANPAYMENTENDDATE,td.WAREHOUSE_ID
+	</sql>
+
+    <sql id="columns_detail1">
+		a.ID,
+		a.DEAL_ID,
+		a.SCHEME_ID,
+		a.BID_SERIAL,
+		NVL((SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE ID = a.DELIVERY_ID),(SELECT CLIENT_NAME FROM T_CLIENT_INFO where ID = a.DELIVERY_ID)) AS DELIVERY_PLACE,
+		a.warehouse_id,
+		NVL((SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE ID = a.RECEIVE_ID),
+		(SELECT CLIENT_NAME FROM T_CLIENT_INFO where ID = a.RECEIVE_ID)) AS RECEIVE_PLACE,
+		a.STOREHOUSE,
+		a.GRAIN_TYPE,
+		a.QUANTITY,
+		a.PRODUCE_AREA,
+		a.PRODUCE_YEAR,
+		a.WAREHOUE_YEAR,
+		a.STORAGE_TYPE,
+		a.DEAL_PRICE,
+		a.DEAL_AMOUNT,
+		a.TAKE_END,
+		a.DELIVERY_START,
+		a.DELIVERY_END,
+		c.CLIENT_NAME AS DEAL_UNIT,
+		a.DELIVERY_ID,
+		a.RECEIVE_ID,
+		a.DEAL_SERIAL,
+		a.DEAL_DATE,
+		lastmodify.COMPLE_RATE,
+		RC.INVITE_TYPE,
+		RSD.SCHEME_BATCH,
+		TRS.SCHEME_NAME,
+		TRS.SCHEME_TYPE,
+		TO_CHAR(RSD.START_TIME,'YYYY-MM-DD') START_TIME,
+		TO_CHAR(RSD.END_TIME,'YYYY-MM-DD') END_TIME,
+		TO_CHAR(RSD.BIDDING_TIME,'YYYY-MM-DD') BIDDING_TIME
+	</sql>
+    <sql id="columns_detail2">
+		T_ROTATE_CONCLUTE_DETAIL.ID,DEAL_ID,SCHEME_ID,BID_SERIAL,DELIVERY_PLACE,
+		RECEIVE_PLACE,STOREHOUSE,T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE,QUANTITY,
+		PRODUCE_AREA,PRODUCE_YEAR,WAREHOUE_YEAR,STORAGE_TYPE,DEAL_PRICE,
+		DEAL_AMOUNT,TAKE_END,DELIVERY_START,DELIVERY_ID,RECEIVE_ID,
+		DELIVERY_END,DEAL_UNIT,T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL,T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE,NVL(CLAIM_AMOUNT, 0) CLAIM_AMOUNT
+	</sql>
+
+    <sql id="table_main"> T_ROTATE_CONCLUTE</sql>
+
+    <sql id="table_detail"> T_ROTATE_CONCLUTE_DETAIL</sql>
+
+
+    <!-- 添加招标结果 -->
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.RotateConclute">
+        begin
+        INSERT INTO T_ROTATE_CONCLUTE
+        (
+        <include refid="columns_main"/>
+        )
+        VALUES
+        (#{id},
+        #{dealSerial,jdbcType=NVARCHAR},
+        #{grainType,jdbcType=NVARCHAR},
+        #{inviteType,jdbcType=NVARCHAR},
+        #{dealDate,jdbcType=DATE},
+        #{unit,jdbcType=NVARCHAR},
+        #{gatherUnit,jdbcType=NVARCHAR},
+        #{gather,jdbcType=NVARCHAR},
+        #{gatherDate,jdbcType=DATE},
+        #{remark,jdbcType=NVARCHAR},
+        #{totalQuantity,jdbcType=NVARCHAR},
+        #{dealPriceTotal,jdbcType=INTEGER},
+        #{dealAmountTotal,jdbcType=INTEGER},
+        #{status,jdbcType=NVARCHAR},
+        #{inviteId,jdbcType=NVARCHAR});
+
+        <if test="detailList!=null">
+            <foreach collection="detailList" item="item" separator=";">
+                INSERT INTO T_ROTATE_CONCLUTE_DETAIL
+                (
+                <include refid="columns_detail"/>
+                )
+                VALUES
+                (#{item.id,jdbcType=NVARCHAR},
+                #{id,jdbcType=NVARCHAR},
+                #{item.schemeID,jdbcType=NVARCHAR},
+                #{item.bidSerial,jdbcType=NVARCHAR},
+                #{item.deliveryPlace,jdbcType=NVARCHAR},
+                #{item.receivePlace,jdbcType=NVARCHAR},
+                #{item.storehouse,jdbcType=NVARCHAR},
+                #{item.grainType,jdbcType=NVARCHAR},
+                #{item.quantity,jdbcType=NVARCHAR},
+                #{item.produceArea,jdbcType=NVARCHAR},
+                #{item.produceYear,jdbcType=NVARCHAR},
+                #{item.warehoueYear,jdbcType=NVARCHAR},
+                #{item.storageType,jdbcType=NVARCHAR},
+                #{item.dealPrice,jdbcType=INTEGER},
+                #{item.dealAmount,jdbcType=INTEGER},
+                #{item.takeEnd,jdbcType=NVARCHAR},
+                #{item.deliveryStart,jdbcType=NVARCHAR},
+                #{item.deliveryId,jdbcType=NVARCHAR},
+                #{item.receiveId,jdbcType=NVARCHAR},
+                #{item.deliveryEnd,jdbcType=NVARCHAR},
+                #{item.dealUnit,jdbcType=NVARCHAR},
+                #{item.dealSerial,jdbcType=NVARCHAR},
+                #{item.dealDate,jdbcType=NVARCHAR},
+                #{item.loanPaymentEndDate,jdbcType=NVARCHAR},
+                #{item.warehouseId,jdbcType=VARCHAR},
+                #{item.inviteDetailId,jdbcType=NVARCHAR},
+                #{item.enterpriseId,jdbcType=VARCHAR})
+            </foreach>
+            ;
+        </if>
+        end;
+    </insert>
+
+    <!-- 查询单个 -->
+    <select id="get" parameterType="java.lang.String"
+            resultMap="rotateConcluteResultMap">
+        SELECT
+        ID,DEAL_SERIAL,GRAIN_TYPE,INVITE_TYPE,DEAL_DATE,UNIT,
+        GATHER_UNIT,GATHER gather,
+        GATHER_DATE,REMARK,TOTAL_QUANTITY,DEAL_PRICE_TOTAL,DEAL_AMOUNT_TOTAL,STATUS
+
+        FROM
+        <include refid="table_main"/>
+        <where>
+            ID = #{_parameter}
+        </where>
+    </select>
+
+
+    <!-- 查询单个 -->
+    <select id="getDetailList" parameterType="java.lang.String"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        SELECT
+        ID,SCHEME_ID,QUANTITY
+        FROM
+        <include refid="table_detail"/>
+        <where>
+            DEAL_ID = #{_parameter}
+        </where>
+    </select>
+
+    <!-- 查询-->
+    <select id="list" parameterType="java.util.HashMap" resultMap="rotateConcluteResultMap">
+        <if test="pageIndex!=null">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+        SELECT
+              ID,
+              DEAL_SERIAL,
+              GRAIN_TYPE,
+              INVITE_TYPE,
+              DEAL_DATE,
+              UNIT,
+              GATHER_UNIT,
+              GATHER gather,
+              GATHER_DATE,
+              REMARK,
+              TOTAL_QUANTITY,
+              DEAL_PRICE_TOTAL,
+              DEAL_AMOUNT_TOTAL,
+              STATUS,
+              REGEXP_REPLACE(DEAL_SERIAL,'[a-zA-Z]{0,}','') as orderSort
+        from
+             <include refid="table_main"/>
+        <where>
+            <if test="grainType!=null and grainType!=''">
+                AND GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="inviteType!=null and inviteType!=''">
+                AND INVITE_TYPE LIKE '%${inviteType}%'
+            </if>
+            <if test="inviteTypes!=null and inviteTypes!=''">
+                AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND TO_CHAR(DEAL_DATE,'YYYY-MM-DD') = '${dealDate}'
+            </if>
+            <if test="status!=null and status!=''">
+                AND STATUS = '${status}'
+            </if>
+            <if test="wareHouseIds!=null">
+                AND ID IN (
+                          SELECT
+                                DEAL_ID
+                          FROM
+                                T_ROTATE_CONCLUTE_DETAIL
+                          WHERE
+                                DELIVERY_ID
+                          IN(<foreach collection="wareHouseIds" separator="," item="item">#{item}</foreach>)
+                          OR
+                          RECEIVE_ID
+                          IN(<foreach collection="wareHouseIds" separator="," item="item">#{item}</foreach>)
+                          )
+            </if>
+        </where>
+        ORDER BY orderSort DESC
+        <if test="pageIndex!=null">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <select id="listByDealSerial" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        SELECT *
+        FROM
+        <include refid="table_detail"/>
+        WHERE DEAL_SERIAL=#{_parameter}
+    </select>
+    <!--查询入库子明细-->
+    <select id="listInDetailSerial" parameterType="com.dhc.fastersoft.entity.RotateConcluteDetail" resultType="java.lang.String">
+        SELECT
+        td.DEAL_SERIAL
+        from
+        <include refid="table_detail"/> td
+        LEFT JOIN <include refid="table_main"/> tm on td.DEAL_ID=tm.id
+
+        <where>
+            tm.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+            <if test="grainType!=null and grainType!=''">
+                AND td.GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="warehoueYear!=null and warehoueYear!=''">
+                AND PRODUCE_YEAR = #{warehoueYear}
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE = #{storehouse}
+            </if>
+            <if test="deliveryId!=null and deliveryId!=''">
+                AND RECEIVE_ID = #{deliveryId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 总条数 -->
+    <select id="count" parameterType="java.util.HashMap" resultType="Integer">
+        SELECT count(0)
+        FROM
+        <include refid="table_main"/>
+        <where>
+            <if test="grainType!=null and grainType!=''">
+                AND GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="inviteType!=null and inviteType!=''">
+                AND INVITE_TYPE LIKE '%${inviteType}%'
+            </if>
+            <if test="inviteTypes!=null and inviteTypes!=''">
+                AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND TO_CHAR(DEAL_DATE,'YYYY-MM-DD') = '${dealDate}'
+            </if>
+            <if test="status!=null and status!=''">
+                AND STATUS = '${status}'
+            </if>
+            <if test="wareHouseIds!=null">
+                AND ID IN (SELECT DEAL_ID FROM T_ROTATE_CONCLUTE_DETAIL
+                WHERE DELIVERY_ID IN(<foreach collection="wareHouseIds" separator="," item="item">#{item}</foreach>)
+                OR RECEIVE_ID IN(<foreach collection="wareHouseIds" separator="," item="item">#{item}</foreach>))
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询明细 -->
+    <select id="listDetail" parameterType="java.lang.String"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        SELECT
+        <include refid="columns_detail10"/>, td.ENTERPRISE_ID,nvl(E.ENTERPRISE_NAME,(select ENTERPRISE_NAME FROM
+        T_STORE_ENTERPRISE where id = house.ENTERPRISE_ID)) as ENTERPRISE_NAME
+        FROM
+        <include refid="table_detail"/>
+        td
+        LEFT JOIN T_STORAGE_WAREHOUSE house ON house.ID = td.RECEIVE_ID
+        LEFT JOIN T_CLIENT_INFO c on c.id = td.DELIVERY_ID
+        left join T_STORE_ENTERPRISE e on td.ENTERPRISE_ID = E.ID
+        <where>
+            td.DEAL_ID = #{_parameter}
+        </where>
+    </select>
+
+    <!-- 查询明细jovan -->
+    <select id="listDetai2" parameterType="java.lang.String"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        SELECT
+        <include refid="columns_detail10"/>,td.ENTERPRISE_ID,nvl(E.ENTERPRISE_NAME,(select ENTERPRISE_NAME FROM
+        T_STORE_ENTERPRISE where id = house.ENTERPRISE_ID)) as ENTERPRISE_NAME
+        FROM
+        <include refid="table_detail"/>
+        td
+        LEFT JOIN T_STORAGE_WAREHOUSE house ON house.ID = td.${warehouseId}
+        left join T_STORE_ENTERPRISE e on td.ENTERPRISE_ID = E.ID
+        <where>
+            td.DEAL_ID = #{id}
+        </where>
+    </select>
+    <!-- 查询明细jovan -->
+
+
+    <!-- 查询明细 -->
+    <select id="listDetails" parameterType="java.util.HashMap"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap1">
+        SELECT
+        <include refid="columns_detail1"/>,nvl(e.ID, house.ENTERPRISE_ID) AS ENTERPRISE_ID,
+        nvl(e.ENTERPRISE_NAME,(select ENTERPRISE_NAME from T_STORE_ENTERPRISE where id = house.ENTERPRISE_ID)) as ENTERPRISE_NAME,regexp_replace(a.DEAL_SERIAL, '^[a-zA-Z]*','') as orderSort
+        FROM
+        <include refid="table_detail"/>a
+        LEFT JOIN
+        (SELECT RS.NOTICE_TYPE,RSD.DEAL_SERIAL,RSD.COMPLE_RATE
+        FROM
+        T_ROTATE_SCHEDULE_DETAIL rsd,
+        T_ROTATE_SCHEDULE rs,
+        (SELECT
+        MAX(MODIFY_TIME) modifyTime,
+        DEAL_SERIAL
+        FROM
+        T_ROTATE_SCHEDULE_DETAIL
+        GROUP BY
+        DEAL_SERIAL)g
+        WHERE g.modifyTime=rsd.MODIFY_TIME AND rsd.SCHEDULE_ID= rs.ID AND G.DEAL_SERIAL=RSD.DEAL_SERIAL
+        ) lastmodify
+        ON a.DEAL_SERIAL=lastmodify.DEAL_SERIAL
+        LEFT JOIN T_ROTATE_CONCLUTE RC
+        ON a.DEAL_ID = RC.ID
+        LEFT JOIN T_ROTATE_SCHEME_DETAIL RSD
+        ON a.SCHEME_ID = RSD.D_ID
+        LEFT JOIN T_ROTATE_SCHEME TRS
+        ON RSD.SCHEME_ID = TRS.ID
+        left join T_STORAGE_WAREHOUSE house ON a.${WAREHOUSE_ID} = house.ID
+        LEFT JOIN T_STORE_ENTERPRISE e on a.ENTERPRISE_ID = e.id
+        left join T_CLIENT_INFO c on c.id = a.DELIVERY_ID
+        <where>
+            <!--<if test="parameter!=null and parameter!=''">
+                DEAL_ID = #{parameter}
+            </if>-->
+            <if test="grainType!=null and grainType!=''">
+                AND a.GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="quantity!=null and quantity!=''">
+                AND a.QUANTITY LIKE '%${quantity}%'
+            </if>
+            <if test="rotateProcessFlag==null || rotateProcessFlag==''">
+                <if test="receivePlace!=null and receivePlace!=''">
+                    AND house.WAREHOUSE_SHORT LIKE '%${receivePlace}%'
+                </if>
+                <if test="dealUnit!=null and dealUnit != ''">
+                    AND a.DEAL_UNIT like concat(concat('%',#{dealUnit}),'%')
+                </if>
+
+                <if test="deliveryPlace!=null and deliveryPlace!=''">
+                    AND house.WAREHOUSE_SHORT LIKE '%${deliveryPlace}%'
+                </if>
+            </if>
+
+            <if test="rotateProcessFlag!=null and rotateProcessFlag!=''">
+                <if test="receivePlace!=null and receivePlace!='' and deliveryPlace!=null and deliveryPlace!=''">
+                    AND (house.WAREHOUSE_SHORT LIKE '%${deliveryPlace}%' OR house.WAREHOUSE_SHORT LIKE
+                    '%${receivePlace}%')
+                </if>
+            </if>
+            <if test="isOut!=null and isOut!=''">
+                AND a.DELIVERY_ID IS NOT NULL
+            </if>
+
+            <!--<if test="isIn!=null and isIn!=''">-->
+                <!--AND a.RECEIVE_ID IS NOT NULL-->
+            <!--</if>-->
+            <if test="hostId!=null and hostId!=''">
+                AND (house.WAREHOUSE_SHORT in (select warehouse_short from T_STORAGE_WAREHOUSE where
+                ENTERPRISE_ID=#{hostId}) or RSD.ENTERPRISE_ID = #{hostId})
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND a.STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            <if test="warehoueYear!=null and warehoueYear!=''">
+                AND PRODUCE_YEAR LIKE '%${warehoueYear}%'
+            </if>
+
+            <if test="produceYear!=null and produceYear!=''">
+                AND a.PRODUCE_YEAR LIKE '%${produceYear}%'
+            </if>
+
+            <!--<if test="noticeType!=null and noticeType!=''">-->
+            <if test='noticeType== "入库"'>
+                AND RC.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+            </if>
+            <if test='noticeType== "出库"'>
+                AND RC.INVITE_TYPE IN ('竞价销售','协议销售','内部招标','其他','内部销售')
+            </if>
+            <if test='schemeType== "1"'>
+                AND (TRS.SCHEME_TYPE != '年度轮换方案' OR TRS.SCHEME_TYPE IS NULL)
+            </if>
+        </where>
+        order by
+        orderSort DESC
+    </select>
+
+    <!-- 查询明细 -->
+   <!-- <select id="outListDetail" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap1">
+        select * from (
+          SELECT
+            <include refid="columns_detail1"/>,
+            nvl(e.ID, house.ENTERPRISE_ID) AS ENTERPRISE_ID,
+            nvl(e.ENTERPRISE_NAME,(select ENTERPRISE_NAME from T_STORE_ENTERPRISE where id = house.ENTERPRISE_ID)) as ENTERPRISE_NAME,
+            regexp_replace(a.DEAL_SERIAL, '^[a-zA-Z]*','') as orderSort,
+            (SELECT a.QUANTITY - Nvl(Sum( PLAN_NUMBER ),0) FROM T_ROTATE_NOTICE_DETAIL WHERE DEAL_SERIAL = a.DEAL_SERIAL ) AS surplus_Plan_Number
+          FROM
+            <include refid="table_detail"/> a
+          LEFT JOIN
+           (SELECT
+                RS.NOTICE_TYPE,
+                RSD.DEAL_SERIAL,
+                RSD.COMPLE_RATE
+            FROM
+                T_ROTATE_SCHEDULE_DETAIL rsd,
+                T_ROTATE_SCHEDULE rs,
+            (SELECT
+                MAX(MODIFY_TIME) modifyTime,
+                DEAL_SERIAL
+             FROM
+                T_ROTATE_SCHEDULE_DETAIL
+             GROUP BY DEAL_SERIAL) g
+            WHERE g.modifyTime=rsd.MODIFY_TIME AND rsd.SCHEDULE_ID= rs.ID AND G.DEAL_SERIAL=RSD.DEAL_SERIAL
+           ) lastmodify
+           ON a.DEAL_SERIAL = lastmodify.DEAL_SERIAL
+           LEFT JOIN T_ROTATE_CONCLUTE RC
+           ON a.DEAL_ID = RC.ID
+           LEFT JOIN T_ROTATE_SCHEME_DETAIL RSD
+           ON a.SCHEME_ID = RSD.D_ID
+           LEFT JOIN T_ROTATE_SCHEME TRS
+           ON RSD.SCHEME_ID = TRS.ID
+           left join T_STORAGE_WAREHOUSE house
+           ON a.${WAREHOUSE_ID} = house.ID
+           LEFT JOIN T_STORE_ENTERPRISE e
+           on a.ENTERPRISE_ID = e.id
+           left join T_CLIENT_INFO c
+           on c.id = a.DELIVERY_ID
+        <where>
+            <if test="grainType != null and grainType != ''">
+                AND a.GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="quantity != null and quantity != ''">
+                AND a.QUANTITY LIKE '%${quantity}%'
+            </if>
+            <if test="rotateProcessFlag == null || rotateProcessFlag == ''">
+                <if test="receivePlace != null and receivePlace != ''">
+                    AND house.WAREHOUSE_SHORT LIKE '%${receivePlace}%'
+                </if>
+                <if test="dealUnit != null and dealUnit != ''">
+                    AND a.DEAL_UNIT like concat(concat('%',#{dealUnit}),'%')
+                </if>
+                <if test="deliveryPlace != null and deliveryPlace != ''">
+                    AND house.WAREHOUSE_SHORT LIKE '%${deliveryPlace}%'
+                </if>
+            </if>
+            <if test="rotateProcessFlag != null and rotateProcessFlag != ''">
+                <if test="receivePlace != null and receivePlace != '' and deliveryPlace != null and deliveryPlace != ''">
+                    AND (house.WAREHOUSE_SHORT LIKE '%${deliveryPlace}%' OR house.WAREHOUSE_SHORT LIKE '%${receivePlace}%')
+                </if>
+            </if>
+            <if test="isOut != null and isOut != ''">
+                AND a.DELIVERY_ID IS NOT NULL
+            </if>
+            <if test="hostId != null and hostId != ''">
+                AND (house.WAREHOUSE_SHORT in (select warehouse_short from T_STORAGE_WAREHOUSE where ENTERPRISE_ID=#{hostId}) or RSD.ENTERPRISE_ID = #{hostId})
+            </if>
+            <if test="storehouse != null and storehouse != ''">
+                AND a.STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            <if test="warehoueYear != null and warehoueYear != ''">
+                AND WAREHOUE_YEAR LIKE '%${warehoueYear}%'
+            </if>
+            <if test="produceYear != null and produceYear != ''">
+                AND a.PRODUCE_YEAR LIKE '%${produceYear}%'
+            </if>
+            <if test='noticeType == "入库"'>
+                AND RC.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+            </if>
+            <if test='noticeType== "出库"'>
+                AND RC.INVITE_TYPE IN ('竞价销售','协议销售','内部招标','其他','内部销售')
+            </if>
+            <if test='schemeType== "1"'>
+                AND (TRS.SCHEME_TYPE != '年度轮换方案' OR TRS.SCHEME_TYPE IS NULL)
+            </if>
+        </where>
+        ) temp
+        WHERE SURPLUS_PLAN_NUMBER > 0
+        order by orderSort DESC
+    </select>-->
+
+    <select id="outListDetail" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap1">
+        select * from
+             (
+              SELECT
+                    <include refid="columns_detail1"/>,
+                    nvl(e.ID, house.ENTERPRISE_ID) AS ENTERPRISE_ID,
+                    nvl(e.ENTERPRISE_NAME,(select ENTERPRISE_NAME from T_STORE_ENTERPRISE where id = house.ENTERPRISE_ID)) as ENTERPRISE_NAME,
+                    regexp_replace(a.DEAL_SERIAL, '^[a-zA-Z]*','') as orderSort,
+                    (SELECT a.QUANTITY - Nvl(Sum( PLAN_NUMBER ),0) FROM T_ROTATE_NOTICE_DETAIL WHERE DEAL_SERIAL = a.DEAL_SERIAL ) AS surplus_Plan_Number,
+                    T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL AS BATCH_NUMBER
+              FROM
+                    <include refid="table_detail"/> a
+              LEFT JOIN
+                   (SELECT
+                          RS.NOTICE_TYPE,
+                          RSD.DEAL_SERIAL,
+                          RSD.COMPLE_RATE
+                    FROM
+                          T_ROTATE_SCHEDULE_DETAIL rsd,
+                          T_ROTATE_SCHEDULE rs,
+                         (SELECT
+                                MAX(MODIFY_TIME) modifyTime,
+                                DEAL_SERIAL
+                          FROM
+                                T_ROTATE_SCHEDULE_DETAIL
+                          GROUP BY DEAL_SERIAL) g
+                    WHERE g.modifyTime=rsd.MODIFY_TIME AND rsd.SCHEDULE_ID= rs.ID AND G.DEAL_SERIAL=RSD.DEAL_SERIAL
+                   ) lastmodify
+               ON a.DEAL_SERIAL = lastmodify.DEAL_SERIAL
+              LEFT JOIN T_ROTATE_CONCLUTE RC
+               ON a.DEAL_ID = RC.ID
+              LEFT JOIN T_ROTATE_SCHEME_DETAIL RSD
+               ON a.SCHEME_ID = RSD.D_ID
+              LEFT JOIN T_ROTATE_SCHEME TRS
+               ON RSD.SCHEME_ID = TRS.ID
+              LEFT JOIN T_STORAGE_WAREHOUSE house
+               ON a.${WAREHOUSE_ID} = house.ID
+              LEFT JOIN T_STORE_ENTERPRISE e
+               ON a.ENTERPRISE_ID = e.id
+              LEFT JOIN T_CLIENT_INFO c
+               ON c.id = a.DELIVERY_ID
+              LEFT JOIN T_ROTATE_CONCLUTE_DETAIL ON a.DELIVERY_PLACE = T_ROTATE_CONCLUTE_DETAIL.RECEIVE_PLACE
+              AND a.STOREHOUSE = T_ROTATE_CONCLUTE_DETAIL.STOREHOUSE
+              AND a.GRAIN_TYPE = T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE
+              AND a.WAREHOUE_YEAR = T_ROTATE_CONCLUTE_DETAIL.PRODUCE_YEAR
+              LEFT JOIN T_ROTATE_CONCLUTE ON T_ROTATE_CONCLUTE.ID = T_ROTATE_CONCLUTE_DETAIL.DEAL_ID
+              AND T_ROTATE_CONCLUTE.INVITE_TYPE IN ( '招标采购', '订单采购', '进口粮采购' )
+        <where>
+                <if test="grainType != null and grainType != ''">
+                    AND a.GRAIN_TYPE = #{grainType}
+                </if>
+                <if test="quantity != null and quantity != ''">
+                    AND a.QUANTITY LIKE '%${quantity}%'
+                </if>
+                <if test="rotateProcessFlag == null || rotateProcessFlag == ''">
+                    <if test="receivePlace != null and receivePlace != ''">
+                        AND house.WAREHOUSE_SHORT LIKE '%${receivePlace}%'
+                    </if>
+                    <if test="dealUnit != null and dealUnit != ''">
+                        AND a.DEAL_UNIT like concat(concat('%',#{dealUnit}),'%')
+                    </if>
+                    <if test="deliveryPlace != null and deliveryPlace != ''">
+                        AND house.WAREHOUSE_SHORT LIKE '%${deliveryPlace}%'
+                    </if>
+                </if>
+                <if test="rotateProcessFlag != null and rotateProcessFlag != ''">
+                    <if test="receivePlace != null and receivePlace != '' and deliveryPlace != null and deliveryPlace != ''">
+                        AND (house.WAREHOUSE_SHORT LIKE '%${deliveryPlace}%' OR house.WAREHOUSE_SHORT LIKE '%${receivePlace}%')
+                    </if>
+                </if>
+                <if test="isOut != null and isOut != ''">
+                    AND a.DELIVERY_ID IS NOT NULL
+                </if>
+                <if test="hostId != null and hostId != ''">
+                    AND (house.WAREHOUSE_SHORT in (select warehouse_short from T_STORAGE_WAREHOUSE where ENTERPRISE_ID=#{hostId}) or RSD.ENTERPRISE_ID = #{hostId})
+                </if>
+                <if test="storehouse != null and storehouse != ''">
+                    AND a.STOREHOUSE LIKE '%${storehouse}%'
+                </if>
+                <if test="warehoueYear != null and warehoueYear != ''">
+                    AND WAREHOUE_YEAR LIKE '%${warehoueYear}%'
+                </if>
+                <if test="produceYear != null and produceYear != ''">
+                    AND a.PRODUCE_YEAR LIKE '%${produceYear}%'
+                </if>
+                <if test='noticeType == "入库"'>
+                    AND RC.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+                </if>
+                <if test='noticeType== "出库"'>
+                    AND RC.INVITE_TYPE IN ('竞价销售','协议销售','内部招标','其他','内部销售')
+                </if>
+                <if test='schemeType== "1"'>
+                    AND (TRS.SCHEME_TYPE != '年度轮换方案' OR TRS.SCHEME_TYPE IS NULL)
+                </if>
+            </where>
+        ) temp
+        WHERE
+              SURPLUS_PLAN_NUMBER > 0
+        ORDER BY orderSort DESC
+    </select>
+
+    <select id="outManuListDetail" parameterType="java.util.HashMap" resultType="com.dhc.fastersoft.entity.RotateManuDetail">
+        select
+            temp.*,
+            T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL AS batchNumber
+        from
+        (
+        select
+            T_REPORT_MONTH_SWTZ.VARIETY as grainType,
+            T_REPORT_MONTH_SWTZ.HARVEST_YEAR as warehoueYear,
+            T_STORE_ENTERPRISE.SHORT_NAME as enterpriseName,
+            T_STORAGE_WAREHOUSE.WAREHOUSE_SHORT as receivePlace,
+            T_REPORT_MONTH_SWTZ.STOREHOUSE as storehouse,
+            T_REPORT_MONTH_SWTZ.QUANTITY as quantity,
+            T_STORE_ENTERPRISE.ID AS id,
+            T_STORAGE_WAREHOUSE.ID AS wareId
+        from
+            T_REPORT_MONTH_SWTZ,
+            T_STORAGE_WAREHOUSE,
+            T_STORE_ENTERPRISE,
+            T_REPORT_MONTH
+        where
+            T_REPORT_MONTH_SWTZ.REPORT_MONTH =
+                (select
+                MAX(T_REPORT_MONTH_SWTZ.REPORT_MONTH)
+                from
+                T_REPORT_MONTH_SWTZ,
+                T_REPORT_MONTH
+                where
+                T_REPORT_MONTH_SWTZ.REPORT_ID = T_REPORT_MONTH.ID
+                and T_REPORT_MONTH.REPORT_STATUS = '汇总待审'
+                and T_REPORT_MONTH_SWTZ.REPORT_WAREHOUSE like '%${deliveryPlace}%'
+                )
+                AND T_REPORT_MONTH_SWTZ.EXTENDS_WAREHOUSE_ID = T_STORAGE_WAREHOUSE.ID
+                AND T_STORAGE_WAREHOUSE.ENTERPRISE_ID = T_STORE_ENTERPRISE.ID
+                AND T_REPORT_MONTH_SWTZ.REPORT_ID = T_REPORT_MONTH.ID
+                ) temp
+        LEFT JOIN T_ROTATE_CONCLUTE_DETAIL
+        ON temp.grainType = T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE
+        AND temp.warehoueYear = T_ROTATE_CONCLUTE_DETAIL.PRODUCE_YEAR
+        AND temp.receivePlace = T_ROTATE_CONCLUTE_DETAIL.RECEIVE_PLACE
+        AND temp.storehouse = T_ROTATE_CONCLUTE_DETAIL.STOREHOUSE
+        LEFT JOIN T_ROTATE_CONCLUTE
+        ON T_ROTATE_CONCLUTE.ID = T_ROTATE_CONCLUTE_DETAIL.DEAL_ID
+        AND T_ROTATE_CONCLUTE.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+      <where>
+          <if test="grainType!=null and grainType!=''">
+              AND temp.grainType like '%${grainType}%'
+          </if>
+          <if test="warehoueYear!=null and warehoueYear!=''">
+              AND temp.warehoueYear like '%${warehoueYear}%'
+          </if>
+          <if test="deliveryPlace!=null and deliveryPlace!=''">
+              AND temp.receivePlace like '%${deliveryPlace}%'
+          </if>
+          <if test="storehouse!=null and storehouse!=''">
+              AND temp.storehouse like '%${storehouse}%'
+          </if>
+          <if test="quantity!=null and quantity!=''">
+              AND temp.quantity like '%${quantity}%'
+          </if>
+      </where>
+          and temp.quantity > 0
+          order by grainType,warehoueYear,enterpriseName
+    </select>
+
+    <!-- 查询-->
+    <select id="listDetailByCondition" parameterType="java.util.HashMap"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        ${start}
+        SELECT
+        T_ROTATE_CONCLUTE_DETAIL.ID,
+        DEAL_ID,
+        SCHEME_ID,
+        BID_SERIAL,
+        NVL2((SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE ID = T_ROTATE_CONCLUTE_DETAIL.DELIVERY_ID),(SELECT
+        CLIENT_NAME FROM T_CLIENT_INFO where ID =
+        T_ROTATE_CONCLUTE_DETAIL.DELIVERY_ID),T_ROTATE_CONCLUTE_DETAIL.DELIVERY_PLACE) AS DELIVERY_PLACE,
+        NVL((SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE ID = T_ROTATE_CONCLUTE_DETAIL.RECEIVE_ID),(SELECT
+        CLIENT_NAME FROM T_CLIENT_INFO where ID = T_ROTATE_CONCLUTE_DETAIL.RECEIVE_ID)) AS RECEIVE_PLACE,
+        STOREHOUSE,
+        T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE,
+        QUANTITY,
+        PRODUCE_AREA,
+        PRODUCE_YEAR,
+        WAREHOUE_YEAR,
+        STORAGE_TYPE,
+        DEAL_PRICE,
+        DEAL_AMOUNT,
+        TAKE_END,
+        DELIVERY_START,
+        DELIVERY_ID,
+        RECEIVE_ID,
+        DELIVERY_END,
+        DEAL_UNIT,
+        T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL,
+        T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE,
+        LOANPAYMENTENDDATE,
+        WAREHOUSE_ID
+        from
+        <include refid="table_detail"/>
+        INNER JOIN
+        <include refid="table_main"/>
+        ON T_ROTATE_CONCLUTE.ID = T_ROTATE_CONCLUTE_DETAIL.DEAL_ID
+        left join T_STORAGE_WAREHOUSE house ON T_ROTATE_CONCLUTE_DETAIL.RECEIVE_ID = house.ID
+        <where>
+            <if test="(inviteTypes!=null and inviteTypes!='') or (inviteType!=null and inviteType!='')">
+                AND DEAL_ID IN
+                (
+                SELECT ID FROM
+                <include refid="table_main"/>
+                <where>
+                    <if test="inviteTypes!=null and inviteTypes!=''">
+                        AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+                    </if>
+                    <if test="inviteType!=null and inviteType!=''">
+                        AND INVITE_TYPE LIKE '%${inviteType}%'
+                    </if>
+                </where>
+                )
+            </if>
+            <if test="status !=null and status !=''">
+                STATUS = #{status}
+            </if>
+            <if test="warehouseCode!=null and warehouseCode!=''">
+                AND house.warehouse_code = #{warehouseCode}
+            </if>
+            <if test="dealId!=null and dealId!=''">
+                AND DEAL_ID LIKE '%${dealId}%'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE LIKE '%${grainType}%'
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT LIKE '%${dealUnit}%'
+            </if>
+            <if test="deliveryPlace!=null and deliveryPlace!=''">
+                AND DELIVERY_PLACE LIKE '%${deliveryPlace}%'
+
+            </if>
+            <if test="receivePlace!=null and receivePlace!=''">
+                AND RECEIVE_PLACE LIKE '%${receivePlace}%'
+            </if>
+
+            <if test="warehoueYear!=null and warehoueYear!=''">
+                AND PRODUCE_YEAR like '%${warehoueYear}%'
+            </if>
+            <if test="produceArea!=null and produceArea!=''">
+                AND PRODUCE_AREA like '%${produceArea}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE like '%${storehouse}%'
+            </if>
+            <if test='noticeType== "入库"'>
+                AND T_ROTATE_CONCLUTE.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+            </if>
+            <if test='noticeType== "出库"'>
+                AND T_ROTATE_CONCLUTE.INVITE_TYPE IN ('竞价销售','协议销售','内部招标','其他','内部销售')
+            </if>
+            <if test="isImport != null and isImport == 1">
+                OR ( INVITE_TYPE LIKE '进口粮采购%'
+                <if test="status !=null and status !=''">
+                    AND STATUS = #{status}
+                </if>
+                <if test="(inviteTypes!=null and inviteTypes!='') or (inviteType!=null and inviteType!='')">
+                    AND DEAL_ID IN
+                    (
+                    SELECT ID FROM
+                    <include refid="table_main"/>
+                    <where>
+                        <if test="inviteTypes!=null and inviteTypes!=''">
+                            AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+                        </if>
+                        <if test="inviteType!=null and inviteType!=''">
+                            AND INVITE_TYPE LIKE '%${inviteType}%'
+                        </if>
+                    </where>
+                    )
+                </if>
+                <if test="dealId!=null and dealId!=''">
+                    AND DEAL_ID LIKE '%${dealId}%'
+                </if>
+                <if test="dealSerial!=null and dealSerial!=''">
+                    AND T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL LIKE '%${dealSerial}%'
+                </if>
+                <if test="grainType!=null and grainType!=''">
+                    AND T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE LIKE '%${grainType}%'
+                </if>
+                <if test="dealDate!=null and dealDate!=''">
+                    AND T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE = '${dealDate}'
+                </if>
+                <if test="dealUnit!=null and dealUnit!=''">
+                    AND DEAL_UNIT LIKE '%${dealUnit}%'
+                </if>
+                <if test="deliveryPlace!=null and deliveryPlace!=''">
+                    AND DELIVERY_PLACE LIKE '%${deliveryPlace}%'
+
+                </if>
+
+                <if test="warehoueYear!=null and warehoueYear!=''">
+                    AND PRODUCE_YEAR like '%${warehoueYear}%'
+                </if>
+                <if test="produceArea!=null and produceArea!=''">
+                    AND PRODUCE_AREA like '%${produceArea}%'
+                </if>
+                <if test="storehouse!=null and storehouse!=''">
+                    AND STOREHOUSE like '%${storehouse}%'
+                </if>
+                <if test="receivePlace!=null and receivePlace!=''">
+                    AND house.WAREHOUSE_SHORT LIKE '%${receivePlace}%'
+                </if>
+                )
+            </if>
+        </where>
+        ORDER BY T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE DESC,DEAL_SERIAL asc
+        ${end}
+    </select>
+
+    <!-- 查询-->
+    <select id="countDetailByCondition" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT
+        COUNT(0)
+        from
+        <include refid="table_detail"/>
+        INNER JOIN
+        <include refid="table_main"/>
+        ON T_ROTATE_CONCLUTE.ID = T_ROTATE_CONCLUTE_DETAIL.DEAL_ID
+        left join T_STORAGE_WAREHOUSE house ON T_ROTATE_CONCLUTE_DETAIL.RECEIVE_ID = house.ID
+        <where>
+            <if test="(inviteTypes!=null and inviteTypes!='')
+			or (inviteType!=null and inviteType!='')">
+                AND DEAL_ID IN
+                (
+                SELECT ID FROM
+                <include refid="table_main"/>
+                <where>
+                    <if test="inviteTypes!=null and inviteTypes!=''">
+                        AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+                    </if>
+                    <if test="inviteType!=null and inviteType!=''">
+                        AND INVITE_TYPE LIKE '%${inviteType}%'
+                    </if>
+                </where>
+                )
+            </if>
+            <if test="status !=null and status !=''">
+                AND STATUS = #{status}
+            </if>
+            <if test="warehouseCode != null and warehouseCode != '' ">
+                AND house.warehouse_code = #{warehouseCode}
+            </if>
+            <if test="dealId!=null and dealId!=''">
+                AND DEAL_ID LIKE '%${dealId}%'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE LIKE '%${grainType}%'
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT LIKE '%${dealUnit}%'
+            </if>
+            <if test="deliveryPlace!=null and deliveryPlace!=''">
+                AND DELIVERY_PLACE LIKE '%${deliveryPlace}%'
+            </if>
+            <if test="receivePlace!=null and receivePlace!=''">
+                AND house.WAREHOUSE_SHORT LIKE '%${receivePlace}%'
+            </if>
+            <if test="warehoueYear!=null and warehoueYear!=''">
+                AND PRODUCE_YEAR like '%${warehoueYear}%'
+            </if>
+            <if test="produceArea!=null and produceArea!=''">
+                AND PRODUCE_AREA like '%${produceArea}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE like '%${storehouse}%'
+            </if>
+            <if test='noticeType== "入库"'>
+                AND T_ROTATE_CONCLUTE.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+            </if>
+            <if test='noticeType== "出库"'>
+                AND T_ROTATE_CONCLUTE.INVITE_TYPE IN ('竞价销售','协议销售','内部招标','其他','内部销售')
+            </if>
+            <if test="isImport != null and isImport == 1">
+                OR ( INVITE_TYPE LIKE '进口粮采购%'
+                <if test="status !=null and status !=''">
+                    AND STATUS = #{status}
+                </if>
+                <if test="(inviteTypes!=null and inviteTypes!='') or (inviteType!=null and inviteType!='')">
+                    AND DEAL_ID IN
+                    (
+                    SELECT ID FROM
+                    <include refid="table_main"/>
+                    <where>
+                        <if test="inviteTypes!=null and inviteTypes!=''">
+                            AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+                        </if>
+                        <if test="inviteType!=null and inviteType!=''">
+                            AND INVITE_TYPE LIKE '%${inviteType}%'
+                        </if>
+                    </where>
+                    )
+                </if>
+                <if test="dealId!=null and dealId!=''">
+                    AND DEAL_ID LIKE '%${dealId}%'
+                </if>
+                <if test="dealSerial!=null and dealSerial!=''">
+                    AND T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL LIKE '%${dealSerial}%'
+                </if>
+                <if test="grainType!=null and grainType!=''">
+                    AND T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE LIKE '%${grainType}%'
+                </if>
+                <if test="dealDate!=null and dealDate!=''">
+                    AND T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE = '${dealDate}'
+                </if>
+                <if test="dealUnit!=null and dealUnit!=''">
+                    AND DEAL_UNIT LIKE '%${dealUnit}%'
+                </if>
+                <if test="deliveryPlace!=null and deliveryPlace!=''">
+                    AND DELIVERY_PLACE LIKE '%${deliveryPlace}%'
+
+                </if>
+
+                <if test="warehoueYear!=null and warehoueYear!=''">
+                    AND PRODUCE_YEAR like '%${warehoueYear}%'
+                </if>
+                <if test="produceArea!=null and produceArea!=''">
+                    AND PRODUCE_AREA like '%${produceArea}%'
+                </if>
+                <if test="storehouse!=null and storehouse!=''">
+                    AND STOREHOUSE like '%${storehouse}%'
+                </if>
+                <if test="receivePlace!=null and receivePlace!=''">
+                    AND house.WAREHOUSE_SHORT LIKE '%${receivePlace}%'
+                </if>
+                )
+            </if>
+        </where>
+    </select>
+
+
+    <select id="countConcluteDetailByNotice" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+
+        SELECT
+        COUNT(0)
+        from
+        <include refid="table_detail"/>
+        <where>
+            AND DEAL_SERIAL IN
+            (
+            SELECT DEAL_SERIAL FROM T_ROTATE_NOTICE_DETAIL
+            <where>
+                <if test="noticeId!=null and noticeId!=''">
+                    NOTICE_ID = '${noticeId}'
+                </if>
+            </where>
+            )
+
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND GRAIN_TYPE LIKE '%${grainType}%'
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            and QUANTITY > nvl((select sum(CURRENT_PERIOD) from T_ROTATE_SCHEDULE_DETAIL where DEAL_SERIAL = T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL),0)
+        </where>
+    </select>
+
+    <select id="countConcluteDetailByNoticeMaun" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+
+        SELECT
+        COUNT(0)
+        from
+        <include refid="table_detail"/>
+        <where>
+            AND DEAL_SERIAL IN
+            (
+            SELECT BATCH_NUMBER FROM T_ROTATE_NOTICE_DETAIL
+            <where>
+                <if test="noticeId!=null and noticeId!=''">
+                    NOTICE_ID = '${noticeId}'
+                </if>
+            </where>
+            )
+
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND GRAIN_TYPE LIKE '%${grainType}%'
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            and QUANTITY > nvl((select sum(CURRENT_PERIOD) from T_ROTATE_SCHEDULE_DETAIL where DEAL_SERIAL = T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL),0)
+        </where>
+    </select>
+
+    <select id="listConcluteDetailByNotice" parameterType="java.util.HashMap"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        <if test="pageIndex!=null">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+        SELECT
+        <include refid="columns_detail"/>
+        from
+        <include refid="table_detail"/>
+        <where>
+            AND DEAL_SERIAL IN
+            (
+            SELECT DEAL_SERIAL FROM T_ROTATE_NOTICE_DETAIL
+            <where>
+                <if test="noticeId!=null and noticeId!=''">
+                    NOTICE_ID = '${noticeId}'
+                </if>
+            </where>
+            )
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND GRAIN_TYPE LIKE '%${grainType}%'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            and QUANTITY > nvl((select sum(CURRENT_PERIOD) from T_ROTATE_SCHEDULE_DETAIL where DEAL_SERIAL = T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL),0)
+        </where>
+        <if test="pageIndex!=null">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <select id="listConcluteDetailByNoticeMaun" parameterType="java.util.HashMap"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        <if test="pageIndex!=null">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+        SELECT
+        <include refid="columns_detail"/>
+        from
+        <include refid="table_detail"/>
+        <where>
+            AND DEAL_SERIAL IN
+            (
+            SELECT BATCH_NUMBER FROM T_ROTATE_NOTICE_DETAIL
+            <where>
+                <if test="noticeId!=null and noticeId!=''">
+                    NOTICE_ID = '${noticeId}'
+                </if>
+            </where>
+            )
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND GRAIN_TYPE LIKE '%${grainType}%'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE LIKE '%${storehouse}%'
+            </if>
+            and QUANTITY > nvl((select sum(CURRENT_PERIOD) from T_ROTATE_SCHEDULE_DETAIL where DEAL_SERIAL = T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL),0)
+        </where>
+        <if test="pageIndex!=null">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <select id="getSchemeDetailIdByDealSerial" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT SCHEME_ID FROM
+        <include refid="table_detail"/>
+        <where>
+            DEAL_SERIAL = #{_parameter}
+        </where>
+    </select>
+
+    <update id="updateStatus" parameterType="java.util.HashMap">
+        UPDATE
+        <include refid="table_main"/>
+        SET
+        STATUS = #{status}
+        <where>
+            AND ID = #{id}
+        </where>
+    </update>
+
+    <select id="getSerialCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM
+        <include refid="table_main"/>
+        WHERE TO_CHAR(GATHER_DATE,'YYYY-MM-DD') = '${_parameter}'
+    </select>
+
+    <select id="serialConut" parameterType="String" resultType="java.lang.Integer">
+
+        select count(1) from
+        <include refid="table_main"/>
+        where DEAL_SERIAL like concat(#{prefix},'%')
+
+    </select>
+
+    <select id="countDetailForRefund" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+
+        SELECT COUNT(*) from (
+        SELECT * FROM T_ROTATE_CONCLUTE_DETAIL
+        <where>
+            <if test="grainType !=null and grainType!=''">
+                AND GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT like concat(concat('%',#{dealUnit}),'%')
+            </if>
+            <if test="startDealDate != null and startDealDate != ''">
+                and DEAL_DATE &gt;= #{startDealDate}
+            </if>
+            <if test="endDealDate != null and endDealDate != ''">
+                and DEAL_DATE &lt;= #{endDealDate}
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+        </where>
+        ) CD LEFT JOIN (
+        SELECT * FROM T_ROTATE_CONCLUTE
+        ) C ON CD.deal_id = C.ID
+        <where>
+            <if test="inviteType!=null and inviteType!=''">
+                AND INVITE_TYPE like '%${inviteType}%'
+            </if>
+        </where>
+    </select>
+
+    <select id="listDetailForRefund" parameterType="java.util.HashMap"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        <if test="pageIndex!=null">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+        SELECT
+        CD.*,C.INVITE_TYPE
+        from
+        (
+        SELECT T_ROTATE_CONCLUTE_DETAIL.*,regexp_replace( DEAL_SERIAL, '^[a-zA-Z]*', '' ) as orderSort FROM T_ROTATE_CONCLUTE_DETAIL
+        <where>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT like '%${dealUnit}%'
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+            <if test="grainType != null and grainType != ''">
+                AND GRAIN_TYPE = #{grainType}
+            </if>
+        </where>
+        ORDER BY orderSort DESC
+        ) CD LEFT JOIN
+        (
+        SELECT * FROM T_ROTATE_CONCLUTE
+        <where>
+            <if test="flage!=null and flage == 1">
+                AND INVITE_TYPE not in ('进口粮采购','订单采购')
+            </if>
+        </where>
+        ) C ON CD.deal_id = C.ID
+        <where>
+            <if test="inviteType!=null and inviteType!=''">
+                AND INVITE_TYPE = #{inviteType}
+            </if>
+        </where>
+        <if test="pageIndex!=null">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <select id="countDetailForRefundNew" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+
+        SELECT COUNT(*) from (
+        SELECT 1 FROM T_ROTATE_CONCLUTE T1
+        INNER JOIN T_ROTATE_CONCLUTE_DETAIL T2
+        ON T1.ID=T2.DEAL_ID
+        INNER JOIN T_ROTATE_INVITE T3
+        ON T1.INVITE_ID=T3.ID
+        INNER JOIN T_ROTATE_INVITE_DETAIL T4
+        ON T2.INVITE_DETAIL_ID=T4.ID
+
+        <where>
+            <if test="flage!=null and flage == 1">
+                AND T1.INVITE_TYPE not in ('进口粮采购','订单采购')
+            </if>
+            <if test="inviteType!=null and inviteType!=''">
+                AND T1.INVITE_TYPE = #{inviteType}
+            </if>
+            <if test="grainType !=null and grainType!=''">
+                AND T2.GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND T2.DEAL_UNIT like concat(concat('%',#{dealUnit}),'%')
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND T2.DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND T2.BID_SERIAL like concat(concat('%',#{bidSerial}),'%')
+            </if>
+            <if test="ids!=null">
+                AND T2.ID NOT IN (<foreach collection="ids" separator="," item="item">#{item}</foreach>)
+            </if>
+        </where>
+        )
+    </select>
+    <select id="listDetailForRefundNew" parameterType="java.util.HashMap"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        <if test="pageIndex!=null">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>SELECT * FROM (
+        SELECT T1.ID
+        DEAL_ID,T1.INVITE_ID,T1.INVITE_TYPE,T2.ID,T2.BID_SERIAL,T2.QUANTITY,T2.DEAL_DATE,T6.CLIENT_NAME
+        DEAL_UNIT,
+        T3.INVITE_NAME,T4.BAIL,(to_number(NVL(T4.BAIL,0))-sum(to_number(nvl(T5.refund_amount,0)))) surplus_bail,
+        TO_NUMBER (REGEXP_REPLACE (T2.BID_SERIAL, '[^0-9]', '')) numb
+        FROM T_ROTATE_CONCLUTE T1
+        INNER JOIN T_ROTATE_CONCLUTE_DETAIL T2
+        ON T1.ID=T2.DEAL_ID
+        INNER JOIN T_ROTATE_INVITE T3
+        ON T1.INVITE_ID=T3.ID
+        INNER JOIN T_ROTATE_INVITE_DETAIL T4
+        ON T2.INVITE_DETAIL_ID=T4.ID
+        LEFT JOIN T_ROTATE_MARGIN_REFUND T5
+        ON T2.ID=T5.CONCLUTE_DETAIL_ID
+        LEFT JOIN T_CLIENT_INFO T6
+        ON T4.COMPETITIVE_UNIT_ID=T6.ID
+        <where>
+            <if test="flage!=null and flage == 1">
+                AND T1.INVITE_TYPE not in ('进口粮采购','订单采购')
+            </if>
+            <if test="inviteType!=null and inviteType!=''">
+                AND T1.INVITE_TYPE = #{inviteType}
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND T2.DEAL_UNIT like '%${dealUnit}%'
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND T2.DEAL_DATE = #{dealDate}
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND T2.BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+            <if test="grainType != null and grainType != ''">
+                AND T2.GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="ids!=null">
+                AND T2.ID NOT IN (<foreach collection="ids" separator="," item="item">#{item}</foreach>)
+            </if>
+        </where>
+        GROUP BY
+        T1.ID,T1.INVITE_ID,T1.INVITE_TYPE,T2.ID,T2.BID_SERIAL,T2.QUANTITY,T2.DEAL_DATE,T6.CLIENT_NAME,
+        T3.INVITE_NAME,T4.BAIL
+        )t
+        WHERE surplus_bail!=0
+        ORDER BY t.DEAL_DATE desc,t.numb ASC
+        <if test="pageIndex!=null">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <select id="listDetailJoinScheme" parameterType="java.util.HashMap"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        <if test="pageIndex!=null">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+        SELECT
+        CD.*,SDS.SCHEME_NAME,SDS.ROTATE_TYPE INVITE_TYPE
+        from
+        (
+        SELECT * FROM
+        <include refid="table_detail"/>
+        <where>
+            <!--<if test="dealUnit!=null and dealUnit!=''">-->
+            <!--AND DEAL_UNIT = '${dealUnit}'-->
+            <!--</if>-->
+            <if test="grainType !=null and grainType!=''">
+                AND GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT like concat(concat('%',#{dealUnit}),'%')
+            </if>
+            <if test="startDealDate != null and startDealDate != ''">
+                and DEAL_DATE &gt;= #{startDealDate}
+            </if>
+            <if test="endDealDate != null and endDealDate != ''">
+                and DEAL_DATE &lt;= #{endDealDate}
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+        </where>
+        ORDER BY DEAL_DATE DESC
+        ) CD LEFT JOIN
+        (
+        SELECT SD.D_ID,S.SCHEME_NAME,S.ROTATE_TYPE FROM T_ROTATE_SCHEME_DETAIL SD LEFT JOIN T_ROTATE_SCHEME S ON
+        SD.SCHEME_ID = S.ID
+
+        ) SDS ON CD.scheme_id = SDS.D_ID
+        <if test="pageIndex!=null">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <select id="countDetailJoinScheme" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+
+        SELECT
+        COUNT(0)
+        from
+        (
+        SELECT * FROM
+        <include refid="table_detail"/>
+        <where>
+            <if test="grainType !=null and grainType!=''">
+                AND GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT like concat(concat('%',#{dealUnit}),'%')
+            </if>
+            <if test="startDealDate != null and startDealDate != ''">
+                and DEAL_DATE &gt;= #{startDealDate}
+            </if>
+            <if test="endDealDate != null and endDealDate != ''">
+                and DEAL_DATE &lt;= #{endDealDate}
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="bidSerial!=null and bidSerial!=''">
+                AND BID_SERIAL LIKE '%${bidSerial}%'
+            </if>
+        </where>
+        ) CD LEFT JOIN
+        (
+        SELECT SD.D_ID,S.SCHEME_NAME,S.ROTATE_TYPE FROM T_ROTATE_SCHEME_DETAIL SD LEFT JOIN T_ROTATE_SCHEME S ON
+        SD.SCHEME_ID = S.ID
+
+        ) SDS ON CD.scheme_id = SDS.D_ID
+    </select>
+
+
+    <select id="listDetailByCondition1" parameterType="java.util.HashMap"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        <if test="pageIndex!=null">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+        SELECT
+        <include refid="columns_detail2"/>
+        from
+        <include refid="table_detail"/>
+        INNER JOIN
+        <include refid="table_main"/>
+        ON T_ROTATE_CONCLUTE.ID = T_ROTATE_CONCLUTE_DETAIL.DEAL_ID
+        LEFT JOIN (SELECT
+        SUM (CLAIM_WEIGHT) CLAIM_WEIGHT,
+        SUM (CLAIM_AMOUNT) CLAIM_AMOUNT,
+        DEAL_SERIAL,CLAIM_TYPE
+        FROM
+        T_ROTATE_CLAIM
+        GROUP BY
+        DEAL_SERIAL,CLAIM_TYPE HAVING CLAIM_TYPE = '货款') CA
+        ON CA.DEAL_SERIAL = T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL
+        <where>
+            AND T_ROTATE_CONCLUTE_DETAIL.QUANTITY > NVL(CA.CLAIM_WEIGHT, 0)
+            <if test="(inviteTypes!=null and inviteTypes!='') or (inviteType!=null and inviteType!='')">
+                AND DEAL_ID IN
+                (
+                SELECT ID FROM
+                <include refid="table_main"/>
+                <where>
+                    <if test="inviteTypes!=null and inviteTypes!=''">
+                        AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+                    </if>
+                    <if test="inviteType!=null and inviteType!=''">
+                        AND INVITE_TYPE LIKE '%${inviteType}%'
+                    </if>
+                </where>
+                )
+            </if>
+            <if test="status !=null and status !=''">
+                STATUS = #{status}
+            </if>
+            <if test="dealId!=null and dealId!=''">
+                AND DEAL_ID LIKE '%${dealId}%'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE LIKE '%${grainType}%'
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT LIKE '%${dealUnit}%'
+            </if>
+            <if test="deliveryPlace!=null and deliveryPlace!=''">
+                AND DELIVERY_PLACE LIKE '%${deliveryPlace}%'
+
+            </if>
+            <if test="receivePlace!=null and receivePlace!=''">
+                AND RECEIVE_PLACE LIKE '%${receivePlace}%'
+
+
+            </if>
+            <if test="warehoueYear!=null and warehoueYear!=''">
+                AND PRODUCE_YEAR like '%${warehoueYear}%'
+            </if>
+            <if test="produceArea!=null and produceArea!=''">
+                AND PRODUCE_AREA like '%${produceArea}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE like '%${storehouse}%'
+            </if>
+        </where>
+        ORDER BY T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE DESC
+        <if test="pageIndex!=null">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <select id="countDetailByCondition1" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        from
+        <include refid="table_detail"/>
+        INNER JOIN
+        <include refid="table_main"/>
+        ON T_ROTATE_CONCLUTE.ID = T_ROTATE_CONCLUTE_DETAIL.DEAL_ID
+        LEFT JOIN (SELECT
+        SUM (CLAIM_WEIGHT) CLAIM_WEIGHT,
+        SUM (CLAIM_AMOUNT) CLAIM_AMOUNT,
+        DEAL_SERIAL,CLAIM_TYPE
+        FROM
+        T_ROTATE_CLAIM
+        GROUP BY
+        DEAL_SERIAL,CLAIM_TYPE HAVING CLAIM_TYPE = '货款') CA
+        ON CA.DEAL_SERIAL = T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL
+        <where>
+            AND T_ROTATE_CONCLUTE_DETAIL.QUANTITY > NVL(CA.CLAIM_WEIGHT, 0)
+            <if test="(inviteTypes!=null and inviteTypes!='')
+			or (inviteType!=null and inviteType!='')">
+                AND DEAL_ID IN
+                (
+                SELECT ID FROM
+                <include refid="table_main"/>
+                <where>
+                    <if test="inviteTypes!=null and inviteTypes!=''">
+                        AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+                    </if>
+                    <if test="inviteType!=null and inviteType!=''">
+                        AND INVITE_TYPE LIKE '%${inviteType}%'
+                    </if>
+                </where>
+                )
+            </if>
+            <if test="status !=null and status !=''">
+                STATUS = #{status}
+            </if>
+            <if test="dealId!=null and dealId!=''">
+                AND DEAL_ID LIKE '%${dealId}%'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE LIKE '%${grainType}%'
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT LIKE '%${dealUnit}%'
+            </if>
+            <if test="deliveryPlace!=null and deliveryPlace!=''">
+                AND DELIVERY_PLACE LIKE '%${deliveryPlace}%'
+
+
+            </if>
+            <if test="receivePlace!=null and receivePlace!=''">
+                AND RECEIVE_PLACE LIKE '%${receivePlace}%'
+
+
+            </if>
+            <if test="warehoueYear!=null and warehoueYear!=''">
+                AND PRODUCE_YEAR like '%${warehoueYear}%'
+            </if>
+            <if test="produceArea!=null and produceArea!=''">
+                AND PRODUCE_AREA like '%${produceArea}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE like '%${storehouse}%'
+            </if>
+        </where>
+    </select>
+
+    <select id="finishRotateConclute"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        select
+        <include refid="columns_detail2"/>,
+        NVL(CLAIM_WEIGHT, 0) CLAIM_WEIGHT,	-- 认领单总数量
+        NVL(THIS_SHIPMENT, 0 ) THIS_SHIPMENT  -- 已开提货单总数量
+        from
+        <include refid="table_detail"/>
+        INNER JOIN
+        <include refid="table_main"/>
+        ON T_ROTATE_CONCLUTE.ID = T_ROTATE_CONCLUTE_DETAIL.DEAL_ID
+        LEFT JOIN ( SELECT SUM( CLAIM_AMOUNT ) CLAIM_AMOUNT,sum(CLAIM_WEIGHT) CLAIM_WEIGHT, DEAL_SERIAL FROM T_ROTATE_CLAIM GROUP BY DEAL_SERIAL ) CA
+        ON CA.DEAL_SERIAL = T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL
+        left join (select sum(THIS_SHIPMENT) THIS_SHIPMENT, DEAL_SERIAL FROM T_ROTATE_TAKE GROUP BY DEAL_SERIAL) RT
+        ON  RT.DEAL_SERIAL = T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL
+        <where>
+            TO_NUMBER(NVL( CLAIM_WEIGHT, 0 )) > TO_NUMBER(NVL(THIS_SHIPMENT, 0 ))
+            <if test="(inviteTypes!=null and inviteTypes!='') or (inviteType!=null and inviteType!='')">
+                AND DEAL_ID IN
+                (
+                SELECT ID FROM
+                <include refid="table_main"/>
+                <where>
+                    <if test="inviteTypes!=null and inviteTypes!=''">
+                        AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+                    </if>
+                    <if test="inviteType!=null and inviteType!=''">
+                        AND INVITE_TYPE LIKE '%${inviteType}%'
+                    </if>
+                </where>
+                )
+            </if>
+            <if test="status !=null and status !=''">
+                STATUS = #{status}
+            </if>
+            <if test="dealId!=null and dealId!=''">
+                AND DEAL_ID LIKE '%${dealId}%'
+            </if>
+            <if test="dealSerial!=null and dealSerial!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_SERIAL LIKE '%${dealSerial}%'
+            </if>
+            <if test="grainType!=null and grainType!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE = '${dealDate}'
+            </if>
+            <if test="dealUnit!=null and dealUnit!=''">
+                AND DEAL_UNIT LIKE '%${dealUnit}%'
+            </if>
+            <if test="deliveryPlace!=null and deliveryPlace!=''">
+                AND DELIVERY_PLACE LIKE '%${deliveryPlace}%'
+            </if>
+            <if test="deliveryId!=null and deliveryId!=''">
+                AND DELIVERY_ID = #{deliveryId}
+            </if>
+            <if test="receivePlace!=null and receivePlace!=''">
+                AND RECEIVE_PLACE LIKE '%${receivePlace}%'
+            </if>
+
+            <if test="isOut!=null and isOut!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.DELIVERY_PLACE IS NOT NULL
+            </if>
+            <if test="isIn!=null and isIn!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.RECEIVE_PLACE IS NOT NULL
+            </if>
+            <if test="warehoueYear!=null and warehoueYear!=''">
+                AND PRODUCE_YEAR like '%${warehoueYear}%'
+            </if>
+            <if test="produceArea!=null and produceArea!=''">
+                AND PRODUCE_AREA like '%${produceArea}%'
+            </if>
+            <if test="storehouse!=null and storehouse!=''">
+                AND STOREHOUSE like '%${storehouse}%'
+            </if>
+            <if test="quantity!=null and quantity!=''">
+                AND T_ROTATE_CONCLUTE_DETAIL.QUANTITY LIKE '%${quantity}%'
+            </if>
+            <if test='noticeType== "入库"'>
+                AND T_ROTATE_CONCLUTE.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+            </if>
+            <if test='noticeType== "出库"'>
+                AND T_ROTATE_CONCLUTE.INVITE_TYPE IN ('竞价销售','协议销售','内部招标','其他','内部销售')
+            </if>
+        </where>
+        ORDER BY T_ROTATE_CONCLUTE_DETAIL.DEAL_DATE DESC
+
+    </select>
+
+
+    <!-- 查询单个 -->
+    <select id="getRotateConcluteDetailById" parameterType="java.lang.String"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        SELECT
+        a.*,RC.INVITE_TYPE as INVITE_TYPE
+
+        FROM T_ROTATE_CONCLUTE_DETAIL a
+        LEFT JOIN T_ROTATE_CONCLUTE RC
+        ON a.DEAL_ID = RC.ID
+        <where>
+            a.ID = #{_parameter}
+        </where>
+    </select>
+
+    <!-- 根据成交明细号查询单个 -->
+    <select id="getRotateConcluteDetailByDealSerial" parameterType="java.lang.String"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        SELECT
+        a.*,RC.INVITE_TYPE as INVITE_TYPE
+
+        FROM T_ROTATE_CONCLUTE_DETAIL a
+        LEFT JOIN T_ROTATE_CONCLUTE RC
+        ON a.DEAL_ID = RC.ID
+        <where>
+            a.DEAL_SERIAL = #{dealSerial}
+        </where>
+    </select>
+
+    <!-- 根据id 获取客户名称 -->
+    <select id="getClientInfoById" parameterType="java.lang.String"
+            resultType="java.lang.String">
+        SELECT T.CLIENT_NAME FROM T_CLIENT_INFO T
+        <where>
+            T.ID = #{id}
+        </where>
+    </select>
+
+    <select id="getDealSerialFromConcluteDetail" parameterType="java.util.Map" resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        SELECT t1.DEAL_SERIAL
+		FROM T_ROTATE_CONCLUTE_DETAIL t1 INNER  JOIN  T_Rotate_conclute t2
+		on t1.deal_id = t2.id and t2.INVITE_TYPE IN ('招标采购','订单采购','进口粮采购')
+        <where>
+            <if test="!froeign">
+                <if test="receiveId != null and receiveId != ''">
+                    AND t1.RECEIVE_ID = #{receiveId,jdbcType=VARCHAR}
+                </if>
+                <if test="encode != null and encode != ''">
+                    AND t1.STOREHOUSE = #{encode,jdbcType=VARCHAR}
+                </if>
+            </if>
+
+            <if test="harvestYear != null and harvestYear != ''">
+                AND t1.PRODUCE_YEAR = #{harvestYear,jdbcType=VARCHAR}
+            </if>
+            <if test="grainType != null and grainType != ''">
+                AND t1.GRAIN_TYPE = #{grainType,jdbcType=VARCHAR}
+            </if>
+            <if test="origin != null and origin != ''">
+                AND t1.PRODUCE_AREA = #{origin,jdbcType=VARCHAR}
+            </if>
+            and t1.deal_serial is not null
+        </where>
+    </select>
+
+
+    <select id="countRotateSum" parameterType="java.util.HashMap" resultType="Integer">
+        SELECT count(0)
+        FROM
+        <include refid="table_main"/>
+        <where>
+            <if test="grainType!=null and grainType!=''">
+                AND GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="inviteType!=null and inviteType!=''">
+                AND INVITE_TYPE LIKE '%${inviteType}%'
+            </if>
+            <if test="inviteTypes!=null and inviteTypes!=''">
+                AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND TO_CHAR(DEAL_DATE,'YYYY-MM-DD') = '${dealDate}'
+            </if>
+            AND STATUS = '已分发'
+        </where>
+    </select>
+
+
+    <select id="listRotateSum" parameterType="java.util.HashMap" resultMap="rotateConcluteResultMap">
+        <if test="pageIndex!=null">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+        SELECT
+        ID,DEAL_SERIAL,GRAIN_TYPE,INVITE_TYPE,DEAL_DATE,UNIT,
+        GATHER_UNIT,GATHER gather,
+        GATHER_DATE,REMARK,TOTAL_QUANTITY,DEAL_PRICE_TOTAL,DEAL_AMOUNT_TOTAL,STATUS,
+        REGEXP_REPLACE(DEAL_SERIAL,'[a-zA-Z]{0,}','') as orderSort
+        from
+        <include refid="table_main"/>
+        <where>
+            <if test="grainType!=null and grainType!=''">
+                AND GRAIN_TYPE = #{grainType}
+            </if>
+            <if test="inviteType!=null and inviteType!=''">
+                AND INVITE_TYPE LIKE '%${inviteType}%'
+            </if>
+            <if test="inviteTypes!=null and inviteTypes!=''">
+                AND INSTR('${inviteTypes}',INVITE_TYPE) > 0
+            </if>
+            <if test="dealDate!=null and dealDate!=''">
+                AND TO_CHAR(DEAL_DATE,'YYYY-MM-DD') = '${dealDate}'
+            </if>
+            AND STATUS = '已分发'
+        </where>
+        ORDER BY orderSort DESC
+        <if test="pageIndex!=null">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+
+    <select id="listOutDetail" parameterType="java.util.Map"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.rotateConcluteDetailResultMap">
+        SELECT
+        td.ID,td.DEAL_ID,td.SCHEME_ID,td.BID_SERIAL,house.warehouse_short DELIVERY_PLACE,
+        td.STOREHOUSE,td.GRAIN_TYPE,td.QUANTITY,
+        td.PRODUCE_AREA,td.PRODUCE_YEAR,td.WAREHOUE_YEAR,td.STORAGE_TYPE,td.DEAL_PRICE,
+        td.DEAL_AMOUNT,td.TAKE_END,td.DELIVERY_ID,
+        td.DELIVERY_END, DEAL_UNIT,td.DEAL_SERIAL,
+        td.DEAL_DATE,
+        td.ENTERPRISE_ID,nvl(E.ENTERPRISE_NAME,(select ENTERPRISE_NAME FROM
+        T_STORE_ENTERPRISE where id = house.ENTERPRISE_ID)) as ENTERPRISE_NAME
+        ,(SELECT nvl(sum(nvl(to_number(a.CLAIM_AMOUNT),0)),0) from T_ROTATE_CLAIM a where a.DEAL_SERIAL = td.DEAL_SERIAL and a.CLAIM_TYPE = '货款') PAYED_MONEY
+        ,(SELECT nvl(sum(nvl(to_number(b.THIS_SHIPMENT),0)),0) from T_ROTATE_TAKE b,T_ROTATE_TAKE_MAIN tm where b.deal_serial = td.DEAL_SERIAL AND b.MAIN_ID=tm.ID AND tm.status = '已完成')TAKED_ORDER_NUM
+        ,(SELECT nvl(to_number(c.bail),0) FROM T_ROTATE_INVITE_DETAIL c where c.id = td.invite_detail_id) BAIL
+        , (SELECT  nvl(sum(nvl(d.REFUND_AMOUNT,0)),0) FROM T_ROTATE_MARGIN_REFUND d where d.conclute_detail_id = td.id)RE_BAIL
+        ,
+        <foreach collection="processTypes" item="item" index="index" separator="," >
+            (SELECT nvl(sum(nvl(to_number(f.claim_amount),0)),0) from T_ROTATE_CLAIM f
+            where f.deal_serial=td.deal_serial and f.claim_type = #{item.value,jdbcType = VARCHAR}) TYPE${index}0,
+            (SELECT nvl(sum(nvl(i.amount,0)),0) FROM T_ROTATE_PROCESS h INNER JOIN T_ROTATE_PROCESS_DETAIL i ON
+            h.id=i.process_id where h.DEAL_SERIAL=TD.DEAL_SERIAL and h.status = '审核通过' and i.type = #{item.value,jdbcType = VARCHAR})TYPE${index}1
+        </foreach>
+        FROM
+        <include refid="table_detail"/>
+        td
+        LEFT JOIN T_STORAGE_WAREHOUSE house ON house.ID = td.DELIVERY_ID
+        left join T_STORE_ENTERPRISE e on td.ENTERPRISE_ID = E.ID
+        <where>
+            <if test='sid!=null and sid!="" '>
+                and td.DEAL_ID = #{sid}
+            </if>
+            <if test='deliveryPlace!=null and deliveryPlace!="" '>
+             and td.DELIVERY_PLACE LIKE   CONCAT(CONCAT('%',#{deliveryPlace}),'%')
+            </if>
+            <if test='encode!=null and encode!="" '>
+                and td.STOREHOUSE = #{encode}
+            </if>
+            <if test='receiverPlace!=null and receiverPlace!="" '>
+                and td.RECEIVE_PLACE LIKE CONCAT(CONCAT('%',#{receiverPlace}),'%')
+            </if>
+            <if test="grainType != null and grainType != ''">
+                and td.GRAIN_TYPE = #{grainType,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="listOutExportDetail" parameterType="java.util.Map"
+            resultMap="com.dhc.fastersoft.dao.RotateConcluteDetailDao.exprotRotateSumResultMap">
+        SELECT
+        td.ID,td.DEAL_ID,td.SCHEME_ID,td.BID_SERIAL,house.warehouse_short DELIVERY_PLACE,
+        td.STOREHOUSE,td.GRAIN_TYPE,td.QUANTITY,
+        td.PRODUCE_AREA,td.PRODUCE_YEAR,td.WAREHOUE_YEAR,td.STORAGE_TYPE,td.DEAL_PRICE,
+        td.DEAL_AMOUNT,td.TAKE_END,td.DELIVERY_ID,
+        td.DELIVERY_END, DEAL_UNIT,td.DEAL_SERIAL,
+        td.DEAL_DATE,
+        td.ENTERPRISE_ID,nvl(E.ENTERPRISE_NAME,(select ENTERPRISE_NAME FROM
+        T_STORE_ENTERPRISE where id = house.ENTERPRISE_ID)) as ENTERPRISE_NAME
+        ,(SELECT nvl(sum(nvl(to_number(a.CLAIM_AMOUNT),0)),0) from T_ROTATE_CLAIM a where a.DEAL_SERIAL = td.DEAL_SERIAL) PAYED_MONEY
+        ,(SELECT nvl(sum(nvl(to_number(b.THIS_SHIPMENT),0)),0) from T_ROTATE_TAKE b,T_ROTATE_TAKE_MAIN tm where b.deal_serial = td.DEAL_SERIAL AND b.MAIN_ID=tm.ID AND tm.status = '已完成')TAKED_ORDER_NUM
+        ,(SELECT nvl(to_number(c.bail),0) FROM T_ROTATE_INVITE_DETAIL c where c.id = td.invite_detail_id) BAIL
+        , (SELECT  nvl(sum(nvl(d.REFUND_AMOUNT,0)),0) FROM T_ROTATE_MARGIN_REFUND d where d.conclute_detail_id = td.id)RE_BAIL
+        ,
+        <foreach collection="processTypes" item="item" index="index" separator="," >
+            (SELECT nvl(sum(nvl(to_number(f.claim_amount),0)),0) from T_ROTATE_CLAIM f
+            where f.deal_serial=td.deal_serial and f.claim_type = #{item.value,jdbcType = VARCHAR}) TYPE${index}0,
+            (SELECT nvl(sum(nvl(i.amount,0)),0) FROM T_ROTATE_PROCESS h INNER JOIN T_ROTATE_PROCESS_DETAIL i ON
+            h.id=i.process_id where h.DEAL_SERIAL=TD.DEAL_SERIAL and h.status = '审核通过' and i.type = #{item.value,jdbcType = VARCHAR})TYPE${index}1
+        </foreach>
+        FROM
+        <include refid="table_detail"/>
+        td
+        LEFT JOIN T_STORAGE_WAREHOUSE house ON house.ID = td.DELIVERY_ID
+        left join T_STORE_ENTERPRISE e on td.ENTERPRISE_ID = E.ID
+        <where>
+            <if test='sid!=null and sid!="" '>
+                and td.DEAL_ID = #{sid}
+            </if>
+            <if test='deliveryPlace!=null and deliveryPlace!="" '>
+                and td.DELIVERY_PLACE LIKE   CONCAT(CONCAT('%',#{deliveryPlace}),'%')
+            </if>
+            <if test='encode!=null and encode!="" '>
+                and td.DEAL_ID = #{encode}
+            </if>
+            <if test='receiverPlace!=null and receiverPlace!="" '>
+                and td.RECEIVE_PLACE LIKE CONCAT(CONCAT('%',#{receiverPlace}),'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getSurplusPlanNum" resultType="java.math.BigDecimal">
+        SELECT (
+          SELECT
+               QUANTITY
+          FROM T_ROTATE_CONCLUTE_DETAIL a
+          WHERE DEAL_SERIAL = #{dealSerial,jdbcType=VARCHAR} ) - (
+          SELECT nvl( sum( PLAN_NUMBER ), 0 ) FROM T_ROTATE_NOTICE_DETAIL
+          WHERE DEAL_SERIAL = #{dealSerial,jdbcType=VARCHAR}
+          <if test="noticeId != null and noticeId != ''">
+             and NOTICE_ID != #{noticeId,jdbcType=VARCHAR}
+          </if>
+          )
+        FROM dual
+    </select>
+</mapper>

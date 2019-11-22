@@ -1,0 +1,1185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualityResultMapper">
+    <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualityResult">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="REPORT_SERIAL" property="reportSerial" jdbcType="VARCHAR"/>
+        <result column="REPORT_UNIT" property="reportUnit" jdbcType="VARCHAR"/>
+        <result column="REPORT_TYPE" property="reportType" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_NO" property="sampleNo" jdbcType="VARCHAR"/>
+        <result column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR"/>
+        <result column="VARIETY" property="variety" jdbcType="VARCHAR"/>
+        <result column="OILCAN_SERIAL" property="oilcanSerial" jdbcType="VARCHAR"/>
+        <result column="STORE_NATURE" property="storeNature" jdbcType="VARCHAR"/>
+        <result column="STORE_DATE" property="storeDate" jdbcType="TIMESTAMP"/>
+        <result column="ENTRUSTED_ENTERPRISE" property="entrustedEnterprise" jdbcType="VARCHAR"/>
+        <result column="STORE_ENCODE" property="storeEncode" jdbcType="VARCHAR"/>
+        <result column="ORIGIN" property="origin" jdbcType="VARCHAR"/>
+        <result column="STORE_TYPE" property="storeType" jdbcType="VARCHAR"/>
+        <result column="VEHICLE_NUMBER" property="vehicleNumber" jdbcType="VARCHAR"/>
+        <result column="HARVEST_YEAR" property="harvestYear" jdbcType="VARCHAR"/>
+        <result column="QUANTITY" property="quantity" jdbcType="VARCHAR"/>
+        <result column="TEST_DATE" property="testDate" jdbcType="TIMESTAMP"/>
+        <result column="TEST_END_DATE" property="testEndDate" jdbcType="TIMESTAMP" />
+        <result column="TEMPLET_NO" property="templetNo" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR"/>
+        <result column="CREATOR" property="creator" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="COMPANY" property="company" jdbcType="VARCHAR"/>
+        <result column="VARIETY_TYPE" property="varietyType" jdbcType="VARCHAR"/>
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR"/>
+        <result column="VALID_TYPE" property="validType" jdbcType="VARCHAR"/>
+        <result column="MAIN_TESTER" property="mainTester" jdbcType="VARCHAR"/>
+        <result column="DEAL_SERIAL" property="dealserial" jdbcType="VARCHAR"/>
+        <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR" />
+        <result column="ACCEPTED_UNIT" property="acceptedUnit" jdbcType="VARCHAR" />
+        <result column="PROGRADE" property="ProGrade" jdbcType="VARCHAR" />
+        <result column="CHECK_TYPE" property="checkType" jdbcType="VARCHAR" />
+        <result column="STORE_JUDGE" property="storeJudge" jdbcType="VARCHAR"/>
+        <result column="ACCEPTED_UNIT_ID" property="acceptedUnitId" jdbcType="VARCHAR"/>
+        <result column="HYGIENE_JUDGE" property="hygieneJudge" jdbcType="VARCHAR"/>
+        <collection property="qualityResultItems"
+                    resultMap="com.dhc.fastersoft.dao.QualityResultItemMapper.BaseResultMap"/>
+    </resultMap>
+
+    <resultMap id="TempResultMap" type="com.dhc.fastersoft.entity.ResultDataTemp">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <id column="TEMPLET_NO" property="templateNo" jdbcType="VARCHAR"/>
+        <id column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR"/>
+        <id column="ACCEPTED_UNIT" property="acceptedUnit" jdbcType="VARCHAR"/>
+        <id column="TEST_DATE" property="testDate" jdbcType="VARCHAR"/>
+        <id column="TEST_END_DATE" property="testEndDate" jdbcType="VARCHAR"/>
+        <id column="SAMPLE_NO" property="sampleNo" jdbcType="VARCHAR"/>
+        <id column="SAMPLE_NAME" property="sampleName" jdbcType="VARCHAR"/>
+        <id column="INSPECTED_UNIT" property="inspectedUnit" jdbcType="VARCHAR"/>
+        <id column="GRADE" property="grade" jdbcType="VARCHAR"/>
+        <id column="BASIC_NUMBER" property="basicNumber" jdbcType="VARCHAR"/>
+        <id column="STORE_TYPE" property="storeType" jdbcType="VARCHAR"/>
+        <id column="SAMPLE_PLACE" property="samplePlace" jdbcType="VARCHAR"/>
+        <id column="ORIGIN" property="origin" jdbcType="VARCHAR"/>
+        <id column="IN_STORE_DATE" property="inStoreDate" jdbcType="VARCHAR"/>
+        <id column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <id column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <id column="RESULT_FILE_ID" property="resultFileId" jdbcType="VARCHAR"/>
+        <id column="HARVEST_YEAR" property="harvestYear" jdbcType="VARCHAR"/>
+        <id column="RESULT_JUDGE" property="qualityJudge" jdbcType="VARCHAR"/>
+        <id column="STORE_JUDGE" property="storeJudge" jdbcType="VARCHAR"/>
+        <id column="HYGIENE_JUDGE" property="hygieneJudge" jdbcType="VARCHAR"/>
+        <id column="SAMPLING_PEOPLE" property="samplingPeople" jdbcType="VARCHAR"/>
+        <id column="SAMPLING_DATE" property="samplingDate" jdbcType="VARCHAR"/>
+        <id column="COLUMN1" property="column1" jdbcType="VARCHAR"/>
+        <id column="COLUMN2" property="column2" jdbcType="VARCHAR"/>
+        <id column="COLUMN3" property="column3" jdbcType="VARCHAR"/>
+        <id column="COLUMN4" property="column4" jdbcType="VARCHAR"/>
+        <id column="COLUMN5" property="column5" jdbcType="VARCHAR"/>
+        <id column="COLUMN6" property="column6" jdbcType="VARCHAR"/>
+        <id column="COLUMN7" property="column7" jdbcType="VARCHAR"/>
+        <id column="COLUMN8" property="column8" jdbcType="VARCHAR"/>
+        <id column="COLUMN9" property="column9" jdbcType="VARCHAR"/>
+        <id column="COLUMN10" property="column10" jdbcType="VARCHAR"/>
+        <id column="COLUMN11" property="column11" jdbcType="VARCHAR"/>
+        <id column="COLUMN12" property="column12" jdbcType="VARCHAR"/>
+        <id column="COLUMN13" property="column13" jdbcType="VARCHAR"/>
+        <id column="COLUMN14" property="column14" jdbcType="VARCHAR"/>
+        <id column="COLUMN15" property="column15" jdbcType="VARCHAR"/>
+        <id column="COLUMN16" property="column16" jdbcType="VARCHAR"/>
+        <id column="COLUMN17" property="column17" jdbcType="VARCHAR"/>
+        <id column="COLUMN18" property="column18" jdbcType="VARCHAR"/>
+        <id column="COLUMN19" property="column19" jdbcType="VARCHAR"/>
+        <id column="COLUMN20" property="column20" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ResultFileMap" type="com.dhc.fastersoft.entity.QualityResultFile">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <id column="FILE_NAME" property="fileName" jdbcType="VARCHAR"/>
+        <id column="FILE_TYPE" property="fileType" jdbcType="VARCHAR"/>
+        <id column="FILE_SIZE" property="fileSize" jdbcType="DECIMAL"/>
+        <id column="CREATOR" property="creator" jdbcType="VARCHAR"/>
+        <id column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
+        <id column="PHYSICAL_PATH" property="physicalPath" jdbcType="VARCHAR"/>
+        <id column="DOWNLOAD_URL" property="downloadUrl" jdbcType="VARCHAR"/>
+        <id column="FILE_RENAME" property="fileRename" jdbcType="VARCHAR"/>
+        <id column="TEMPLATE_NO" property="templateNo" jdbcType="VARCHAR"/>
+        <id column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR"/>
+        <id column="CHECK_TYPE" property="checkType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="select">
+        r.ID,
+        REPORT_SERIAL,
+        WS.WAREHOUSE_SHORT AS REPORT_UNIT,
+        REPORT_TYPE,
+        SAMPLE_NO,
+        SAMPLE_NAME,
+        VARIETY,
+        OILCAN_SERIAL,
+        STORE_NATURE,
+        TO_CHAR(STORE_DATE,'YYYY-MM-DD') STORE_DATE,
+        ENTRUSTED_ENTERPRISE,
+        STORE_ENCODE,
+        ORIGIN,
+        STORE_TYPE,
+        VEHICLE_NUMBER,
+        HARVEST_YEAR,
+        QUANTITY,
+        TO_CHAR(TEST_DATE,'YYYY-MM-DD') TEST_DATE,
+        TO_CHAR(TEST_END_DATE,'YYYY-MM-DD') TEST_END_DATE,
+        TEMPLET_NO,
+        r.STATUS,
+        GROUP_ID,
+        r.CREATOR,
+        r.CREATE_DATE,
+        VARIETY_TYPE,
+        FILE_NAME,
+        r.REMARK,
+        VALID_TYPE,
+        MAIN_TESTER,
+        NVL(TWS.WAREHOUSE_SHORT,r.ACCEPTED_UNIT) AS ACCEPTED_UNIT,
+        r.PROGRADE,
+        r.CHECK_TYPE,
+        r.WAREHOUSE_ID,
+        r.STORE_JUDGE,
+        r.ACCEPTED_UNIT_ID,
+        r.HYGIENE_JUDGE
+    </sql>
+
+
+    <sql id="tablename"> T_QUALITY_RESULT r </sql>
+    <sql id="sort"> CREATE_DATE </sql>
+    <sql id="criteria">
+        <where>
+            <if test="sampleName != null and sampleName != ''">
+                AND SAMPLE_NAME
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{sampleName}
+                    </when>
+                    <otherwise>
+                        like '%${sampleName}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="warehouseCode != null and warehouseCode != ''">
+                AND WS.WAREHOUSE_CODE = #{warehouseCode}
+            </if>
+            <if test="checkType != null and checkType != ''">
+                AND CHECK_TYPE = '${checkType}'
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                AND SAMPLE_NO
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{sampleNo}
+                    </when>
+                    <otherwise>
+                        like '%${sampleNo}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="mainTester != null and mainTester != ''">
+                AND r.MAIN_TESTER like concat(concat('%',#{mainTester}),'%')
+            </if>
+            <if test="warehouseType !=null and warehouseType !=''">
+                AND WS.WAREHOUSE_TYPE = #{warehouseType}
+            </if>
+            <if test="testDate_s != null and testDate_s != ''">
+                AND (TEST_DATE BETWEEN to_date('${testDate_s}','yyyy-MM-dd') AND to_date('${testDate_e}','yyyy-MM-dd'))
+            </if>
+            <if test="reportSerial != null and reportSerial != ''">
+                AND REPORT_SERIAL
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{reportSerial}
+                    </when>
+                    <otherwise>
+                        like '%${reportSerial}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="templetNo != null and templetNo != ''">
+                AND TEMPLET_NO
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{templetNo}
+                    </when>
+                    <otherwise>
+                        like '%${templetNo}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="variety != null and variety != ''">
+                AND VARIETY = #{variety}
+            </if>
+            <if test="validType != null and validType != ''">
+                AND VALID_TYPE
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{validType}
+                    </when>
+                    <otherwise>
+                        like '%${validType}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="storeEncode != null and storeEncode != ''">
+                AND STORE_ENCODE
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{storeEncode}
+                    </when>
+                    <otherwise>
+                        like '%${storeEncode}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="acceptedUnit != null and acceptedUnit != ''">
+                AND ((TWS.WAREHOUSE_SHORT
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{acceptedUnit}
+                    </when>
+                    <otherwise>
+                        like CONCAT(CONCAT('%',#{acceptedUnit}),'%')
+                    </otherwise>
+                </choose>
+                  and ACCEPTED_UNIT_ID IS NOT NULL) OR (ACCEPTED_UNIT
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{acceptedUnit}
+                    </when>
+                    <otherwise>
+                        like CONCAT(CONCAT('%',#{acceptedUnit}),'%')
+                    </otherwise>
+                </choose>
+                 and ACCEPTED_UNIT_ID IS NULL) )
+            </if>
+            <if test="reportUnit != null and reportUnit != ''">
+                AND WS.WAREHOUSE_SHORT
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{reportUnit}
+                    </when>
+                    <otherwise>
+                        like '%${reportUnit}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="origin != null and origin != ''">
+                AND ORIGIN
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{origin}
+                    </when>
+                    <otherwise>
+                        like '%${origin}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="acceptedUnitId!=null and acceptedUnitId!=''">
+                AND ACCEPTED_UNIT_ID = #{acceptedUnitId}
+            </if>
+            <if test="storeJudge != null and storeJudge != ''">
+                AND STORE_JUDGE
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{strorJudge}
+                    </when>
+                    <otherwise>
+                        like CONCAT(CONCAT('%',#{strorJudge}),'%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="hygieneJudge != null and hygieneJudge != ''">
+                AND HYGIENE_JUDGE
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{hygieneJudge}
+                    </when>
+                    <otherwise>
+                        like CONCAT(CONCAT('%',#{hygieneJudge}),'%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="harvestYear != null and harvestYear != ''">
+                AND HARVEST_YEAR
+                <choose>
+                    <when test="isLike != null and isLike == 0">
+                        = #{harvestYear}
+                    </when>
+                    <otherwise>
+                        like  '%${harvestYear}%'
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="company != null and company != ''">
+                <choose>
+                    <when test="type == 'dc'">
+                        AND COMPANY IN
+                        <foreach collection="company" item="c" open="(" close=")" separator=",">
+                            #{c.warehouseShort}
+                        </foreach>
+                    </when>
+                    <otherwise>
+                        AND COMPANY
+                        <choose>
+                            <when test="isLike != null and isLike == 0">
+                                = #{company}
+                            </when>
+                            <otherwise>
+                                like '%${company}%'
+                            </otherwise>
+                        </choose>
+
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </sql>
+    <!-- 总条数 -->
+    <select id="count" parameterType="java.util.HashMap"
+            resultType="Integer">
+        SELECT count(0) FROM
+        <include refid="tablename"/>
+        LEFT JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = r.WAREHOUSE_ID
+        left join T_STORAGE_WAREHOUSE TWS ON TWS.ID = R.ACCEPTED_UNIT_ID
+        <include refid="criteria"/>
+    </select>
+    <!-- 根据搜索条件查询计划列表 -->
+    <select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        ${start}
+        SELECT
+        <include refid="select"/>
+        from
+        <include refid="tablename"/>
+        LEFT JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = r.WAREHOUSE_ID
+        left join T_STORAGE_WAREHOUSE TWS ON TWS.ID = R.ACCEPTED_UNIT_ID
+        <include refid="criteria"/>
+        <!--ORDER BY <include refid="sort"/> DESC-->
+        order by NLSSORT (
+        SAMPLE_NO,
+        'NLS_SORT=SCHINESE_PINYIN_M'
+        ) DESC
+        ${end}
+    </select>
+    <select id="list1" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+
+        SELECT
+        <include refid="select"/>
+        from
+        <include refid="tablename"/>
+        LEFT JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = r.WAREHOUSE_ID
+        left join T_STORAGE_WAREHOUSE TWS ON TWS.ID = R.ACCEPTED_UNIT_ID
+        <include refid="criteria"/>
+        <!--ORDER BY <include refid="sort"/> DESC-->
+        order by NLSSORT (
+        SAMPLE_NO,
+        'NLS_SORT=SCHINESE_PINYIN_M'
+        ) DESC
+
+    </select>
+    <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="select"/>
+        from
+        <include refid="tablename"/>
+        LEFT JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = r.WAREHOUSE_ID
+        left join T_STORAGE_WAREHOUSE TWS ON TWS.ID = R.ACCEPTED_UNIT_ID
+        WHERE r.ID='${id}'
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE from
+        <include refid="tablename"/>
+        WHERE ID='${id}'
+    </delete>
+    <insert id="add" parameterType="com.dhc.fastersoft.entity.QualityResult">
+        insert into T_QUALITY_RESULT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="reportSerial != null">
+                REPORT_SERIAL,
+            </if>
+            <if test="reportUnit != null">
+                REPORT_UNIT,
+            </if>
+            <if test="reportType != null">
+                REPORT_TYPE,
+            </if>
+            <if test="sampleNo != null">
+                SAMPLE_NO,
+            </if>
+            <if test="sampleName != null">
+                SAMPLE_NAME,
+            </if>
+            <if test="variety != null">
+                VARIETY,
+            </if>
+            <if test="oilcanSerial != null">
+                OILCAN_SERIAL,
+            </if>
+            <if test="storeNature != null">
+                STORE_NATURE,
+            </if>
+            <if test="storeDate != null">
+                STORE_DATE,
+            </if>
+            <if test="entrustedEnterprise != null">
+                ENTRUSTED_ENTERPRISE,
+            </if>
+            <if test="storeEncode != null">
+                STORE_ENCODE,
+            </if>
+            <if test="origin != null">
+                ORIGIN,
+            </if>
+            <if test="storeType != null">
+                STORE_TYPE,
+            </if>
+            <if test="vehicleNumber != null">
+                VEHICLE_NUMBER,
+            </if>
+            <if test="harvestYear != null">
+                HARVEST_YEAR,
+            </if>
+            <if test="quantity != null">
+                QUANTITY,
+            </if>
+            <if test="testDate != null and testDate != ''" >
+                TEST_DATE,
+            </if>
+            <if test="testEndDate != null  and testEndDate != ''">
+                TEST_END_DATE,
+            </if>
+            <if test="templetNo != null">
+                TEMPLET_NO,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="groupId != null">
+                GROUP_ID,
+            </if>
+            <if test="creator != null">
+                CREATOR,
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="company != null">
+                COMPANY,
+            </if>
+            <if test="varietyType != null">
+                VARIETY_TYPE,
+            </if>
+            <if test="fileName != null">
+                FILE_NAME,
+            </if>
+            <if test="validType != null">
+                VALID_TYPE,
+            </if>
+            <if test="mainTester != null">
+                MAIN_TESTER,
+            </if>
+            <if test="warehouseId != null" >
+                WAREHOUSE_ID,
+
+            </if>
+            <if test="acceptedUnit != null" >
+                ACCEPTED_UNIT,
+
+            </if>
+            <if test="proGrade != null" >
+                PROGRADE,
+
+            </if>
+            <if test="checkType != null" >
+                CHECK_TYPE,
+
+            </if>
+
+            <if test="storeJudge != null and storeJudge != ''">
+                STORE_JUDGE,
+            </if>
+            <if test="acceptedUnitId != null and acceptedUnitId != ''">
+                ACCEPTED_UNIT_ID,
+            </if>
+            <if test="hygieneJudge!=null and hygieneJudge!=''">
+                HYGIENE_JUDGE,
+            </if>
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="reportSerial != null">
+                #{reportSerial,jdbcType=VARCHAR},
+            </if>
+            <if test="reportUnit != null">
+                #{reportUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="reportType != null">
+                #{reportType,jdbcType=VARCHAR},
+            </if>
+            <if test="sampleNo != null">
+                #{sampleNo,jdbcType=VARCHAR},
+            </if>
+            <if test="sampleName != null">
+                #{sampleName,jdbcType=VARCHAR},
+            </if>
+            <if test="variety != null">
+                #{variety,jdbcType=VARCHAR},
+            </if>
+            <if test="oilcanSerial != null">
+                #{oilcanSerial,jdbcType=VARCHAR},
+            </if>
+            <if test="storeNature != null">
+                #{storeNature,jdbcType=VARCHAR},
+            </if>
+            <if test="storeDate != null">
+                TO_DATE(#{storeDate,jdbcType=TIMESTAMP},'yyyy-mm-dd'),
+            </if>
+            <if test="entrustedEnterprise != null">
+                #{entrustedEnterprise,jdbcType=VARCHAR},
+            </if>
+            <if test="storeEncode != null">
+                #{storeEncode,jdbcType=VARCHAR},
+            </if>
+            <if test="origin != null">
+                #{origin,jdbcType=VARCHAR},
+            </if>
+            <if test="storeType != null">
+                #{storeType,jdbcType=VARCHAR},
+            </if>
+            <if test="vehicleNumber != null">
+                #{vehicleNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="harvestYear != null">
+                #{harvestYear,jdbcType=VARCHAR},
+            </if>
+            <if test="quantity != null">
+                #{quantity,jdbcType=VARCHAR},
+            </if>
+            <if test="testDate != null and testDate != ''">
+                TO_DATE(#{testDate,jdbcType=TIMESTAMP},'yyyy-mm-dd'),
+            </if>
+            <if test="testEndDate != null and testEndDate != ''">
+                TO_DATE(#{testEndDate,jdbcType=TIMESTAMP},'yyyy-mm-dd'),
+            </if>
+            <if test="templetNo != null">
+                #{templetNo,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="groupId != null">
+                #{groupId,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                to_date(#{createDate,jdbcType=VARCHAR}, 'yyyy-mm-dd,hh24:mi:ss'),
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="varietyType != null">
+                #{varietyType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="validType != null">
+                #{validType,jdbcType=VARCHAR},
+            </if>
+            <if test="mainTester != null">
+                #{mainTester,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseId != null" >
+                '${warehouseId}',
+            </if>
+
+            <if test="acceptedUnit != null" >
+                #{acceptedUnit,jdbcType=VARCHAR},
+
+            </if>
+            <if test="proGrade != null" >
+                #{proGrade,jdbcType=VARCHAR},
+
+            </if>
+            <if test="checkType != null" >
+                #{checkType,jdbcType=VARCHAR},
+
+            </if>
+            <if test="storeJudge != null and storeJudge != ''">
+                #{storeJudge,jdbcType=VARCHAR},
+
+            </if>
+            <if test="acceptedUnitId != null and acceptedUnitId != ''">
+                #{acceptedUnitId},
+            </if>
+            <if test="hygieneJudge!=null and hygieneJudge!=''">
+                #{hygieneJudge},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.dhc.fastersoft.entity.QualityQuota">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        <trim suffixOverrides=",">
+            <if test="reportSerial != null">
+                REPORT_SERIAL='${reportSerial}',
+            </if>
+            <if test="reportUnit != null">
+                REPORT_UNIT='${reportUnit}',
+            </if>
+            <if test="reportType != null">
+                REPORT_TYPE='${reportType}',
+            </if>
+            <if test="sampleNo != null">
+                SAMPLE_NO='${sampleNo}',
+            </if>
+            <if test="sampleName != null">
+                SAMPLE_NAME='${sampleName}',
+            </if>
+            <if test="variety != null">
+                VARIETY='${variety}',
+            </if>
+            <if test="oilcanSerial != null">
+                OILCAN_SERIAL='${oilcanSerial}',
+            </if>
+            <if test="storeNature != null">
+                STORE_NATURE='${storeNature}',
+            </if>
+            <if test="storeDate != null">
+                STORE_DATE=TO_DATE('${storeDate}','yyyy-mm-dd'),
+            </if>
+            <if test="entrustedEnterprise != null">
+                ENTRUSTED_ENTERPRISE='${entrustedEnterprise}',
+            </if>
+            <if test="storeEncode != null">
+                STORE_ENCODE='${storeEncode}',
+            </if>
+            <if test="origin != null">
+                ORIGIN='${origin}',
+            </if>
+            <if test="storeType != null">
+                STORE_TYPE='${storeType}',
+            </if>
+            <if test="vehicleNumber != null">
+                VEHICLE_NUMBER='${vehicleNumber}',
+            </if>
+            <if test="harvestYear != null">
+                HARVEST_YEAR='${harvestYear}',
+            </if>
+            <if test="quantity != null">
+                QUANTITY='${quantity}',
+            </if>
+            <if test="testDate != null">
+                TEST_DATE=TO_DATE('${testDate}','yyyy-mm-dd,hh24:mi:ss'),
+            </if>
+            <if test="testEndDate != null">
+                TEST_END_DATE=TO_DATE('${testEndDate}','yyyy-mm-dd,hh24:mi:ss'),
+            </if>
+            <if test="templetNo != null">
+                TEMPLET_NO='${templetNo}',
+            </if>
+            <if test="status != null">
+                STATUS='${status}',
+            </if>
+            <if test="groupId != null">
+                GROUP_ID='${groupId}',
+            </if>
+            <if test="creator != null">
+                CREATOR='${creator}' ,
+            </if>
+            <if test="createDate != null">
+                CREATE_DATE= to_date('${createDate}','yyyy-MM-dd HH24:mi:ss'),
+            </if>
+            <if test="company != null">
+                COMPANY= '${company}',
+            </if>
+            <if test="remark != null">
+                REMARK='${remark}',
+            </if>
+            <if test="varietyType != null">
+                VARIETY_TYPE='${varietyType}',
+            </if>
+            <if test="fileName != null">
+                FILE_NAME='${fileName}',
+            </if>
+            <if test="validType != null and validType != ''">
+                VALID_TYPE='${validType}',
+            </if>
+            <if test="warehouseId != null" >
+                WAREHOUSE_ID='${warehouseId}',
+
+            </if>
+            <if test="mainTester != null">
+                MAIN_TESTER='${mainTester}',
+            </if>
+
+            <if test="acceptedUnit != null" >
+                ACCEPTED_UNIT=#{acceptedUnit,jdbcType=VARCHAR},
+
+            </if>
+            <if test="proGrade != null" >
+                PROGRADE=#{proGrade,jdbcType=VARCHAR},
+
+            </if>
+            <if test="checkType != null" >
+                CHECK_TYPE=#{checkType,jdbcType=VARCHAR},
+
+            </if>
+
+            <if test="storeJudge != null and storeJudge != ''">
+                STORE_JUDGE = #{storeJudge,jdbcType=VARCHAR},
+            </if>
+            <if test="acceptedUnitId !=null and acceptedUnitId != ''">
+                ACCEPTED_UNIT_ID = #{acceptedUnitId},
+            </if>
+            <if test="hygieneJudge!=null and hygieneJudge!=''">
+                HYGIENE_JUDGE = #{hygieneJudge},
+            </if>
+        </trim>
+        WHERE ID='${id}'
+    </update>
+
+    <select id="getResultBySampleNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT<include refid="select"/>,ri.*,ri.REMARK AS D_REMARK FROM
+        <include refid="tablename"/>
+        INNER JOIN T_QUALITY_RESULT_ITEM ri ON r.ID = ri.RESULT_ID
+        LEFT JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = r.WAREHOUSE_ID
+        left join T_STORAGE_WAREHOUSE TWS ON TWS.ID = R.ACCEPTED_UNIT_ID
+        <where>
+            AND SAMPLE_NO = #{sampleNo}
+            AND VALID_TYPE = #{validType}
+        </where>
+        ORDER BY ri.ORDER_NO
+    </select>
+    <select id="selectQualityResultcount" parameterType="java.util.HashMap"
+            resultType="Integer">
+        SELECT count(0) FROM
+         (select * from T_QUALITY_RESULT where  CHECK_TYPE='2') r
+        INNER JOIN T_QUALITY_SAMPLE T ON r.SAMPLE_NO = T.SAMPLE_NO
+        <where>
+            <if test="variety != null and variety != ''">
+                AND r.VARIETY LIKE '%${variety}%'
+            </if>
+            <if test="harvestYear != null and harvestYear != ''">
+                AND TO_CHAR(T.HARVEST_YEAR,'YYYY') = #{harvestYear}
+            </if>
+            <if test="storeEncode != null and storeEncode != ''">
+                AND r.STORE_ENCODE = #{storeEncode}
+            </if>
+            <if test="origin != null and origin != ''">
+                AND T.ORIGIN LIKE '%${origin}%'
+            </if>
+            <if test="checkType != null and checkType != ''">
+                AND T.CHECK_TYPE = #{checkType}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectQualityResultlist" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        <if test="pageIndex!=null and pageIndex!=''">
+            select * from ( select row_.*, rownum rownum_ from (
+        </if>
+        SELECT
+                r.ID,
+                r.STORE_ENCODE STORE_ENCODE,
+                r.VARIETY VARIETY,
+                T.ORIGIN ORIGIN,
+                TO_CHAR(T.HARVEST_YEAR,'YYYY') HARVEST_YEAR,
+                r.SAMPLE_NO SAMPLE_NO,
+                r.ACCEPTED_UNIT REPORT_UNIT,
+                r.QUANTITY QUANTITY,
+                r.TEST_DATE TEST_DATE,
+                T.VALID_TYPE VALID_TYPE,
+                T.DEAL_SERIAL DEAL_SERIAL
+        from
+             (select * from T_QUALITY_RESULT where  CHECK_TYPE='2') r
+             INNER JOIN T_QUALITY_SAMPLE T
+        ON   r.SAMPLE_NO = T.SAMPLE_NO
+        <where>
+            <if test="variety != null and variety != ''">
+                AND r.VARIETY LIKE '%${variety}%'
+            </if>
+            <if test="harvestYear != null and harvestYear != ''">
+                AND TO_CHAR(T.HARVEST_YEAR,'YYYY') = #{harvestYear}
+            </if>
+            <if test="storeEncode != null and storeEncode != ''">
+                AND r.STORE_ENCODE = #{storeEncode}
+            </if>
+            <if test="origin != null and origin != ''">
+                AND T.ORIGIN LIKE '%${origin}%'
+            </if>
+        </where>
+        <if test="pageIndex!=null and pageIndex!='' and pageSize!=null and pageSize!=''">
+            ) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+            where rownum_ > (#{pageIndex}-1) * #{pageSize}
+        </if>
+    </select>
+
+    <!-- 根据搜索条件查询计划列表 -->
+    <select id="exportAlllist" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT
+        <include refid="select"/>
+        from
+        <include refid="tablename"/>
+        LEFT JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = r.WAREHOUSE_ID
+        left join T_STORAGE_WAREHOUSE TWS ON TWS.ID = R.ACCEPTED_UNIT_ID
+        <include refid="criteria"/>
+        <!--ORDER BY <include refid="sort"/> DESC-->
+        order by NLSSORT (
+        SAMPLE_NO,
+        'NLS_SORT=SCHINESE_PINYIN_M'
+        ) DESC
+    </select>
+
+    <select id="countSampleNo" parameterType="java.util.HashMap"
+            resultType="Integer">
+        SELECT count(0) FROM T_QUALITY_RESULT
+        <where>
+            CHECK_TYPE='2'
+            <if test="sampleNo != null and sampleNo !=''" >
+              AND  SAMPLE_NO = '${sampleNo}'
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryBySampleNo" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT r.*,ri.* ,ri.REMARK AS D_REMARK FROM (select * from T_QUALITY_RESULT where  CHECK_TYPE='2') r
+        LEFT JOIN T_QUALITY_RESULT_ITEM ri on r. id = ri.result_id
+        where r.SAMPLE_NO IN
+        <foreach item="sampleNo" collection="list" separator="," open="(" close=")">
+            #{sampleNo}
+        </foreach>
+        ORDER BY ORDER_NO
+    </select>
+
+
+
+    <insert id="saveFileHistory" parameterType="com.dhc.fastersoft.entity.QualityResultFile" >
+        insert into T_QUALITY_RESULT_FILE (ID, FILE_NAME,
+        FILE_TYPE, FILE_SIZE, CREATOR,
+        CREATE_DATE, PHYSICAL_PATH,
+        DOWNLOAD_URL, FILE_RENAME,TEMPLATE_NO,TEMPLATE_ID,CHECK_TYPE)
+        values (#{id,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR},
+        #{fileType,jdbcType=VARCHAR}, #{fileSize,jdbcType=DECIMAL}, #{creator,jdbcType=VARCHAR},
+        #{createDate,jdbcType=TIMESTAMP}, #{physicalPath,jdbcType=VARCHAR},
+        #{downloadUrl,jdbcType=VARCHAR}, #{fileRename,jdbcType=VARCHAR}, #{templateNo,jdbcType=VARCHAR}
+        ,#{templateId,jdbcType=VARCHAR},#{checkType,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="saveTempResult" parameterType="java.util.HashMap" >
+        insert into T_RESULT_DATA_TEMP (ID, TEMPLET_NO,ENTERPRISE_NAME,
+        ACCEPTED_UNIT, TEST_DATE, TEST_END_DATE,
+        SAMPLE_NO, SAMPLE_NAME,
+        INSPECTED_UNIT, GRADE,BASIC_NUMBER,STORE_TYPE,SAMPLE_PLACE,ORIGIN,IN_STORE_DATE,
+        HARVEST_YEAR,REMARK,STATUS,RESULT_FILE_ID,RESULT_JUDGE,STORE_JUDGE,HYGIENE_JUDGE,
+        SAMPLING_PEOPLE,SAMPLING_DATE,
+        <foreach collection="columns" item="item" index="index" separator="," >
+        COLUMN${index+1}
+    </foreach>
+        )
+        values (#{id,jdbcType=VARCHAR}, #{templateNo,jdbcType=VARCHAR},#{enterpriseName,jdbcType=VARCHAR},
+        #{acceptedUnit,jdbcType=VARCHAR}, #{testDate,jdbcType=DECIMAL}, #{testEndDate,jdbcType=VARCHAR},
+        #{sampleNo,jdbcType=TIMESTAMP}, #{sampleName,jdbcType=VARCHAR},
+        #{inspectedUnit,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{basicNumber,jdbcType=VARCHAR}, #{storeType,jdbcType=VARCHAR}
+        , #{samplePlace,jdbcType=VARCHAR}, #{origin,jdbcType=VARCHAR}, #{inStoreDate,jdbcType=VARCHAR}, #{harvestYear,jdbcType=VARCHAR}
+        , #{remark,jdbcType=VARCHAR}, 0, #{resultFileId,jdbcType=VARCHAR},#{qualityJudge,jdbcType=VARCHAR},#{storeJudge,jdbcType=VARCHAR},
+        #{hygieneJudge,jdbcType=VARCHAR},#{samplingPeople,jdbcType=VARCHAR},#{samplingDate,jdbcType=VARCHAR},
+        <foreach collection="columns" item="item" index="index" separator="," >
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+        )
+    </insert>
+
+
+    <!-- 根据搜索条件查询计划列表 -->
+    <select id="tempResultlist" parameterType="java.util.HashMap" resultMap="TempResultMap">
+        ${start}
+        SELECT
+        ID, TEMPLET_NO,ENTERPRISE_NAME,
+        ACCEPTED_UNIT, TEST_DATE, TEST_END_DATE,
+        SAMPLE_NO, SAMPLE_NAME,
+        INSPECTED_UNIT, GRADE,BASIC_NUMBER,STORE_TYPE,SAMPLE_PLACE,ORIGIN,IN_STORE_DATE,
+        HARVEST_YEAR,REMARK,STATUS,RESULT_FILE_ID,RESULT_JUDGE,STORE_JUDGE,HYGIENE_JUDGE,SAMPLING_PEOPLE,SAMPLING_DATE
+        from
+        T_RESULT_DATA_TEMP
+        <where>
+            <if test="resultFileId != null and resultFileId != ''">
+                AND RESULT_FILE_ID = #{resultFileId}
+            </if>
+            <if test="status != null and status != ''">
+                AND STATUS  = #{status}
+            </if>
+        </where>
+
+        <!--ORDER BY <include refid="sort"/> DESC-->
+
+        ${end}
+    </select>
+
+
+    <select id="getTempResultById" parameterType="java.lang.String" resultMap="TempResultMap">
+        select
+        *
+        from
+        T_RESULT_DATA_TEMP
+        WHERE ID='${id}'
+    </select>
+
+
+    <update id="updateTempResult" parameterType="com.dhc.fastersoft.entity.ResultDataTemp">
+        UPDATE
+        T_RESULT_DATA_TEMP
+        SET
+        <trim suffixOverrides=",">
+            <if test="sampleNo != null">
+                SAMPLE_NO='${sampleNo}',
+            </if>
+            <if test="templateNo != null">
+                TEMPLET_NO='${templateNo}',
+            </if>
+            <if test="sampleName != null">
+                SAMPLE_NAME='${sampleName}',
+            </if>
+            <if test="samplePlace != null">
+                SAMPLE_PLACE='${samplePlace}',
+            </if>
+            <if test="basicNumber != null">
+                BASIC_NUMBER='${basicNumber}',
+            </if>
+            <if test="enterpriseName != null">
+                ENTERPRISE_NAME='${enterpriseName}',
+            </if>
+            <if test="acceptedUnit != null">
+                ACCEPTED_UNIT='${acceptedUnit}',
+            </if>
+            <if test="testDate != null">
+                TEST_DATE='${testDate}',
+            </if>
+            <if test="testEndDate != null">
+                TEST_END_DATE='${testEndDate}',
+            </if>
+            <if test="inspectedUnit != null">
+                INSPECTED_UNIT='${inspectedUnit}',
+            </if>
+            <if test="grade != null">
+                GRADE='${grade}',
+            </if>
+            <if test="storeType != null">
+                STORE_TYPE='${storeType}',
+            </if>
+            <if test="origin != null">
+                ORIGIN='${origin}',
+            </if>
+            <if test="inStoreDate != null">
+                IN_STORE_DATE='${inStoreDate}',
+            </if>
+            <if test="harvestYear != null">
+                HARVEST_YEAR='${harvestYear}',
+            </if>
+            <if test="resultFileId != null">
+                RESULT_FILE_ID='${resultFileId}',
+            </if>
+
+            <if test="qualityJudge != null">
+                RESULT_JUDGE='${qualityJudge}',
+            </if>
+            <if test="storeJudge != null">
+                STORE_JUDGE='${storeJudge}',
+            </if>
+            <if test="hygieneJudge != null">
+                HYGIENE_JUDGE='${hygieneJudge}',
+            </if>
+            <if test="samplingPeople != null">
+                SAMPLING_PEOPLE='${samplingPeople}',
+            </if>
+            <if test="samplingDate != null">
+                SAMPLING_DATE='${samplingDate}',
+            </if>
+
+            <if test="remark != null">
+                REMARK='${remark}',
+            </if>
+            <if test="status != null">
+                STATUS='${status}',
+            </if>
+
+            <if test="column1 != null">
+                COLUMN1='${column1}',
+            </if>
+            <if test="column2 != null">
+                COLUMN2='${column2}',
+            </if>
+            <if test="column3 != null">
+                COLUMN3='${column3}',
+            </if>
+            <if test="column4 != null">
+                COLUMN4='${column4}',
+            </if>
+            <if test="column5 != null">
+                COLUMN5='${column5}',
+            </if>
+            <if test="column6 != null">
+                COLUMN6='${column6}',
+            </if>
+            <if test="column7 != null">
+                COLUMN7='${column7}',
+            </if>
+            <if test="column8 != null">
+                COLUMN8='${column8}',
+            </if>
+            <if test="column9 != null">
+                COLUMN9='${column9}',
+            </if>
+            <if test="column10 != null">
+                COLUMN10='${column10}',
+            </if>
+            <if test="column11 != null">
+                COLUMN11='${column11}',
+            </if>
+            <if test="column12 != null">
+                COLUMN12='${column12}',
+            </if>
+            <if test="column13 != null">
+                COLUMN13='${column13}',
+            </if>
+            <if test="column14 != null">
+                COLUMN14='${column14}',
+            </if>
+            <if test="column15 != null">
+                COLUMN15='${column15}',
+            </if>
+            <if test="column16 != null">
+                COLUMN16='${column16}',
+            </if>
+            <if test="column17 != null">
+                COLUMN17='${column17}',
+            </if>
+            <if test="column18 != null">
+                COLUMN18='${column18}',
+            </if>
+            <if test="column19 != null">
+                COLUMN19='${column19}',
+            </if>
+            <if test="column20 != null">
+                COLUMN20='${column20}',
+            </if>
+
+        </trim>
+        WHERE ID='${id}'
+    </update>
+
+
+    <select id="getResultByReportSerial" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+
+        SELECT
+        <include refid="select"/>
+        from
+        <include refid="tablename"/>
+        LEFT JOIN T_STORAGE_WAREHOUSE WS
+        ON WS.ID = r.WAREHOUSE_ID
+        left join T_STORAGE_WAREHOUSE TWS ON TWS.ID = R.ACCEPTED_UNIT_ID
+        <where>
+            <if test="reportSerial != null and reportSerial != ''">
+                AND REPORT_SERIAL = #{reportSerial}
+            </if>
+            <if test="checkType != null and checkType != ''">
+                AND CHECK_TYPE = #{checkType}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 根据搜索条件查询 -->
+    <select id="resultFileList" parameterType="java.util.HashMap" resultMap="ResultFileMap">
+        ${start}
+        SELECT
+        *
+        from
+        T_QUALITY_RESULT_FILE
+        <where>
+            <if test="templateNo != null and templateNo != ''">
+                AND TEMPLATE_NO = #{templateNo}
+            </if>
+        </where>
+        ORDER BY CREATE_DATE DESC
+        ${end}
+    </select>
+
+
+    <!-- 总条数 -->
+    <select id="resultFileCount" parameterType="java.util.HashMap"
+            resultType="Integer">
+        SELECT count(0) FROM
+        T_QUALITY_RESULT_FILE
+        <where>
+            <if test="templateNo != null and templateNo != ''">
+                AND TEMPLATE_NO = #{templateNo}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getResultFileById" parameterType="java.lang.String" resultMap="ResultFileMap">
+        select
+        *
+        from
+        T_QUALITY_RESULT_FILE
+        WHERE ID='${id}'
+    </select>
+
+    <delete id="delImportFile" parameterType="String">
+        delete from T_QUALITY_RESULT_FILE
+        where id = #{id}
+    </delete>
+
+    <delete id="delImportData">
+        delete from T_RESULT_DATA_TEMP
+        where id in
+        <foreach collection="ids" item="id" open=" ( " separator=" , " close=" ) ">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countImportData" resultType="java.lang.Integer">
+        select count(1) from T_RESULT_DATA_TEMP
+        <where>
+            <if test="status != null and status != ''">
+                AND STATUS = #{status}
+            </if>
+            <if test="ids != null and ids.size() > 0">
+                AND ID IN
+                <foreach collection="ids" item="id" open=" ( " separator=" , " close=" ) ">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="resultFileId != null and resultFileId != ''">
+                RESULT_FILE_ID = #{resultFileId}
+            </if>
+        </where>
+    </select>
+</mapper>

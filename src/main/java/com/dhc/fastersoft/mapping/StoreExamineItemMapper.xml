@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoreExamineItemDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.store.StoreExamineItem" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="EXAMINE_ID" property="examineId" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="ITEM" property="item" jdbcType="VARCHAR" />
+    <result column="STANDARD" property="standard" jdbcType="VARCHAR" />
+    <result column="POINT" property="point" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    ID id, EXAMINE_ID examineId, PARENT_ID parentId, ITEM item, STANDARD standard, POINT point
+  </sql>
+  
+	
+	<select id="getStoreExamineById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.store.StoreExamineItem">
+		SELECT 
+			<include refid="Base_Column_List" />
+		 from T_STORE_EXAMINE_ITEM		
+		where ID=#{id,jdbcType=NVARCHAR}
+		
+	</select>
+	
+	 
+	<select id="getItemListByParentId" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		SELECT 
+		  ID id, EXAMINE_ID examineId, PARENT_ID parentId, ITEM item, STANDARD standard, POINT point
+		 FROM T_STORE_EXAMINE_ITEM  
+		 where PARENT_ID='${parentId}'
+		 and EXAMINE_ID='${examineId}'
+		 
+		
+	</select>  
+	
+	<select id="getItemListByExamineId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  
+	
+		 SELECT 
+			<include refid="Base_Column_List" />
+		 from T_STORE_EXAMINE_ITEM		
+		where EXAMINE_ID=#{examineId,jdbcType=NVARCHAR}
+		
+	</select> 
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.store.StoreExamineItem" >
+ 
+      insert into T_STORE_EXAMINE_ITEM (ID, EXAMINE_ID, PARENT_ID, 
+      ITEM, STANDARD, POINT
+      )
+    values (#{id,jdbcType=VARCHAR}, #{examineId,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{item,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, #{point,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.store.StoreExamineItem">
+	 update T_STORE_EXAMINE_ITEM
+    set 
+      EXAMINE_ID = #{examineId,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=VARCHAR},
+      ITEM = #{item,jdbcType=VARCHAR},
+      STANDARD = #{standard,jdbcType=VARCHAR},
+      POINT = #{point,jdbcType=VARCHAR}
+	
+		WHERE ID='${id}'
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORE_EXAMINE_ITEM
+		where EXAMINE_ID=#{examineId,jdbcType=NVARCHAR}
+	</delete>
+	
+ 
+  
+</mapper>

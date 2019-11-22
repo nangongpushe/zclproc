@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.system.SysUserDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.system.SysUser" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="SALT" property="salt" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+     <result column="NOTE" property="note" jdbcType="VARCHAR" />
+     <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+     <result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+     <result column="POSITION" property="position" jdbcType="VARCHAR" />
+     <result column="CELLPHONE" property="cellPhone" jdbcType="VARCHAR" />
+     <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+     <result column="AVATAR" property="avatar" jdbcType="VARCHAR" />
+     <result column="SIGNATURE" property="signature" jdbcType="VARCHAR" />
+     <result column="ORIGIN_CODE" property="originCode" jdbcType="VARCHAR" />
+    <result column="ENTERPRISE_ID" property="enterPriseId" jdbcType="VARCHAR" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ACCOUNT, NAME name, PASSWORD, SALT, to_char(CREATE_TIME,'yyyy-MM-dd') CREATE_TIME, LAST_LOGIN_TIME, STATUS, NOTE, COMPANY, DEPARTMENT,
+    POSITION, CELLPHONE, EMAIL, AVATAR, SIGNATURE, ORIGIN_CODE,ENTERPRISE_ID
+  </sql>
+  <sql id="Base_Column_Lists" >
+    sys.ID, sys.ACCOUNT, sys.NAME name, sys.PASSWORD, sys.SALT, to_char(sys.CREATE_TIME,'yyyy-MM-dd') CREATE_TIME, sys.LAST_LOGIN_TIME, sys.STATUS, sys.NOTE,s.ENTERPRISE_NAME AS COMPANY, sys.DEPARTMENT,
+    sys.POSITION, sys.CELLPHONE, sys.EMAIL, sys.AVATAR, sys.SIGNATURE, sys.ORIGIN_CODE,sys.ENTERPRISE_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_Lists" />
+    from T_SYS_USER sys left join T_STORE_ENTERPRISE s on sys.ENTERPRISE_ID=s.id
+    where sys.ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_SYS_USER
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.system.SysUser" >
+    insert into T_SYS_USER (ID, ACCOUNT, NAME, 
+      PASSWORD, SALT, CREATE_TIME, 
+      LAST_LOGIN_TIME, STATUS, NOTE, COMPANY, DEPARTMENT,
+    POSITION, CELLPHONE, EMAIL, AVATAR, SIGNATURE,ORIGIN_CODE,ENTERPRISE_ID)
+    values (#{id,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, sysdate, 
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{status,jdbcType=DECIMAL}, #{note,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{cellPhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{signature,jdbcType=VARCHAR},
+      #{originCode,jdbcType=VARCHAR},  #{enterPriseId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.system.SysUser" >
+    insert into T_SYS_USER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="account != null" >
+        ACCOUNT,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="salt != null" >
+        SALT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="note != null" >
+        NOTE,
+      </if>
+      <if test="company != null" >
+        COMPANY,
+      </if>
+      <if test="department != null" >
+        DEPARTMENT,
+      </if>
+      <if test="position != null" >
+        POSITION,
+      </if>
+      <if test="cellPhone != null" >
+        CELLPHONE,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="avatar != null" >
+        AVATAR,
+      </if>
+       <if test="signature != null" >
+        SIGNATURE,
+      </if>
+	  <if test="originCode != null" >
+        ORIGIN_CODE,
+      </if>
+      <if test="originCode != null" >
+        ENTERPRISE_ID
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+       sysdate,
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+       <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="cellPhone != null" >
+        #{cellPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+       <if test="signature != null" >
+        #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="originCode != null" >
+        #{originCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enterPriseId != null" >
+        #{enterPriseId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.system.SysUser" >
+    update T_SYS_USER
+    <set >
+      <if test="account != null" >
+        ACCOUNT = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        SALT = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        NOTE = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        COMPANY = #{company,jdbcType=VARCHAR},
+      </if>
+       <if test="department != null" >
+        DEPARTMENT = #{department,jdbcType=VARCHAR},
+      </if>
+       <if test="position != null" >
+        POSITION = #{position,jdbcType=VARCHAR},
+      </if>
+       <if test="cellPhone != null" >
+        CELLPHONE = #{cellPhone,jdbcType=VARCHAR},
+      </if>
+       <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+       <if test="avatar != null" >
+        AVATAR = #{avatar,jdbcType=VARCHAR},
+      </if>
+       <if test="signature != null" >
+        SIGNATURE = #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="originCode != null" >
+        ORIGIN_CODE = #{originCode,jdbcType=VARCHAR},
+      </if>
+      <if test="enterPriseId != null" >
+        ENTERPRISE_ID=#{enterPriseId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.system.SysUser" >
+    update T_SYS_USER
+    set ACCOUNT = #{account,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      SALT = #{salt,jdbcType=VARCHAR},
+      LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=DECIMAL},
+      NOTE = #{note,jdbcType=VARCHAR},
+      COMPANY = #{note,jdbcType=VARCHAR},
+      DEPARTMENT = #{note,jdbcType=VARCHAR},
+      POSITION = #{note,jdbcType=VARCHAR},
+      CELLPHONE = #{note,jdbcType=VARCHAR},
+      EMAIL = #{note,jdbcType=VARCHAR},
+      AVATAR = #{note,jdbcType=VARCHAR},
+      SIGNATURE = #{note,jdbcType=VARCHAR},
+       ENTERPRISE_ID=#{enterPriseId,jdbcType=VARCHAR},
+      ORIGIN_CODE = #{originCode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+   <!-- 登录 -->
+  <select id="login" parameterType="java.util.HashMap" resultMap="BaseResultMap" >
+  	 select 
+    <include refid="Base_Column_List" />
+    from T_SYS_USER
+    where ACCOUNT = #{account,jdbcType=VARCHAR} and  PASSWORD = #{password,jdbcType=VARCHAR} 
+  </select>
+  
+   <select id="pageQuery" parameterType="java.util.HashMap"
+		resultMap="BaseResultMap">
+		${start} SELECT 
+		<include refid="Base_Column_Lists" />
+		from T_SYS_USER sys left join T_STORE_ENTERPRISE s on sys.ENTERPRISE_ID=s.id
+        <where>
+			<if test="name!=null and name!=''">
+			  and	sys.NAME LIKE '%${name}%'
+			</if>
+			<if test="company!=null and company!=''">
+			  and  s.ENTERPRISE_NAME LIKE '%${company}%'
+			</if>
+           <if test="originCode!=null and originCode!=''">
+              and  sys.ORIGIN_CODE = '${originCode}'
+           </if>
+        </where>
+		${end}
+	</select>
+	 <select id="distinctList" parameterType="java.util.HashMap"
+		resultMap="BaseResultMap">
+		${start} select distinct company from T_SYS_USER where company is not null
+		ORDER BY company DESC
+		${end}
+	</select>
+	<select id="getRecordCount" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_SYS_USER  sys left join T_STORE_ENTERPRISE s on sys.ENTERPRISE_ID=s.id
+		where 1=1
+			<if test="name!=null and name!=''">
+				and sys.NAME LIKE '%${name}%'
+			</if>
+			<if test="company!=null and company!=''">
+			 and s.ENTERPRISE_NAME LIKE '%${company}%'
+			</if>
+            <if test="originCode!=null and originCode!=''">
+              and  sys.ORIGIN_CODE = '${originCode}'
+            </if>
+	</select>
+	
+  <insert id="saveUserRole" parameterType="java.util.HashMap" >
+    insert into t_sys_user_role (ID, USER_ID, ROLE_ID
+      )
+    values (#{id,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}
+      )
+  </insert>
+ 
+   <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_USER
+    where ACCOUNT = #{account,jdbcType=VARCHAR}
+
+   </select>
+  
+    <delete id="deleteUserRole" parameterType="java.lang.String" >
+    delete from t_sys_user_role
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </delete>
+  
+  <select id="getListByRoleName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   select u.* from t_sys_role r,t_sys_user u,t_sys_user_role ur 
+   where u.id = ur.user_id and r.id = ur.role_id and r.name = #{roleName,jdbcType=VARCHAR}
+  </select>
+  
+    <select id="getListByStoreHouseAndType" parameterType="java.util.HashMap"
+		resultMap="BaseResultMap">
+    select s.NAME from t_sys_user s,t_sys_role r,t_sys_user_role sr
+    where sr.role_id=r.id
+    and sr.user_id=s.id
+    and r.type='${type}'
+    and s.company='${storeHouse}'
+  </select>
+  
+  <select id="getUserByPosition" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	SELECT * FROM T_SYS_USER WHERE POSITION = #{_parameter}
+  </select>
+
+  <select id="selectByCompany" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from T_SYS_USER
+    where COMPANY = #{company,jdbcType=VARCHAR}
+    AND ROWNUM =1
+
+  </select>
+
+
+  <select id="getUserName" resultType="java.lang.String" parameterType="java.lang.String" >
+    select NAME from t_sys_user where ID = #{ID}
+  </select>
+
+
+  <select id="getUserIds" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    SELECT ID from T_SYS_USER where NAME LIKE CONCAT(CONCAT('%',#{name}),'%')
+  </select>
+
+  <select id="getUserByExample" resultMap="BaseResultMap">
+    select ID,NAME from t_sys_user
+    <where>
+      <if test="originCode != null and originCode !=''">
+        AND ORIGIN_CODE = #{originCode}
+      </if>
+      <if test="position != null and position != ''">
+        AND POSITION like concat('%',concat(#{position},'%'))
+      </if>
+
+    </where>
+
+
+  </select>
+
+</mapper>

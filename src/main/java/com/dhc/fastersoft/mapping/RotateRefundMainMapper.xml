@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateRefundMainDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateRefundMain" id="rotateRefundMainResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="serial" column="SERIAL" jdbcType="VARCHAR" />
+		<result property="department" column="DEPARTMENT" jdbcType="VARCHAR" />
+		<result property="handleTime" column="HANDLE_TIME" jdbcType="TIMESTAMP" />
+		<result property="operator" column="OPERATOR" jdbcType="VARCHAR" />
+		<result property="modifier" column="MODIFIER" jdbcType="VARCHAR" />
+		<result property="modifyTime" column="MODIFY_TIME" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="columns_main">
+		ID,SERIAL,DEPARTMENT,HANDLE_TIME,OPERATOR,
+		MODIFIER,MODIFY_TIME
+	</sql>
+	<select id="getMaxSerial" parameterType="String" resultType="String">
+		SELECT MAX(SERIAL) from T_ROTATE_MARGIN_REFUND_MAIN
+	</select>
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.RotateRefundMain">
+         INSERT INTO T_ROTATE_MARGIN_REFUND_MAIN
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(#{id,jdbcType=VARCHAR},
+		#{serial,jdbcType=VARCHAR},
+		#{department,jdbcType=VARCHAR},
+		#{handleTime,jdbcType=TIMESTAMP},
+		#{operator,jdbcType=VARCHAR},
+		#{modifier,jdbcType=VARCHAR},
+		#{modifyTime,jdbcType=TIMESTAMP})
+	</insert>
+	<select id="get" parameterType="java.lang.String" resultMap="rotateRefundMainResultMap">
+		SELECT *
+		FROM T_ROTATE_MARGIN_REFUND_MAIN
+		<where>
+			ID=#{id,jdbcType=VARCHAR}
+		</where>
+
+	</select>
+	<select id="getBySerial" parameterType="String" resultMap="rotateRefundMainResultMap">
+		select <include refid="columns_main"/>
+		from T_ROTATE_MARGIN_REFUND_MAIN
+		WHERE SERIAL = #{serial,jdbcType=VARCHAR}
+	</select>
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM T_ROTATE_MARGIN_REFUND_MAIN
+		<where>
+			ID = #{_parameter}
+		</where>
+	</delete>
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotateRefundMain">
+		UPDATE T_ROTATE_MARGIN_REFUND_MAIN
+		SET
+		DEPARTMENT = #{department,jdbcType=VARCHAR},
+		HANDLE_TIME = #{handleTime,jdbcType=TIMESTAMP},
+		SERIAL = #{serial,jdbcType=VARCHAR},
+		MODIFIER=#{modifier,jdbcType=VARCHAR},
+		MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+		OPERATOR=#{operator,jdbcType=VARCHAR}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+</mapper>

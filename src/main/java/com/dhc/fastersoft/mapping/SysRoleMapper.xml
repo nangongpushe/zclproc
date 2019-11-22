@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.system.SysRoleDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.system.SysRole" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, TYPE, to_char(CREATE_TIME,'yyyy-MM-dd') CREATE_TIME, STATUS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_SYS_ROLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_SYS_ROLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.system.SysRole" >
+    insert into T_SYS_ROLE (ID, NAME, TYPE, 
+      CREATE_TIME, STATUS)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+     sysdate, #{status,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.system.SysRole" >
+    insert into T_SYS_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+       sysdate,
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.system.SysRole" >
+    update T_SYS_ROLE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.system.SysRole" >
+    update T_SYS_ROLE
+    set NAME = #{name,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="findRoleByUserId" resultType="java.lang.String">
+ 		select r.type from T_SYS_ROLE r,T_SYS_USER_ROLE ur where ur.ROLE_ID = r.id and ur.USER_ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+   <select id="findRoleIdByUserId" resultType="java.lang.String">
+ 		select r.id from T_SYS_ROLE r,T_SYS_USER_ROLE ur where ur.ROLE_ID = r.id and ur.USER_ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	 <select id="findRoleNameByUserId" resultType="java.lang.String">
+ 		select r.name from T_SYS_ROLE r,T_SYS_USER_ROLE ur where ur.ROLE_ID = r.id and ur.USER_ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+   <select id="pageQuery" parameterType="java.util.HashMap"
+		resultMap="BaseResultMap">
+		${start} SELECT 
+		<include refid="Base_Column_List" />
+		from T_SYS_ROLE
+		<where>
+			<if test="name!=null and name!=''">
+				NAME LIKE '%${name}%'
+			</if>
+		</where>
+		ORDER BY CREATE_TIME DESC,ID DESC
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM T_SYS_ROLE
+		<where>
+			<if test="name!=null and name!=''">
+				NAME LIKE '%${name}%'
+			</if>
+		</where>
+	</select>
+	
+    <select id="selectAll"
+		resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		from T_SYS_ROLE
+	</select>
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.yearReport.ReportYearGMKCDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.yearReport.ReportYearGMKC" >
+    <id column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="REPORT_YEAR" property="reportYear" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="GRAIN_TYPE" property="grainType" jdbcType="VARCHAR" />
+    <result column="SUBTOTAL" property="subtotal" jdbcType="DECIMAL" />
+    <result column="PROVINCE" property="province" jdbcType="DECIMAL" />
+    <result column="CITY" property="city" jdbcType="DECIMAL" />
+    <result column="COUNTY" property="county" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REPORT_ID, REPORT_YEAR, REPORT_NAME, GRAIN_TYPE, SUBTOTAL, PROVINCE, CITY, COUNTY
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_REPORT_YEAR_GMKC
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_REPORT_YEAR_GMKC
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearGMKC" >
+    insert into T_REPORT_YEAR_GMKC (REPORT_ID, REPORT_YEAR, REPORT_NAME, 
+      GRAIN_TYPE, SUBTOTAL, PROVINCE, 
+      CITY, COUNTY)
+    values (SEQ_REPORT_YEAR.NEXTVAL, #{reportYear,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR}, 
+      #{grainType,jdbcType=VARCHAR}, #{subtotal,jdbcType=DECIMAL}, #{province,jdbcType=DECIMAL}, 
+      #{city,jdbcType=DECIMAL}, #{county,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearGMKC" >
+    insert into T_REPORT_YEAR_GMKC
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        REPORT_ID,
+      </if>
+      <if test="reportYear != null" >
+        REPORT_YEAR,
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME,
+      </if>
+      <if test="grainType != null" >
+        GRAIN_TYPE,
+      </if>
+      <if test="subtotal != null" >
+        SUBTOTAL,
+      </if>
+      <if test="province != null" >
+        PROVINCE,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="county != null" >
+        COUNTY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        #{reportId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportYear != null" >
+        #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="grainType != null" >
+        #{grainType,jdbcType=VARCHAR},
+      </if>
+      <if test="subtotal != null" >
+        #{subtotal,jdbcType=DECIMAL},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=DECIMAL},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=DECIMAL},
+      </if>
+      <if test="county != null" >
+        #{county,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearGMKC" >
+    update T_REPORT_YEAR_GMKC
+    <set >
+      <if test="reportYear != null" >
+        REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="grainType != null" >
+        GRAIN_TYPE = #{grainType,jdbcType=VARCHAR},
+      </if>
+      <if test="subtotal != null" >
+        SUBTOTAL = #{subtotal,jdbcType=DECIMAL},
+      </if>
+      <if test="province != null" >
+        PROVINCE = #{province,jdbcType=DECIMAL},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=DECIMAL},
+      </if>
+      <if test="county != null" >
+        COUNTY = #{county,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearGMKC" >
+    update T_REPORT_YEAR_GMKC
+    set REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      GRAIN_TYPE = #{grainType,jdbcType=VARCHAR},
+      SUBTOTAL = #{subtotal,jdbcType=DECIMAL},
+      PROVINCE = #{province,jdbcType=DECIMAL},
+      CITY = #{city,jdbcType=DECIMAL},
+      COUNTY = #{county,jdbcType=DECIMAL}
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </update>
+  
+    <select id="selectByYear" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from T_REPORT_YEAR_GMKC
+	    where REPORT_YEAR = #{reportYear,jdbcType=VARCHAR}
+  	</select>
+</mapper>

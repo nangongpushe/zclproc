@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.NgasOperaSituationDao">
+    <resultMap id="tempResultMap" type="com.dhc.fastersoft.entity.NgasOperaSituation">
+        <result	column="ID"	jdbcType="VARCHAR"	property="id"/>
+        <result	column="OPERA_RECORD_ID" jdbcType="VARCHAR"	property="operaRecordId"/>
+        <result	column="PERIOD" jdbcType="VARCHAR"	property="period"/>
+        <result	column="TARGET_THICKNESS"	jdbcType="DECIMAL"	property="targetThickness"/>
+        <result	column="START_TIME"	jdbcType="TIMESTAMP"	property="startTime"/>
+        <result	column="END_TIME"	jdbcType="TIMESTAMP"	property="endTime"/>
+        <result	column="DURING_TIME"	jdbcType="DECIMAL"	property="duringTime"/>
+        <result	column="MAX_THICKNESS"	jdbcType="DECIMAL"	property="maxThickness"/>
+        <result	column="MIN_THICKNESS"	jdbcType="DECIMAL"	property="minThickness"/>
+        <result	column="AVG_THICKNESS"	jdbcType="DECIMAL"	property="avgThickness"/>
+        <result	column="ORDER_NO"	jdbcType="DECIMAL"	property="orderNo"/>
+
+    </resultMap>
+
+    <sql id="select_temp">
+        ID,OPERA_RECORD_ID,PERIOD,TARGET_THICKNESS,START_TIME,END_TIME,DURING_TIME,MAX_THICKNESS,MIN_THICKNESS,
+        AVG_THICKNESS,ORDER_NO
+    </sql>
+
+    <!--<sql id="Related">
+        T_STORAGE_GRAIN_INSPECTION_D t INNER JOIN T_STORAGE_GRAIN_INSPECTION ts
+    </sql>-->
+
+    <sql id="tablename">
+        T_NGAS_OPERA_SITUATION
+    </sql>
+
+    <select id="selectNgasOperaSituationByPid" resultMap="tempResultMap">
+        SELECT
+        <include refid="select_temp"/>
+        FROM
+        <!--<include refid="Related"/>-->
+        <include refid="tablename"/>
+        WHERE
+        OPERA_RECORD_ID=#{p_id}
+    </select>
+
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.NgasOperaSituation">
+        insert into <include refid="tablename"/> (<include refid="select_temp"/>)
+        values
+        (#{id,jdbcType=VARCHAR},#{operaRecordId,jdbcType=VARCHAR},#{period,jdbcType=VARCHAR},
+        #{targetThickness,jdbcType=DECIMAL},
+        #{startTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},#{duringTime,jdbcType=DECIMAL}
+        ,#{maxThickness,jdbcType=DECIMAL},#{minThickness,jdbcType=DECIMAL},#{avgThickness,jdbcType=DECIMAL},
+        #{orderNo,jdbcType=DECIMAL}
+        )
+    </insert>
+
+    <delete id="remove">
+        DELETE
+        FROM <include refid="tablename"></include>
+        <where>
+            OPERA_RECORD_ID=#{operaRecordId}
+        </where>
+    </delete>
+
+    <!--<update id="update">
+        UPDATE
+        <include refid="tablename"></include>
+        SET
+       TOPMAX=#{topMax},TOPMIN=#{topMin},
+        TOPAVG=#{topAvg}, PLACEID=#{placeId}
+        <where>
+            P_ID=#{p_id}
+        </where>
+    </update>-->
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateArriveAuditDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateArriveAudit" id="rotateArriveAuditResultMap">
+		<result property="arriveId" column="ARRIVE_ID" jdbcType="VARCHAR" />
+		<result property="auditorId" column="AUDITOR_ID" jdbcType="NVARCHAR" />
+		<result property="advice" column="ADVICE" jdbcType="NVARCHAR" />
+		<result property="reason" column="REASON" jdbcType="NVARCHAR" />
+		<result property="auditDate" column="AUDIT_DATE" jdbcType="TIMESTAMP" />
+		<result property="auditorName" column="AUDITOR_NAME" jdbcType="NVARCHAR" />
+		<result property="auditStep" column="AUDIT_STEP" jdbcType="NVARCHAR" />
+	</resultMap>
+</mapper>

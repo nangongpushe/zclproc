@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotatePaymentDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotatePayment" id="rotatePaymentResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="paySerial" column="PAY_SERIAL" jdbcType="NVARCHAR" />
+		<result property="reportDate" column="REPORT_DATE" jdbcType="TIMESTAMP" />
+		<result property="clientName" column="CLIENT_NAME" jdbcType="NVARCHAR" />
+		<result property="depositBank" column="DEPOSIT_BANK" jdbcType="TIMESTAMP" />
+		<result property="depositAccount" column="DEPOSIT_ACCOUNT" jdbcType="TIMESTAMP" />
+		<result property="payType" column="PAY_TYPE" jdbcType="NVARCHAR" />
+		<result property="proceedType" column="PROCEED_TYPE" jdbcType="NVARCHAR" />
+		<result property="operator" column="OPERATOR" jdbcType="NVARCHAR" />
+		<result property="status" column="STATUS" jdbcType="VARCHAR" />
+		<result property="groupId" column="GROUP_ID" jdbcType="NVARCHAR" />
+		<result property="reporterId" column="REPORTER_ID" jdbcType="NVARCHAR" />
+		<result property="clientId" column="CLIENT_ID" jdbcType="VARCHAR" />
+		<collection property="detailList" resultMap="com.dhc.fastersoft.dao.RotatePlanDetailDao.rotatePlanDetailResultMap"></collection>
+	</resultMap>
+
+	<sql id="columns_main">
+		ID,PAY_SERIAL,REPORT_DATE,CLIENT_NAME,DEPOSIT_BANK,DEPOSIT_ACCOUNT,
+		PAY_TYPE,PROCEED_TYPE,OPERATOR,STATUS,GROUP_ID,REPORTER_ID,CLIENT_ID
+	</sql>
+	
+	<sql id="s_columns_main">
+		ID,PAY_SERIAL,REPORT_DATE,CLIENT_NAME,DEPOSIT_BANK,DEPOSIT_ACCOUNT,
+		PAY_TYPE,PROCEED_TYPE,(select name from t_sys_user where id = OPERATOR) OPERATOR,STATUS,GROUP_ID,REPORTER_ID,CLIENT_ID
+	</sql>
+
+	<sql id="s_columns_mains">
+		t.ID,t.PAY_SERIAL,t.REPORT_DATE,ss.CLIENT_NAME,t.DEPOSIT_BANK,t.DEPOSIT_ACCOUNT,
+		t.PAY_TYPE,t.PROCEED_TYPE,(select name from t_sys_user where id = OPERATOR) OPERATOR,t.STATUS,t.GROUP_ID,t.REPORTER_ID,t.CLIENT_ID
+	</sql>
+
+	<sql id="columns_detail">
+		ID,PAYMENT_ID,SCHEME_NAME,BID_SERIAL,GRAIN_TYPE,QUANTITY
+		,PRICE,AMOUNT,CONCLUTE_ID
+	</sql>
+
+	<sql id="table_main"> T_ROTATE_PAYMENT </sql>
+	
+	<sql id="table_detail"> T_ROTATE_PAYMENT_DETAIL </sql>
+	
+	
+	<!-- 查询单个计划 -->
+	<select id="getPayment" parameterType="java.lang.String"
+		resultMap="rotatePaymentResultMap">
+		SELECT <include refid="s_columns_mains"/>
+		 FROM <include refid="table_main"/> t left  join T_CLIENT_INFO ss on t.CLIENT_ID = ss.ID
+		<where>
+			t.ID = #{_parameter}
+		</where>
+	</select>
+	
+	
+	<!-- 根据搜索条件查询计划列表 -->
+	<select id="list" parameterType="java.util.HashMap" resultMap="rotatePaymentResultMap">
+		<if test="pageIndex!=null and pageIndex!=''">
+			select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		 SELECT
+		<include refid="s_columns_mains" />
+		from
+		<include refid="table_main" /> t left  join T_CLIENT_INFO ss on t.CLIENT_ID = ss.ID
+		<where>
+			<if test="paySerial!=null and paySerial!=''">
+				AND t.PAY_SERIAL LIKE '%${paySerial}%'
+			</if>
+			<if test="reportDate!=null and reportDate!=''">
+				AND t.TO_CHAR(REPORT_DATE,'YYYY-MM-DD') = '${reportDate}'
+			</if>
+			<if test="clientName!=null and clientName!=''">
+				AND ss.CLIENT_NAME LIKE '%${clientName}%'
+			</if>
+			<if test="depositBank!=null and depositBank!=''">
+				AND t.DEPOSIT_BANK LIKE '%${depositBank}%'
+			</if>
+			<if test="depositAccount!=null and depositAccount!=''">
+				AND t.DEPOSIT_ACCOUNT LIKE '%${depositAccount}%'
+			</if>
+			<if test="payType!=null and payType!=''">
+				AND t.PAY_TYPE LIKE '%${payType}%'
+			</if>
+			<if test="proceedType!=null and proceedType!=''">
+				AND PROCEED_TYPE LIKE '%${proceedType}%'
+			</if>
+			<if test="status!=null and status!=''">
+				AND STATUS LIKE '%${status}%'
+			</if>
+		</where>
+		ORDER BY REPORT_DATE DESC
+		<if test="pageIndex!=null and pageIndex!='' and pageSize!=null and pageSize!=''">
+		) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+		where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) 
+		FROM <include refid="table_main"/> t left  join T_CLIENT_INFO ss on t.CLIENT_ID = ss.ID
+		<where>
+			<if test="paySerial!=null and paySerial!=''">
+				AND t.PAY_SERIAL LIKE '%${paySerial}%'
+			</if>
+			<if test="reportDate!=null and reportDate!=''">
+				AND t.TO_CHAR(REPORT_DATE,'YYYY-MM-DD') = '${reportDate}'
+			</if>
+			<if test="clientName!=null and clientName!=''">
+				AND ss.CLIENT_NAME LIKE '%${clientName}%'
+			</if>
+			<if test="depositBank!=null and depositBank!=''">
+				AND t.DEPOSIT_BANK LIKE '%${depositBank}%'
+			</if>
+			<if test="depositAccount!=null and depositAccount!=''">
+				AND t.DEPOSIT_ACCOUNT LIKE '%${depositAccount}%'
+			</if>
+			<if test="payType!=null and payType!=''">
+				AND t.PAY_TYPE LIKE '%${payType}%'
+			</if>
+			<if test="proceedType!=null and proceedType!=''">
+				AND t.PROCEED_TYPE LIKE '%${proceedType}%'
+			</if>
+			<if test="status!=null and status!=''">
+				AND t.STATUS LIKE '%${status}%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="listPaymentDetail" parameterType="java.util.HashMap"
+		resultMap="com.dhc.fastersoft.dao.RotatePaymentDetailDao.rotatePaymentDetailResultMap">
+		SELECT
+		<include refid="columns_detail" />
+		FROM <include refid="table_detail" />
+		<where>
+			<if test="paymentId!=null and paymentId!=''">
+				AND PAYMENT_ID = #{paymentId}
+			</if>
+			<if test="schemeName!=null and schemeName!=''">
+				AND SCHEME_NAME = #{schemeName}
+			</if>
+			<if test="bidSerial!=null and bidSerial!=''">
+				AND BID_SERIAL = #{bidSerial}
+			</if>
+			<if test="grainType!=null and grainType!=''">
+				AND GRAIN_TYPE = #{grainType}
+			</if>
+		</where>
+	</select>
+	
+
+	<insert id="savePayment" parameterType="com.dhc.fastersoft.entity.RotatePayment">
+		begin
+		INSERT INTO <include refid="table_main"/> (<include refid="columns_main"/>)
+		VALUES
+		(#{id},#{paySerial},#{reportDate},#{clientName},#{depositBank},#{depositAccount},
+		#{payType},#{proceedType},#{operator},#{status},#{groupId,jdbcType=NVARCHAR},
+		#{reporterId,jdbcType=NVARCHAR},#{clientId,jdbcType=NVARCHAR});
+
+		<foreach collection="detailList" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_detail" /> (<include refid="columns_detail"/>)
+			VALUES
+			(#{item.id},#{id},#{item.schemeName},
+			#{item.bidSerial,jdbcType=NVARCHAR},#{item.grainType},#{item.quantity},
+			#{item.price},#{item.amount},#{item.concluteId})
+		</foreach>
+		;end;
+	</insert>
+
+	<update id="updatePayment" parameterType="com.dhc.fastersoft.entity.RotatePayment">
+		begin
+		UPDATE
+		<include refid="table_main" />
+		SET
+		CLIENT_NAME = #{clientName},DEPOSIT_BANK = #{depositBank},
+		DEPOSIT_ACCOUNT=#{depositAccount},
+		PAY_TYPE =#{payType,jdbcType=NVARCHAR},
+		PROCEED_TYPE =#{proceedType,jdbcType=NVARCHAR},
+		STATUS=#{status},
+		CLIENT_ID=#{clientId,jdbcType=NVARCHAR},
+		GROUP_ID=#{groupId}
+		<where>
+			ID = #{id};
+		</where>
+		
+		DELETE FROM <include refid="table_detail" /> 
+		<where>
+			PAYMENT_ID = #{id};
+		</where>
+		
+		<foreach collection="detailList" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_detail" /> (<include refid="columns_detail"/>)
+			VALUES
+			(#{item.id},#{id},#{item.schemeName},
+			#{item.bidSerial,jdbcType=NVARCHAR},#{item.grainType},#{item.quantity},
+			#{item.price},#{item.amount},#{item.concluteId})
+		</foreach>
+		;end;
+	</update>
+	
+	<!-- 根据计划id删除计划 -->
+	<delete id="removePayment" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_main"/>
+		<where>
+			ID = '${_parameter}'
+		</where>
+	</delete>
+	
+	<!-- 根据计划id删除计划明细 -->
+	<delete id="removeDetail" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_detail" />
+		<where>
+			PAYMENT_ID = '${_parameter}'
+		</where>
+	</delete>
+	
+	<update id="updateStatus" parameterType="java.util.HashMap">
+		UPDATE <include refid="table_main"/>
+		SET
+			STATUS = #{status}
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+
+</mapper>

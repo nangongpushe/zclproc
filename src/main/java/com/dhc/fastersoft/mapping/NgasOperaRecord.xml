@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.NgasOperaRecordDao">
+    <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.NgasOperaRecord">
+        <result	column="ID"	jdbcType="VARCHAR"	property="id"/>
+        <result	column="WEATHER"	jdbcType="VARCHAR"	property="weather"/>
+        <result	column="TEMPERATURE"	jdbcType="DECIMAL"	property="temperature"/>
+        <result	column="AIR_WET"	jdbcType="DECIMAL"	property="airWet"/>
+        <result	column="STOREHOUSE_TYPE"	jdbcType="VARCHAR"	property="storehouseType"/>
+        <result	column="ENCODE"	jdbcType="VARCHAR"	property="encode"/>
+        <result	column="SEAL_METHOD"	jdbcType="VARCHAR"	property="sealMethod"/>
+        <result	column="STOREHOUSE_STRUCTURE"	jdbcType="VARCHAR"	property="storehouseStructure"/>
+        <result	column="AIRTIGHTNESS"	jdbcType="VARCHAR"	property="airTightness"/>
+        <result	column="INSTORE_TIME"	jdbcType="TIMESTAMP"	property="instoreTime"/>
+        <result	column="STOREHOUSE_VOLUME"	jdbcType="DECIMAL"	property="storehouseVolume"/>
+        <result	column="GRAIN_BULK_VOLUME"	jdbcType="DECIMAL"	property="grainBulkVolume"/>
+        <result	column="SPACE_VOLUME"	jdbcType="DECIMAL"	property="spaceVolume"/>
+        <result	column="STACK_FORM"	jdbcType="VARCHAR"	property="stackForm"/>
+        <result	column="GRAIN_HEIGHT"	jdbcType="DECIMAL"	property="grainHeight"/>
+        <result	column="ISFUMIGATED"	jdbcType="VARCHAR"	property="isfumigated"/>
+        <result	column="GRAIN_TYPE"	jdbcType="VARCHAR"	property="grainType"/>
+        <result	column="QUANTITY"	jdbcType="VARCHAR"	property="quantity"/>
+        <result	column="IMPURITY"	jdbcType="DECIMAL"	property="impurity"/>
+        <result	column="STOREHOUSE_TEMP"	jdbcType="DECIMAL"	property="storehouseTemp"/>
+        <result	column="STOREHOUSE_WET"	jdbcType="DECIMAL"	property="storehouseWet"/>
+        <result	column="DEW"	jdbcType="DECIMAL"	property="dew"/>
+        <result	column="MAX_GRAIN_TEMP"	jdbcType="DECIMAL"	property="maxGraintemp"/>
+        <result	column="MIN_GRAIN_TEMP"	jdbcType="DECIMAL"	property="minGrainTemp"/>
+        <result	column="AVG_GRAIN_TEMP"	jdbcType="DECIMAL"	property="avgGraintemp"/>
+        <result	column="PEST_LEVEL"	jdbcType="VARCHAR"	property="pestLevel"/>
+        <result	column="PEST_NAMES"	jdbcType="VARCHAR"	property="pestNames"/>
+        <result	column="PEST_DENSITY"	jdbcType="DECIMAL"	property="pestDensity"/>
+        <result	column="PEST_INSECT"	jdbcType="VARCHAR"	property="pestInsect"/>
+        <result	column="FIND_PEST_TIME"	jdbcType="TIMESTAMP"	property="findPestTime"/>
+        <result	column="WIND_TUNNEL_TYPE"	jdbcType="VARCHAR"	property="windTunnelType"/>
+        <result	column="GAS_CHARGE_TYPE"	jdbcType="VARCHAR"	property="gasChargeType"/>
+        <result	column="NMAKE_PLANT"	jdbcType="VARCHAR"	property="nmakePlant"/>
+        <result	column="DEGAS_DATE"	jdbcType="TIMESTAMP"	property="degasDate"/>
+        <result	column="DEGAS_TYPE"	jdbcType="VARCHAR"	property="degasType"/>
+        <result	column="DEGAS_TIME"	jdbcType="DECIMAL"	property="degasTime"/>
+        <result	column="RESULT_JUDGE"	jdbcType="VARCHAR"	property="resultJudge"/>
+        <result	column="SUM_ENERGY"	jdbcType="DECIMAL"	property="sumEnergy"/>
+        <result	column="AVG_ENERGY"	jdbcType="DECIMAL"	property="avgEnergy"/>
+        <result	column="REMARK"	jdbcType="VARCHAR"	property="remark"/>
+        <result	column="CREATE_DATE"	jdbcType="TIMESTAMP"	property="createDate"/>
+        <result	column="CREATORID"	jdbcType="VARCHAR"	property="creatorId"/>
+        <result column="REPORT_DATE" jdbcType="TIMESTAMP" property="reportDate"/>
+        <result	column="CREATOR"	jdbcType="VARCHAR"	property="creator"/>
+        <result	column="WAREHOUSE"	jdbcType="VARCHAR"	property="warehouse"/>
+        <result column="WAREHOUSE_ID" jdbcType="VARCHAR" property="warehouseId"/>
+    </resultMap>
+
+
+    <sql id="columns">
+        ID, WEATHER, TEMPERATURE,
+        AIR_WET, STOREHOUSE_TYPE, ENCODE,
+        SEAL_METHOD, STOREHOUSE_STRUCTURE, AIRTIGHTNESS,
+        INSTORE_TIME, STOREHOUSE_VOLUME, GRAIN_BULK_VOLUME,
+        SPACE_VOLUME, STACK_FORM, GRAIN_HEIGHT,
+        ISFUMIGATED, GRAIN_TYPE, QUANTITY,
+        IMPURITY, STOREHOUSE_TEMP, STOREHOUSE_WET,
+        DEW, MAX_GRAIN_TEMP, MIN_GRAIN_TEMP,
+        AVG_GRAIN_TEMP, PEST_LEVEL, PEST_NAMES,
+        PEST_DENSITY, PEST_INSECT, FIND_PEST_TIME,
+        WIND_TUNNEL_TYPE, GAS_CHARGE_TYPE, NMAKE_PLANT,
+        DEGAS_DATE, DEGAS_TYPE, DEGAS_TIME,
+        RESULT_JUDGE, SUM_ENERGY, AVG_ENERGY,
+        REMARK, CREATE_DATE, CREATORID,
+        REPORT_DATE, CREATOR, WAREHOUSE,WAREHOUSE_ID
+    </sql>
+
+
+    <sql id="tablename">
+        T_NGAS_OPERA_RECORD
+    </sql>
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.NgasOperaRecord">
+        insert into <include refid="tablename"></include> (<include refid="columns"></include>
+        )
+        values (#{id,jdbcType=VARCHAR}, #{weather,jdbcType=VARCHAR}, #{temperature,jdbcType=VARCHAR},
+        #{airWet,jdbcType=VARCHAR}, #{storehouseType,jdbcType=VARCHAR}, #{encode,jdbcType=DECIMAL},
+        #{sealMethod,jdbcType=DECIMAL}, #{storehouseStructure,jdbcType=DECIMAL}, #{airTightness,jdbcType=DECIMAL},
+        #{instoreTime,jdbcType=DECIMAL}, #{storehouseVolume,jdbcType=DECIMAL}, #{grainBulkVolume,jdbcType=DECIMAL},
+        #{spaceVolume,jdbcType=DECIMAL}, #{stackForm,jdbcType=DECIMAL}, #{grainHeight,jdbcType=DECIMAL},
+        #{isfumigated,jdbcType=DECIMAL}, #{grainType,jdbcType=DECIMAL}, #{quantity,jdbcType=DECIMAL},
+        #{impurity,jdbcType=DECIMAL}, #{storehouseTemp,jdbcType=DECIMAL}, #{storehouseWet,jdbcType=DECIMAL},
+        #{dew,jdbcType=DECIMAL}, #{maxGraintemp,jdbcType=DECIMAL}, #{minGrainTemp,jdbcType=DECIMAL},
+        #{avgGraintemp,jdbcType=VARCHAR}, #{pestLevel,jdbcType=VARCHAR}, #{pestNames,jdbcType=VARCHAR},
+        #{pestDensity,jdbcType=DECIMAL}, #{pestInsect,jdbcType=DECIMAL}, #{findPestTime,jdbcType=VARCHAR},
+        #{windTunnelType,jdbcType=VARCHAR}, #{gasChargeType,jdbcType=DECIMAL}, #{nmakePlant,jdbcType=DECIMAL},
+        #{degasDate,jdbcType=VARCHAR}, #{degasType,jdbcType=VARCHAR}, #{degasTime,jdbcType=VARCHAR},
+        #{resultJudge,jdbcType=VARCHAR},  #{sumEnergy,jdbcType=VARCHAR},
+        #{avgEnergy,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},SYSDATE, #{creatorId,jdbcType=VARCHAR},
+        #{reportDate,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{warehouse,jdbcType=VARCHAR},#{warehouseId,jdbcType=VARCHAR}
+        )
+    </insert>
+    <select id="getPrimId" resultType="java.lang.String">
+        select SEQ_T_NGAS_OPERA_RECORD.NEXTVAL from dual
+    </select>
+
+
+    <select id="count" parameterType="java.util.HashMap" resultType="_int">
+        SELECT COUNT(A.ID)
+        FROM <include refid="tablename"></include> A
+        <if test="storehouseStatus != null and storehouseStatus != ''">
+            JOIN T_STORAGE_STOREHOUSE B ON A.ENCODE = B.ENCODE
+        </if>
+        LEFT JOIN T_STORAGE_WAREHOUSE W ON A.WAREHOUSE_ID = W.ID
+        <where>
+            <if test="storehouseStatus != null and storehouseStatus != ''">
+                AND B.STATUS LIKE '%${storehouseStatus}%'
+            </if>
+            <if test="warehouse != null and warehouse != ''">
+                AND W.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+            </if>
+            <if test="storehouseEncode != null and storehouseEncode != ''">
+                AND A.encode LIKE '%${storehouseEncode}%'
+            </if>
+
+            <if test="reportDate != null and reportDate != ''">
+                AND TO_CHAR(report_Date,'YYYY"-"MM"-"DD') LIKE '%${reportDate}%'
+            </if>
+            <if test="creator != ''">
+                AND A.CREATOR = #{creator,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT A.ID, A.WEATHER, A.TEMPERATURE,
+        A.AIR_WET, A.STOREHOUSE_TYPE, A.ENCODE,
+        A.SEAL_METHOD, A.STOREHOUSE_STRUCTURE, A.AIRTIGHTNESS,
+        A.INSTORE_TIME, A.STOREHOUSE_VOLUME, A.GRAIN_BULK_VOLUME,
+        A.SPACE_VOLUME, A.STACK_FORM, A.GRAIN_HEIGHT,
+        A.ISFUMIGATED, A.GRAIN_TYPE, A.QUANTITY,
+        A.IMPURITY, A.STOREHOUSE_TEMP, A.STOREHOUSE_WET,
+        A.DEW, A.MAX_GRAIN_TEMP, A.MIN_GRAIN_TEMP,
+        A.AVG_GRAIN_TEMP, A.PEST_LEVEL, A.PEST_NAMES,
+        A.PEST_DENSITY, A.PEST_INSECT, A.FIND_PEST_TIME,
+        A.WIND_TUNNEL_TYPE, A.GAS_CHARGE_TYPE, A.NMAKE_PLANT,
+        A.DEGAS_DATE, DEGAS_TYPE, A.DEGAS_TIME,
+        A.RESULT_JUDGE, SUM_ENERGY, A.AVG_ENERGY,
+        A.REMARK, A.CREATE_DATE, A.CREATORID,
+        A.REPORT_DATE, A.CREATOR, W.WAREHOUSE_SHORT AS WAREHOUSE,A.WAREHOUSE_ID
+        FROM <include refid="tablename"></include> A
+        LEFT JOIN T_STORAGE_WAREHOUSE W ON W.ID = A.WAREHOUSE_ID
+        <where>
+            A.ID = #{id}
+        </where>
+    </select>
+
+    <select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        ${start}
+        SELECT
+        A.ID, A.WEATHER, A.TEMPERATURE,
+        A.AIR_WET, A.STOREHOUSE_TYPE, A.ENCODE,
+        A.SEAL_METHOD, A.STOREHOUSE_STRUCTURE, A.AIRTIGHTNESS,
+        A.INSTORE_TIME, A.STOREHOUSE_VOLUME, A.GRAIN_BULK_VOLUME,
+        A.SPACE_VOLUME, A.STACK_FORM, A.GRAIN_HEIGHT,
+        A.ISFUMIGATED, A.GRAIN_TYPE, A.QUANTITY,
+        A.IMPURITY, A.STOREHOUSE_TEMP, A.STOREHOUSE_WET,
+        A.DEW, A.MAX_GRAIN_TEMP, A.MIN_GRAIN_TEMP,
+        A.AVG_GRAIN_TEMP, A.PEST_LEVEL, A.PEST_NAMES,
+        A.PEST_DENSITY, A.PEST_INSECT, A.FIND_PEST_TIME,
+        A.WIND_TUNNEL_TYPE, A.GAS_CHARGE_TYPE, A.NMAKE_PLANT,
+        A.DEGAS_DATE, A.DEGAS_TYPE, A.DEGAS_TIME,
+        A.RESULT_JUDGE, A.SUM_ENERGY, A.AVG_ENERGY,
+        A.REMARK, A.CREATE_DATE, A.CREATORID,
+        A.REPORT_DATE, A.CREATOR, W.WAREHOUSE_SHORT AS WAREHOUSE
+        FROM <include refid="tablename"></include> A
+        <if test="storehouseStatus != null and storehouseStatus != ''">
+            JOIN T_STORAGE_STOREHOUSE B ON A.ENCODE = B.ENCODE
+        </if>
+        LEFT JOIN T_STORAGE_WAREHOUSE W ON A.WAREHOUSE_ID = W.ID
+        <where>
+            <if test="storehouseStatus != null and storehouseStatus != ''">
+                AND B.STATUS LIKE '%${storehouseStatus}%'
+            </if>
+            <if test="warehouse != null and warehouse != ''">
+                AND W.WAREHOUSE_SHORT LIKE '%${warehouse}%'
+            </if>
+            <if test="storehouseEncode != null and storehouseEncode != ''">
+                AND A.encode LIKE '%${storehouseEncode}%'
+            </if>
+
+            <if test="reportDate != null and reportDate != ''">
+                AND TO_CHAR(A.report_Date,'YYYY"-"MM"-"DD') LIKE '%${reportDate}%'
+            </if>
+            <if test="creator != ''">
+                AND A.CREATOR = #{creator,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY A.CREATE_DATE DESC
+        ${end}
+    </select>
+
+    <delete id="remove" parameterType="java.lang.String">
+        DELETE
+        FROM <include refid="tablename"></include>
+        <where>
+            ID = #{id}
+        </where>
+    </delete>
+
+    <update id="update" parameterType="com.dhc.fastersoft.entity.NgasOperaRecord">
+        UPDATE
+        <include refid="tablename"></include>
+        SET
+        WEATHER=#{weather,jdbcType=VARCHAR},TEMPERATURE=#{temperature,jdbcType=DECIMAL},
+        AIR_WET=#{airWet,jdbcType=DECIMAL},
+        STOREHOUSE_TYPE=#{storehouseType,jdbcType=VARCHAR},ENCODE=#{encode,jdbcType=VARCHAR},
+        SEAL_METHOD=#{sealMethod,jdbcType=VARCHAR},STOREHOUSE_STRUCTURE=#{storehouseStructure,jdbcType=VARCHAR},
+        AIRTIGHTNESS=#{airTightness,jdbcType=VARCHAR},
+        INSTORE_TIME=	#{instoreTime,jdbcType=TIMESTAMP},STOREHOUSE_VOLUME=#{storehouseVolume,jdbcType=DECIMAL},
+        GRAIN_BULK_VOLUME=#{grainBulkVolume,jdbcType=DECIMAL},SPACE_VOLUME=#{spaceVolume,jdbcType=DECIMAL},
+        STACK_FORM=#{stackForm,jdbcType=VARCHAR},GRAIN_HEIGHT=#{grainHeight,jdbcType=DECIMAL},ISFUMIGATED=#{isfumigated,jdbcType=VARCHAR},
+        GRAIN_TYPE=#{grainType,jdbcType=VARCHAR},QUANTITY=#{quantity,jdbcType=DECIMAL},IMPURITY=#{impurity,jdbcType=DECIMAL},
+        STOREHOUSE_TEMP=#{storehouseTemp,jdbcType=DECIMAL},STOREHOUSE_WET=#{storehouseWet,jdbcType=DECIMAL},
+        DEW=#{dew,jdbcType=DECIMAL},MAX_GRAIN_TEMP=#{maxGraintemp,jdbcType=DECIMAL},
+        MIN_GRAIN_TEMP=#{minGrainTemp,jdbcType=DECIMAL},AVG_GRAIN_TEMP=#{avgGraintemp,jdbcType=DECIMAL},
+        PEST_LEVEL=#{pestLevel,jdbcType=VARCHAR},
+        PEST_NAMES=#{pestNames,jdbcType=VARCHAR},
+        PEST_DENSITY=#{pestDensity,jdbcType=DECIMAL},PEST_INSECT=#{pestInsect,jdbcType=VARCHAR},
+        FIND_PEST_TIME=#{findPestTime,jdbcType=TIMESTAMP},WIND_TUNNEL_TYPE=#{windTunnelType,jdbcType=VARCHAR},
+        GAS_CHARGE_TYPE=#{gasChargeType,jdbcType=VARCHAR},NMAKE_PLANT=#{nmakePlant,jdbcType=VARCHAR},
+        DEGAS_DATE=#{degasDate,jdbcType=TIMESTAMP},DEGAS_TYPE=#{degasType,jdbcType=VARCHAR},DEGAS_TIME=#{degasTime,jdbcType=DECIMAL},
+        RESULT_JUDGE=#{resultJudge,jdbcType=VARCHAR}
+        ,SUM_ENERGY=#{sumEnergy,jdbcType=DECIMAL},AVG_ENERGY=#{avgEnergy,jdbcType=DECIMAL},
+        REMARK=#{remark,jdbcType=VARCHAR},REPORT_DATE=#{reportDate,jdbcType=TIMESTAMP},
+        WAREHOUSE=#{warehouse,jdbcType=VARCHAR},WAREHOUSE_ID=#{warehouseId,jdbcType=VARCHAR}
+        <where>
+            ID = #{id,jdbcType=VARCHAR}
+        </where>
+    </update>
+
+    <!--<select id="listForECahrt" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT <include refid="selectColumns"></include>
+        FROM <include refid="tablename"></include>
+        <where>
+            WAREHOUSE = #{warehouse}
+            AND ENCODE = #{encode}
+            AND (REPORT_DATE BETWEEN TO_DATE(#{statisticBeginDate},'YYYY"-"MM"-"DD') AND TO_DATE(#{statisticEndDate},'YYYY"-"MM"-"DD'))
+        </where>
+        ORDER BY REPORT_DATE ASC
+    </select>-->
+</mapper>

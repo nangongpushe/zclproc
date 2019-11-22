@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.StorageEnergyDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.StorageEnergy" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="WAREHOUSE_NAME" property="warehouseName" jdbcType="VARCHAR" />
+    <result column="WORK_TYPE" property="workType" jdbcType="VARCHAR" />
+    <result column="WORK_TIME" property="workTime" jdbcType="TIMESTAMP" />
+    <result column="ENERGY" property="energy" jdbcType="DOUBLE" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID id, WAREHOUSE_NAME warehouseName, WORK_TYPE workType, WORK_TIME workTime, ENERGY energy
+  </sql>
+  <!--  <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+				<include refid="Base_Column_List" />
+		FROM T_STORAGE_ENERGY 
+		 WHERE 1=1
+		 <if test="warehouseName!=null and warehouseName!=''">
+			 and  WAREHOUSE_NAME  = '${warehouseName}'
+		</if>
+		
+		<if test="workType!=null and workType!=''">
+			 and  WORK_TYPE  = '${workType}'
+		</if>
+		
+		 <if test="workTime!=null and workTime!=''">
+			to_date(to_char(WORK_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') = to_date('${workTime}','YYYY-MM-DD')
+		</if>
+		
+		${end}
+	</select> -->
+	
+	   <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		select work_type,warehouse_name,   NVL(H0,0)||';' ||NVL(H1,0) ||';' ||NVL(H2,0) ||';' ||NVL(H3,0) ||';'|| NVL(H4,0) ||';'
+		 ||NVL(H5,0) ||';' ||NVL(H6,0) ||';' ||NVL(H7,0) ||';' ||NVL(H8,0) ||';'|| NVL(H9,0) ||';'
+		  ||NVL(H10,0) ||';' ||NVL(H11,0) ||';' ||NVL(H12,0) ||';'|| NVL(H13,0) ||';' ||NVL(H14,0) ||';'
+		  || NVL(H15,0) ||';' ||NVL(H16,0) ||';' ||NVL(H17,0) ||';' ||NVL(H18,0) ||';' ||NVL(H19,0) ||';'
+		  || NVL(H20,0) ||';'||NVL(H21,0)||';'||NVL(H22,0)||';'||NVL(H23,0)||';'||NVL(H24,0) hour from 
+		(select  temp.warehouse_name warehouse_name,temp.work_type work_type,temp.hh hh,e.energy energy from t_storage_energy e,  (select warehouse_name,work_type, TO_CHAR(work_time,'hh24') hh from
+		t_storage_energy group by warehouse_name,work_type,TO_CHAR(work_time,'hh24') )temp where temp.warehouse_name=e.warehouse_name
+		and temp.work_type=e.work_type and  TO_CHAR(e.work_time,'hh24')=hh
+		 <if test="warehouseName!=null and warehouseName!=''">
+			 and  e.WAREHOUSE_NAME  = '${warehouseName}'
+		</if>
+		
+		<if test="workType!=null and workType!=''">
+			 and  e.WORK_TYPE  = '${workType}'
+		</if>
+		
+		 <if test="workTime!=null and workTime!=''">
+		 and	to_date(to_char(e.WORK_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') = to_date('${workTime}','YYYY-MM-DD')
+		</if>
+		
+		)PIVOT( sum(energy) for hh IN('00' H0,'01' H1,'02' H2,'03' H3,'04' H4 ,'05' H5,'06' H6,'07' H7,'08' H8,'09' H9, 
+                       '10' H10,'11' H11,'12' H12,'13' H13,'14' H14 ,   '15' H15,'16' H16,'17' H17,'18' H18,'19' H19,  
+                        '20' H20,'21' H21,'22' H22,'23' H23,'24' H24))
+	</select>
+	
+	
+	   <select id="pageQuery1" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  		 select work_type,warehouse_name,   NVL(H1,0) ||';' ||NVL(H2,0) ||';' ||NVL(H3,0) ||';'|| NVL(H4,0) ||';'    ||NVL(H5,0) ||';'
+       ||NVL(H6,0) ||';' ||NVL(H7,0) ||';' ||NVL(H8,0) ||';'|| NVL(H9,0) ||';'     ||NVL(H10,0) ||';' ||NVL(H11,0) ||';' 
+       ||NVL(H12,0) ||';'|| NVL(H13,0) ||';' ||NVL(H14,0) ||';'     || NVL(H15,0) ||';' ||NVL(H16,0) ||';' ||NVL(H17,0) ||';'
+        ||NVL(H18,0) ||';' ||NVL(H19,0) ||';'     || NVL(H20,0) ||';'||NVL(H21,0)||';'||NVL(H22,0)||';'||NVL(H23,0)||';'||NVL(H24,0)
+         ||NVL(H25,0) ||';' ||NVL(H26,0) ||';'     || NVL(H27,0) ||';'||NVL(H28,0)||';'||NVL(H29,0)||';'||NVL(H30,0)||';'||NVL(H31,0)
+         hour 
+        from   
+        (select sum(energy) energy, warehouse_name,work_type, TO_CHAR(work_time,'dd') hh from    t_storage_energy 
+        WHERE 1=1  
+           <if test="warehouseName!=null and warehouseName!=''">
+			 and  WAREHOUSE_NAME  = '${warehouseName}'
+		</if>
+		
+		<if test="workType!=null and workType!=''">
+			 and  WORK_TYPE  = '${workType}'
+		</if>
+		
+		 <if test="workTime!=null and workTime!=''">
+		 and	to_date(to_char(WORK_TIME,'YYYY-MM'),'YYYY-MM') = to_date('${workTime}','YYYY-MM')
+		</if>
+        group by warehouse_name,work_type,TO_CHAR(work_time,'dd') )     
+                   
+                     PIVOT( sum(energy) for hh IN('01' H1,'02' H2,'03' H3,'04' H4 ,   '05' H5,'06' H6,'07' H7,'08' H8,'09' H9, 
+                       '10' H10,'11' H11,'12' H12,'13' H13,'14' H14 ,   '15' H15,'16' H16,'17' H17,'18' H18,'19' H19,  
+                        '20' H20,'21' H21,'22' H22,'23' H23,'24' H24,'25' H25,'26' H26,'27' H27,'28' H28,'29' H29,'30' H30,'31' H31))
+	</select>
+	
+	
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_STORAGE_ENERGY  
+		WHERE 1=1	
+		<if test="warehouseName!=null and warehouseName!=''">
+			 and  WAREHOUSE_NAME  = '${warehouseName}'
+		</if>
+		
+		<if test="workType!=null and workType!=''">
+			 and  WORK_TYPE  = '${workType}'
+		</if>
+		
+		 <if test="workTime!=null and workTime!=''">
+			and to_date(to_char(WORK_TIME,'YYYY-MM-DD'),'YYYY-MM-DD') = to_date('${workTime}','YYYY-MM-DD')
+		</if>
+	</select>
+	
+		
+	<select id="getRecordCount1" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_STORAGE_ENERGY  
+		WHERE 1=1	
+		<if test="warehouseName!=null and warehouseName!=''">
+			 and  WAREHOUSE_NAME  = '${warehouseName}'
+		</if>
+		
+		<if test="workType!=null and workType!=''">
+			 and  WORK_TYPE  = '${workType}'
+		</if>
+		
+		 <if test="workTime!=null and workTime!=''">
+			and to_date(to_char(WORK_TIME,'YYYY-MM'),'YYYY-MM') = to_date('${workTime}','YYYY-MM')
+		</if>
+	</select>
+	
+	<select id="getStorageEnergy" parameterType="com.dhc.fastersoft.entity.StorageEnergy"  resultType="com.dhc.fastersoft.entity.StorageEnergy">
+		SELECT <include refid="Base_Column_List" />
+		FROM T_STORAGE_ENERGY 
+		 WHERE WORK_TIME=to_date(#{workTime},'YYYY-MM-DD hh24')
+		 and WAREHOUSE_NAME=#{warehouseName,jdbcType=VARCHAR}
+		 and WORK_TYPE = #{workType,jdbcType=VARCHAR}
+	</select>
+	
+	
+	
+	<select id="getStorageEnergyById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.StorageEnergy">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM T_STORAGE_ENERGY 
+		 WHERE ID=#{id,jdbcType=VARCHAR}	
+		
+	</select>
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.StorageEnergy" >
+ 
+      
+       insert into T_STORAGE_ENERGY (ID, WAREHOUSE_NAME, WORK_TYPE, 
+      WORK_TIME, ENERGY)
+    values (#{id,jdbcType=VARCHAR}, #{warehouseName,jdbcType=VARCHAR}, #{workType,jdbcType=VARCHAR}, 
+      to_date(#{workTime,jdbcType=TIMESTAMP}, 'yyyy-mm-dd hh24') , #{energy,jdbcType=DOUBLE})
+      
+      
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.StorageEnergy">
+	 update T_STORAGE_ENERGY
+    set 
+       WAREHOUSE_NAME = #{warehouseName,jdbcType=VARCHAR},
+      WORK_TYPE = #{workType,jdbcType=VARCHAR},
+      WORK_TIME =  to_date(#{workTime,jdbcType=TIMESTAMP}, 'yyyy-mm-dd hh24'),
+      ENERGY = #{energy,jdbcType=DOUBLE}
+      WHERE ID='${id}'			
+	</update>
+	
+	 
+
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORAGE_ENERGY
+		WHERE ID=#{id,jdbcType=VARCHAR}
+	</delete>
+  
+  
+  
+</mapper>

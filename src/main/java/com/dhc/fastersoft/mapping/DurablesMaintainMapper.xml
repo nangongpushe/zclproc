@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.DurablesMaintainDao" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.DurablesMaintain" >
+
+    <result column="ID" 				property="id" 			jdbcType="NVARCHAR" />
+    <result column="DURABLES_ID" 		property="durablesId" 	jdbcType="NVARCHAR" />
+    <result column="ENCODE" 			property="encode" 		jdbcType="NVARCHAR" />
+    <result column="TYPE" 				property="type" 		jdbcType="NVARCHAR" />
+    <result column="COMMODITY" 			property="commodity" 	jdbcType="NVARCHAR" />
+    <result column="MAINTAIN_DATE" 		property="maintainDate" jdbcType="TIMESTAMP" />
+    <result column="MAINTAIN_MAN" 		property="maintainMan" 	jdbcType="NVARCHAR" />
+    <result column="MAINTAIN_CONTENT" 	property="maintainContent" jdbcType="NVARCHAR" />
+    <result column="REMARK" 			property="remark" 		jdbcType="NVARCHAR" />
+  </resultMap>
+  
+   <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+		${start} 
+		SELECT 
+			ID id, DURABLES_ID durablesId, ENCODE encode, TYPE type, COMMODITY commodity, TO_CHAR(MAINTAIN_DATE,'YYYY-MM-DD')  maintainDate, 
+     		 MAINTAIN_MAN maintainMan, MAINTAIN_CONTENT maintainContent, REMARK remark
+		 FROM T_MATERIAL_DURABLES_MAINTAIN 	
+		 WHERE 1=1		 
+		  <if test="commodity!=null and commodity!=''">
+			 and  COMMODITY  LIKE '%${commodity}%'
+		</if>
+		<if test="type!=null and type !=''">
+			 and  TYPE  = '${type}'
+		</if>
+		<if test="encode!=null and encode!=''">
+			 and  ENCODE  LIKE '%${encode}%'
+		</if>
+		
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>	
+		
+		order by MAINTAIN_DATE DESC
+		${end}
+	</select>
+	
+	 <select id="exportxls" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  
+	
+		SELECT 
+			ID id, DURABLES_ID durablesId, ENCODE encode, TYPE type, COMMODITY commodity, TO_CHAR(MAINTAIN_DATE,'YYYY-MM-DD')  maintainDate, 
+     		 MAINTAIN_MAN maintainMan, MAINTAIN_CONTENT maintainContent, REMARK remark
+		 FROM T_MATERIAL_DURABLES_MAINTAIN 	
+		 WHERE 1=1		 
+		  <if test="commodity!=null and commodity!=''">
+			 and  COMMODITY  LIKE '%${commodity}%'
+		</if>
+		<if test="type!=null and type !=''">
+			 and  TYPE  ='${type}'
+		</if>
+		<if test="encode!=null and encode!=''">
+			 and  ENCODE  ='${encode}'
+		</if>
+		
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>	
+		
+		order by MAINTAIN_DATE DESC
+		
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_MATERIAL_DURABLES_MAINTAIN  
+		 WHERE 1=1		 
+		 <if test="commodity!=null and commodity!=''">
+			 and  COMMODITY  LIKE '%${commodity}%'
+		</if>
+		<if test="type!=null and type !=''">
+			 and  TYPE  ='${type}'
+		</if>
+		<if test="encode!=null and encode!=''">
+			 and  ENCODE  LIKE '%${encode}%'
+		</if>
+		
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd==null or timeEnd=='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') >= to_date('${timeStart}','YYYY-MM-DD')
+		</if>
+		<if test="(timeStart==null or timeStart=='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') <![CDATA[ <= ]]> to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>
+		<if test="(timeStart!=null and timeStart!='') and (timeEnd!=null and timeEnd!='')">
+				AND to_date(to_char(MAINTAIN_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') BETWEEN to_date('${timeStart}','YYYY-MM-DD') AND to_date('${timeEnd}','YYYY-MM-DD') 
+		</if>		 
+		 
+		
+	</select>
+	
+	<select id="getDurablesMaintainById" parameterType="java.lang.String" resultType="com.dhc.fastersoft.entity.DurablesMaintain">
+		SELECT 
+			 
+			ID id, DURABLES_ID durablesId, ENCODE encode, TYPE type, COMMODITY commodity, TO_CHAR(MAINTAIN_DATE,'YYYY-MM-DD')  maintainDate, 
+     		 MAINTAIN_MAN maintainMan, MAINTAIN_CONTENT maintainContent, REMARK remark
+		 FROM T_MATERIAL_DURABLES_MAINTAIN 		
+		where ID=#{id,jdbcType=NVARCHAR}
+		
+	</select>
+	
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.DurablesMaintain" >
+ 
+      insert into T_MATERIAL_DURABLES_MAINTAIN (ID, DURABLES_ID, ENCODE, 
+      TYPE, COMMODITY, MAINTAIN_DATE, 
+      MAINTAIN_MAN, MAINTAIN_CONTENT, REMARK
+      )
+    values (#{id,jdbcType=NVARCHAR}, #{durablesId,jdbcType=NVARCHAR}, #{encode,jdbcType=NVARCHAR}, 
+      #{type,jdbcType=NVARCHAR}, #{commodity,jdbcType=NVARCHAR}, to_date(#{maintainDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'), 
+      #{maintainMan,jdbcType=NVARCHAR}, #{maintainContent,jdbcType=NVARCHAR}, #{remark,jdbcType=NVARCHAR}
+      )
+  </insert>
+  
+  <update id="update" parameterType="com.dhc.fastersoft.entity.DurablesMaintain">
+				
+	 update T_MATERIAL_DURABLES_MAINTAIN
+    set 
+      DURABLES_ID = #{durablesId,jdbcType=NVARCHAR},
+      ENCODE = #{encode,jdbcType=NVARCHAR},
+      TYPE = #{type,jdbcType=NVARCHAR},
+      COMMODITY = #{commodity,jdbcType=NVARCHAR},
+      MAINTAIN_DATE = to_date(#{maintainDate,jdbcType=TIMESTAMP}, 'yyyy-mm-dd'),
+      MAINTAIN_MAN = #{maintainMan,jdbcType=NVARCHAR},
+      MAINTAIN_CONTENT = #{maintainContent,jdbcType=NVARCHAR},
+      REMARK = #{remark,jdbcType=NVARCHAR}
+	
+		WHERE ID='${id}'
+	</update>
+	
+	 
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_MATERIAL_DURABLES_MAINTAIN
+		WHERE  ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+  
+  
+</mapper>

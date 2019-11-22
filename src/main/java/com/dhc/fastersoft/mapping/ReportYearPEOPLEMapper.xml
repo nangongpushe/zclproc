@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.ReportYearPEOPLEMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.yearReport.ReportYearPEOPLE" >
+    <id column="REPORT_ID" property="reportId" jdbcType="VARCHAR" />
+    <result column="REPORT_YEAR" property="reportYear" jdbcType="VARCHAR" />
+    <result column="REPORT_NAME" property="reportName" jdbcType="VARCHAR" />
+    <result column="INDICATOR" property="indicator" jdbcType="VARCHAR" />
+    <result column="UNIT" property="unit" jdbcType="VARCHAR" />
+    <result column="THIS_YEAR" property="thisYear" jdbcType="DECIMAL" />
+    <result column="LAST_YEAR" property="lastYear" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    REPORT_ID, REPORT_YEAR, REPORT_NAME, INDICATOR, UNIT, THIS_YEAR, LAST_YEAR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_REPORT_YEAR_PEOPLE
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_REPORT_YEAR_PEOPLE
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearPEOPLE" >
+    insert into T_REPORT_YEAR_PEOPLE (REPORT_ID, REPORT_YEAR, REPORT_NAME, 
+      INDICATOR, UNIT, THIS_YEAR, 
+      LAST_YEAR)
+    values (#{reportId,jdbcType=VARCHAR}, #{reportYear,jdbcType=VARCHAR}, #{reportName,jdbcType=VARCHAR}, 
+      #{indicator,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{thisYear,jdbcType=DECIMAL}, 
+      #{lastYear,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearPEOPLE" >
+    insert into T_REPORT_YEAR_PEOPLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        REPORT_ID,
+      </if>
+      <if test="reportYear != null" >
+        REPORT_YEAR,
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME,
+      </if>
+      <if test="indicator != null" >
+        INDICATOR,
+      </if>
+      <if test="unit != null" >
+        UNIT,
+      </if>
+      <if test="thisYear != null" >
+        THIS_YEAR,
+      </if>
+      <if test="lastYear != null" >
+        LAST_YEAR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        #{reportId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportYear != null" >
+        #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="indicator != null" >
+        #{indicator,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="thisYear != null" >
+        #{thisYear,jdbcType=DECIMAL},
+      </if>
+      <if test="lastYear != null" >
+        #{lastYear,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearPEOPLE" >
+    update T_REPORT_YEAR_PEOPLE
+    <set >
+      <if test="reportYear != null" >
+        REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null" >
+        REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="indicator != null" >
+        INDICATOR = #{indicator,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        UNIT = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="thisYear != null" >
+        THIS_YEAR = #{thisYear,jdbcType=DECIMAL},
+      </if>
+      <if test="lastYear != null" >
+        LAST_YEAR = #{lastYear,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhc.fastersoft.entity.yearReport.ReportYearPEOPLE" >
+    update T_REPORT_YEAR_PEOPLE
+    set REPORT_YEAR = #{reportYear,jdbcType=VARCHAR},
+      REPORT_NAME = #{reportName,jdbcType=VARCHAR},
+      INDICATOR = #{indicator,jdbcType=VARCHAR},
+      UNIT = #{unit,jdbcType=VARCHAR},
+      THIS_YEAR = #{thisYear,jdbcType=DECIMAL},
+      LAST_YEAR = #{lastYear,jdbcType=DECIMAL}
+    where REPORT_ID = #{reportId,jdbcType=VARCHAR}
+  </update>
+</mapper>

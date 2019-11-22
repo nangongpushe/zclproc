@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateTakeMainDao">
+    <resultMap id="BaseMap" type="com.dhc.fastersoft.entity.RotateTakeMain">
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="SERIAL" property="serial" jdbcType="VARCHAR" />
+        <result column="RECEIVE_WAREHOUSE" property="receiveWarehouse" jdbcType="VARCHAR" />
+        <result column="RECEIVE_WAREHOUSE_ID" property="receiveWarehouseId" jdbcType="VARCHAR" />
+        <result column="WAREHOUSE_CONTACTOR" property="warehouseContactor" jdbcType="VARCHAR" />
+        <result column="WAREHOUSE_TEL" property="warehouseTel" jdbcType="VARCHAR" />
+        <result column="ENTERPRISE_TEL" property="enterpriseTel" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATER" property="creater" jdbcType="VARCHAR" />
+        <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+        <result column="COMPLETE_DATE" property="completeDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <resultMap id="takeMainMap" type="com.dhc.fastersoft.entity.RotateTakeMain" extends="BaseMap">
+        <collection property="rotateTakes" ofType="com.dhc.fastersoft.entity.RotateTake" column="ID" select="com.dhc.fastersoft.dao.RotateTakeDao.getByMainId">
+        </collection>
+    </resultMap>
+
+    <sql id="search_col">
+        ID, SERIAL, (SELECT WAREHOUSE_SHORT FROM T_STORAGE_WAREHOUSE WHERE id = RECEIVE_WAREHOUSE_ID ) as RECEIVE_WAREHOUSE,
+        RECEIVE_WAREHOUSE_ID, WAREHOUSE_CONTACTOR, WAREHOUSE_TEL, ENTERPRISE_TEL, STATUS, CREATER, CREATE_DATE, COMPLETE_DATE
+    </sql>
+
+    <insert id="save" parameterType="com.dhc.fastersoft.entity.RotateTakeMain">
+      insert into T_ROTATE_TAKE_MAIN(
+        ID, RECEIVE_WAREHOUSE, RECEIVE_WAREHOUSE_ID, WAREHOUSE_CONTACTOR, WAREHOUSE_TEL, ENTERPRISE_TEL,
+        STATUS, SERIAL, CREATER, CREATE_DATE
+      ) values (
+        #{id,jdbcType=VARCHAR},#{receiveWarehouse,jdbcType=VARCHAR},#{receiveWarehouseId,jdbcType=VARCHAR},#{warehouseContactor,jdbcType=VARCHAR},
+        #{warehouseTel,jdbcType=VARCHAR},#{enterpriseTel,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
+        #{serial,jdbcType=VARCHAR},#{creater,jdbcType=VARCHAR},#{createDate,jdbcType=DATE}
+      )
+    </insert>
+
+    <update id="update" parameterType="com.dhc.fastersoft.entity.RotateTakeMain">
+        update T_ROTATE_TAKE_MAIN
+        <set>
+            <if test="receiveWarehouse != null">
+                RECEIVE_WAREHOUSE = #{receiveWarehouse,jdbcType=VARCHAR},
+            </if>
+            <if test="receiveWarehouseId != null">
+                RECEIVE_WAREHOUSE_ID = #{receiveWarehouseId,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseContactor!=null">
+                WAREHOUSE_CONTACTOR = #{warehouseContactor,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseTel!=null">
+                WAREHOUSE_TEL= #{warehouseTel,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseTel!=null">
+                ENTERPRISE_TEL = #{enterpriseTel,jdbcType=VARCHAR},
+            </if>
+            <if test="status!=null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="serial!=null">
+                SERIAL= #{serial,jdbcType=VARCHAR},
+            </if>
+            <if test="creater!=null">
+                CREATER= #{creater,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate!=null">
+                CREATE_DATE = #{createDate,jdbcType=DATE},
+            </if>
+            <if test="completeDate != null">
+                COMPLETE_DATE = #{completeDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="remove" parameterType="String">
+      delete from T_ROTATE_TAKE_MAIN where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="getTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+        select count(1) from T_ROTATE_TAKE_MAIN a LEFT JOIN T_STORAGE_WAREHOUSE b on a.RECEIVE_WAREHOUSE_ID = b.id LEFT JOIN T_SYS_USER c on c.id=a.creater
+        <where>
+            <if test="entity.serial != null and entity.serial != ''">
+                AND a.SERIAL LIKE concat(concat('%',#{entity.serial}),'%')
+            </if>
+            <if test="entity.receiveWarehouse != null and entity.receiveWarehouse != ''">
+                AND b.WAREHOUSE_SHORT LIKE concat(concat('%',#{entity.receiveWarehouse}),'%')
+            </if>
+            <if test="entity.creater != null and entity.creater !=''">
+                AND c.NAME LIKE concat(concat('%',#{entity.creater}),'%')
+            </if>
+            <if test="entity.createDate != null and entity.createDate != ''">
+                AND to_char(a.CREATE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.createDate},'yyyy-mm-dd')
+            </if>
+            <if test="entity.completeDate != null and entity.completeDate != ''">
+                AND to_char(COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+            </if>
+            <if test="otherPram != null and otherPram.warehouseCode!=null and otherPram.warehouseCode!=''">
+                AND B.WAREHOUSE_CODE = #{otherPram.warehouseCode}
+            </if>
+            <if test="entity.status != null and entity.status != ''">
+                AND a.STATUS =#{entity.status}
+            </if>
+        </where>
+    </select>
+
+    <select id="limitByParams" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="takeMainMap">
+      select * from (
+        select id, SERIAL, RECEIVE_WAREHOUSE, CREATER, CREATE_DATE, STATUS, COMPLETE_DATE, ROWNUM RN
+          from(SELECT * FROM (
+        SELECT * FROM (
+        SELECT a.id,a.SERIAL,b.WAREHOUSE_SHORT AS RECEIVE_WAREHOUSE,( SELECT name FROM t_sys_user WHERE id = CREATER )
+        AS CREATER,a.CREATE_DATE,a.STATUS,a.COMPLETE_DATE
+        FROM T_ROTATE_TAKE_MAIN a
+        LEFT JOIN T_STORAGE_WAREHOUSE b ON a.RECEIVE_WAREHOUSE_ID = b.id
+        LEFT JOIN T_SYS_USER c on c.id=a.creater
+        WHERE a.STATUS = '已完成'
+        <if test="entity.serial != null and entity.serial != ''">AND a.SERIAL LIKE
+            concat(concat('%',#{entity.serial}),'%')
+            AND b.WAREHOUSE_SHORT LIKE concat(concat('%',#{entity.receiveWarehouse}),'%')</if>
+            <if test="
+        entity.receiveWarehouse != null and entity.receiveWarehouse != ''">AND b.WAREHOUSE_SHORT LIKE concat(concat('%',#{entity.receiveWarehouse}),'%')
+            AND CREATER LIKE concat(concat('%',#{entity.creater}),'%')</if>
+                <if test="
+        entity.creater != null and entity.creater !=''">
+                    AND c.name LIKE concat(concat('%',#{entity.creater}),'%')
+                </if>
+                <if test="entity.createDate != null and entity.createDate != ''">
+                    AND to_char(a.CREATE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.createDate},'yyyy-mm-dd')
+                </if>
+                <if test="entity.completeDate != null and entity.completeDate != ''">
+                    AND to_char(COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+                </if>
+                <if test="otherPram != null and otherPram.warehouseCode!=null and otherPram.warehouseCode!=''">
+                    AND b.WAREHOUSE_CODE = #{otherPram.warehouseCode}
+                </if>
+                ORDER BY a.CREATE_DATE DESC
+            )  UNION ALL
+            SELECT * FROM (
+                SELECT a.id,a.SERIAL,b.WAREHOUSE_SHORT AS RECEIVE_WAREHOUSE,( SELECT name FROM t_sys_user WHERE id = CREATER ) AS CREATER,a.CREATE_DATE,a.STATUS,a.COMPLETE_DATE
+                  FROM T_ROTATE_TAKE_MAIN a
+                  LEFT JOIN T_STORAGE_WAREHOUSE b ON a.RECEIVE_WAREHOUSE_ID = b.id
+                  LEFT JOIN T_SYS_USER c on c.id=a.creater
+                WHERE a.STATUS != '已完成'
+                <if test="entity.serial != null and entity.serial != ''">
+                    AND a.SERIAL LIKE concat(concat('%',#{entity.serial}),'%')
+                </if>
+                <if test="entity.receiveWarehouse != null and entity.receiveWarehouse != ''">
+                    AND b.WAREHOUSE_SHORT LIKE concat(concat('%',#{entity.receiveWarehouse}),'%')
+                </if>
+                <if test="entity.creater != null and entity.creater !=''">
+                    AND c.name LIKE concat(concat('%',#{entity.creater}),'%')
+                </if>
+                <if test="entity.createDate != null and entity.createDate != ''">
+                    AND to_char(a.CREATE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.createDate},'yyyy-mm-dd')
+                </if>
+                <if test="entity.completeDate != null and entity.completeDate != ''">
+                    AND to_char(COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+                </if>
+                <if test="otherPram != null and otherPram.warehouseCode!=null and otherPram.warehouseCode!=''">
+                    AND b.WAREHOUSE_CODE = #{otherPram.warehouseCode}
+                </if>
+                ORDER BY CREATE_DATE DESC
+            )
+           )
+            WHERE 1=1
+        <if test="entity.status != null and entity.status != ''">
+            AND STATUS =#{entity.status}
+        </if>
+            ORDER BY SERIAL DESC
+          ) WHERE ROWNUM &lt;= #{pageIndex}*#{pageSize}
+      ) WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+
+    </select>
+
+    <select id="getById" parameterType="String" resultMap="takeMainMap">
+        select <include refid="search_col"/>
+          from T_ROTATE_TAKE_MAIN
+          WHERE id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getBySerial" parameterType="String" resultMap="takeMainMap">
+        select <include refid="search_col"/>
+        from T_ROTATE_TAKE_MAIN
+        WHERE SERIAL = #{serial,jdbcType=VARCHAR}
+    </select>
+    <select id="getWeight" parameterType="String" resultType="String">
+        SELECT CLAIM_WEIGHT
+        FROM T_ROTATE_CLAIM
+        WHERE DEAL_SERIAL=#{deal_serial,jdbcType=VARCHAR}
+    </select>
+    <select id="getAmount" parameterType="String" resultType="String">
+        SELECT THIS_SHIPMENT
+        FROM T_ROTATE_TAKE
+        WHERE DEAL_SERIAL=#{deal_serial,jdbcType=VARCHAR}
+    </select>
+    <select id="getAmountById" parameterType="String" resultType="String">
+        SELECT THIS_SHIPMENT
+        FROM T_ROTATE_TAKE
+        WHERE ID=#{id,jdbcType=VARCHAR}
+    </select>
+    <select id="getMaxSerial" parameterType="String" resultType="String">
+        SELECT MAX(SERIAL) from T_ROTATE_TAKE_MAIN
+    </select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateNoticeDetailDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateNoticeDetail" id="noticeResultDetailMap">
+		<id column="D_ID" property="id" jdbcType="NVARCHAR" />
+		<result column="NOTICE_ID" property="noticeId" jdbcType="NVARCHAR" />
+		<result column="SERIAL_NO" property="serialNo" jdbcType="INTEGER" />
+		<result column="VARIETY" property="variety" jdbcType="NVARCHAR" />
+		<result column="COST" property="cost" jdbcType="DOUBLE" />
+		<result column="PIPE_ATTRIBUTE" property="pipeAttribute" jdbcType="NVARCHAR" />
+		<result column="HARVEST_YEAR" property="harvestYear" jdbcType="NVARCHAR" />
+		<result column="STORAGE_WAREHOUSE" property="storageWarehouse" jdbcType="NVARCHAR" />
+		<result column="STOREHOUSE" property="storehouse" jdbcType="NVARCHAR" />
+		<result column="PLAN_NUMBER" property="planNumber" jdbcType="NVARCHAR" />
+		<result column="ACTUAL_NUMBER" property="actualNumber" jdbcType="NVARCHAR" />
+		<result column="REMOVAL_UNIT" property="removalUnit" jdbcType="NVARCHAR" />
+		<result column="IMMIGRATION_UNIT" property="immigrationUnit" jdbcType="NVARCHAR" />
+		<result column="SCHEME_ID" property="schemeId" jdbcType="NVARCHAR"/>
+		<result column="SCHEME_NAME" property="schemeName" jdbcType="NVARCHAR"/>
+		<result column="DEAL_SERIAL" property="dealSerial" jdbcType="NVARCHAR"/>
+		<result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="VARCHAR"/>
+		<result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR"/>
+		<result column="BATCH_NUMBER" property="batchNumber" jdbcType="VARCHAR"/>
+		<result column="MANU_REMARK" property="manuReport" jdbcType="VARCHAR"/>
+		<result column="MANU_ACNUMBER" property="manuActualNumber" jdbcType="NVARCHAR" />
+		<association property="warehouse" javaType="com.dhc.fastersoft.entity.StorageWarehouse">
+			<result column="WAREHOUSE_ID" property="id"></result>
+			<result column="WAREHOUSE_SHORT" property="warehouseShort"></result>
+			<result column="WAREHOUSE_CODE" property="warehouseCode"></result>
+		</association>
+	</resultMap>
+</mapper> 

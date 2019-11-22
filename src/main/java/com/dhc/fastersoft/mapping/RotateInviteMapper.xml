@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateInviteDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateInvite" id="rotateInviteResultMap">
+		<result property="id" column="ID" jdbcType="NVARCHAR" />
+		<result property="inviteName" column="INVITE_NAME" jdbcType="NVARCHAR" />
+		<result property="inviteType" column="INVITE_TYPE" jdbcType="NVARCHAR" />
+		<result property="inviteSerial" column="INVITE_SERIAL" jdbcType="NVARCHAR" />
+		<result property="entrustCompany" column="ENTRUST_COMPANY" jdbcType="NVARCHAR" />
+		<result property="entrustBid" column="ENTRUST_BID" jdbcType="NVARCHAR" />
+		<result property="entrustNum" column="ENTRUST_NUM" jdbcType="NVARCHAR" />
+		<result property="exploitingEntity" column="EXPLOITING_ENTITY" jdbcType="NVARCHAR" />
+		<result property="operator" column="OPERATOR" jdbcType="NVARCHAR" />	
+		<result property="department" column="DEPARTMENT" jdbcType="NVARCHAR" />
+		<result property="handleTime" column="HANDLE_TIME" jdbcType="TIMESTAMP" />
+		<result property="remark" column="REMARK" jdbcType="NVARCHAR" />
+		<result property="bidId" column="BID_ID" jdbcType="NVARCHAR" />
+		<result property="bidName" column="BID_NAME" jdbcType="NVARCHAR" />
+		<result property="bidType" column="BID_TYPE" jdbcType="NVARCHAR" />	
+		<result property="totalNum" column="TOTAL_NUM" jdbcType="NVARCHAR" />
+		<result property="totalCompetitivePrice" column="TOTAL_COMPETITIVE_PRICE" jdbcType="NVARCHAR" />
+		<result property="totalBidPrice" column="TOTAL_BID_PRICE" jdbcType="NVARCHAR" />
+		<result property="totalBail" column="TOTAL_BAIL" jdbcType="NVARCHAR" />
+		<result property="isGather" column="IS_GATHER" jdbcType="NVARCHAR" />
+		<collection property="inviteDetails" resultMap="com.dhc.fastersoft.dao.RotateInviteDetailDao.rotateInviteDetailResultMap"></collection>
+		
+	</resultMap>
+
+	<sql id="columns_invite">
+		ID,INVITE_NAME,INVITE_TYPE,ENTRUST_COMPANY,ENTRUST_BID,ENTRUST_NUM,
+		EXPLOITING_ENTITY,OPERATOR,DEPARTMENT,HANDLE_TIME,REMARK,BID_ID,BID_NAME,BID_TYPE,
+		TOTAL_NUM,TOTAL_COMPETITIVE_PRICE,TOTAL_BID_PRICE,TOTAL_BAIL,INVITE_SERIAL,IS_GATHER
+	</sql>
+	
+	<sql id="s_columns_invite">
+		ID,INVITE_NAME,INVITE_TYPE,ENTRUST_COMPANY,ENTRUST_BID,ENTRUST_NUM,
+		EXPLOITING_ENTITY,(select name from t_sys_user where id = OPERATOR) OPERATOR,DEPARTMENT,HANDLE_TIME,REMARK,BID_ID,BID_NAME,BID_TYPE,
+		TOTAL_NUM,TOTAL_COMPETITIVE_PRICE,TOTAL_BID_PRICE,TOTAL_BAIL,INVITE_SERIAL,IS_GATHER
+	</sql>
+
+	<sql id="columns_invite_detail">
+		INVITE_ID,BID_SERIAL,COMPETITIVE_UNIT,NUM,STARTING_PRICE,
+		COMPETITIVE_PRICE,BID_PRICE,BAIL,LOANPAYMENTENDDATE,COMPETITIVE_UNIT_ID,ID
+	</sql>
+
+	<sql id="columns_invite_detail1">
+		td.INVITE_ID,td.BID_SERIAL,ti.CLIENT_NAME AS COMPETITIVE_UNIT,td.NUM,td.STARTING_PRICE,
+		td.COMPETITIVE_PRICE,td.BID_PRICE,td.BAIL,td.LOANPAYMENTENDDATE,td.COMPETITIVE_UNIT_ID,td.ID
+	</sql>
+
+	<sql id="table_invite"> T_ROTATE_INVITE </sql>
+
+	<sql id="table_invite_detail"> T_ROTATE_INVITE_DETAIL </sql>
+	
+	
+	<!-- 添加招标结果 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.RotateInvite">
+		begin
+		INSERT INTO
+		<include refid="table_invite" />
+		(
+		<include refid="columns_invite" />
+		)
+		VALUES
+		(#{id},#{inviteName,jdbcType=NVARCHAR},#{inviteType,jdbcType=NVARCHAR},
+		#{entrustCompany,jdbcType=NVARCHAR},#{entrustBid,jdbcType=NVARCHAR},
+		#{entrustNum,jdbcType=NVARCHAR},#{exploitingEntity,jdbcType=NVARCHAR},
+		#{operator,jdbcType=NVARCHAR},#{department,jdbcType=NVARCHAR},
+		#{handleTime,jdbcType=TIMESTAMP},#{remark,jdbcType=NVARCHAR},
+		#{bidId,jdbcType=NVARCHAR},#{bidName,jdbcType=NVARCHAR},
+		#{bidType,jdbcType=NVARCHAR},#{totalNum,jdbcType=NVARCHAR},
+		#{totalCompetitivePrice,jdbcType=NVARCHAR},#{totalBidPrice,jdbcType=NVARCHAR},
+		#{totalBail,jdbcType=NVARCHAR},#{inviteSerial,jdbcType=NVARCHAR},#{isGather,jdbcType=NVARCHAR});
+
+
+		<foreach collection="inviteDetails" item="item" separator=";">
+			INSERT INTO
+			<include refid="table_invite_detail" />
+			(
+			<include refid="columns_invite_detail" />
+			)
+			VALUES
+			(#{id},#{item.bidSerial,jdbcType=NVARCHAR},
+			#{item.competitiveUnit,jdbcType=NVARCHAR},#{item.num,jdbcType=NVARCHAR},
+			#{item.startingPrice,jdbcType=NVARCHAR},
+			#{item.competitivePrice,jdbcType=NVARCHAR},
+			#{item.bidPrice,jdbcType=NVARCHAR},
+			#{item.bail,jdbcType=NVARCHAR},
+			#{item.loanPaymentEndDate,jdbcType=NVARCHAR},
+			#{item.competitiveUnitId,jdbcType=NVARCHAR},
+			#{item.id,jdbcType=NVARCHAR})
+		</foreach>
+		;end;
+	</insert>
+	
+	<!-- 查询单个 -->
+	<select id="get" parameterType="java.lang.String"
+		resultMap="rotateInviteResultMap">
+		SELECT <include refid="s_columns_invite"/>
+		 FROM <include refid="table_invite"/>
+		<where>
+			ID = #{_parameter}
+		</where>
+	</select>
+	
+	<!-- 查询-->
+	<select id="list" parameterType="java.util.HashMap" resultMap="rotateInviteResultMap">
+		select * from ( select row_.*, rownum rownum_ from (
+		SELECT
+		<include refid="s_columns_invite" />
+		from
+		<include refid="table_invite" />
+		<where>
+			<if test="inviteName!=null and inviteName!=''">
+				AND INVITE_NAME LIKE '%${inviteName}%'
+			</if>
+			<if test="inviteType!=null and inviteType!=''">
+				AND INVITE_TYPE LIKE '%${inviteType}%'
+			</if>
+			<if test="handleTime!=null and handleTime!=''">
+				AND TO_CHAR(HANDLE_TIME,'YYYY-MM-DD') = '${handleTime}'
+			</if>
+		</where>
+		ORDER BY HANDLE_TIME DESC
+		) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+		where rownum_ > (#{pageIndex}-1) * #{pageSize}
+	</select>
+	
+	<!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT count(0)
+		FROM
+		<include refid="table_invite" />
+		<where>
+			<if test="inviteName!=null and inviteName!=''">
+				AND INVITE_NAME LIKE '%${inviteName}%'
+			</if>
+			<if test="inviteType!=null and inviteType!=''">
+				AND INVITE_TYPE LIKE '%${inviteType}%'
+			</if>
+			<if test="handleTime!=null and handleTime!=''">
+				AND TO_CHAR(HANDLE_TIME,'YYYY-MM-DD') = '${handleTime}'
+			</if>
+			<if test="bidId!=null and bidId !=''">
+				AND BID_ID = #{bidId}
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询明细 -->
+	<select id="listDetail" parameterType="java.lang.String"
+		resultMap="com.dhc.fastersoft.dao.RotateInviteDetailDao.rotateInviteDetailResultMap">
+		SELECT
+		<include refid="columns_invite_detail1" />
+		FROM
+		<include refid="table_invite_detail" /> td
+		LEFT JOIN T_CLIENT_INFO ti on td.COMPETITIVE_UNIT_ID = ti.ID
+		<where>
+			td.INVITE_ID = #{_parameter}
+		</where>
+	</select>
+	
+
+	<update id="update" parameterType="com.dhc.fastersoft.entity.RotateInvite">
+		begin
+		UPDATE
+		<include refid="table_invite" />
+		SET
+		INVITE_NAME = #{inviteName},INVITE_TYPE = #{inviteType},
+		ENTRUST_COMPANY =	#{entrustCompany,jdbcType=NVARCHAR},
+		ENTRUST_BID=#{entrustBid,jdbcType=NVARCHAR},
+		ENTRUST_NUM =#{entrustNum,jdbcType=NVARCHAR},
+		EXPLOITING_ENTITY=#{exploitingEntity,jdbcType=NVARCHAR},
+		REMARK=#{remark,jdbcType=NVARCHAR},
+		BID_ID=#{bidId,jdbcType=NVARCHAR},
+		BID_NAME=#{bidName,jdbcType=NVARCHAR},
+		BID_TYPE=#{bidType,jdbcType=NVARCHAR},
+		TOTAL_NUM=#{totalNum,jdbcType=NVARCHAR},
+		TOTAL_COMPETITIVE_PRICE=#{totalCompetitivePrice,jdbcType=NVARCHAR},
+		TOTAL_BID_PRICE=#{totalBidPrice,jdbcType=NVARCHAR},
+		TOTAL_BAIL=#{totalBail,jdbcType=NVARCHAR},
+		INVITE_SERIAL=#{inviteSerial,jdbcType=NVARCHAR}
+		<where>
+			ID = #{id}
+		</where>
+		<if test="inviteDetails!=null">
+			;DELETE FROM <include refid="table_invite_detail" />
+			<where>
+				INVITE_ID = #{id};
+			</where>
+			<foreach collection="inviteDetails" item="item" separator=";">
+				INSERT INTO
+				<include refid="table_invite_detail" />
+				(
+				<include refid="columns_invite_detail" />
+				)
+				VALUES
+				(#{id},#{item.bidSerial,jdbcType=NVARCHAR},
+				#{item.competitiveUnit,jdbcType=NVARCHAR},#{item.num,jdbcType=NVARCHAR},
+				#{item.startingPrice,jdbcType=NVARCHAR},
+				#{item.competitivePrice,jdbcType=NVARCHAR},
+				#{item.bidPrice,jdbcType=NVARCHAR},
+				#{item.bail,jdbcType=NVARCHAR},
+				#{item.loanPaymentEndDate,jdbcType=NVARCHAR},
+				#{item.competitiveUnitId,jdbcType=NVARCHAR},
+				#{item.id,jdbcType=NVARCHAR})
+			</foreach>
+		</if>
+		;end;
+	</update>
+	
+	<select id="getSerialCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(0) FROM <include refid="table_invite" />
+		WHERE TO_CHAR(HANDLE_TIME,'YYYY-MM-DD') = '${_parameter}'
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE <include refid="table_invite" /> WHERE ID = #{_parameter}
+	</delete>
+	
+	<delete id="removeDetail" parameterType="java.lang.String">
+		DELETE <include refid="table_invite_detail" /> WHERE INVITE_ID = #{_parameter}
+	</delete>
+	<update id="updateIsGather" parameterType="java.util.HashMap">
+		UPDATE <include refid="table_invite" /> SET IS_GATHER =#{isGather} WHERE ID = #{id}
+	</update>
+</mapper>

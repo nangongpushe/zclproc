@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.StorageInspectMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.StorageInspect" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="YEAR" property="year" jdbcType="VARCHAR" />
+    <result column="REPORT_UNIT" property="reportUnit" jdbcType="VARCHAR" />
+    <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR" />
+    <result column="INSPECT_START" property="inspectStart" jdbcType="TIMESTAMP" />
+    <result column="INSPECT_END" property="inspectEnd" jdbcType="TIMESTAMP" />
+    <result column="INSPECT_CONTENT" property="inspectContent" jdbcType="VARCHAR" />
+    <result column="INSPECT_RESULT" property="inspectResult" jdbcType="VARCHAR" />
+    <result column="INSPECT_FUNDS" property="inspectFunds" jdbcType="DECIMAL" />
+    <result column="INSPECTOR" property="inspector" jdbcType="VARCHAR" />
+    <result column="GROUP_ID" property="groupId" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+      <result column="CREATORID" property="creatorId" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="select">
+        ss.ID,
+        ss.YEAR,
+        house.WAREHOUSE_SHORT AS REPORT_UNIT,
+        ss.WAREHOUSE_ID,
+        TO_CHAR(ss.INSPECT_START,'YYYY-MM-DD') INSPECT_START,
+        TO_CHAR(ss.INSPECT_END,'YYYY-MM-DD') INSPECT_END,
+        ss.INSPECT_CONTENT,
+        ss.INSPECT_RESULT,
+        ss.INSPECT_FUNDS,
+        ss.INSPECTOR,
+        ss.GROUP_ID,
+
+        ss.FILE_NAME,
+        TO_CHAR(ss.CREATE_DATE,'YYYY-MM-DD') CREATE_DATE
+  </sql>
+  <sql id="tablename"> T_STORAGE_INSPECT </sql>
+  <sql id="sort"> CREATE_DATE </sql>
+  <!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap"  resultType="Integer">
+		SELECT count(0) FROM  <include refid="tablename"/> ss left join T_STORAGE_WAREHOUSE house ON ss.WAREHOUSE_ID = house.ID
+		<where>
+			   <if test="reportUnit != null and reportUnit!=''" >
+                   house.WAREHOUSE_SHORT = '${reportUnit}'
+		      </if>
+		      <if test="inspector != null and inspector!=''" >
+		          AND ss.INSPECTOR LIKE '%${inspector}%'
+		      </if>
+		</where>
+	</select>
+  <!-- 根据搜索条件查询计划列表 -->
+	<select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		${start} SELECT  <include refid="select"/>
+        , sys.name  creator
+        from  T_STORAGE_INSPECT ss  left join
+        T_SYS_USER sys ON ss.CREATORID=sys.ID
+        left join T_STORAGE_WAREHOUSE house ON ss.WAREHOUSE_ID = house.ID
+		<where>
+			  <if test="reportUnit != null and reportUnit!=''" >
+                  house.WAREHOUSE_SHORT = '${reportUnit}'
+		      </if>
+		      <if test="inspector != null and inspector!=''" >
+		          AND ss.INSPECTOR LIKE '%${inspector}%'
+		      </if>
+		</where>  
+		ORDER BY ss.CREATE_DATE DESC
+		${end}
+	</select>
+	<select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select  <include refid="select"/>,ss.CREATOR from T_STORAGE_INSPECT ss left join T_STORAGE_WAREHOUSE house ON ss.WAREHOUSE_ID = house.ID WHERE ss.ID='${id}'
+	</select>
+	<delete id="delete" parameterType="java.lang.String" >
+		DELETE from <include refid="tablename"/> WHERE ID='${id}'
+	</delete>
+	<update id="update" parameterType="com.dhc.fastersoft.entity.QualityTemplet">
+			UPDATE <include refid="tablename"/> SET
+	<trim suffixOverrides="," >
+      <if test="year != null" >
+        YEAR='${year}',
+      </if>
+      <if test="reportUnit != null" >
+        REPORT_UNIT='${reportUnit}',
+      </if>
+      <if test="warehouseId != null" >
+          WAREHOUSE_ID='${warehouseId}',
+      </if>
+      <if test="inspectStart != null" >
+        INSPECT_START=to_date('${inspectStart}', 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="inspectEnd != null" >
+        INSPECT_END=to_date('${inspectEnd}', 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="inspectContent != null" >
+        INSPECT_CONTENT='${inspectContent}',
+      </if>
+      <if test="inspectResult != null" >
+        INSPECT_RESULT='${inspectResult}',
+      </if>
+      <if test="inspectFunds != null" >
+        INSPECT_FUNDS='${inspectFunds}',
+      </if>
+      <if test="inspector != null" >
+        INSPECTOR='${inspector}',
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID='${groupId}',
+      </if>
+       <if test="creator != null" >
+       CREATOR='${creator}' ,
+      </if>
+        <if test="creatorId != null" >
+            CREATORID='${creatorId}' ,
+        </if>
+      <if test="createDate != null" >
+       CREATE_DATE= to_date('${createDate}','yyyy-MM-dd HH24:mi:ss'),
+      </if>
+      <if test="company != null" >
+       COMPANY= '${company}',
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME='${fileName}'
+      </if>
+      </trim>
+      		  WHERE ID='${id}'
+	</update>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.StorageInspect" >
+    insert into T_STORAGE_INSPECT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="year != null" >
+        YEAR,
+      </if>
+      <if test="reportUnit != null" >
+        REPORT_UNIT,
+      </if>
+      <if test="warehouseId != null" >
+          WAREHOUSE_ID,
+      </if>
+      <if test="inspectStart != null" >
+        INSPECT_START,
+      </if>
+      <if test="inspectEnd != null" >
+        INSPECT_END,
+      </if>
+      <if test="inspectContent != null" >
+        INSPECT_CONTENT,
+      </if>
+      <if test="inspectResult != null" >
+        INSPECT_RESULT,
+      </if>
+      <if test="inspectFunds != null" >
+        INSPECT_FUNDS,
+      </if>
+      <if test="inspector != null" >
+        INSPECTOR,
+      </if>
+      <if test="groupId != null" >
+        GROUP_ID,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+        <if test="creatorId != null" >
+            CREATORID,
+        </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="reportUnit != null" >
+        #{reportUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouseId != null" >
+        #{warehouseId,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectStart != null" >
+        to_date(#{inspectStart,jdbcType=VARCHAR}, 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="inspectEnd != null" >
+       to_date(#{inspectEnd,jdbcType=VARCHAR}, 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="inspectContent != null" >
+        #{inspectContent,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectResult != null" >
+        #{inspectResult,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectFunds != null" >
+        #{inspectFunds,jdbcType=DECIMAL},
+      </if>
+      <if test="inspector != null" >
+        #{inspector,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+        <if test="creatorId != null" >
+            #{creatorId,jdbcType=VARCHAR},
+        </if>
+      <if test="createDate != null" >
+        to_date(#{createDate,jdbcType=VARCHAR}, 'yyyy-mm-dd,hh24:mi:ss'),
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

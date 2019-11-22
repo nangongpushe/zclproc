@@ -1,0 +1,166 @@
+/* CSS Document */
+*{ margin:0; padding:0;}
+
+table {border-collapse:collapse;word-break:break-all}
+input{font: 14px/1.5 Arial,Verdana,'SimSun';}
+ol, ul ,li{list-style: none;}
+img {border: 0 none; font-size:0; vertical-align:top}
+
+.clearfix:after {
+    clear:both;
+    overflow:hidden;
+    content:'';
+    height:0;
+    display:block;
+}
+body {
+  padding-top: 90px;
+  padding-bottom: 80px;
+  background-color: #f5f8fa;
+   background: url(../images/background.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+   background-size: cover;
+   font-family: Microsoft YaHei;
+}
+
+#entry .mc {
+    width: 1100px;
+    margin: 0 auto;
+}
+#entry-bg {
+    width: 720px;
+    height: 600px;
+    display:inline-block;
+    float:left;
+}
+
+#entry-bg img {
+    width: 720px;
+    height: 600px
+}
+#entry .form {
+    position: relative;
+    float: left;
+    margin-top: 100px;
+    background: #fff;
+    width: 380px;
+    height: 380px;
+    display: inline-block;
+}
+#entry .item {line-height: 26px; overflow: visible;width: 320px; z-index: 1; }
+#entry .fore1 { 
+	z-index: 10;
+	margin-bottom: 16px;
+	height:46px;margin-top:30px;
+	margin-left:6px 
+}
+#entry .fore2 {
+    z-index: 8;
+    margin-left: 6px;
+}
+
+#entry .item span {
+    position: absolute;
+    color: #22b8e5;
+    height: 45px;
+    line-height: 45px;
+    display: block;
+    left: 8px;
+    z-index: 1;
+    font-family: simsun;
+    font-size: 25px;
+    top: -3px;
+}
+#entry .item .item-ifo {width: 307px; }
+#entry .item .item-ifo .text-area{width:318px;height:46px;position:relative;}
+#entry .text {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 296px;
+    height: 40px;
+    line-height: 24px;
+    padding: 2px 0 2px 37px;
+    border-radius: 4px;
+    border: 1px solid #d6d6d6;
+    font-size: 14px;
+    font-family: arial, SimSun;
+    color: #4a4a4f;
+}
+    #entry .text:focus {
+        border-color: #2ab4a8;
+        box-shadow: 0 0 8px #2ab4a8
+    }
+#entry .text-1 { width: 100px; float: left; }
+#entry .img img { margin: 0 5px; cursor: pointer; height: 33px; display: block; }
+.form .hline { line-height: 16px; }
+.login-prm{ color:#84939c; padding:0 10px; line-height:23px; background-image:url("../Images/lg_bg.png");background-repeat: no-repeat; width:301px;height:52px; margin:20px 0}
+.login-prm span{color:#384751;padding:0 3px;}
+.ftx13, .flk13 a:link, .flk13 a:visited, a.flk13:link, a.flk13:visited { color: #005AA0; }
+#entry .item-ifo .ico.i-pass {position:relative;}
+.form label, .form input, .form select, .form textarea, .form button, .form .label { float: left; font-size: 12px; }
+#entry .focus { color: #999; line-height: 22px; display: none; }
+#entry .blank { display: none; float: none; width: 16px; height: 16px; position: absolute; top: 9px; right: 8px; z-index: 10; padding: 2px; }
+#entry .item .item-ifo .fog{display:inline-block;float:right;position: relative;right:11px;color:#98999a;padding-left:20px;
+            background:url(http://mason-sites-resources.oss-cn-hangzhou.aliyuncs.com/images/warn.png) no-repeat left center;}
+#entry .checkbox { margin:7px 12px 3px 0; vertical-align: middle; }
+#entry .mar { margin-right: 10px; }
+#entry .login-btn2013 {
+    height: 52px;
+    margin-left: 42px;
+    margin-top: 12px;
+}
+#entry .null,
+#entry .error,
+#loginname_error.error,
+#loginpwd_error.error,
+#authcode_error.error,
+#loginphone_error.error,
+#fastloginpwd_error.error {
+    width: 296px;
+    padding: 2px 0 2px 3px;
+    border: 1px solid #ffbdbf;
+    color: #e6393d;
+    background: #ffebec;
+    line-height: 16px;
+    z-index: 100;
+    margin: 10px 0;
+}
+#entry .btn-entry {
+    background-color: #2ab4a8;
+    border: medium none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-family: "Microsoft YaHei";
+    font-size: 18px;
+    height: 40px;
+    overflow: hidden;
+    width: 296px;
+    letter-spacing: 5px;
+}
+#entry .btn-entry:hover {background-color:#2bc2b5; }
+#entry .login-bind-btn{ margin-top:30px;}
+#entry .btn-bind-id{ width:156px; height:46px; line-height:46px; text-align:center; background-color:#f6342f; border:0 none; border-radius:3px; font-size:19px; color:#fff; font-family:'microsoft yahei'; cursor:pointer;}
+#entry .btn-bind-id:hover{ background-color:#ff3b36;}
+#entry .login-bind-btn .ftx24{ display: inline-block;margin: 10px 0 0 15px;}
+#entry .ftx24 { color:#6a7c86;float:left;font-size:13px; }
+.mb { margin-bottom: 24px; overflow: hidden; }
+
+.par_i {
+    position: absolute;
+    right: 0;
+    top: 6px;
+    font-size: 20px;
+    color: #d6d6d6;
+}
+#checkCodeBox.text.text-1 {
+    padding-left: 12px
+}
+#loginButton{
+	background-color:#22b8e5;
+	color:#fff;
+	border-color:#22b8e5;
+}

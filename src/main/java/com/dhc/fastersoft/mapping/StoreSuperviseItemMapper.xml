@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhc.fastersoft.dao.StoreSuperviseItemDao">
+  <resultMap id="itemResultMap" type="com.dhc.fastersoft.entity.StoreSuperviseItem">
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="SUPERVISE_ID" jdbcType="VARCHAR" property="superviseId" />
+    <result column="WAREHOUSE_CODE" jdbcType="VARCHAR" property="warehouseCode" />
+	  <result column="WAREHOUSE_ID" jdbcType="VARCHAR" property="warehouseId" />
+    <result column="WAREHOUSE_NAME" jdbcType="VARCHAR" property="warehouseName" />
+    <result column="ENTERPRISE_ID" jdbcType="VARCHAR" property="enterpriseId" />
+    <result column="ENTERPRISE_SERIAL" jdbcType="VARCHAR" property="enterpriseSerial" />
+    <result column="ENTERPRISE_NAME" jdbcType="VARCHAR" property="enterpriseName" />
+    <result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="organizationCode" />
+    <result column="DIVISION" jdbcType="VARCHAR" property="division" />
+    <result column="PERSON_INCHARGE" jdbcType="VARCHAR" property="personIncharge" />
+    <result column="TELEPHONE" jdbcType="VARCHAR" property="telephone" />
+    <result column="SUPERVISE_START" jdbcType="TIMESTAMP" property="superviseStart" />
+    <result column="SUPERVISE_END" jdbcType="TIMESTAMP" property="superviseEnd" />
+    <result column="SOCIAL_CREDIT_CODE" jdbcType="VARCHAR" property="socialCreditCode" />
+  </resultMap>
+  
+  <sql id="tablename">T_STORE_SUPERVISE_ITEM</sql>
+  
+  
+  <sql id="columns">
+	ID, SUPERVISE_ID, WAREHOUSE_CODE, 
+	WAREHOUSE_NAME, ENTERPRISE_ID, ENTERPRISE_SERIAL, 
+	ENTERPRISE_NAME, ORGANIZATION_CODE, DIVISION, 
+	PERSON_INCHARGE, TELEPHONE, SUPERVISE_START, 
+	SUPERVISE_END,SOCIAL_CREDIT_CODE,WAREHOUSE_ID
+  </sql>
+	<sql id="columnss">
+	sup.ID, sup.SUPERVISE_ID, sup.WAREHOUSE_CODE,
+	t.WAREHOUSE_SHORT AS WAREHOUSE_NAME, sup.ENTERPRISE_ID, se.ENTERPRISE_SERIAL AS ENTERPRISE_SERIAL,
+	se.ENTERPRISE_NAME AS ENTERPRISE_NAME, sup.ORGANIZATION_CODE, (se.PROVINCE||se.CITY||se.AREA) AS DIVISION,
+	se.PERSON_INCHARGE AS PERSON_INCHARGE, se.TELEPHONE AS TELEPHONE, sup.SUPERVISE_START,
+	sup.SUPERVISE_END,se.SOCIAL_CREDIT_CODE AS SOCIAL_CREDIT_CODE,warehouse_id
+  </sql>
+  
+  <insert id="save" parameterType="com.dhc.fastersoft.entity.StoreSuperviseItem">
+    insert into <include refid="tablename"></include> ( <include refid="columns"></include> )
+    values (#{id,jdbcType=VARCHAR}, #{superviseId,jdbcType=VARCHAR}, #{warehouseCode,jdbcType=VARCHAR}, 
+      #{warehouseName,jdbcType=VARCHAR}, #{enterpriseId,jdbcType=VARCHAR}, #{enterpriseSerial,jdbcType=VARCHAR}, 
+      #{enterpriseName,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR}, #{division,jdbcType=VARCHAR}, 
+      #{personIncharge,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{superviseStart,jdbcType=TIMESTAMP}, 
+      #{superviseEnd,jdbcType=TIMESTAMP},#{socialCreditCode,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <select id="getPrimId" resultType="java.lang.String">
+  	SELECT SEQ_STORE_SUPERVISE_ITEM.NEXTVAL FROM DUAL
+  </select>
+  
+  <select id="listBySuperviseId" parameterType="java.lang.String" resultMap="itemResultMap">
+  	SELECT <include refid="columnss"></include>
+  	from 
+  	<include refid="tablename"></include>  sup left join T_STORE_SUPERVISE sts ON sup.supervise_Id = sts.ID
+	  left join T_STORAGE_WAREHOUSE t ON sup.WAREHOUSE_ID = t.ID
+	  left join T_STORE_ENTERPRISE se ON  sup.ENTERPRISE_ID = se.ID
+  	where sup.supervise_Id = #{id}
+  </select>
+ 
+  
+  <select id="pageQuery" parameterType="java.util.HashMap" resultMap="itemResultMap">
+  
+		${start} 
+		SELECT 
+			<include refid="columns" />
+		 FROM T_STORE_SUPERVISE_ITEM 	
+		 WHERE 1=1
+		 <if test="warehouseName!=null and warehouseName!=''">
+		 		and  WAREHOUSE_NAME = #{warehouseName}
+		 	</if>
+			
+
+		${end}
+	</select>
+	
+	<select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(0) FROM T_STORE_SUPERVISE_ITEM  
+		 WHERE 1=1
+		
+		 <if test="warehouseName!=null and warehouseName!=''">
+		 		and  WAREHOUSE_NAME = #{warehouseName}
+		 	</if>
+
+	</select>
+  	
+  	<select id="listStoreSuperviseItems" parameterType="java.util.HashMap" resultMap="itemResultMap">
+  		SELECT 
+			<include refid="columns" />
+		 FROM T_STORE_SUPERVISE_ITEM 	
+		 <where>
+		 	<if test="warehouseName!=null and warehouseName!=''">
+		 		and  WAREHOUSE_NAME = #{warehouseName}
+		 	</if>
+		 	<if test="nowDate!=null and nowDate!=''">
+		 		AND SUPERVISE_START &lt;=#{nowDate}
+		 		AND SUPERVISE_END &gt;=#{nowDate}
+		 	</if>
+
+		 </where>
+			 
+  	</select>
+
+	<select id="getNewSuperiviseByWarehouseId" parameterType="java.util.HashMap" resultMap="itemResultMap">
+		SELECT
+		t1.ID,t2.id as warehouse_id
+		FROM T_STORE_SUPERVISE_ITEM t1 ,t_storage_warehouse t2
+		<where>
+			AND t1.ENTERPRISE_ID=t2.ENTERPRISE_ID
+			<if test="warehouseId!=null and warehouseId!=''">
+				and  t1.WAREHOUSE_ID = #{warehouseId}
+			</if>
+			<if test="superiviseId!=null and superiviseId!=''">
+				AND t1.SUPERVISE_ID =#{superiviseId}
+			</if>
+
+		</where>
+
+	</select>
+
+</mapper>

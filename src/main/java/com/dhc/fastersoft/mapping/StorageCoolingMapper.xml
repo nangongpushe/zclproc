@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StorageCoolingDao">
+	<resultMap type="com.dhc.fastersoft.entity.store.StorageCooling" id="StorageCoolingResultMap">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="warehouse" column="WAREHOUSE" jdbcType="VARCHAR" />
+		<result property="warehouseId" column="WAREHOUSE_ID" jdbcType="VARCHAR" />
+		<result property="encode" column="ENCODE" jdbcType="VARCHAR" />
+		<result property="type" column="TYPE" jdbcType="VARCHAR" />
+		<result property="diameter" column="DIAMETER" jdbcType="VARCHAR" />
+		<result property="bulkHeight" column="BULK_HEIGHT" jdbcType="VARCHAR" />
+		<result property="bulkCubage" column="BULK_CUBAGE" jdbcType="VARCHAR" />
+		<result property="grainVariety" column="GRAIN_VARIETY" jdbcType="VARCHAR" />
+		<result property="dew" column="DEW" jdbcType="VARCHAR" />
+		<result property="impurity" column="IMPURITY" jdbcType="VARCHAR" />
+		<result property="realQuantity" column="REAL_QUANTITY" jdbcType="VARCHAR" />
+		<result property="valleyCoolerModel" column="VALLEY_COOLER_MODEL" jdbcType="VARCHAR" />
+		<result property="valleyCoolerNum" column="VALLEY_COOLER_NUM" jdbcType="VARCHAR" />
+		<result property="kw" column="KW" jdbcType="VARCHAR" />
+		<result property="mht" column="MHT" jdbcType="VARCHAR" />
+		<result property="aspirationType" column="ASPIRATION_TYPE" jdbcType="VARCHAR" />
+		<result property="mh" column="MH" jdbcType="VARCHAR" />
+		<result property="purpose" column="PURPOSE" jdbcType="VARCHAR" />
+		<result property="startTime" column="START_TIME" jdbcType="TIMESTAMP" />
+		<result property="endTime" column="END_TIME" jdbcType="TIMESTAMP" />
+		<result property="totalTime" column="TOTAL_TIME" jdbcType="VARCHAR" />
+		<result property="tempMax" column="TEMP_MAX" jdbcType="VARCHAR" />
+		<result property="tempMin" column="TEMP_MIN" jdbcType="VARCHAR" />
+		<result property="tempAvg" column="TEMP_AVG" jdbcType="VARCHAR" />
+		<result property="rhMax" column="RH_MAX" jdbcType="VARCHAR" />
+		<result property="rhMin" column="RH_MIN" jdbcType="VARCHAR" />
+		<result property="rhAvg" column="RH_AVG" jdbcType="VARCHAR" />
+		<result property="beforeMax" column="BEFORE_MAX" jdbcType="VARCHAR" />
+		<result property="beforeMin" column="BEFORE_MIN" jdbcType="VARCHAR" />
+		<result property="beforeAvg" column="BEFORE_AVG" jdbcType="VARCHAR" />
+		<result property="afterMax" column="AFTER_MAX" jdbcType="VARCHAR" />
+		<result property="afterMin" column="AFTER_MIN" jdbcType="VARCHAR" />
+		<result property="afterAvg" column="AFTER_AVG" jdbcType="VARCHAR" />
+		<result property="gradMax" column="GRAD_MAX" jdbcType="VARCHAR" />
+		<result property="gradMin" column="GRAD_MIN" jdbcType="VARCHAR" />
+		<result property="gradAvg" column="GRAD_AVG" jdbcType="VARCHAR" />
+		<result property="dewMax" column="DEW_MAX" jdbcType="VARCHAR" />
+		<result property="dewMin" column="DEW_MIN" jdbcType="VARCHAR" />
+		<result property="dewAvg" column="DEW_AVG" jdbcType="VARCHAR" />
+		<result property="coolingAirTemp" column="COOLING_AIR_TEMP" jdbcType="VARCHAR" />
+		<result property="coolingAirRh" column="COOLING_AIR_RH" jdbcType="VARCHAR" />
+		<result property="ability" column="ABILITY" jdbcType="VARCHAR" />
+		<result property="totalPower" column="TOTAL_POWER" jdbcType="VARCHAR" />
+		<result property="energyConsum" column="ENERGY_CONSUM" jdbcType="VARCHAR" />
+		<result property="electrovalency" column="ELECTROVALENCY" jdbcType="VARCHAR" />
+		<result property="cost" column="COST" jdbcType="VARCHAR" />
+		<result property="custodian" column="CUSTODIAN" jdbcType="VARCHAR" />		
+		<result property="leader" column="LEADER" jdbcType="VARCHAR" />
+		<result property="recordDate" column="RECORD_DATE" jdbcType="DATE" />
+		<result property="creator" column="CREATOR" jdbcType="VARCHAR" />
+		<result property="createDate" column="CREATE_DATE" jdbcType="DATE" />
+		<result property="operatorId" column="OPERATOR_ID" jdbcType="VARCHAR"/>
+		<association property="operator" column="OPERATOR_ID"  select="com.dhc.fastersoft.dao.system.SysUserDao.getUserName"/>
+	</resultMap>
+
+	<sql id="columns_main">
+		"ID",
+	"WAREHOUSE",
+	"WAREHOUSE_ID",
+	"ENCODE",
+	"TYPE",
+	"DIAMETER",
+	"BULK_HEIGHT",
+	"BULK_CUBAGE",
+	"GRAIN_VARIETY",
+	"DEW",
+	"IMPURITY",
+	"REAL_QUANTITY",
+	"VALLEY_COOLER_MODEL",
+	"VALLEY_COOLER_NUM",
+	"KW",
+	"MHT",
+	"ASPIRATION_TYPE",
+	"MH",
+	"PURPOSE",
+	"START_TIME",
+	"END_TIME",
+	"TOTAL_TIME",
+	"TEMP_MAX",
+	"TEMP_MIN",
+	"TEMP_AVG",
+	"RH_MAX",
+	"RH_MIN",
+	"RH_AVG",
+	"BEFORE_MAX",
+	"BEFORE_MIN",
+	"BEFORE_AVG",
+	"AFTER_MAX",
+	"AFTER_MIN",
+	"AFTER_AVG",
+	"GRAD_MAX",
+	"GRAD_MIN",
+	"GRAD_AVG",
+	"DEW_MAX",
+	"DEW_MIN",
+	"DEW_AVG",
+	"COOLING_AIR_TEMP",
+	"COOLING_AIR_RH",
+	"ABILITY",
+	"TOTAL_POWER",
+	"ENERGY_CONSUM",
+	"ELECTROVALENCY",
+	"COST",
+	"CUSTODIAN",
+	"OPERATOR",
+	"LEADER",
+	"RECORD_DATE",
+	"CREATOR",
+	"CREATE_DATE",
+	"OPERATOR_ID"
+	</sql>
+
+	<sql id="table_main"> T_STORAGE_COOLING </sql>
+	
+	
+	
+	<!-- 添加 -->
+	<insert id="save" parameterType="com.dhc.fastersoft.entity.store.StorageCooling">
+		INSERT INTO
+		<include refid="table_main" />
+		(
+		<include refid="columns_main" />
+		)
+		VALUES
+		(
+		#{id},#{warehouse},#{warehouseId},#{encode},
+		#{type},#{diameter,jdbcType=VARCHAR},#{bulkHeight,jdbcType=VARCHAR},
+		#{bulkCubage,jdbcType=VARCHAR},#{grainVariety},#{dew},
+		#{impurity},#{realQuantity},#{valleyCoolerModel,jdbcType=VARCHAR},
+		#{valleyCoolerNum,jdbcType=VARCHAR},#{kw,jdbcType=VARCHAR},#{mht,jdbcType=VARCHAR},
+		#{aspirationType,jdbcType=VARCHAR},#{mh,jdbcType=VARCHAR},#{purpose},
+		#{startTime},#{endTime},#{totalTime},
+		#{tempMax},#{tempMin},#{tempAvg},
+		#{rhMax},#{rhMin},#{rhAvg},
+		#{beforeMax},#{beforeMin},#{beforeAvg},
+		#{afterMax},#{afterMin},#{afterAvg},
+		#{gradMax},#{gradMin},#{gradAvg},
+		#{dewMax},#{dewMin},#{dewAvg},
+		#{coolingAirTemp},#{coolingAirRh},#{ability},
+		#{totalPower,jdbcType=VARCHAR},#{energyConsum,jdbcType=VARCHAR},#{electrovalency,jdbcType=VARCHAR},
+		#{cost,jdbcType=VARCHAR},#{custodian},#{operator},
+		#{leader},#{recordDate},#{creator,jdbcType=VARCHAR},
+		#{createDate,jdbcType=DATE},#{operatorId,jdbcType=VARCHAR}
+		
+		)
+	</insert>
+
+	<update id="update" parameterType="com.dhc.fastersoft.entity.store.StorageCooling">
+		UPDATE
+		<include refid="table_main" />
+		SET
+		"WAREHOUSE" = #{warehouse},
+		"WAREHOUSE_ID" = #{warehouseId},
+		"ENCODE" = #{encode},
+		"TYPE" = #{type},
+		"DIAMETER" = #{diameter,jdbcType=VARCHAR},
+		"BULK_HEIGHT" = #{bulkHeight,jdbcType=VARCHAR},
+		"BULK_CUBAGE" = #{bulkCubage,jdbcType=VARCHAR},
+		"GRAIN_VARIETY" = #{grainVariety},
+		"DEW" = #{dew},
+		"IMPURITY" = #{impurity},
+		"REAL_QUANTITY" = #{realQuantity},
+		"VALLEY_COOLER_MODEL" = #{valleyCoolerModel,jdbcType=VARCHAR},
+		"VALLEY_COOLER_NUM" = #{valleyCoolerNum,jdbcType=VARCHAR},
+		"KW" = #{kw,jdbcType=VARCHAR},
+		"MHT" = #{mht,jdbcType=VARCHAR},
+		"ASPIRATION_TYPE" = #{aspirationType,jdbcType=VARCHAR},
+		"MH" = #{mh,jdbcType=VARCHAR},
+		"PURPOSE" = #{purpose},
+		"START_TIME" = #{startTime},
+		"END_TIME" = #{endTime},
+		"TOTAL_TIME" = #{totalTime},
+		"TEMP_MAX" = #{tempMax},
+		"TEMP_MIN" = #{tempMin},
+		"TEMP_AVG" = #{tempAvg},
+		"RH_MAX" = #{rhMax},
+		"RH_MIN" = #{rhMin},
+		"RH_AVG" = #{rhAvg},
+		"BEFORE_MAX" = #{beforeMax},
+		"BEFORE_MIN" = #{beforeMin},
+		"BEFORE_AVG" = #{beforeAvg},
+		"AFTER_MAX" = #{afterMax},
+		"AFTER_MIN" = #{afterMin},
+		"AFTER_AVG" = #{afterAvg},
+		"GRAD_MAX" = #{gradMax},
+		"GRAD_MIN" = #{gradMin},
+		"GRAD_AVG" = #{gradAvg},
+		"DEW_MAX" = #{dewMax},
+		"DEW_MIN" = #{dewMin},
+		"DEW_AVG" = #{dewAvg},
+		"COOLING_AIR_TEMP" = #{coolingAirTemp},
+		"COOLING_AIR_RH" = #{coolingAirRh},
+		"ABILITY" = #{ability},
+		"TOTAL_POWER" = #{totalPower,jdbcType=VARCHAR},
+		"ENERGY_CONSUM" = #{energyConsum,jdbcType=VARCHAR},
+		"ELECTROVALENCY" = #{electrovalency,jdbcType=VARCHAR},
+		"COST" = #{cost,jdbcType=VARCHAR},
+		"CUSTODIAN" = #{custodian},
+		"OPERATOR" = #{operator},
+		"LEADER" = #{leader},
+		"RECORD_DATE" = #{recordDate},
+		"CREATOR" = #{creator,jdbcType=VARCHAR},
+		"CREATE_DATE" = #{createDate,jdbcType=DATE}
+		WHERE ID = #{id}
+	</update>
+	
+	
+	<select id="getById" parameterType="java.lang.String" resultMap="com.dhc.fastersoft.dao.store.StorageCoolingDao.StorageCoolingResultMap">
+		SELECT
+		A."ID",
+		W.WAREHOUSE_SHORT AS WAREHOUSE,
+		A."WAREHOUSE_ID",
+		A."ENCODE",
+		A."TYPE",
+		A."DIAMETER",
+		A."BULK_HEIGHT",
+		A."BULK_CUBAGE",
+		A."GRAIN_VARIETY",
+		A."DEW",
+		A."IMPURITY",
+		A."REAL_QUANTITY",
+		A."VALLEY_COOLER_MODEL",
+		A."VALLEY_COOLER_NUM",
+		A."KW",
+		A."MHT",
+		A."ASPIRATION_TYPE",
+		A."MH",
+		A."PURPOSE",
+		A."START_TIME",
+		A."END_TIME",
+		A."TOTAL_TIME",
+		A."TEMP_MAX",
+		A."TEMP_MIN",
+		A."TEMP_AVG",
+		A."RH_MAX",
+		A."RH_MIN",
+		A."RH_AVG",
+		A."BEFORE_MAX",
+		A."BEFORE_MIN",
+		A."BEFORE_AVG",
+		A."AFTER_MAX",
+		A."AFTER_MIN",
+		A."AFTER_AVG",
+		A."GRAD_MAX",
+		A."GRAD_MIN",
+		A."GRAD_AVG",
+		A."DEW_MAX",
+		A."DEW_MIN",
+		A."DEW_AVG",
+		A."COOLING_AIR_TEMP",
+		A."COOLING_AIR_RH",
+		A."ABILITY",
+		A."TOTAL_POWER",
+		A."ENERGY_CONSUM",
+		A."ELECTROVALENCY",
+		A."COST",
+		A."CUSTODIAN",
+		A."OPERATOR",
+		A."LEADER",
+		A."RECORD_DATE",
+		A."CREATOR",
+		A."CREATE_DATE",
+		A."OPERATOR_ID"
+		FROM <include refid="table_main" /> A
+		LEFT JOIN T_STORAGE_WAREHOUSE W ON A.WAREHOUSE_ID = W.ID
+		WHERE A.ID = #{_parameter}
+	</select>
+	
+	
+	<select id="list" parameterType="java.util.HashMap" resultMap="com.dhc.fastersoft.dao.store.StorageCoolingDao.StorageCoolingResultMap">
+		<if test="pageIndex!=null">
+		select * from ( select row_.*, rownum rownum_ from (
+		</if>
+		SELECT a.ID,W.WAREHOUSE_SHORT AS WAREHOUSE,a.ENCODE,a.TYPE,a.DIAMETER,a.BULK_HEIGHT,a.BULK_CUBAGE,a.GRAIN_VARIETY,a.DEW,a.IMPURITY,a.REAL_QUANTITY,a.
+		VALLEY_COOLER_MODEL,a.VALLEY_COOLER_NUM,a.KW,a.MHT,a.ASPIRATION_TYPE,a.MH,a.PURPOSE,a.START_TIME,a.END_TIME,a.TOTAL_TIME,a.
+		TEMP_MAX,a.TEMP_MIN,a.TEMP_AVG,a.RH_MAX,a.RH_MIN,a.RH_AVG,a.BEFORE_MAX,a.BEFORE_MIN,a.BEFORE_AVG,a.AFTER_MAX,a.AFTER_MIN,a.AFTER_AVG,a.
+		GRAD_MAX,a.GRAD_MIN,a.GRAD_AVG,a.DEW_MAX,a.DEW_MIN,a.DEW_AVG,a.COOLING_AIR_TEMP,a.COOLING_AIR_RH,a.ABILITY,a.TOTAL_POWER,a.ENERGY_CONSUM,a.
+		ELECTROVALENCY,a.COST,a.CUSTODIAN,a.LEADER,a.RECORD_DATE,a.CREATOR,a.CREATE_DATE,a.OPERATOR_ID
+		FROM <include refid="table_main" /> a LEFT JOIN t_sys_user b ON a.OPERATOR_ID=b.id
+		LEFT JOIN T_STORAGE_WAREHOUSE W ON W.ID = a.WAREHOUSE_ID
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND W.id like '%${warehouse}%'
+			</if>
+			<if test="storehouse!=null and storehouse!=''">
+				AND a.ENCODE like '%${storehouse}%'
+			</if>
+			<if test="grainType!=null and grainType!=''">
+				AND a.GRAIN_VARIETY = '${grainType}'
+			</if>
+			<if test="operator!=null and operator!=''">
+				AND b.name like '%${operator}%'
+			</if>
+			<if test="recordDate !=null and recordDate !=''">
+				AND TO_CHAR(a.RECORD_DATE,'YYYY-MM-DD') like '%${recordDate}%'
+			</if>
+			<if test="ids!=null and ids!=''">
+				AND a.ID IN (<foreach collection="ids" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+		<if test="sortField!=null and sortField!=''">
+			ORDER BY a.${sortField} a.${sortType}
+		</if>
+		<if test="sortField==null or sortField==''">
+			ORDER BY a.RECORD_DATE DESC
+		</if>
+
+		<if test="pageIndex!=null">
+			) row_ where rownum &lt;= #{pageIndex} * #{pageSize} )
+			where rownum_ > (#{pageIndex}-1) * #{pageSize}
+		</if>
+	</select>
+	
+	<select id="count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*) FROM <include refid="table_main" /> a LEFT JOIN t_sys_user b ON a.OPERATOR_ID=b.id
+		LEFT JOIN T_STORAGE_WAREHOUSE W ON A.WAREHOUSE_ID = W.ID
+		<where>
+			<if test="warehouse!=null and warehouse!=''">
+				AND W.id like '%${warehouse}%'
+			</if>
+			<if test="storehouse!=null and storehouse!=''">
+				AND a.ENCODE like '%${storehouse}%'
+			</if>
+			<if test="grainType!=null and grainType!=''">
+				AND a.GRAIN_VARIETY = '${grainType}'
+			</if>
+			<if test="operator!=null and operator!=''">
+				AND b.name like '%${operator}%'
+			</if>
+			<if test="recordDate !=null and recordDate !=''">
+				AND TO_CHAR(a.RECORD_DATE,'YYYY-MM-DD') like '%${recordDate}%'
+			</if>
+			<if test="ids!=null and ids!=''">
+				AND a.ID IN (<foreach collection="ids" item="item" separator=",">#{item}</foreach>)
+			</if>
+		</where>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM <include refid="table_main" /> WHERE ID=#{_parameter}
+	</delete>
+	
+</mapper>

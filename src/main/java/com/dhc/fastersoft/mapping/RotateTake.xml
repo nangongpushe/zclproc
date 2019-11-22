@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateTakeDao">
+	<resultMap id="RotateTakeResultMap" type="com.dhc.fastersoft.entity.RotateTake">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="SERIAL" property="serial" jdbcType="VARCHAR" />
+		<result column="WAREHOUSE_SHORT" property="reserveUnit" jdbcType="VARCHAR" />
+		<result column="RESERVE_ID" property="reserveId" jdbcType="VARCHAR"/>
+		<result column="RESERVE_TEL" property="reserveTel" jdbcType="VARCHAR" />
+		<result column="BUYER" property="buyer" jdbcType="VARCHAR" />
+		<result column="TON" property="ton" jdbcType="VARCHAR" />
+		<result column="CREATER" property="creater" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="COMPLETE_DATE" property="completeDate" jdbcType="TIMESTAMP" />
+		<result column="DEAL_SERIAL" property="dealSerial" jdbcType="VARCHAR" />
+		<result column="STORE_ENCODE" property="storeEncode" jdbcType="NVARCHAR"/>
+		<result column="VARIETY" property="variety" jdbcType="VARCHAR"/>
+		<result column="CONTRACT" property="contract" jdbcType="VARCHAR"/>
+		<result column="LADING_BILLS" property="ladingBills" jdbcType="VARCHAR"/>
+		<result column="THIS_SHIPMENT" property="thisShipment" jdbcType="VARCHAR"/>
+		<result column="ACCUMULATED_BILLS" property="accumulatedBills" jdbcType="VARCHAR"/>
+		<result column="TAKE_END" property="takeEnd" jdbcType="VARCHAR"/>
+		<result column="MAIN_ID" property="mainId" jdbcType="VARCHAR"/>
+		<result column="UNITPRICE" property="unitPrice" jdbcType="VARCHAR"/>
+		<result column="STORAGEMODE" property="storageMode" jdbcType="VARCHAR"/>
+		<result column="ACCEPTANCEUNIT" property="acceptanceUnit" jdbcType="VARCHAR"/>
+		<result column="ACCEPTANCEUNIT_ID" property="acceptanceUnitId" jdbcType="VARCHAR"/>
+		<result column="TELEPHONE" property="telephone" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID,SERIAL,RESERVE_UNIT,RESERVE_ID,RESERVE_TEL,BUYER,
+		TON,CREATER,CREATE_DATE,STATUS,COMPLETE_DATE,
+		DEAL_SERIAL,STORE_ENCODE,VARIETY,CONTRACT,
+		LADING_BILLS,THIS_SHIPMENT,ACCUMULATED_BILLS,
+		TAKE_END,UNITPRICE,STORAGEMODE,ACCEPTANCEUNIT,ACCEPTANCEUNIT_ID,TELEPHONE,CONTACTS,CONTACTNUMBER, MAIN_ID
+	</sql>
+	
+	<sql id="s_columns">
+		ID,SERIAL,RESERVE_UNIT,RESERVE_ID,RESERVE_TEL,BUYER,
+		TON,(select name from t_sys_user where id = CREATER) CREATER,CREATE_DATE,STATUS,COMPLETE_DATE,
+		DEAL_SERIAL,STORE_ENCODE,VARIETY,CONTRACT,
+		LADING_BILLS,THIS_SHIPMENT,ACCUMULATED_BILLS,
+		TAKE_END,UNITPRICE,STORAGEMODE,(select CLIENT_NAME from T_CLIENT_INFO where id = ACCEPTANCEUNIT_ID) AS ACCEPTANCEUNIT,ACCEPTANCEUNIT_ID,TELEPHONE,CONTACTS,CONTACTNUMBER
+	</sql>
+	
+	<insert id="AddRotateTake" parameterType="com.dhc.fastersoft.entity.RotateTake">
+		INSERT INTO T_ROTATE_TAKE(<include refid="columns"/>)
+		VALUES(
+			#{id},#{serial,jdbcType=VARCHAR},#{reserveUnit,jdbcType=VARCHAR},#{reserveId,jdbcType=VARCHAR},#{reserveTel,jdbcType=VARCHAR},#{buyer,jdbcType=VARCHAR},
+			#{ton,jdbcType=VARCHAR},#{creater,jdbcType=VARCHAR},#{createDate,jdbcType=DATE},#{status,jdbcType=VARCHAR},#{completeDate,jdbcType=TIMESTAMP},
+			#{dealSerial,jdbcType=VARCHAR},#{storeEncode,jdbcType=VARCHAR},#{variety,jdbcType=VARCHAR},#{contract,jdbcType=VARCHAR},
+			#{ladingBills,jdbcType=VARCHAR},#{thisShipment,jdbcType=VARCHAR},#{accumulatedBills,jdbcType=VARCHAR},#{takeEnd,jdbcType=VARCHAR},
+			#{unitPrice,jdbcType=VARCHAR},#{storageMode,jdbcType=VARCHAR},#{acceptanceUnit,jdbcType=VARCHAR},#{acceptanceUnitId,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},#{contacts,jdbcType=VARCHAR},#{contactNumber,jdbcType=VARCHAR},#{mainId,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="ListLimitTake" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="RotateTakeResultMap">
+		SELECT * FROM (
+			SELECT A.*,B.WAREHOUSE_SHORT, ROWNUM RN
+			FROM (SELECT
+				<include refid="s_columns" />
+				FROM
+				T_ROTATE_TAKE
+				ORDER BY CREATE_DATE DESC
+			) A left join T_STORAGE_WAREHOUSE B ON A.RESERVE_ID = B.ID
+			<where>
+				<if test="entity.serial != null">
+					AND SERIAL LIKE concat(concat('%',#{entity.serial}),'%')
+				</if>
+				<if test="entity.reserveUnit != null">
+					AND B.WAREHOUSE_SHORT LIKE concat(concat('%',#{entity.reserveUnit}),'%')
+				</if>
+				<if test="entity.takeEnd != null and entity.takeEnd != ''">
+					AND TAKE_END = #{entity.takeEnd}
+				</if>
+				<if test="entity.dealSerial != null">
+					AND DEAL_SERIAL LIKE concat(concat('%',#{entity.dealSerial}),'%')
+				</if>
+				<if test="entity.creater != null">
+					AND CREATER LIKE concat(concat('%',#{entity.creater}),'%')
+				</if>
+				<if test="entity.createDate != null and entity.createDate != ''">
+					AND to_char(CREATE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.createDate},'yyyy-mm-dd')
+				</if>
+				<if test="entity.status != null and entity.status != ''">
+					AND STATUS = #{entity.status}
+				</if>
+				<if test="entity.completeDate != null and entity.completeDate != ''">
+					AND to_char(COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+				</if>
+				<if test="otherPram != null and otherPram.warehouseCode!=null and otherPram.warehouseCode!=''">
+					AND B.WAREHOUSE_CODE = #{otherPram.warehouseCode}
+				</if>
+				And ROWNUM &lt;= #{pageIndex}*#{pageSize}
+			</where>
+		)
+		WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+	</select>
+	
+	<select id="GetTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+		SELECT COUNT(ID) FROM T_ROTATE_TAKE
+		<where>
+			<if test="entity.serial != null">
+				AND SERIAL LIKE concat(concat('%',#{entity.serial}),'%')
+			</if>
+			<if test="entity.reserveUnit != null">
+				AND RESERVE_UNIT LIKE concat(concat('%',#{entity.reserveUnit}),'%')
+			</if>
+			<if test="entity.takeEnd != null and entity.takeEnd != ''">
+				AND TAKE_END = #{entity.takeEnd}
+			</if>
+			<if test="entity.dealSerial != null">
+				AND DEAL_SERIAL LIKE concat(concat('%',#{entity.dealSerial}),'%')
+			</if>
+			<if test="entity.creater != null">
+				AND CREATER LIKE concat(concat('%',#{entity.creater}),'%')
+			</if>
+			<if test="entity.createDate != null and entity.createDate != ''">
+				AND to_char(CREATE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.createDate},'yyyy-mm-dd')
+			</if>
+			<if test="entity.status != null and entity.status != ''">
+				AND STATUS = #{entity.status}
+			</if>
+			<if test="entity.completeDate != null and entity.completeDate != ''">
+				AND to_char(COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+			</if>
+		</where>
+	</select>
+
+	<select id="GetRotateTake" parameterType="java.lang.String" resultMap="RotateTakeResultMap">
+		SELECT T.*,B.WAREHOUSE_SHORT FROM(
+		SELECT <include refid="s_columns"/> FROM T_ROTATE_TAKE
+		WHERE ID = #{_parameter}
+		) T LEFT JOIN  T_STORAGE_WAREHOUSE B on T.RESERVE_ID = B.ID
+	</select>
+
+	<update id="UpdateRotateTake" parameterType="com.dhc.fastersoft.entity.RotateTake">
+		UPDATE T_ROTATE_TAKE SET
+		SERIAL = #{serial,jdbcType=VARCHAR},RESERVE_UNIT = #{reserveUnit,jdbcType=VARCHAR},RESERVE_ID = #{reserveId,jdbcType=VARCHAR},RESERVE_TEL = #{reserveTel,jdbcType=VARCHAR},BUYER = #{buyer,jdbcType=VARCHAR},
+		TON = #{ton,jdbcType=VARCHAR},STATUS = #{status,jdbcType=VARCHAR},COMPLETE_DATE = #{completeDate,jdbcType=TIMESTAMP},
+		DEAL_SERIAL = #{dealSerial,jdbcType=VARCHAR},STORE_ENCODE = #{storeEncode,jdbcType=VARCHAR},VARIETY = #{variety,jdbcType=VARCHAR},CONTRACT = #{contract,jdbcType=VARCHAR},
+		LADING_BILLS = #{ladingBills,jdbcType=VARCHAR},THIS_SHIPMENT = #{thisShipment,jdbcType=VARCHAR},ACCUMULATED_BILLS = #{accumulatedBills,jdbcType=VARCHAR},
+		TAKE_END = #{takeEnd,jdbcType=VARCHAR},UNITPRICE = #{unitPrice,jdbcType=VARCHAR},STORAGEMODE = #{storageMode,jdbcType=VARCHAR},
+		ACCEPTANCEUNIT = #{acceptanceUnit,jdbcType=VARCHAR},TELEPHONE = #{telephone,jdbcType=VARCHAR},CONTACTS = #{contacts,jdbcType=VARCHAR},CONTACTNUMBER = #{contactNumber,jdbcType=VARCHAR}
+		WHERE ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteByMainId" parameterType="String">
+		delete from T_ROTATE_TAKE where MAIN_ID = #{mainId, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="getByMainId" parameterType="String" resultMap="RotateTakeResultMap">
+		select * from T_ROTATE_TAKE where MAIN_ID = #{mainId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectTakeCountByDealSerial" parameterType="String" resultType="java.math.BigDecimal">
+		select nvl(sum(a.THIS_SHIPMENT),0) FROM T_ROTATE_TAKE a
+		  left join T_ROTATE_TAKE_MAIN b on a.MAIN_ID = b.id
+		  where a.DEAL_SERIAL = #{DEAL_SERIAL, jdbcType=VARCHAR}
+		  and b.status IN ('待签发','已完成')
+	</select>
+</mapper>

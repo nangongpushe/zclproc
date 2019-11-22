@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateNoticeDao">
+    <resultMap type="com.dhc.fastersoft.entity.RotateNotice" id="noticeResultMap">
+        <id column="ID" property="id" jdbcType="NVARCHAR"/>
+        <result column="NOTICE_TYPE" property="noticeType" jdbcType="NVARCHAR"/>
+        <result column="ROTATE_TYPE" property="rotateType" jdbcType="NVARCHAR"/>
+        <result column="NOTICE_SERIAL" property="noticeSerial" jdbcType="NVARCHAR"/>
+        <result column="DOCUMENT_NUMBER" property="documentNumber" jdbcType="NVARCHAR"/>
+        <result column="ACCEPTE_UNIT" property="accepteUnit" jdbcType="NVARCHAR"/>
+        <result column="STORAGE_DATE" property="storageDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATER" property="creater" jdbcType="NVARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="STATUS" property="status" jdbcType="NVARCHAR"/>
+        <result column="COMPLETE_DATE" property="completeDate" jdbcType="TIMESTAMP"/>
+        <result column="COMPLETE_HUMEN" property="completeHumen" jdbcType="VARCHAR"/>
+        <result column="YEAR" property="year" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="ANNEX" property="annex" jdbcType="VARCHAR"/>
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="INTEGER"/>
+        <result column="CREATER_ID" property="createrId" jdbcType="VARCHAR"/>
+        <result column="AUDIT" property="audit" jdbcType="VARCHAR"/>
+        <result column="SENDER" property="sender" jdbcType="VARCHAR"/>
+        <association property="storeEnterprise" javaType="com.dhc.fastersoft.entity.store.StoreEnterprise">
+            <id property="id" column="ENTERPRISE_ID"></id>
+            <result column="ENTERPRISE_NAME"  property="enterpriseName" jdbcType="VARCHAR"></result>
+        </association>
+        <collection property="noticeDetail" resultMap="com.dhc.fastersoft.dao.RotateNoticeDetailDao.noticeResultDetailMap"/>
+    </resultMap>
+
+
+    <sql id="columns">
+		ID,
+		NOTICE_TYPE,
+		ROTATE_TYPE,
+		NOTICE_SERIAL,
+		DOCUMENT_NUMBER,
+		ACCEPTE_UNIT,
+		STORAGE_DATE,
+		CREATER,
+		CREATE_TIME,
+		STATUS,
+		COMPLETE_DATE,
+		COMPLETE_HUMEN,
+		YEAR,REMARK,
+		ANNEX,
+		SEND_STATUS,
+		CREATER_ID,
+		"AUDIT",
+		SENDER,
+		ENTERPRISE_ID
+	</sql>
+
+    <sql id="detail-columns">
+		ID,
+		NOTICE_ID,
+		SERIAL_NO,
+		VARIETY,
+		COST,
+		PIPE_ATTRIBUTE,
+		HARVEST_YEAR,
+		STORAGE_WAREHOUSE,
+		STOREHOUSE,
+		PLAN_NUMBER,
+		ACTUAL_NUMBER,
+		REMOVAL_UNIT,
+		IMMIGRATION_UNIT,
+		DEAL_SERIAL,
+		WAREHOUSE_ID,
+		ENTERPRISE_ID,
+		BATCH_NUMBER,
+        MANU_REMARK,
+        MANU_ACNUMBER
+	</sql>
+
+    <sql id="select-columns">
+		  m.ID,
+		  m.NOTICE_TYPE,
+		  m.ROTATE_TYPE,
+		  m.NOTICE_SERIAL,
+		  m.DOCUMENT_NUMBER,
+		  m.ACCEPTE_UNIT,
+		  m.STORAGE_DATE,
+		  (select name from t_sys_user where id = CREATER_ID) CREATER,
+		  m.CREATE_TIME,
+		  m.STATUS,
+		  m.COMPLETE_DATE,
+		  m.COMPLETE_HUMEN,
+		  m.YEAR,m.REMARK,
+		  m.ANNEX,
+		  m.SEND_STATUS,
+		  m.CREATER_ID,
+		  "AUDIT",
+		  m.SENDER,
+		  m.ENTERPRISE_ID
+	</sql>
+
+    <sql id="detail-select-columns">
+		  c.ID AS D_ID,
+		  c.NOTICE_ID,
+		  c.SERIAL_NO,
+		  c.VARIETY,
+		  c.COST,
+		  c.PIPE_ATTRIBUTE,
+		  c.HARVEST_YEAR,
+		  c.STORAGE_WAREHOUSE,
+		  c.STOREHOUSE,
+		  c.PLAN_NUMBER,
+		  c.ACTUAL_NUMBER,
+		  c.REMOVAL_UNIT,
+		  c.IMMIGRATION_UNIT,
+		  c.DEAL_SERIAL,
+		  c.WAREHOUSE_ID,
+		  c.BATCH_NUMBER,
+		  c.MANU_REMARK,
+		  c.MANU_ACNUMBER
+	</sql>
+
+    <sql id="tablename"> T_ROTATE_NOTICE </sql>
+
+    <insert id="SaveNotice" parameterType="com.dhc.fastersoft.entity.RotateNotice">
+        begin
+        INSERT INTO
+                   <include refid="tablename"/>
+                   (<include refid="columns"/>)
+        VALUES(
+                #{id,jdbcType=VARCHAR},
+                #{noticeType},
+                #{rotateType},
+                #{noticeSerial},
+                #{documentNumber},
+                #{accepteUnit},
+                #{storageDate},
+                #{creater},
+                #{createTime},
+                #{status},
+                #{completeDate,jdbcType=TIMESTAMP},
+                #{completeHumen,jdbcType=VARCHAR},
+                #{year},
+                #{remark,jdbcType=VARCHAR},
+                #{annex,jdbcType=VARCHAR},
+                #{sendStatus},
+                #{createrId},
+                #{audit,jdbcType=VARCHAR},
+                #{sender,jdbcType=VARCHAR},
+                #{storeEnterprise.id}
+                );
+
+        <foreach collection="noticeDetail" item="notice">
+            INSERT INTO
+                       T_ROTATE_NOTICE_DETAIL
+                       (<include refid="detail-columns"/>)
+            VALUES(
+                    #{notice.id,jdbcType=VARCHAR},
+                    #{id,jdbcType=VARCHAR},
+                    #{notice.serialNo},
+                    #{notice.variety},
+                    #{notice.cost,jdbcType=VARCHAR},
+                    #{notice.pipeAttribute,jdbcType=NVARCHAR},
+                    #{notice.harvestYear,jdbcType=NVARCHAR},
+                    #{notice.storageWarehouse,jdbcType=NVARCHAR},
+                    #{notice.storehouse,jdbcType=NVARCHAR},
+                    #{notice.planNumber,jdbcType=NUMERIC},
+                    #{notice.actualNumber,jdbcType=NUMERIC},
+                    #{notice.removalUnit,jdbcType=NVARCHAR},
+                    #{notice.immigrationUnit,jdbcType=NVARCHAR},
+                    #{notice.dealSerial,jdbcType=NVARCHAR},
+                    #{notice.warehouse.id,jdbcType=NVARCHAR},
+                    #{notice.enterpriseId,jdbcType=VARCHAR},
+                    #{notice.batchNumber,jdbcType=VARCHAR},
+                    #{notice.manuReport,jdbcType=VARCHAR},
+                    #{notice.manuActualNumber,jdbcType=NUMERIC}
+                 );
+        </foreach>
+        end;
+    </insert>
+
+    <select id="ListLimitNotice" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="noticeResultMap">
+
+        SELECT
+        <if test="entity.reportProgress != null">
+            DISTINCT
+            c.NOTICE_ID,
+        </if>
+            A.*,B.ENTERPRISE_NAME
+        FROM (SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tablename"/>
+        ) A left join T_STORE_ENTERPRISE B on A.ENTERPRISE_ID = B.ID
+        <if test="entity.reportProgress != null">
+            LEFT JOIN T_ROTATE_SCHEDULE c on A.id = c.NOTICE_ID
+        </if>
+        <where>
+            <if test="entity.noticeSerial != null and entity.noticeSerial != ''">
+                AND A.NOTICE_SERIAL LIKE concat(concat('%',#{entity.noticeSerial}),'%')
+            </if>
+
+           <choose>
+	            <when test="otherPram != null and otherPram.acceptUnit != null">
+	                AND A.ACCEPTE_UNIT IN
+	                <foreach collection="otherPram.acceptUnit" item="unit" open="(" close=")" separator=",">
+	                    #{unit}
+	                </foreach>
+	            </when>
+               <when test="otherPram != null and otherPram.enterpriseidList != null">
+                   AND B.ID IN
+                   <foreach collection="otherPram.enterpriseidList" item="id" open="(" close=")" separator=",">
+                       #{id}
+                   </foreach>
+               </when>
+
+            	<when test="entity.accepteUnit != null and entity.accepteUnit != ''">
+            		AND B.SHORT_NAME LIKE concat(concat('%',#{entity.accepteUnit}),'%')
+            	</when>
+            </choose>
+            <if test="entity.storageDate != null and entity.storageDate!=''">
+                AND A.STORAGE_DATE = #{entity.storageDate}
+            </if>
+            <if test="entity.documentNumber != null and entity.documentNumber != ''">
+                AND A.DOCUMENT_NUMBER LIKE concat(concat('%',#{entity.documentNumber}),'%')
+            </if>
+            <if test="entity.creater != null and entity.creater != ''">
+                AND A.CREATER LIKE concat(concat('%',#{entity.creater}),'%')
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                AND to_char(A.CREATE_TIME,'yyyy-mm-dd') LIKE to_char(#{entity.createTime},'yyyy-mm-dd')
+            </if>
+            <if test="entity.status != null and entity.status!=''">
+                AND A.STATUS = #{entity.status}
+            </if>
+            <if test="entity.completeDate != null and entity.completeDate !=''">
+                AND to_char(A.COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+            </if>
+            <if test="entity.noticeType != null and entity.noticeType!=''">
+                AND A.NOTICE_TYPE = #{entity.noticeType}
+            </if>
+            <if test="entity.sendStatus != null and entity.sendStatus !=''">
+                AND A.SEND_STATUS = #{entity.sendStatus}
+            </if>
+            <if test="entity.storeEnterprise!=null and entity.storeEnterprise.id!=null and entity.storeEnterprise.id!=''">
+                AND A.ENTERPRISE_ID = #{entity.storeEnterprise.id}
+            </if>
+            <if test="entity.reportProgress != null and entity.reportProgress">
+                AND c.id is not null
+            </if>
+            <if test="entity.reportProgress != null and !entity.reportProgress">
+                AND c.id is null
+            </if>
+        </where>
+        ORDER BY to_number(substr(NOTICE_SERIAL,2,4)) desc,to_number(substr(NOTICE_SERIAL,7,(instr(NOTICE_SERIAL,'号')-7))) desc,CREATE_TIME DESC
+    </select>
+
+    <select id="GetNoticeDetail" parameterType="java.lang.String" resultMap="noticeResultMap">
+        SELECT
+              <include refid="select-columns"/>,
+              <include refid="detail-select-columns"/>,
+              B.ENTERPRISE_NAME,
+              w.WAREHOUSE_SHORT,
+              w.WAREHOUSE_CODE
+        FROM
+        <include refid="tablename"/> m
+        left join T_STORE_ENTERPRISE B on M.ENTERPRISE_ID = B.ID
+        LEFT JOIN T_ROTATE_NOTICE_DETAIL c ON m.ID = c.NOTICE_ID
+        LEFT JOIN T_STORAGE_WAREHOUSE w on w.id = c.WAREHOUSE_ID
+        WHERE m.ID = #{_parameter}
+    </select>
+
+    <select id="GetTotalCount" parameterType="com.dhc.fastersoft.utils.PageUtil" resultType="java.lang.Integer">
+        SELECT COUNT(ID) FROM
+        <include refid="tablename"/>
+        <where>
+            <if test="entity.noticeSerial != null and entity.noticeSerial != ''">
+                AND NOTICE_SERIAL LIKE concat(concat('%',#{entity.noticeSerial}),'%')
+            </if>
+            <choose>
+	            <when test="otherPram != null and otherPram.acceptUnit != null">
+	                AND ACCEPTE_UNIT IN
+	                <foreach collection="otherPram.acceptUnit" item="unit" open="(" close=")" separator=",">
+	                    #{unit}
+	                </foreach>
+	            </when>
+            	<when test="entity.accepteUnit != null and entity.accepteUnit != ''">
+            		AND ACCEPTE_UNIT LIKE concat(concat('%',#{entity.accepteUnit}),'%')
+            	</when>
+            </choose>
+            <if test="entity.storageDate != null">
+                AND STORAGE_DATE = #{entity.storageDate}
+            </if>
+            <if test="entity.documentNumber != null and entity.documentNumber != ''">
+                AND DOCUMENT_NUMBER = #{entity.documentNumber}
+            </if>
+            <if test="entity.creater != null and entity.creater != ''">
+                AND CREATER like '%${entity.creater}%'
+            </if>
+            <if test="entity.createTime != null">
+                AND to_char(CREATE_TIME,'yyyy-mm-dd') LIKE to_char(#{entity.createTime},'yyyy-mm-dd')
+            </if>
+            <if test="entity.status != null  and entity.status != ''">
+                AND STATUS = #{entity.status}
+            </if>
+            <if test="entity.completeDate != null">
+                AND to_char(COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+            </if>
+            <if test="entity.noticeType != null and entity.noticeType != ''">
+                AND NOTICE_TYPE = #{entity.noticeType}
+            </if>
+            <if test="entity.sendStatus != null and entity.sendStatus != ''">
+                AND SEND_STATUS = #{entity.sendStatus}
+            </if>
+        </where>
+    </select>
+
+    <update id="UpdateNotice" parameterType="com.dhc.fastersoft.entity.RotateNotice">
+    begin
+        UPDATE
+              <include refid="tablename"/>
+        SET
+            ROTATE_TYPE = #{rotateType,jdbcType=VARCHAR},
+            NOTICE_SERIAL = #{noticeSerial,jdbcType=VARCHAR},
+            DOCUMENT_NUMBER = #{documentNumber,jdbcType=VARCHAR},
+            ACCEPTE_UNIT = #{accepteUnit,jdbcType=VARCHAR},
+            STORAGE_DATE = #{storageDate,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            COMPLETE_DATE = #{completeDate,jdbcType=TIMESTAMP},
+            COMPLETE_HUMEN = #{completeHumen,jdbcType=VARCHAR},
+            YEAR = #{year,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            ANNEX = #{annex,jdbcType=VARCHAR},
+            SEND_STATUS = #{sendStatus,jdbcType=NUMERIC},
+            "AUDIT" = #{audit,jdbcType=VARCHAR},
+            SENDER = #{sender,jdbcType=VARCHAR},
+            ENTERPRISE_ID=#{storeEnterprise.id,jdbcType=VARCHAR}
+        WHERE ID = #{id};
+
+        DELETE
+        FROM
+             T_ROTATE_NOTICE_DETAIL
+        WHERE
+             NOTICE_ID = #{id};
+
+        <foreach collection="noticeDetail" item="notice">
+            INSERT INTO
+                  T_ROTATE_NOTICE_DETAIL
+            (<include refid="detail-columns"/>)
+            VALUES(
+                #{notice.id,jdbcType=NVARCHAR},
+                #{id,jdbcType=NVARCHAR},
+                #{notice.serialNo,jdbcType=NUMERIC},
+                #{notice.variety,jdbcType=NVARCHAR},
+                #{notice.cost,jdbcType=NVARCHAR},
+                #{notice.pipeAttribute,jdbcType=NVARCHAR},
+                #{notice.harvestYear,jdbcType=NVARCHAR},
+                #{notice.storageWarehouse,jdbcType=NVARCHAR},
+                #{notice.storehouse,jdbcType=NVARCHAR},
+                #{notice.planNumber,jdbcType=NVARCHAR},
+                #{notice.actualNumber,jdbcType=NVARCHAR},
+                #{notice.removalUnit,jdbcType=NVARCHAR},
+                #{notice.immigrationUnit,jdbcType=NVARCHAR},
+                #{notice.dealSerial,jdbcType=NVARCHAR},
+                #{notice.warehouse.id,jdbcType=NVARCHAR},
+                #{notice.enterpriseId,jdbcType=VARCHAR},
+                #{notice.batchNumber,jdbcType=VARCHAR},
+                #{notice.manuReport,jdbcType=VARCHAR},
+                #{notice.manuActualNumber,jdbcType=NVARCHAR}
+            );
+        </foreach>
+    end;
+    </update>
+
+    <select id="GetNoticeDetailByids" parameterType="java.util.List" resultMap="noticeResultMap">
+        SELECT<include refid="select-columns"/>,
+        <include refid="detail-select-columns"/>, w.WAREHOUSE_SHORT
+        FROM
+        <include refid="tablename"/>
+        m
+        LEFT JOIN T_ROTATE_NOTICE_DETAIL c ON m.ID = c.NOTICE_ID
+        LEFT JOIN T_STORAGE_WAREHOUSE w ON c.WAREHOUSE_ID = w.id
+        WHERE m.ID IN (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+    <update id="SendDataOut" parameterType="java.util.Map">
+        UPDATE
+        <include refid="tablename"/>
+        SET SEND_STATUS = ${status} WHERE ID IN
+        (<foreach collection="list" item="id" separator=",">#{id}</foreach>)
+    </update>
+
+    <select id="getRownum" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT rn FROM (
+        SELECT a.*,ROWNUM rn FROM T_ROTATE_NOTICE a
+        )
+        <where>
+            AND ID = #{id}
+            AND YEAR = #{year}
+        </where>
+    </select>
+
+    <select id="GetNoticeByDealSerial" parameterType="java.util.HashMap" resultMap="noticeResultMap">
+        SELECT<include refid="select-columns"/>,
+        <include refid="detail-select-columns"/>
+        FROM
+        <include refid="tablename"/>
+        m
+        LEFT JOIN T_ROTATE_NOTICE_DETAIL c ON m.ID = c.NOTICE_ID
+        <where>
+            <if test=" dealSerial !=null and dealSerial !='' ">
+                AND c.DEAL_SERIAL = #{dealSerial}
+            </if>
+            <if test=" status !=null and status !='' ">
+                AND m.STATUS = #{status}
+            </if>
+            <if test=" acceptUnit !=null and acceptUnit !='' ">
+                AND m.ACCEPTE_UNIT = #{acceptUnit}
+            </if>
+        </where>
+    </select>
+
+    <select id="listLimitNoticeByDate" parameterType="com.dhc.fastersoft.utils.PageUtil" resultMap="noticeResultMap">
+        SELECT * FROM (
+        SELECT A.*, ROWNUM RN
+        FROM (SELECT *
+        FROM (SELECT<include refid="select-columns"/>,
+        <include refid="detail-select-columns"/>
+        FROM
+        <include refid="tablename"/>
+        m
+        LEFT JOIN T_ROTATE_NOTICE_DETAIL c ON m.ID = c.NOTICE_ID
+        ORDER BY M.CREATE_TIME DESC
+        ) A
+        <where>
+            <if test="entity.noticeSerial != null and entity.noticeSerial != ''">
+                AND NOTICE_SERIAL LIKE concat(concat('%',#{entity.noticeSerial}),'%')
+            </if>
+            <if test="otherPram != null and otherPram.acceptUnit != null">
+                AND ACCEPTE_UNIT IN
+                <foreach collection="otherPram.acceptUnit" item="unit" open="(" close=")" separator=",">
+                    #{unit}
+                </foreach>
+            </if>
+            <if test="entity.storageDate != null">
+                AND STORAGE_DATE = #{entity.storageDate}
+            </if>
+            <if test="entity.documentNumber != null and entity.documentNumber != ''">
+                AND DOCUMENT_NUMBER LIKE concat(concat('%',#{entity.documentNumber}),'%')
+            </if>
+            <if test="entity.creater != null and entity.creater != ''">
+                AND CREATER LIKE concat(concat('%',#{entity.creater}),'%')
+            </if>
+            <if test="entity.createTime != null">
+                AND to_char(CREATE_TIME,'yyyy-mm-dd') &gt;= to_char(#{entity.createTime},'yyyy-mm-dd')
+            </if>
+            <if test="entity.status != null">
+                AND STATUS = #{entity.status}
+            </if>
+            <if test="entity.completeDate != null">
+                AND to_char(COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+            </if>
+            <if test="entity.noticeType != null">
+                AND NOTICE_TYPE = #{entity.noticeType}
+            </if>
+        </where>
+        UNION
+        SELECT *
+        FROM (SELECT<include refid="select-columns"/>,
+        <include refid="detail-select-columns"/>
+        FROM
+        <include refid="tablename"/>
+        m
+        LEFT JOIN T_ROTATE_NOTICE_DETAIL c ON m.ID = c.NOTICE_ID
+        ORDER BY M.CREATE_TIME DESC
+        ) A
+        <where>
+            <if test="entity.noticeSerial != null and entity.noticeSerial != ''">
+                AND NOTICE_SERIAL LIKE concat(concat('%',#{entity.noticeSerial}),'%')
+            </if>
+            <if test="otherPram != null and otherPram.acceptUnit != null">
+                AND ACCEPTE_UNIT IN
+                <foreach collection="otherPram.acceptUnit" item="unit" open="(" close=")" separator=",">
+                    #{unit}
+                </foreach>
+            </if>
+            <if test="entity.storageDate != null">
+                AND STORAGE_DATE = #{entity.storageDate}
+            </if>
+            <if test="entity.documentNumber != null and entity.documentNumber != ''">
+                AND DOCUMENT_NUMBER LIKE concat(concat('%',#{entity.documentNumber}),'%')
+            </if>
+            <if test="entity.creater != null and entity.creater != ''">
+                AND CREATER LIKE concat(concat('%',#{entity.creater}),'%')
+            </if>
+            <if test="entity.createTime != null">
+                AND to_char(CREATE_TIME,'yyyy-mm-dd') &lt;to_char(#{entity.createTime},'yyyy-mm-dd')
+            </if>
+            <if test="entity.status != null">
+                AND STATUS = #{entity.status}
+            </if>
+            <if test="entity.completeDate != null">
+                AND to_char(COMPLETE_DATE,'yyyy-mm-dd') LIKE to_char(#{entity.completeDate},'yyyy-mm-dd')
+            </if>
+            <if test="entity.noticeType != null">
+                AND NOTICE_TYPE = #{entity.noticeType}
+            </if>
+            AND SEND_STATUS = '0'
+        </where>
+        ) A
+        WHERE ROWNUM &lt;= #{pageIndex}*#{pageSize}
+        )
+        WHERE RN > (#{pageIndex} - 1) * #{pageSize}
+    </select>
+
+    <select id="getRotateNoticeCount" resultType="java.lang.Integer">
+        select count(1) from <include refid="tablename"/>
+        <where>
+            <if test="noticeSerial!=null and noticeSerial!=''">
+                AND NOTICE_SERIAL = #{noticeSerial}
+            </if>
+            <if test="type!=null and type!='' ">
+                AND NOTICE_TYPE = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="findOutNoticeSerial" resultType="string">
+        select NOTICE_SERIAL from T_ROTATE_NOTICE where NOTICE_TYPE = '出库'
+    </select>
+
+    <select id="findInNoticeSerial" resultType="string">
+        select NOTICE_SERIAL from T_ROTATE_NOTICE where NOTICE_TYPE = '入库'
+    </select>
+
+    <select id="findMoveNoticeSerial" resultType="string">
+        select NOTICE_SERIAL from T_ROTATE_NOTICE where NOTICE_TYPE = '移库'
+    </select>
+</mapper>

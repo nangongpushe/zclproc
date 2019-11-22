@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.QualityTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.QualityTask" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_SERIAL" property="taskSerial" jdbcType="VARCHAR" />
+    <result column="TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+    <result column="SAMPLE_NO" property="sampleNo" jdbcType="VARCHAR" />
+    <result column="WEARHOUSE" property="wearhouse" jdbcType="VARCHAR" />
+    <result column="TASK_PRIORITY" property="taskPriority" jdbcType="VARCHAR" />
+    <result column="TASK_EXECUTOR" property="taskExecutor" jdbcType="VARCHAR" />
+    <result column="INSPECTION_TYPE" property="inspectionType" jdbcType="VARCHAR" />
+    <result column="PLANNED_INSPECTION_TIME" property="plannedInspectionTime" jdbcType="TIMESTAMP" />
+    <result column="ACTUAL_INSPECTION_TIME" property="actualInspectionTime" jdbcType="TIMESTAMP" />
+    <result column="TASK_STATUS" property="taskStatus" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+    <result column="VALID_TYPE" property="validType" jdbcType="VARCHAR"/> 
+  </resultMap>
+  <sql id="select">
+	   ID,
+       TASK_SERIAL,
+       TASK_NAME,
+       SAMPLE_NO,
+       WEARHOUSE,
+       TASK_PRIORITY,
+       TASK_EXECUTOR,
+       INSPECTION_TYPE,
+       TO_CHAR(PLANNED_INSPECTION_TIME,'YYYY-MM-DD,hh24:mi:ss') PLANNED_INSPECTION_TIME,
+       TO_CHAR(ACTUAL_INSPECTION_TIME,'YYYY-MM-DD,hh24:mi:ss') ACTUAL_INSPECTION_TIME,
+       TASK_STATUS,
+       CREATOR,
+       TO_CHAR(CREATE_DATE,'YYYY-MM-DD') CREATE_DATE,
+       REMARK,
+       VALID_TYPE
+	</sql>
+	<sql id="tablename"> T_QUALITY_TASK </sql>
+	<sql id="sort"> CREATE_DATE </sql>
+	<sql id="criteria">
+  		<where>1=1
+			  <if test="taskSerial != null and taskSerial != ''" >
+	             AND TASK_SERIAL LIKE '%${taskSerial}%'
+		      </if>
+		      <if test="taskName != null and taskName !='' " >
+		          AND TASK_NAME LIKE '%${taskName}%'
+		      </if>
+		      <if test="creator != null and creator !=''" >
+		          AND CREATOR LIKE '%${creator}%'
+		      </if>
+			  <if test="sampleNo != null and sampleNo != ''" >
+		          AND SAMPLE_NO LIKE '%${sampleNo}%'
+		      </if>
+		      <if test="inspectionType != null and inspectionType != ''" >
+		          AND INSPECTION_TYPE LIKE '%${inspectionType}%'
+		      </if>
+		      <if test="actualInspectionTime != null and actualInspectionTime != ''" >
+		          AND ACTUAL_INSPECTION_TIME LIKE to_date('${actualInspectionTime}','yyyy-MM-dd') 
+		      </if>
+		      <if test="taskStatus != null and taskStatus != ''" >
+		          AND TASK_STATUS LIKE '%${taskStatus}%'
+		      </if>
+		      <if test="wearhouse != null and wearhouse != ''" >
+		          AND WEARHOUSE LIKE '%${wearhouse}%'
+		      </if>
+		</where>
+  </sql>
+  <!-- 总条数 -->
+	<select id="count" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM <include refid="tablename"/>
+		<include refid="criteria"/>
+	</select>
+	<select id="check" parameterType="java.util.HashMap"
+		resultType="Integer">
+		SELECT count(0) FROM <include refid="tablename"/>
+		where  TASK_SERIAL = '${taskSerial}'
+	</select>
+	<!-- 根据搜索条件查询计划列表 -->
+	<select id="list" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		${start} SELECT  <include refid="select"/> from <include refid="tablename"/>
+		<include refid="criteria"/>  
+		ORDER BY <include refid="sort"/> DESC
+		${end}
+	</select>
+	<select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select  <include refid="select"/> from <include refid="tablename"/> WHERE ID='${id}'
+	</select>
+	<delete id="delete" parameterType="java.lang.String" >
+		DELETE from <include refid="tablename"/> WHERE ID='${id}'
+	</delete>
+  <insert id="add" parameterType="com.dhc.fastersoft.entity.QualityTask" >
+    insert into T_QUALITY_TASK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="taskSerial != null" >
+        TASK_SERIAL,
+      </if>
+      <if test="taskName != null" >
+        TASK_NAME,
+      </if>
+      <if test="sampleNo != null" >
+        SAMPLE_NO,
+      </if>
+      <if test="wearhouse != null" >
+        WEARHOUSE,
+      </if>
+      <if test="taskPriority != null" >
+        TASK_PRIORITY,
+      </if>
+      <if test="taskExecutor != null" >
+        TASK_EXECUTOR,
+      </if>
+      <if test="inspectionType != null" >
+        INSPECTION_TYPE,
+      </if>
+      <if test="plannedInspectionTime != null" >
+        PLANNED_INSPECTION_TIME,
+      </if>
+      <if test="actualInspectionTime != null" >
+        ACTUAL_INSPECTION_TIME,
+      </if>
+      <if test="taskStatus != null" >
+        TASK_STATUS,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="company != null" >
+        COMPANY,
+      </if>
+      VALID_TYPE,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskSerial != null" >
+        #{taskSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null" >
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="sampleNo != null" >
+        #{sampleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="wearhouse != null" >
+        #{wearhouse,jdbcType=VARCHAR},
+      </if>
+      <if test="taskPriority != null" >
+        #{taskPriority,jdbcType=VARCHAR},
+      </if>
+      <if test="taskExecutor != null" >
+        #{taskExecutor,jdbcType=VARCHAR},
+      </if>
+      <if test="inspectionType != null" >
+        #{inspectionType,jdbcType=VARCHAR},
+      </if>
+      <if test="plannedInspectionTime != null" >
+       TO_DATE(#{plannedInspectionTime,jdbcType=TIMESTAMP},'yyyy-mm-dd,hh24:mi:ss') ,
+      </if>
+      <if test="actualInspectionTime != null" >
+       TO_DATE(#{actualInspectionTime,jdbcType=TIMESTAMP},'yyyy-mm-dd,hh24:mi:ss') ,
+      </if>
+      <if test="taskStatus != null" >
+        #{taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+       TO_DATE(#{createDate,jdbcType=TIMESTAMP},'yyyy-mm-dd,hh24:mi:ss') ,
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      #{validType,jdbcType=VARCHAR}
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.dhc.fastersoft.entity.QualityTask">
+			UPDATE <include refid="tablename"/> SET
+	<trim suffixOverrides="," >
+	  <if test="taskSerial != null" >
+        TASK_SERIAL='${taskSerial}',
+      </if>
+      <if test="taskName != null" >
+        TASK_NAME='${taskName}',
+      </if>
+      <if test="sampleNo != null" >
+        SAMPLE_NO='${sampleNo}',
+      </if>
+      <if test="wearhouse != null" >
+        WEARHOUSE='${wearhouse}',
+      </if>
+      <if test="taskPriority != null" >
+        TASK_PRIORITY='${taskPriority}',
+      </if>
+      <if test="taskExecutor != null" >
+        TASK_EXECUTOR='${taskExecutor}',
+      </if>
+      <if test="inspectionType != null" >
+        INSPECTION_TYPE='${inspectionType}',
+      </if>
+      <if test="plannedInspectionTime != null" >
+        PLANNED_INSPECTION_TIME=TO_DATE('${plannedInspectionTime}','yyyy-MM-dd HH24:mi:ss'),
+      </if>
+      <if test="actualInspectionTime != null" >
+        ACTUAL_INSPECTION_TIME=TO_DATE('${actualInspectionTime}','yyyy-MM-dd HH24:mi:ss'),
+      </if>
+      <if test="taskStatus != null" >
+        TASK_STATUS='${taskStatus}',
+      </if>
+       <if test="creator != null" >
+       CREATOR='${creator}' ,
+      </if>
+      <if test="createDate != null" >
+       CREATE_DATE= to_date('${createDate}','yyyy-MM-dd HH24:mi:ss'),
+      </if>
+      <if test="company != null" >
+       COMPANY= '${company}',
+      </if>
+      <if test="remark != null" >
+        REMARK='${remark}',
+      </if>
+      VALID_TYPE = #{validType,jdbcType=VARCHAR}
+      </trim>
+      		  WHERE ID='${id}'
+	</update>
+</mapper>

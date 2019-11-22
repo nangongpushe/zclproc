@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.store.StoreEnterpriseDao">
+    <resultMap id="BaseResultMap" type="com.dhc.fastersoft.entity.store.StoreEnterprise">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="ENTERPRISE_SERIAL" property="enterpriseSerial" jdbcType="VARCHAR"/>
+        <result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR"/>
+        <result column="SHORT_NAME" property="shortName" jdbcType="VARCHAR"/>
+        <result column="ORGANIZATION_CODE" property="organizationCode" jdbcType="VARCHAR"/>
+        <result column="SOCIAL_CREDIT_CODE" property="socialCreditCode" jdbcType="VARCHAR"/>
+        <result column="ECONOMIC_TYPE" property="economicType" jdbcType="VARCHAR"/>
+        <result column="REGIST_TYPE" property="registType" jdbcType="VARCHAR"/>
+        <result column="BUSINESS_NO" property="businessNo" jdbcType="VARCHAR"/>
+        <result column="SENIORITY" property="seniority" jdbcType="VARCHAR"/>
+        <result column="PERSON_INCHARGE" property="personIncharge" jdbcType="VARCHAR"/>
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+        <result column="TELEPHONE" property="telephone" jdbcType="VARCHAR"/>
+        <result column="FAX" property="fax" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="WEBSITE" property="website" jdbcType="VARCHAR"/>
+        <result column="POSTALCODE" property="postalcode" jdbcType="NVARCHAR"/>
+        <result column="PROVINCE" property="province" jdbcType="VARCHAR"/>
+        <result column="PROVINCE_CODE" property="provinceCode" jdbcType="VARCHAR"/>
+        <result column="CITY" property="city" jdbcType="VARCHAR"/>
+        <result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR"/>
+        <result column="AREA" property="area" jdbcType="VARCHAR"/>
+        <result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR"/>
+        <result column="DEPOSIT_BANK" property="depositBank" jdbcType="NVARCHAR"/>
+        <result column="DEPOSIT_ACCOUNT" property="depositAccount" jdbcType="NVARCHAR"/>
+        <result column="BANK_CREDIT_RATING" property="bankCreditRating" jdbcType="NVARCHAR"/>
+        <result column="FIXED_ASSETS" property="fixedAssets" jdbcType="DOUBLE"/>
+        <result column="REGISTERED_CAPITAL" property="registeredCapital" jdbcType="DOUBLE"/>
+        <result column="ASSETS" property="assets" jdbcType="DOUBLE"/>
+        <result column="PEOPLE" property="people" jdbcType="INTEGER"/>
+        <result column="CREATOR" property="creator" jdbcType="NVARCHAR"/>
+        <result column="CREATORID" property="creatorId" jdbcType="NVARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="REMARK" property="remark" jdbcType="NVARCHAR"/>
+        <result column="ISSTOP" property="isStop" jdbcType="NVARCHAR"/>
+        <result column="CONTACTS" property="contacts" jdbcType="NVARCHAR"/>
+        <result column="CONTACTNUMBER" property="contactNumber" jdbcType="NVARCHAR"/>
+        <result column="REPORT_WAREHOUSE_ID" property="wareHouseId" jdbcType="NVARCHAR"/>
+        <result column="ENTERPRISE_ID" property="enterpriseID" jdbcType="NVARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            E.ID id,
+            E.ENTERPRISE_SERIAL enterpriseSerial,
+            E.ENTERPRISE_NAME enterpriseName,
+            E.SHORT_NAME shortName,
+            E.ORGANIZATION_CODE organizationCode,
+            E.SOCIAL_CREDIT_CODE socialCreditCode,
+            E.ECONOMIC_TYPE economicType,
+            E.REGIST_TYPE registType,
+            E.BUSINESS_NO businessNo,
+            E.SENIORITY seniority,
+            E.PERSON_INCHARGE personIncharge,
+            E.ADDRESS address,
+            E.TELEPHONE telephone,
+            E.FAX fax,
+            E.EMAIL email,
+            E.WEBSITE website,
+            E.POSTALCODE postalcode,
+            E.PROVINCE province,
+            E.PROVINCE_CODE provinceCode,
+            E.CITY city,
+            E.CITY_CODE cityCode,
+            E.AREA area,
+            E.AREA_CODE areaCode,
+            E.DEPOSIT_BANK depositBank,
+            E.CONTACTS contacts,
+            E.CONTACTNUMBER contactNumber,
+            E.DEPOSIT_ACCOUNT depositAccount,
+            E.BANK_CREDIT_RATING bankCreditRating,
+            round(E.FIXED_ASSETS,4) fixedAssets,
+            round(E.REGISTERED_CAPITAL,4) registeredCapital,
+            round(E.ASSETS,4) assets,
+            E.PEOPLE people,
+            E.CREATORID creatorId,
+            (select name from t_sys_user where id = E.CREATORID) CREATOR,
+            TO_CHAR(E.CREATE_DATE,'YYYY-MM-DD') createDate,
+            E.REMARK remark,
+            E.PROVINCE || E.CITY || E.AREA  provinceCityArea,
+            E.ISSTOP isStop
+    </sql>
+
+    <sql id="table_name">
+		T_STORE_ENTERPRISE
+	</sql>
+
+    <select id="getStoreEnterpriseByEnterpriseName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from
+        <include refid="table_name"/>
+        <where>
+            <if test="enterpriseName != null and enterpriseName!=''">
+                and ENTERPRISE_NAME = #{enterpriseName,jdbcType=NVARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="pageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+
+
+        ${start}
+        SELECT
+        <include refid="Base_Column_List"/>
+
+        from T_STORE_ENTERPRISE E
+        WHERE 1=1
+         and  E.ENTERPRISE_SERIAL not in('ZSK','QUZ','YUE','DEQ','ZHS','ZHI')
+
+        <!-- <if test="warehouseName!=null and warehouseName!=''">
+            ,T_STORE_SUPERVISE_ITEM T
+            WHERE 1=1
+             and  T.warehouse_name  = '${warehouseName}'
+             and T.enterprise_serial=E.enterprise_serial
+        </if>
+        <if test="warehouseName ==null or warehouseName ==''">
+            WHERE 1=1
+        </if> -->
+        <if test="warehouseCode!=null and warehouseCode!=''">
+            and E.SOCIAL_CREDIT_CODE = (SELECT SOCIAL_CREDIT_CODE FROM T_STORAGE_WAREHOUSE WHERE
+            WAREHOUSE_CODE=#{warehouseCode})
+        </if>
+        <if test="creatorId!=null and creatorId!=''">
+            and E.CREATORID = '${creatorId}'
+        </if>
+        <if test="registType!=null and registType!=''">
+            and E.REGIST_TYPE = '${registType}'
+        </if>
+        <if test="seniority!=null and seniority!=''">
+            and E.SENIORITY = '${seniority}'
+        </if>
+        <if test="economicType!=null and economicType!=''">
+            and E.ECONOMIC_TYPE = '${economicType}'
+        </if>
+        <if test="province!=null and province!=''">
+            and E.PROVINCE = '${province}'
+        </if>
+        <if test="city!=null and city!=''">
+            and E.CITY = '${city}'
+        </if>
+        <if test="area!=null and area!=''">
+            and E.AREA = '${area}'
+        </if>
+
+        <if test="isStop!=null and isStop!=''">
+            and E.ISSTOP = '${isStop}'
+        </if>
+
+
+        <if test="enterpriseName!=null and enterpriseName!=''">
+            and E.ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+        </if>
+        <if test="enterpriseSerial!=null and enterpriseSerial!=''">
+            and E.ENTERPRISE_SERIAL LIKE '%${enterpriseSerial}%'
+        </if>
+        <if test="socialCreditCode!=null and socialCreditCode!=''">
+            and E.SOCIAL_CREDIT_CODE LIKE '%${socialCreditCode}%'
+        </if>
+        <if test="isEnterpriseType!=null and isEnterpriseType!=''">
+            and E.IS_ENTERPRISE_TYPE IS NULL
+        </if>
+
+
+        order by E.CREATE_DATE DESC
+        ${end}
+
+    </select>
+
+    <select id="getRecordCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(0)
+        FROM T_STORE_ENTERPRISE E
+        WHERE 1=1
+        and  E.ENTERPRISE_SERIAL not in('ZSK','QUZ','YUE','DEQ','ZHS','ZHI')
+        <!-- <if test="warehouseName!=null and warehouseName!=''">
+            ,T_STORE_SUPERVISE_ITEM T
+            WHERE 1=1
+             and  T.warehouse_name  = '${warehouseName}'
+             and T.enterprise_serial=E.enterprise_serial
+        </if>
+        <if test="warehouseName ==null or warehouseName ==''">
+            WHERE 1=1
+        </if> -->
+        <if test="warehouseCode!=null and warehouseCode!=''">
+            and E.SOCIAL_CREDIT_CODE = (SELECT SOCIAL_CREDIT_CODE FROM T_STORAGE_WAREHOUSE WHERE
+            WAREHOUSE_CODE=#{warehouseCode})
+        </if>
+        <if test="creatorId!=null and creatorId!=''">
+            and E.CREATORID = '${creatorId}'
+        </if>
+        <if test="registType!=null and registType!=''">
+            and E.REGIST_TYPE = '${registType}'
+        </if>
+        <if test="seniority!=null and seniority!=''">
+            and E.SENIORITY = '${seniority}'
+        </if>
+        <if test="economicType!=null and economicType!=''">
+            and E.ECONOMIC_TYPE = '${economicType}'
+        </if>
+        <if test="province!=null and province!=''">
+            and E.PROVINCE = '${province}'
+        </if>
+        <if test="isStop!=null and isStop!=''">
+            and E.ISSTOP = '${isStop}'
+        </if>
+        <if test="city!=null and city!=''">
+            and E.CITY = '${city}'
+        </if>
+        <if test="area!=null and area!=''">
+            and E.AREA = '${area}'
+        </if>
+        <if test="enterpriseName!=null and enterpriseName!=''">
+            and E.ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+        </if>
+        <if test="enterpriseSerial!=null and enterpriseSerial!=''">
+            and E.ENTERPRISE_SERIAL LIKE '%${enterpriseSerial}%'
+        </if>
+        <if test="socialCreditCode!=null and socialCreditCode!=''">
+            and E.SOCIAL_CREDIT_CODE LIKE '%${socialCreditCode}%'
+        </if>
+        <if test="isEnterpriseType!=null and isEnterpriseType!=''">
+            and E.IS_ENTERPRISE_TYPE IS NULL
+        </if>
+    </select>
+
+    <select id="thisPageQuery" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+
+
+        ${start}
+        SELECT
+        <include refid="Base_Column_List"/>
+
+        from T_STORE_ENTERPRISE E
+        WHERE 1=1
+        <!-- <if test="warehouseName!=null and warehouseName!=''">
+            ,T_STORE_SUPERVISE_ITEM T
+            WHERE 1=1
+             and  T.warehouse_name  = '${warehouseName}'
+             and T.enterprise_serial=E.enterprise_serial
+        </if>
+        <if test="warehouseName ==null or warehouseName ==''">
+            WHERE 1=1
+        </if> -->
+        <if test="warehouseCode!=null and warehouseCode!=''">
+            and E.SOCIAL_CREDIT_CODE = (SELECT SOCIAL_CREDIT_CODE FROM T_STORAGE_WAREHOUSE WHERE
+            WAREHOUSE_CODE=#{warehouseCode})
+        </if>
+        <if test="creatorId!=null and creatorId!=''">
+            and E.CREATORID = '${creatorId}'
+        </if>
+        <if test="registType!=null and registType!=''">
+            and E.REGIST_TYPE = '${registType}'
+        </if>
+        <if test="seniority!=null and seniority!=''">
+            and E.SENIORITY = '${seniority}'
+        </if>
+        <if test="economicType!=null and economicType!=''">
+            and E.ECONOMIC_TYPE = '${economicType}'
+        </if>
+        <if test="province!=null and province!=''">
+            and E.PROVINCE = '${province}'
+        </if>
+        <if test="city!=null and city!=''">
+            and E.CITY = '${city}'
+        </if>
+        <if test="area!=null and area!=''">
+            and E.AREA = '${area}'
+        </if>
+
+        <if test="isStop!=null and isStop!=''">
+            and E.ISSTOP = '${isStop}'
+        </if>
+
+
+        <if test="enterpriseName!=null and enterpriseName!=''">
+            and E.ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+        </if>
+        <if test="enterpriseSerial!=null and enterpriseSerial!=''">
+            and E.ENTERPRISE_SERIAL LIKE '%${enterpriseSerial}%'
+        </if>
+        <if test="socialCreditCode!=null and socialCreditCode!=''">
+            and E.SOCIAL_CREDIT_CODE LIKE '%${socialCreditCode}%'
+        </if>
+        <if test="isEnterpriseType!=null and isEnterpriseType!=''">
+            and E.IS_ENTERPRISE_TYPE IS NULL
+        </if>
+
+
+        order by E.CREATE_DATE DESC
+        ${end}
+
+    </select>
+
+    <select id="thisGetRecordCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(0)
+        FROM T_STORE_ENTERPRISE E
+        WHERE 1=1
+        <!-- <if test="warehouseName!=null and warehouseName!=''">
+            ,T_STORE_SUPERVISE_ITEM T
+            WHERE 1=1
+             and  T.warehouse_name  = '${warehouseName}'
+             and T.enterprise_serial=E.enterprise_serial
+        </if>
+        <if test="warehouseName ==null or warehouseName ==''">
+            WHERE 1=1
+        </if> -->
+        <if test="warehouseCode!=null and warehouseCode!=''">
+            and E.SOCIAL_CREDIT_CODE = (SELECT SOCIAL_CREDIT_CODE FROM T_STORAGE_WAREHOUSE WHERE
+            WAREHOUSE_CODE=#{warehouseCode})
+        </if>
+        <if test="creatorId!=null and creatorId!=''">
+            and E.CREATORID = '${creatorId}'
+        </if>
+        <if test="registType!=null and registType!=''">
+            and E.REGIST_TYPE = '${registType}'
+        </if>
+        <if test="seniority!=null and seniority!=''">
+            and E.SENIORITY = '${seniority}'
+        </if>
+        <if test="economicType!=null and economicType!=''">
+            and E.ECONOMIC_TYPE = '${economicType}'
+        </if>
+        <if test="province!=null and province!=''">
+            and E.PROVINCE = '${province}'
+        </if>
+        <if test="isStop!=null and isStop!=''">
+            and E.ISSTOP = '${isStop}'
+        </if>
+        <if test="city!=null and city!=''">
+            and E.CITY = '${city}'
+        </if>
+        <if test="area!=null and area!=''">
+            and E.AREA = '${area}'
+        </if>
+        <if test="enterpriseName!=null and enterpriseName!=''">
+            and E.ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+        </if>
+        <if test="enterpriseSerial!=null and enterpriseSerial!=''">
+            and E.ENTERPRISE_SERIAL LIKE '%${enterpriseSerial}%'
+        </if>
+        <if test="socialCreditCode!=null and socialCreditCode!=''">
+            and E.SOCIAL_CREDIT_CODE LIKE '%${socialCreditCode}%'
+        </if>
+        <if test="isEnterpriseType!=null and isEnterpriseType!=''">
+            and E.IS_ENTERPRISE_TYPE IS NULL
+        </if>
+    </select>
+
+    <select id="exportxls" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM T_STORE_ENTERPRISE E
+        WHERE 1=1
+        <!-- <if test="warehouseName!=null and warehouseName!=''">
+            ,T_STORE_SUPERVISE_ITEM T
+            WHERE 1=1
+             and  T.warehouse_name  = '${warehouseName}'
+             and T.enterprise_serial=E.enterprise_serial
+        </if>
+        <if test="warehouseName ==null or warehouseName ==''">
+            WHERE 1=1
+        </if> -->
+        <if test="creatorId!=null and creatorId!=''">
+            and E.CREATORID = '${creatorId}'
+        </if>
+        <if test="registType!=null and registType!=''">
+            and E.REGIST_TYPE = '${registType}'
+        </if>
+
+        <if test="isStop!=null and isStop!=''">
+            and E.ISSTOP = '${isStop}'
+        </if>
+        <if test="seniority!=null and seniority!=''">
+            and E.SENIORITY = '${seniority}'
+        </if>
+        <if test="economicType!=null and economicType!=''">
+            and E.ECONOMIC_TYPE = '${economicType}'
+        </if>
+        <if test="province!=null and province!=''">
+            and E.PROVINCE = '${province}'
+        </if>
+        <if test="city!=null and city!=''">
+            and E.CITY = '${city}'
+        </if>
+        <if test="area!=null and area!=''">
+            and E.AREA = '${area}'
+        </if>
+        <if test="enterpriseName!=null and enterpriseName!=''">
+            and E.ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+        </if>
+        <if test="socialCreditCode!=null and socialCreditCode!=''">
+            and E.SOCIAL_CREDIT_CODE LIKE '%${socialCreditCode}%'
+        </if>
+        order by E.CREATE_DATE DESC
+
+
+    </select>
+
+    <select id="getenterpriseSerialCount" parameterType="java.lang.String" resultType="int">
+		SELECT COUNT(0) FROM T_STORE_ENTERPRISE 
+		WHERE 1=1	
+		and ENTERPRISE_SERIAL=#{enterpriseSerial,jdbcType=NVARCHAR}
+		  
+		
+	</select>
+
+    <select id="getStoreEnterpriseById" parameterType="java.lang.String"
+            resultType="com.dhc.fastersoft.entity.store.StoreEnterprise">
+        SELECT
+        <include refid="Base_Column_List"/>,E.IS_INPUT isInput
+        from T_STORE_ENTERPRISE E
+        where ID=#{id,jdbcType=NVARCHAR}
+
+    </select>
+
+    <select id="getStoreEnterpriseByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		
+		
+		 SELECT ST.WAREHOUSE_NAME  wareHouse  FROM T_SYS_USER S ,T_STORE_SUPERVISE_ITEM  ST
+   		where  ST.ENTERPRISE_NAME = S.COMPANY
+   	    AND S.ID=#{id,jdbcType=NVARCHAR}
+		
+	</select>
+
+    <select id="getStoreEnterpriseByWarehouseCode" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select * from (SELECT ST.WAREHOUSE_NAME wareHouse,S.enterprise_name FROM t_storage_warehouse S
+        ,T_STORE_SUPERVISE_ITEM ST,t_store_supervise ss
+        where ST.ENTERPRISE_NAME = S.enterprise_name
+        and ss.id=st.supervise_id
+        <if test="year!=null and year!=''">
+            and ss.supervise_year = '${year}'
+        </if>
+        and s.warehouse_code='${warehouseCode}'
+        ) where rownum=1
+
+    </select>
+
+    <insert id="add" parameterType="com.dhc.fastersoft.entity.store.StoreEnterprise">
+ 
+        insert into T_STORE_ENTERPRISE (ID, ENTERPRISE_SERIAL, ENTERPRISE_NAME, 
+      SHORT_NAME, ORGANIZATION_CODE, SOCIAL_CREDIT_CODE, 
+      ECONOMIC_TYPE, REGIST_TYPE, BUSINESS_NO, 
+      SENIORITY, PERSON_INCHARGE, ADDRESS, 
+      TELEPHONE, FAX, EMAIL, 
+      WEBSITE, POSTALCODE, PROVINCE, 
+      PROVINCE_CODE, CITY, CITY_CODE, 
+      AREA, AREA_CODE, DEPOSIT_BANK, 
+      DEPOSIT_ACCOUNT, BANK_CREDIT_RATING, FIXED_ASSETS, 
+      REGISTERED_CAPITAL, ASSETS, PEOPLE, 
+      CREATOR, CREATORID,CREATE_DATE, REMARK,ISSTOP,CONTACTS,CONTACTNUMBER,IS_INPUT
+      )
+    values (#{id,jdbcType=VARCHAR}, #{enterpriseSerial,jdbcType=VARCHAR}, #{enterpriseName,jdbcType=VARCHAR}, 
+      #{shortName,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR}, #{socialCreditCode,jdbcType=VARCHAR}, 
+      #{economicType,jdbcType=VARCHAR}, #{registType,jdbcType=VARCHAR}, #{businessNo,jdbcType=VARCHAR}, 
+      #{seniority,jdbcType=VARCHAR}, #{personIncharge,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{telephone,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{website,jdbcType=VARCHAR}, #{postalcode,jdbcType=NVARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{provinceCode,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
+      #{area,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, #{depositBank,jdbcType=NVARCHAR}, 
+      #{depositAccount,jdbcType=NVARCHAR}, #{bankCreditRating,jdbcType=NVARCHAR}, #{fixedAssets,jdbcType=DOUBLE}, 
+      #{registeredCapital,jdbcType=DOUBLE}, #{assets,jdbcType=DOUBLE}, #{people,jdbcType=INTEGER}, 
+      #{creator,jdbcType=NVARCHAR}, #{creatorId,jdbcType=NVARCHAR},sysdate, #{remark,jdbcType=NVARCHAR},
+       #{isStop,jdbcType=NVARCHAR},#{contacts,jdbcType=NVARCHAR},#{contactNumber,jdbcType=NVARCHAR},#{isInput,jdbcType=NVARCHAR}
+      )
+  </insert>
+
+    <update id="update" parameterType="com.dhc.fastersoft.entity.store.StoreEnterprise">
+
+        update T_STORE_ENTERPRISE
+        set
+        ENTERPRISE_SERIAL = #{enterpriseSerial,jdbcType=VARCHAR},
+        ENTERPRISE_NAME = #{enterpriseName,jdbcType=VARCHAR},
+        SHORT_NAME = #{shortName,jdbcType=VARCHAR},
+        ORGANIZATION_CODE = #{organizationCode,jdbcType=VARCHAR},
+        SOCIAL_CREDIT_CODE = #{socialCreditCode,jdbcType=VARCHAR},
+        ECONOMIC_TYPE = #{economicType,jdbcType=VARCHAR},
+        REGIST_TYPE = #{registType,jdbcType=VARCHAR},
+        BUSINESS_NO = #{businessNo,jdbcType=VARCHAR},
+        SENIORITY = #{seniority,jdbcType=VARCHAR},
+        PERSON_INCHARGE = #{personIncharge,jdbcType=VARCHAR},
+        ADDRESS = #{address,jdbcType=VARCHAR},
+        TELEPHONE = #{telephone,jdbcType=VARCHAR},
+        FAX = #{fax,jdbcType=VARCHAR},
+        EMAIL = #{email,jdbcType=VARCHAR},
+        WEBSITE = #{website,jdbcType=VARCHAR},
+        POSTALCODE = #{postalcode,jdbcType=NVARCHAR},
+        PROVINCE = #{province,jdbcType=VARCHAR},
+        PROVINCE_CODE = #{provinceCode,jdbcType=VARCHAR},
+        CITY = #{city,jdbcType=VARCHAR},
+        CITY_CODE = #{cityCode,jdbcType=VARCHAR},
+        AREA = #{area,jdbcType=VARCHAR},
+        AREA_CODE = #{areaCode,jdbcType=VARCHAR},
+        DEPOSIT_BANK = #{depositBank,jdbcType=NVARCHAR},
+        DEPOSIT_ACCOUNT = #{depositAccount,jdbcType=NVARCHAR},
+        BANK_CREDIT_RATING = #{bankCreditRating,jdbcType=NVARCHAR},
+        FIXED_ASSETS = #{fixedAssets,jdbcType=DOUBLE},
+        REGISTERED_CAPITAL = #{registeredCapital,jdbcType=DOUBLE},
+        ASSETS = #{assets,jdbcType=DOUBLE},
+        PEOPLE = #{people,jdbcType=INTEGER},
+        CREATOR = #{creator,jdbcType=NVARCHAR},
+        CREATORID=#{creatorId,jdbcType=NVARCHAR},
+        <!--  CREATE_DATE = sysdate, -->
+        REMARK = #{remark,jdbcType=NVARCHAR},
+        ISSTOP = #{isStop,jdbcType=NVARCHAR},
+        CONTACTS = #{contacts,jdbcType=NVARCHAR},
+        CONTACTNUMBER = #{contactNumber,jdbcType=NVARCHAR},
+        IS_INPUT = #{isInput}
+        WHERE ID='${id}'
+    </update>
+
+
+    <delete id="remove" parameterType="java.lang.String">
+		DELETE FROM  T_STORE_ENTERPRISE
+		WHERE  ID=#{id,jdbcType=NVARCHAR}
+	</delete>
+
+    <select id="getNameById" parameterType="java.lang.String" resultType="int">
+        select count(*) from T_STORAGE_WAREHOUSE where ENTERPRISE_ID = #{id,jdbcType=NVARCHAR}
+	</select>
+
+    <select id="getAllEnterprise" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM T_STORE_ENTERPRISE E
+    </select>
+
+
+    <select id="getEnterpriseByIds" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM T_STORE_ENTERPRISE E left JOIN (SELECT ENTERPRISE_ID, ORDER_NO FROM T_STORAGE_WAREHOUSE WHERE ISHOST = 'Y') W
+        ON W.ENTERPRISE_ID = E.ID
+        <where>
+            <if test="excludeEnterpriseId!=null and excludeEnterpriseId.size()>0">
+                AND ID NOT IN
+                (<foreach collection="excludeEnterpriseId" item="item" separator=",">#{item}</foreach>)
+            </if>
+        </where>
+        ORDER BY ORDER_NO ASC
+    </select>
+
+
+    <select id="getEnterpriseList" resultMap="BaseResultMap">
+        select
+              <include refid="Base_Column_List"/>
+        from
+              T_STORE_ENTERPRISE E
+              left join T_STORAGE_WAREHOUSE b on E.id = b.ENTERPRISE_ID
+        where
+              b.ISHOST = 'Y' or b.WAREHOUSE_TYPE ='储备库'
+        order by b.ORDER_NO
+    </select>
+
+    <select id="pageQueryOrderByName" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        ${start}
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,SW.ID AS REPORT_WAREHOUSE_ID
+
+        from T_STORE_ENTERPRISE E
+        LEFT JOIN (SELECT ID,ENTERPRISE_ID,ORDER_NO,WAREHOUSE_TYPE FROM T_STORAGE_WAREHOUSE WHERE (ISHOST='Y')) SW
+        ON SW.ENTERPRISE_ID = E.ID
+        WHERE 1=1
+        and E.ISSTOP != 'Y'
+        and SW.WAREHOUSE_TYPE != '储备库'
+        <if test="warehouseCode!=null and warehouseCode!=''">
+            and E.SOCIAL_CREDIT_CODE = (SELECT SOCIAL_CREDIT_CODE FROM T_STORAGE_WAREHOUSE WHERE
+            WAREHOUSE_CODE=#{warehouseCode})
+        </if>
+        <if test="creatorId!=null and creatorId!=''">
+            and E.CREATORID = '${creatorId}'
+        </if>
+        <if test="registType!=null and registType!=''">
+            and E.REGIST_TYPE = '${registType}'
+        </if>
+        <if test="seniority!=null and seniority!=''">
+            and E.SENIORITY = '${seniority}'
+        </if>
+        <if test="economicType!=null and economicType!=''">
+            and E.ECONOMIC_TYPE = '${economicType}'
+        </if>
+        <if test="province!=null and province!=''">
+            and E.PROVINCE = '${province}'
+        </if>
+        <if test="city!=null and city!=''">
+            and E.CITY = '${city}'
+        </if>
+        <if test="area!=null and area!=''">
+            and E.AREA = '${area}'
+        </if>
+        <if test="enterpriseName!=null and enterpriseName!=''">
+            and E.ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+        </if>
+        <if test="enterpriseSerial!=null and enterpriseSerial!=''">
+            and E.ENTERPRISE_SERIAL LIKE '%${enterpriseSerial}%'
+        </if>
+        <if test="socialCreditCode!=null and socialCreditCode!=''">
+            and E.SOCIAL_CREDIT_CODE LIKE '%${socialCreditCode}%'
+        </if>
+        order by SW.ORDER_NO
+        ${end}
+    </select>
+
+    <!--查询除去6个直属公司的个数-->
+    <select id="getRecordCount1" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(0)
+        from T_STORE_ENTERPRISE E
+        LEFT JOIN (SELECT ID,ENTERPRISE_ID,ORDER_NO,WAREHOUSE_TYPE FROM T_STORAGE_WAREHOUSE WHERE (ISHOST='Y')) SW
+        ON SW.ENTERPRISE_ID = E.ID
+        WHERE 1=1
+        and E.ISSTOP != 'Y'
+        and SW.WAREHOUSE_TYPE != '储备库'
+        <if test="warehouseCode!=null and warehouseCode!=''">
+            and E.SOCIAL_CREDIT_CODE = (SELECT SOCIAL_CREDIT_CODE FROM T_STORAGE_WAREHOUSE WHERE
+            WAREHOUSE_CODE=#{warehouseCode})
+        </if>
+        <if test="creatorId!=null and creatorId!=''">
+            and E.CREATORID = '${creatorId}'
+        </if>
+        <if test="registType!=null and registType!=''">
+            and E.REGIST_TYPE = '${registType}'
+        </if>
+        <if test="seniority!=null and seniority!=''">
+            and E.SENIORITY = '${seniority}'
+        </if>
+        <if test="economicType!=null and economicType!=''">
+            and E.ECONOMIC_TYPE = '${economicType}'
+        </if>
+        <if test="province!=null and province!=''">
+            and E.PROVINCE = '${province}'
+        </if>
+        <if test="city!=null and city!=''">
+            and E.CITY = '${city}'
+        </if>
+        <if test="area!=null and area!=''">
+            and E.AREA = '${area}'
+        </if>
+        <if test="enterpriseName!=null and enterpriseName!=''">
+            and E.ENTERPRISE_NAME LIKE '%${enterpriseName}%'
+        </if>
+        <if test="enterpriseSerial!=null and enterpriseSerial!=''">
+            and E.ENTERPRISE_SERIAL LIKE '%${enterpriseSerial}%'
+        </if>
+        <if test="socialCreditCode!=null and socialCreditCode!=''">
+            and E.SOCIAL_CREDIT_CODE LIKE '%${socialCreditCode}%'
+        </if>
+    </select>
+    <select id="getStoreAndOilList" resultType="java.util.HashMap">
+        SELECT
+            to_char(
+            wm_concat ( to_char( a.ENCODE ) )) AS encode,
+            b.ID AS warehouseId,
+            c.IS_INPUT AS isInput
+        FROM
+            ( SELECT WAREHOUSE_ID, ENCODE FROM T_STORAGE_STOREHOUSE UNION ALL SELECT WAREHOUSE_ID, CAST( OILCAN_SERIAL AS NVARCHAR2 ( 100 )) FROM T_STORAGE_OILCAN ) a
+            RIGHT JOIN T_STORAGE_WAREHOUSE b on a.WAREHOUSE_ID = b.ID
+            LEFT JOIN T_STORE_ENTERPRISE c on b.ENTERPRISE_ID = c.ID
+        GROUP BY
+            b.ID,c.IS_INPUT
+    </select>
+    <select id="findStroeEnterpriseByWarehouseCode" parameterType="String" resultMap="BaseResultMap">
+        select * from
+          T_STORAGE_WAREHOUSE a,
+          T_STORE_ENTERPRISE b
+        where a.ENTERPRISE_ID = b.id
+          and a.WAREHOUSE_CODE = #{warehouseCode}
+    </select>
+
+</mapper>

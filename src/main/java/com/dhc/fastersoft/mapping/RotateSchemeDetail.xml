@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhc.fastersoft.dao.RotateSchemeDetailDao">
+	<resultMap type="com.dhc.fastersoft.entity.RotateSchemeDetail" id="schemedetailResultMap">
+		<id column="D_ID" property="dId" jdbcType="NVARCHAR"/>
+		<result column="SCHEME_BATCH" property="schemeBatch" jdbcType="NVARCHAR"/>
+		<result column="D_SCHEME_TYPE" property="schemeType" jdbcType="NVARCHAR"/>
+		<result column="D_ROTATE_TYPE" property="rotateType" jdbcType="NVARCHAR"/>
+		<result column="BIDDING_TIME" property="biddingTime" jdbcType="INTEGER"/>
+		<result column="START_TIME" property="startTime" jdbcType="NVARCHAR"/>
+		<result column="END_TIME" property="endTime" jdbcType="NVARCHAR"/>
+		<result column="EXPECTED_CYCLE" property="expectedCycle" jdbcType="NVARCHAR"/>
+		<result column="LIBRARY_ID" property="libraryId" jdbcType="TIMESTAMP"/>
+		<result column="BRAN_NUMBER" property="branNumber" jdbcType="NVARCHAR"/>
+		<result column="YIELD_TIME" property="yieldTime" jdbcType="NVARCHAR"/>
+		<result column="FOOD_TYPE" property="foodType" jdbcType="NVARCHAR"/>
+		<result column="REAL_CONTAINER" property="realContainer" jdbcType="NVARCHAR"/>
+		<result column="REAL_STORAGE" property="realStorage" jdbcType="NVARCHAR"/>
+		<result column="ROTATE_NUMBER" property="rotateNumber" jdbcType="DOUBLE"/>
+		<result column="OGIRIN" property="ogirin" jdbcType="INTEGER"/>
+		<result column="PLAN_LEVEL" property="planLevel" jdbcType="INTEGER"/>
+		<result column="REAL_ROTATE_NUMBER" property="realRotateNumber" jdbcType="INTEGER"/>
+		<result column="SCHEME_ID" property="schemeId" jdbcType="NVARCHAR"/>
+		<result column="PLAN_DETAIL_ID" property="planDetailId" jdbcType="NVARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="NVARCHAR"/>
+		<result column="QUALITY_DETAIL" property="qualityDetail" jdbcType="NVARCHAR"/>
+		<result column="WAREHOUSE_ID" property="warehouseId" jdbcType="VARCHAR"/>
+		<result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR"/>
+        <result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="VARCHAR"/>
+		<result column="STORE_TYPE" property="storeType" jdbcType="VARCHAR"/>
+		<result column="PLAN_MAIN_DETAIL_ID" property="planMainDetailId" jdbcType="VARCHAR"/>
+		<result column="DEAL_DETAIL_NUMBER" property="dealDetailNumber" jdbcType="DECIMAL"/>
+		<result column="OVERDUE_TIME" property="overdueTime" jdbcType="DECIMAL"/>
+	</resultMap>
+</mapper>
